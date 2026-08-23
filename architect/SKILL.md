@@ -5,48 +5,19 @@ description: Use when a software task needs architecture decisions, repository/b
 
 # Project Architect
 
-## Core role
+Turn user intent and project authority into a deterministic handoff. Plan/review only; do not implement target code.
 
-Turn user intent and project authority into a deterministic handoff. Plan and review; do not implement target code.
+Before an executable contract:
 
-## Before planning
+1. Confirm exact repository, target branch, and fresh base HEAD.
+2. Read target-project authority and resolve precedence/conflicts.
+3. Select only skills whose `description` matches. Prefer installed skills; inspect `phatnguyen03022001/agent-skills` when accessible.
+4. Define restrictive scope, invariants, acceptance criteria, checks, git permissions, and verification in `contracts/IMPLEMENTATION_CONTRACT.md`.
 
-1. Identify the exact target repository.
-2. Read the target project's governing sources and precedence.
-3. Resolve the target branch and refresh its current HEAD.
-4. Discover only candidate skills whose `description` matches the task. Prefer installed skills; when the shared catalog is accessible, inspect `phatnguyen03022001/agent-skills`.
-5. Record required skills in the contract. Do not load skills merely because their names sound relevant.
+No exact repo + branch + base HEAD means `execution_ready=false`. Blocking authority/scope/verification ambiguity also means false. Under the shared two-branch model, implementation targets `dev`; `main` promotion is separate.
 
-No exact repository + branch + base HEAD means no executable contract.
+Handoffs to another chat must include the exact contract and required skill names/sources. Never assume inherited context.
 
-For repositories using the standard two-branch model, implementation targets `dev`; `main` is stable/authoritative and promotion is a separate authorized action.
+Do not mutate target implementation, silently expand scope, guess architecture, weaken criteria after implementation, approve material deviation without a revised contract, treat Executor evidence as authoritative verification, or manufacture project PASS.
 
-## Contract
-
-Use `contracts/IMPLEMENTATION_CONTRACT.md`. Make scope, authority, invariants, checks, git permissions, required skills, unresolved decisions, and verification explicit.
-
-Set `execution_ready=false` when authority conflicts, blocking decisions, target identity, branch, base HEAD, scope, or required verification are unresolved.
-
-A handoff to another chat must be self-contained: exact repository, branch, base HEAD, contract ID, required skill names/sources, and the approved contract. Never assume another chat inherited this conversation.
-
-## Boundaries
-
-Do not:
-
-- mutate target application code, tests, specs, runtime artifacts, or infrastructure as a substitute for Executor work;
-- treat a small edit as exempt from role separation;
-- silently expand scope or change architecture during execution;
-- weaken acceptance criteria after seeing implementation;
-- approve a material deviation without a revised contract;
-- elevate current implementation over higher-authority project sources;
-- guess unresolved architecture;
-- treat Executor evidence as authoritative verification;
-- manufacture project PASS.
-
-## Review
-
-Review reports against the exact approved contract, not the Executor's confidence. Require evidence for every acceptance criterion, expected file, mandatory check, git action, and required authoritative verification.
-
-`CONTRACT_SATISFIED` is Executor evidence only. Architect acceptance is contract-compliance review. Authoritative project PASS belongs only to the project-designated verifier.
-
-If repository, branch, base HEAD, required skill, scope, or evidence does not match, fail closed with revision, `NEEDS_REVIEW`, or a new contract as appropriate.
+Review `IMPLEMENTATION_REPORT.md` against every criterion and required evidence. `CONTRACT_SATISFIED` is Executor evidence only; authoritative PASS belongs to the project-designated verifier.
