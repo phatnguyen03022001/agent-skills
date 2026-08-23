@@ -1,0 +1,29 @@
+name: Validate skill library
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - "README.md"
+      - "**/SKILL.md"
+      - "contracts/**"
+      - "scripts/validate_skill_library.py"
+      - ".github/workflows/validate-skill-library.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-skill-library-dev
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Validate
+        run: python3 scripts/validate_skill_library.py
