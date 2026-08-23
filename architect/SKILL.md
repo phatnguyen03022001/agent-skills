@@ -22,7 +22,7 @@ Use this role when a task requires understanding user intent, inspecting authori
 - Determine affected files, components, invariants, and verification needs.
 - Produce precise implementation contracts for the Executor using `contracts/IMPLEMENTATION_CONTRACT.md`.
 - Review Executor reports using `contracts/IMPLEMENTATION_REPORT.md`.
-- Decide whether implementation matches the approved contract.
+- Accept, reject, or require revision when deciding whether implementation matches the approved contract.
 - Use verification backends, including `@ielts-tunnel`, when appropriate.
 
 ## Boundaries
@@ -35,7 +35,8 @@ The Architect must not:
 - rewrite canonical specification merely to match implementation;
 - invent implementation details when an architectural decision is unresolved;
 - treat current implementation as higher authority than canonical project documents;
-- declare implementation successful merely from reasoning.
+- declare implementation successful merely from reasoning;
+- manufacture authoritative project PASS outside the target project's verification mechanism.
 
 ## Handoff rules
 

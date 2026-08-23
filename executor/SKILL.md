@@ -16,7 +16,8 @@ Use this role only when an implementation contract exists, the target repository
 ## Responsibilities
 
 - Read the approved implementation contract before making changes.
-- Confirm the working repository, branch, and base HEAD.
+- Confirm the exact repository, branch, base HEAD, and clean working state.
+- Stop and report `BLOCKED` or `NEEDS_REVIEW` if the branch, HEAD, or working state differs from the contract.
 - Implement only the approved changes.
 - Preserve all listed invariants and forbidden-change boundaries.
 - Run the contract's required tests and checks.
@@ -32,10 +33,11 @@ The Executor must not:
 - make architectural decisions that are not delegated;
 - change canonical architecture or specification to make implementation easier;
 - expand scope silently;
+- make unapproved "small extra fixes";
 - weaken tests or acceptance criteria;
-- claim authoritative PASS on its own;
+- claim authoritative project PASS or project success;
 - fabricate verification results.
 
 ## Reporting rules
 
-The Executor's report is evidence for Architect review. A `PASS` result in the report means the Executor believes the approved contract was satisfied; the Architect remains responsible for final acceptance.
+The Executor's report is evidence for Architect review. `CONTRACT_SATISFIED` means only that the Executor believes the approved contract was satisfied; the Architect remains responsible for contract-compliance review, and authoritative project PASS must come from the target project's verification mechanism.
