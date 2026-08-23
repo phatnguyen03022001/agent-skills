@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the small, flat Agent Skills library using only the Python stdlib."""
+"""Validate the curated, flat Agent Skills library using only the Python stdlib."""
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+EXPECTED_SKILL_COUNT = 15
 NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 LINK_RE = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 
@@ -55,9 +56,6 @@ def parse_frontmatter(path: Path) -> tuple[dict[str, str], str]:
         if key in metadata:
             error(f"{path.relative_to(ROOT)}:{line_no}: duplicate frontmatter key '{key}'")
             continue
-        # This repository intentionally uses the YAML plain-scalar subset for
-        # Agent Skills metadata. Reject obvious collection/block syntax so a
-        # malformed construct cannot be mistaken for a valid scalar.
         if value[0] in "[{|>" or value.startswith("-"):
             error(
                 f"{path.relative_to(ROOT)}:{line_no}: unsupported frontmatter value syntax for '{key}'"
@@ -85,41 +83,18 @@ def validate_links(path: Path, text: str) -> None:
 
 def validate_contracts() -> None:
     required_contract_tokens = [
-        "full_name:",
-        "branch:",
-        "name:",
-        "role:",
-        "base_head:",
-        "required_skills:",
-        "recommended_skills:",
-        "invariants:",
-        "forbidden_changes:",
-        "acceptance_criteria:",
-        "executor_checks:",
-        "authoritative_verification:",
-        "commit:",
-        "push:",
-        "promote_to_main:",
-        "stale_contract_behavior:",
-        "execution_ready:",
+        "full_name:", "branch:", "name:", "role:", "base_head:",
+        "required_skills:", "recommended_skills:", "invariants:",
+        "forbidden_changes:", "acceptance_criteria:", "executor_checks:",
+        "authoritative_verification:", "commit:", "push:",
+        "promote_to_main:", "stale_contract_behavior:", "execution_ready:",
     ]
     required_report_tokens = [
-        "full_name:",
-        "branch:",
-        "base_head:",
-        "pre_execution_head:",
-        "final_head:",
-        "skills_used:",
-        "changed_files:",
-        "commits_created:",
-        "pushed:",
-        "promoted_to_main:",
-        "acceptance_evidence:",
-        "executor_checks:",
-        "authoritative_verification:",
-        "result:",
+        "full_name:", "branch:", "base_head:", "pre_execution_head:",
+        "final_head:", "skills_used:", "changed_files:", "commits_created:",
+        "pushed:", "promoted_to_main:", "acceptance_evidence:",
+        "executor_checks:", "authoritative_verification:", "result:",
     ]
-
     checks = [
         (ROOT / "contracts" / "IMPLEMENTATION_CONTRACT.md", required_contract_tokens),
         (ROOT / "contracts" / "IMPLEMENTATION_REPORT.md", required_report_tokens),
@@ -136,11 +111,12 @@ def validate_contracts() -> None:
 
 
 def main() -> int:
-    skill_files = sorted(
-        path for path in ROOT.glob("*/SKILL.md") if path.parent.parent == ROOT
-    )
-    if not skill_files:
-        error("no top-level skill directories containing SKILL.md")
+    skill_files = sorted(path for path in ROOT.glob("*/SKILL.md") if path.parent.parent == ROOT)
+    if len(skill_files) != EXPECTED_SKILL_COUNT:
+        error(
+            f"expected exactly {EXPECTED_SKILL_COUNT} discoverable top-level skills; "
+            f"found {len(skill_files)}"
+        )
 
     seen_names: dict[str, Path] = {}
     print("Skill word counts:")
@@ -179,11 +155,9 @@ def main() -> int:
             warning(f"{rel}: {word_count} words; consider moving heavy detail to references/")
         if line_count > 500:
             warning(f"{rel}: {line_count} lines; Agent Skills recommends keeping SKILL.md under 500 lines")
-
         validate_links(path, text)
 
     validate_contracts()
-
     readme = ROOT / "README.md"
     if not readme.is_file():
         error("missing README.md")
@@ -194,14 +168,13 @@ def main() -> int:
         print("\nWarnings:")
         for message in warnings:
             print(f"  WARN: {message}")
-
     if errors:
         print("\nErrors:", file=sys.stderr)
         for message in errors:
             print(f"  ERROR: {message}", file=sys.stderr)
         return 1
 
-    print(f"\nOK: validated {len(skill_files)} unique skills and contract structure")
+    print(f"\nOK: validated exactly {EXPECTED_SKILL_COUNT} unique skills and contract structure")
     return 0
 
 
