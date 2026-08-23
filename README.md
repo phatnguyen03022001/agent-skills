@@ -1,57 +1,94 @@
-# ielts-agents
+# agent-skills
 
-`ielts-agents` contains role definitions and shared handoff contracts for the IELTS Architect / Executor operating model.
+Reusable agent skills and handoff contracts for software work across repositories.
 
-This repository is intentionally small. It does not contain IELTS application code, tunnel code, an executor backend, a coordinator server, CI/CD, or runtime dependencies.
+This repository is a skill library, not a project source-of-truth. Each target repository keeps its own code, specs, design, verification rules, and deployment authority. Skills provide reusable operating behavior; target-project authority always wins on project-specific facts.
 
-## Roles
+## Operating model
 
-### IELTS Architect
+- **Project Architect**: resolves target authority, repository, branch, exact base HEAD, relevant skills, scope, and verification; then creates/reviews implementation contracts.
+- **Implementation Executor**: mutates only the exact contract target and returns evidence.
+- **Shared skills**: add domain behavior such as GitHub dev/main safety or Google Cloud Run operations.
+- **Project verifier/runner**: owns authoritative PASS only when the target project designates it.
 
-The Architect is the planning, architecture, review, and orchestration authority for IELTS engineering tasks. It turns user intent and authoritative project context into deterministic implementation contracts for an Executor.
+A new execution chat must not mutate anything until the exact `repository.full_name`, target `branch`, and `base_head` are explicit.
 
-The Architect decides whether an Executor report satisfies the approved contract. It can accept contract compliance, reject the result, require revision, or issue a revised contract. It must invoke authoritative verification when the contract, target repository, or canonical project documents require it, and it must never declare implementation success from reasoning alone.
+## Default Git model
 
-### IELTS Executor
+For repositories that adopt the shared two-branch model:
 
-The Executor implements an approved implementation contract exactly within its authorized scope. It confirms the target repository, branch, base HEAD, and working state before changing anything. It makes only the required changes, preserves listed invariants, runs the required checks, and reports the result.
+- `dev` is the integration and normal mutation branch.
+- `main` is stable and authoritative.
+- normal implementation targets `dev`;
+- promotion `dev -> main` is separate, explicit, and verification-gated;
+- no extra branches, PRs, force-pushes, or history rewrites unless the user or target repository explicitly requires them.
 
-The Executor does not reinterpret objectives, make undelegated architectural decisions, weaken acceptance criteria, silently expand scope, commit or push without explicit contract authorization, or claim authoritative project success.
+This repository is being bootstrapped into that model. After bootstrap, normal changes should land on `dev` first.
 
-## Why role separation exists
+## Skill discovery
 
-Role separation keeps planning authority separate from execution authority. This prevents silent scope expansion, architecture drift, and after-the-fact specification changes. It also gives every implementation a reviewable record: what was approved, what changed, how it was checked, and what still needs review.
+Architects should select skills by frontmatter `description`, not by name alone. Load only skills whose trigger conditions match the task.
 
-## Contract-based handoff
+Current catalog:
 
-The Architect hands work to the Executor through `contracts/IMPLEMENTATION_CONTRACT.md`. The contract records the objective, authority sources, required changes, preserved invariants, acceptance criteria, forbidden changes, verification requirements, unresolved decisions, stale-contract behavior, git action authority, and whether execution is ready.
+| Skill | Trigger |
+| --- | --- |
+| `project-architect` | architecture, scope, repository/branch targeting, skill selection, contracts, report review |
+| `implementation-executor` | executing an approved contract against exact repo/branch/base HEAD |
+| `github-dev-main-workflow` | Git/GitHub work under the shared dev/main model, including Actions/cost risk |
+| `cloud-run-basics` | Google Cloud Run deploy/config/troubleshooting/security/scaling/cost work |
 
-The Executor reports back through `contracts/IMPLEMENTATION_REPORT.md`. The report records the actual repository state, pre-execution checks, changed files, checks run or skipped, verification results, deviations, unresolved items, commit/push actions, and a result value.
+## Skill size guidance
 
-## Authority model
+Keep `SKILL.md` concise enough that agents actually read it. The working target is:
 
-Executor completion means the Executor reports the state of its assigned contract only. `CONTRACT_SATISFIED` means the Executor believes the authorized work was completed against the exact approved base with required Executor checks run, no material unapproved deviations, no forbidden changes, and only explicitly authorized git actions. It is not authoritative project PASS.
+- frequently loaded skills: ideally under ~200 words;
+- normal task-specific skills: ideally under ~500 words;
+- move large schemas, references, and reusable templates into supporting files.
 
-Architect review means the Architect decides whether the implementation matches the approved contract. The Architect may accept contract compliance, request revision, reject the result, or issue a revised contract. Architect review does not manufacture authoritative project PASS, and material deviations or weakened acceptance criteria require a revised contract before acceptance.
+Descriptions should begin with `Use when` and describe trigger conditions only. They should not summarize the workflow, because agents may shortcut from the description instead of reading the skill body.
 
-Authoritative verification belongs to the target IELTS project repository and its approved verification mechanisms. When `@ielts-tunnel` or another project-defined backend is required by the contract, target repository, or canonical project documents, that backend provides the authoritative verification signal.
+## Contract handoff
 
-The authority flow is: user constraints and target canonical documents define the problem; the Architect creates or revises the contract; the Executor executes only that contract; the report provides evidence; the Architect reviews contract compliance; the target project's authoritative verifier provides project PASS or FAIL when required.
+`contracts/IMPLEMENTATION_CONTRACT.md` is the Architect-to-Executor protocol.
 
-## Relationship to the IELTS application repository
+It binds execution to:
 
-The IELTS application repository remains the authoritative home for application code, canonical project documents, specifications, design files, tests, and runtime behavior.
+- exact repository;
+- exact branch and branch role;
+- exact base HEAD;
+- authority sources and precedence;
+- required skills;
+- restrictive scope;
+- invariants and forbidden changes;
+- acceptance criteria;
+- Executor checks and authoritative verification;
+- commit/push/promotion permissions;
+- unresolved decisions;
+- explicit `execution_ready`.
 
-`ielts-agents` does not replace or modify that repository. Architect and Executor roles must inspect and respect the authoritative IELTS application repository when a task requires it, but this repository only defines role behavior and shared contracts.
+`contracts/IMPLEMENTATION_REPORT.md` is the Executor-to-Architect evidence protocol. `CONTRACT_SATISFIED` is never authoritative project PASS.
 
-## Relationship to `@ielts-tunnel`
+For a handoff to another ChatGPT conversation, the Architect must provide a self-contained envelope containing the contract plus required skill names/sources. Never assume another chat inherited repository, branch, HEAD, or skill context.
 
-`@ielts-tunnel` remains the external sync and verification backend for the IELTS system. It is not part of this repository.
+## GitHub and cost discipline
 
-Architect and Executor roles must not duplicate tunnel functionality. They may rely on tunnel-backed sync or verification only when the contract, target repository, or canonical project documents require it. Tunnel behavior and implementation remain outside `ielts-agents`.
+GitHub writes can trigger Actions or other infrastructure. Before consequential push/merge/rerun/dispatch operations, inspect applicable triggers and cost risk when available. Do not create or broaden CI, rerun workflows, use larger runners, or enable paid/unknown-cost features merely for convenience.
 
-## Future orchestration direction
+Prefer repository-native/local verification when it provides the required evidence and target-project governance allows it. Cost optimization must never weaken correctness.
 
-A future coordinator or MCP dispatcher may route user requests to Architect and Executor roles, pass contract/report artifacts between them, and invoke `@ielts-tunnel` for sync or verification.
+## Cloud skills
 
-That orchestration layer is future work and is not implemented in this repository.
+`cloud-run-basics` is a reusable Cloud Run guardrail skill. It is intentionally concise and fail-closed around project identity, IAM, exposure, build/deploy side effects, billing risk, and verification.
+
+Domain skills must not override a target repository's own deployment or security policy.
+
+## Future shared runner
+
+A future shared runner/tunnel may provide bounded sync and verification across projects. It should remain separate from this repository and use trusted project profiles rather than arbitrary shell commands.
+
+The intended authority split is:
+
+`Architect decides -> Contract authorizes -> Executor mutates -> Report evidences -> Architect reviews -> Project verifier declares PASS`
+
+Do not collapse those roles merely because one environment happens to expose more tools.

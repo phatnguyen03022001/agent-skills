@@ -1,17 +1,19 @@
 # Implementation Report
 
-This reusable report is the Executor-to-Architect return format for IELTS engineering work.
+Reusable Executor-to-Architect evidence format.
 
-The report must distinguish what changed, what was verified, what deviated, and what still needs Architect review. Verification results must be factual and must not be fabricated.
+The report records what actually happened. It must distinguish implementation evidence, git state, Executor checks, Architect review, and authoritative project verification.
 
 ## Template
 
 ```yaml
 contract_id: ""
+contract_version: 1
 repository:
   full_name: ""
   url: ""
 branch: ""
+branch_role: ""
 base_head: ""
 pre_execution_head: ""
 final_head: ""
@@ -21,6 +23,10 @@ pre_execution_checks:
   branch_confirmed: false
   base_head_confirmed: false
   working_tree_clean: false
+skills_used:
+  - name: ""
+    source: ""
+    available: false
 working_tree_after:
   clean: false
   summary: ""
@@ -32,8 +38,13 @@ commits_created:
   - sha: ""
     message: ""
 pushed: false
+promoted_to_main: false
 implementation_summary:
   - ""
+acceptance_evidence:
+  - criterion: ""
+    status: NOT_PROVEN
+    evidence: ""
 executor_checks:
   required:
     - command_or_check: ""
@@ -47,8 +58,6 @@ authoritative_verification:
   performed: false
   result: ""
   evidence: ""
-verification_results:
-  - ""
 deviations_from_contract:
   - deviation: ""
     architect_approved_in_revised_contract: false
@@ -60,45 +69,34 @@ result: NEEDS_REVIEW
 
 ## Result values
 
-- `CONTRACT_SATISFIED`: Executor believes the approved contract was satisfied against the exact approved base, with required Executor checks run successfully, no skipped mandatory checks, no forbidden changes, no material unapproved deviations, and only explicitly authorized git actions. This is not authoritative project PASS.
-- `NEEDS_REVIEW`: Work is complete enough to review, but deviations, ambiguity, skipped checks, stale-base concerns, partial verification, unexpected files, or judgment calls require Architect attention.
-- `BLOCKED`: Execution could not continue because required information, access, repository state, branch state, base HEAD, clean working state, dependencies, git action authority, or decisions were unavailable.
-- `FAILED`: Execution was attempted but did not satisfy the contract, mandatory checks, invariants, or verification requirements.
+- `CONTRACT_SATISFIED`: Executor evidence says the exact approved contract was satisfied. It is not Architect acceptance and not authoritative project PASS.
+- `NEEDS_REVIEW`: enough work/evidence exists to review, but ambiguity, deviation, missing proof, stale concerns, or judgment remains.
+- `BLOCKED`: execution could not safely begin/continue because required identity, authority, state, skill, dependency, or decision was unavailable.
+- `FAILED`: execution was attempted but did not satisfy the contract, mandatory checks, invariants, or required verification.
 
-## Field rules
+## Evidence rules
 
-- `contract_id`: Must match the implementation contract.
-- `repository`: Actual repository where execution occurred.
-- `branch`: Actual branch where execution occurred.
-- `base_head`: Base commit from the contract.
-- `pre_execution_head`: Actual HEAD observed before changes.
-- `final_head`: Final commit after changes, or empty if no commit was produced.
-- `status`: Brief execution state, such as `implemented`, `blocked`, or `failed`.
-- `pre_execution_checks`: Evidence that repository, branch, base HEAD, and working state matched the contract before editing.
-- `working_tree_after`: Whether uncommitted changes remain after execution.
-- `changed_files`: Every changed file and whether it was inside the contract scope.
-- `commits_created`: Commits created by the Executor. Empty when commit authority was not granted or no commit was produced.
-- `pushed`: Whether the Executor pushed to a remote.
-- `implementation_summary`: Concise description of completed work.
-- `executor_checks`: Mandatory checks performed and mandatory checks skipped. A skipped required check prevents `CONTRACT_SATISFIED`.
-- `authoritative_verification`: Required project verification status. If required and not performed or not passing, `CONTRACT_SATISFIED` is invalid.
-- `verification_results`: Evidence from checks, tests, tunnel calls, or manual inspection.
-- `deviations_from_contract`: Any difference from the approved contract, including unapproved extra changes or scope changes not made.
-- `unresolved_items`: Remaining questions, blockers, risks, or follow-up needs.
-- `result`: Must be one of `CONTRACT_SATISFIED`, `NEEDS_REVIEW`, `BLOCKED`, or `FAILED`.
+Every acceptance criterion must be `SATISFIED`, `UNSATISFIED`, or `NOT_PROVEN` with evidence. Any `UNSATISFIED` or `NOT_PROVEN` criterion prevents `CONTRACT_SATISFIED`.
+
+A successful verifier run is necessary evidence when required, but never proves that required changes were implemented. If the contract required mutation but `final_head == pre_execution_head`, `CONTRACT_SATISFIED` requires proof that the required state already existed and the contract allowed verification-only completion.
+
+Record every changed file, created commit, push, and main promotion. Git actions not explicitly authorized by the contract invalidate a clean result.
 
 ## Invalid clean-result conditions
 
-`CONTRACT_SATISFIED` is invalid when any of the following are true unless a revised Architect-approved contract explicitly supersedes the original:
+`CONTRACT_SATISFIED` is invalid when any of these are true unless a revised Architect-approved contract supersedes the original:
 
-- repository, branch, or base HEAD did not match before execution;
-- the contract was internally inconsistent or stale;
-- the working tree was dirty before execution;
-- uncommitted changes remain after execution without contract authorization;
-- a mandatory Executor check failed or was skipped;
-- required authoritative verification failed, was unavailable, or was not performed;
-- a changed file or component was outside the authorized scope;
-- a forbidden change occurred;
-- a material deviation lacked revised-contract approval;
-- a blocking unresolved item remains;
-- commit or push occurred without explicit `git_actions` authorization.
+- repository, branch, or base HEAD mismatch;
+- stale or internally inconsistent contract;
+- required skill unavailable/not used;
+- required clean-state precondition failed;
+- changed file/component outside scope;
+- forbidden change or material unapproved deviation;
+- mandatory check failed, skipped, or substituted without authority;
+- required authoritative verification absent/failing;
+- blocking unresolved item remains;
+- acceptance criterion is not proven satisfied;
+- unauthorized branch creation, commit, push, or main promotion;
+- uncommitted final state violates the contract.
+
+Never report authoritative project PASS. The target project's designated verifier owns that signal.
