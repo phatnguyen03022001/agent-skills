@@ -163,8 +163,22 @@ def scalar_value(raw: str, path: Path, number: int) -> Any:
         return None
     if INT_RE.fullmatch(raw):
         return int(raw)
-    if len(raw) >= 2 and raw[0] == raw[-1] and raw[0] in ("'", '"'):
-        return raw[1:-1]
+    if raw[:1] in ("'", '"'):
+        quote = raw[0]
+        if len(raw) < 2 or raw[-1] != quote:
+            raise ProtocolYamlError(f"{path.relative_to(ROOT)}:{number}: unterminated quoted scalar")
+        inner = raw[1:-1]
+        escaped = False
+        for char in inner:
+            if quote == '"' and char == "\\" and not escaped:
+                escaped = True
+                continue
+            if char == quote and not escaped:
+                raise ProtocolYamlError(f"{path.relative_to(ROOT)}:{number}: unexpected quote inside quoted scalar")
+            escaped = False
+        if escaped:
+            raise ProtocolYamlError(f"{path.relative_to(ROOT)}:{number}: unterminated escape in quoted scalar")
+        return inner
     if raw.startswith(("[", "{", "|", ">")):
         raise ProtocolYamlError(f"{path.relative_to(ROOT)}:{number}: unsupported YAML value syntax")
     return raw
@@ -351,13 +365,21 @@ def validate_task_template() -> None:
         ("task_id", str), ("task_revision", int), ("state", str),
         ("architect_binding.target_repository", str), ("target.repository", str),
         ("target.branch.name", str), ("execution_base.mode", str),
+        ("execution_base.require_exact_match", bool),
         ("skill_library.repository", str), ("skill_library.revision", str),
         ("execution_skills.required", list), ("execution_skills.recommended", list),
         ("structure_authority.status", str), ("structure_authority.source", str),
         ("structure_authority.rationale", str), ("scope.required_changes", list),
+        ("scope.expected_files_are_restrictive", bool),
         ("invariants", list), ("forbidden_changes", list),
         ("gap_policy.local_auto_fix", bool), ("gap_policy.blocking_gap_behavior", str),
         ("structure_policy.expected_new_files", list),
+        ("structure_policy.unlisted_new_files.allowed", bool),
+        ("structure_policy.unlisted_new_files.max", int),
+        ("structure_policy.unlisted_new_files.within", list),
+        ("structure_policy.unlisted_new_files.purpose", str),
+        ("structure_policy.allow_new_top_level_directories", bool),
+        ("structure_policy.allow_new_shared_modules", bool),
         ("verification.authoritative_verification", dict),
         ("git_authority.create_branch", bool), ("git_authority.commit", bool),
         ("git_authority.push", bool), ("git_authority.promote_to_main", bool),
@@ -368,6 +390,7 @@ def validate_task_template() -> None:
     require_mapping_sequence(label, doc, "acceptance_criteria")
     require_mapping_sequence(label, doc, "verification.executor_checks")
     require_field(label, doc, "execution_base.mode", str, "handoff_snapshot")
+    require_field(label, doc, "execution_base.require_exact_match", bool, True)
     require_field(label, doc, "gap_policy.blocking_gap_behavior", str, "BLOCKED")
 
     bound = get_path(doc, "architect_binding.target_repository")
@@ -420,7 +443,17 @@ def validate_report_template() -> None:
         ("skill_library.authorized_revision", str), ("skill_library.observed_revision", str),
         ("execution_skills_used.required", list),
         ("pre_execution_checks.protocol_version_supported", bool),
+        ("pre_execution_checks.handoff_type_confirmed", bool),
         ("pre_execution_checks.task_at_base_confirmed", bool),
+        ("pre_execution_checks.task_identity_confirmed", bool),
+        ("pre_execution_checks.architect_binding_confirmed", bool),
+        ("pre_execution_checks.repository_confirmed", bool),
+        ("pre_execution_checks.branch_confirmed", bool),
+        ("pre_execution_checks.base_head_confirmed", bool),
+        ("pre_execution_checks.skill_revision_confirmed", bool),
+        ("pre_execution_checks.required_execution_skills_available", bool),
+        ("pre_execution_checks.structure_authority_confirmed", bool),
+        ("pre_execution_checks.working_tree_clean", bool),
         ("authoritative_verification", dict), ("result", str),
     ]:
         require_field(label, doc, dotted, expected_type)
@@ -446,6 +479,7 @@ def validate_review_template() -> None:
         ("reviewed_report.path", str), ("reviewed_report.commit", str),
         ("reviewed_report.report_revision", int),
         ("contract_compliance.protocol_version", str),
+        ("contract_compliance.identity", str),
         ("contract_compliance.execution_base", str),
         ("contract_compliance.skill_rules", str),
         ("contract_compliance.scope", str),
