@@ -16,7 +16,7 @@ Target-repository governance may be stricter and takes precedence.
 
 Refresh exact repository, branch, remote HEAD, expected base, write authority, and workflow triggers. If the remote branch moved, fail closed. Do not create extra branches or PRs merely by convention. Force-push and history rewrite are forbidden unless exceptional target governance explicitly requires them.
 
-`task.git_authority` governs Executor Git mutations. Content ownership does not imply commit/push authority.
+`task.git_authority` governs Executor Git mutations. Content ownership does not imply commit/push authority. `create_branch`, `commit`, `push`, and `promote_to_main` are independent capabilities. When `create_branch: false`, do not invoke branch creation even for tests or temporary work; use isolated fixtures for negative tests. Commit does not imply push, and push does not imply branch creation, force push, `main` mutation, or promotion.
 
 ## Promotion candidate lineage
 
@@ -25,9 +25,9 @@ Let `R = reviewed_report.commit` for the exact report accepted by Architect.
 A valid `promotion_candidate_head` is only:
 
 1. `R`; or
-2. the direct child of `R`, with that single commit containing only the expected Architect-owned review artifact.
+2. the single-parent direct child of `R`, whose only parent is `R`, with that single commit containing only the expected Architect-owned review artifact.
 
-Any implementation, unrelated documentation, cleanup, dependency change, other task commit, unrelated commit, or second post-review commit after `R` invalidates accepted lineage and requires a new report plus Architect review.
+A merge commit or empty child is not the permitted review-artifact child. Any implementation, unrelated documentation, cleanup, dependency change, other task commit, unrelated commit, or second post-review commit after `R` invalidates accepted lineage and requires a new report plus Architect review.
 
 Before promotion, refresh `dev` and `main`, require current `dev` equals the candidate, require authoritative verification to identify that exact SHA, and require explicit promotion authority. If `dev` changes after verification: `REVERIFY / REVIEW_REQUIRED`.
 

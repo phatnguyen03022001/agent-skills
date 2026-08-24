@@ -10,7 +10,7 @@ Executor owns report content. Architect reviews it but does not rewrite it.
 
 When canonical report evidence is committed, Executor must have commit authority under the exact task. The Architect review must identify that exact committed report as `reviewed_report.commit`; an uncommitted working copy or a different report revision is not review identity.
 
-The report commit is still not automatically `promotion_candidate_head`. After Architect accepts `R = reviewed_report.commit`, only `R` itself or one direct child containing solely the expected Architect-owned review artifact can become the candidate without a new report/review cycle.
+The report commit is still not automatically `promotion_candidate_head`. After Architect accepts `R = reviewed_report.commit`, only `R` itself or one single-parent direct child whose only parent is `R` and that contains solely the expected Architect-owned review artifact can become the candidate without a new report/review cycle.
 
 ## Evidence
 

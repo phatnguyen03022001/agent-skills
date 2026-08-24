@@ -310,6 +310,53 @@ def load_protocol_document(relative_path: str) -> dict[str, Any] | None:
 
 _MISSING = object()
 
+TASK_SEQUENCE_SCHEMAS: dict[str, dict[str, type]] = {
+    "authority_sources": {"source": str, "role": str, "precedence": int},
+    "acceptance_criteria": {"id": str, "requirement": str, "evidence_required": str},
+    "verification.executor_checks": {"id": str, "command_or_check": str, "required": bool},
+}
+REPORT_SEQUENCE_SCHEMAS: dict[str, dict[str, type]] = {
+    "changed_files": {
+        "path": str,
+        "summary": str,
+        "new_file": bool,
+        "in_scope": bool,
+        "structure_authorized": bool,
+    },
+    "commits_created": {"sha": str, "message": str},
+    "acceptance_evidence": {"criterion_id": str, "status": str, "evidence": str},
+    "executor_checks": {"check_id": str, "result": str, "evidence": str},
+    "discovered_gaps": {
+        "gap_id": str,
+        "classification": str,
+        "type": str,
+        "severity": str,
+        "description": str,
+        "evidence": str,
+        "impact": str,
+        "blocks_current_task": bool,
+        "action_taken": str,
+        "suggested_next_step": str,
+    },
+    "structural_observations": {
+        "type": str,
+        "path": str,
+        "evidence": str,
+        "recommendation": str,
+        "action_taken": str,
+    },
+}
+REVIEW_SEQUENCE_SCHEMAS: dict[str, dict[str, type]] = {
+    "gap_disposition": {"gap_id": str, "decision": str, "rationale": str},
+    "follow_up_tasks": {"task_id": str, "origin": dict},
+}
+FOLLOW_UP_ORIGIN_SCHEMA: dict[str, type] = {
+    "type": str,
+    "task_id": str,
+    "gap_id": str,
+}
+GAP_CLASSIFICATIONS = frozenset({"LOCAL", "FOLLOW_UP", "BLOCKING"})
+
 
 def get_path(document: dict[str, Any], dotted: str) -> Any:
     value: Any = document
@@ -338,17 +385,65 @@ def require_field(
         error(f"{label}: path '{dotted}' must equal {expected_value!r}, got {value!r}")
 
 
-def require_mapping_sequence(label: str, document: dict[str, Any], dotted: str) -> None:
+def require_mapping_schema(
+    label: str,
+    value: Any,
+    item_path: str,
+    required_fields: dict[str, type],
+    closed_values: dict[str, frozenset[Any]] | None = None,
+) -> bool:
+    if type(value) is not dict:
+        error(f"{label}: path '{item_path}' must be mapping")
+        return False
+
+    expected_keys = set(required_fields)
+    actual_keys = set(value)
+    missing = sorted(expected_keys - actual_keys)
+    unexpected = sorted(actual_keys - expected_keys)
+    if missing:
+        error(f"{label}: path '{item_path}' missing required fields {missing}")
+    if unexpected:
+        error(f"{label}: path '{item_path}' has unexpected fields {unexpected}")
+
+    valid = not missing and not unexpected
+    for field, expected_type in required_fields.items():
+        if field not in value:
+            continue
+        field_value = value[field]
+        if type(field_value) is not expected_type:
+            error(
+                f"{label}: path '{item_path}.{field}' must be {expected_type.__name__}, "
+                f"got {type(field_value).__name__}"
+            )
+            valid = False
+            continue
+        if closed_values and field in closed_values and field_value not in closed_values[field]:
+            error(f"{label}: path '{item_path}.{field}' has unsupported value {field_value!r}")
+            valid = False
+    return valid
+
+
+def require_mapping_sequence_schema(
+    label: str,
+    document: dict[str, Any],
+    dotted: str,
+    required_fields: dict[str, type],
+    closed_values: dict[str, frozenset[Any]] | None = None,
+) -> list[tuple[int, dict[str, Any]]]:
     value = get_path(document, dotted)
     if value is _MISSING:
         error(f"{label}: missing required path '{dotted}'")
-        return
+        return []
     if type(value) is not list:
         error(f"{label}: path '{dotted}' must be list")
-        return
+        return []
+
+    valid_items: list[tuple[int, dict[str, Any]]] = []
     for index, item in enumerate(value):
-        if type(item) is not dict:
-            error(f"{label}: path '{dotted}[{index}]' must be mapping")
+        item_path = f"{dotted}[{index}]"
+        if require_mapping_schema(label, item, item_path, required_fields, closed_values):
+            valid_items.append((index, item))
+    return valid_items
 
 
 def validate_version(label: str, document: dict[str, Any]) -> None:
@@ -386,9 +481,8 @@ def validate_task_template() -> None:
         ("blocking_decisions", list), ("execution_ready", bool),
     ]:
         require_field(label, doc, dotted, expected_type)
-    require_mapping_sequence(label, doc, "authority_sources")
-    require_mapping_sequence(label, doc, "acceptance_criteria")
-    require_mapping_sequence(label, doc, "verification.executor_checks")
+    for dotted, schema in TASK_SEQUENCE_SCHEMAS.items():
+        require_mapping_sequence_schema(label, doc, dotted, schema)
     require_field(label, doc, "execution_base.mode", str, "handoff_snapshot")
     require_field(label, doc, "execution_base.require_exact_match", bool, True)
     require_field(label, doc, "gap_policy.blocking_gap_behavior", str, "BLOCKED")
@@ -457,11 +551,11 @@ def validate_report_template() -> None:
         ("authoritative_verification", dict), ("result", str),
     ]:
         require_field(label, doc, dotted, expected_type)
-    for dotted in [
-        "changed_files", "commits_created", "acceptance_evidence", "executor_checks",
-        "discovered_gaps", "structural_observations",
-    ]:
-        require_mapping_sequence(label, doc, dotted)
+    for dotted, schema in REPORT_SEQUENCE_SCHEMAS.items():
+        closed_values = None
+        if dotted == "discovered_gaps":
+            closed_values = {"classification": GAP_CLASSIFICATIONS}
+        require_mapping_sequence_schema(label, doc, dotted, schema, closed_values)
     require_field(label, doc, "deviations_from_task", list)
     require_field(label, doc, "blockers", list)
     require_field(label, doc, "state", str, "REPORTED")
@@ -491,8 +585,16 @@ def validate_review_template() -> None:
         ("notes", list),
     ]:
         require_field(label, doc, dotted, expected_type)
-    require_mapping_sequence(label, doc, "gap_disposition")
-    require_mapping_sequence(label, doc, "follow_up_tasks")
+    for dotted, schema in REVIEW_SEQUENCE_SCHEMAS.items():
+        items = require_mapping_sequence_schema(label, doc, dotted, schema)
+        if dotted == "follow_up_tasks":
+            for index, item in items:
+                require_mapping_schema(
+                    label,
+                    item["origin"],
+                    f"follow_up_tasks[{index}].origin",
+                    FOLLOW_UP_ORIGIN_SCHEMA,
+                )
 
 
 def require_tokens(path: Path, tokens: list[str]) -> None:
@@ -513,7 +615,8 @@ def validate_protocol_docs() -> None:
         "NOT_APPLICABLE", "UNRESOLVED", "promotion_candidate_head",
         "REVERIFY / REVIEW_REQUIRED", "LOCAL", "FOLLOW_UP",
         "No orphan source files", "No speculative scale structure",
-        "reviewed_report.commit", "direct child",
+        "reviewed_report.commit", "single-parent direct child",
+        "shared trusted", "create_branch: false",
     ])
     for path in [
         ROOT / "contracts" / "IMPLEMENTATION_CONTRACT.md",

@@ -20,6 +20,8 @@ Canonical target-repository artifacts are:
 
 Content ownership and Git mutation authority are distinct. `task.git_authority` applies to Executor Git mutations. Executor may write `report.yaml` content, but an execution-ready task that requires canonical committed report evidence must authorize Executor commit capability. Architect review authority does not inherit Executor Git authority. Conversely, Executor commit authority does not authorize writing Architect-owned review content.
 
+The Executor Git capabilities `create_branch`, `commit`, `push`, and `promote_to_main` are independent. `commit: true` does not authorize branch creation, push, `main` mutation, or promotion. `push: true` does not authorize branch creation, force push, `main` mutation, or promotion. `promote_to_main: false` forbids `main` ref mutation and merge into `main`. If `create_branch: false`, Executor MUST NOT invoke branch-creation capability at all, including for testing, capability probing, staging, temporary work, backup, commit construction, recovery, or cleanup. Negative tests for forbidden Git operations use isolated fixtures or mocks, never the live repository.
+
 An Architect-owned review artifact may remain external when target repository policy permits. No role manufactures another role's authority.
 
 ## Canonical Executor handoff
@@ -51,6 +53,8 @@ Keep these distinct:
 
 `reviewed_report.commit` must identify a committed report, not an uncommitted working copy or a different report revision.
 
+A report is reviewable only when the Architect review context can deterministically resolve `reviewed_report.commit` and the exact report path/content. The only supported transport is either remote Git reachability or an explicitly shared trusted Git object/checkout environment. For normal cross-chat or otherwise remote-only review, the report commit must be reachable from the authorized remote Git state. A local-only report commit is valid only when the Architect review context shares that trusted checkout/object database and can resolve the same object deterministically. `commit` and `push` remain independent: `commit: true` does not imply push, and remote reachability must be granted with only the minimum authorized push capability when the intended review transport requires it. An execution-ready task must not knowingly select a canonical report lifecycle that its intended Architect review context cannot consume. `commit: false` cannot support a claim of canonical committed report evidence.
+
 ## Promotion lineage after review
 
 Let `R = reviewed_report.commit` after Architect accepts that exact report.
@@ -58,9 +62,9 @@ Let `R = reviewed_report.commit` after Architect accepts that exact report.
 Only two candidate lineages are valid:
 
 1. `promotion_candidate_head == R`; or
-2. `promotion_candidate_head` is the **direct child** of `R`, and that single child commit contains only the expected Architect-owned review artifact.
+2. `promotion_candidate_head` is the **single-parent direct child** of `R`, its only parent is `R`, and that one child commit contains only the expected Architect-owned review artifact.
 
-Any other `dev` mutation after `R` invalidates the accepted lineage and requires a new Executor report plus Architect review. This includes implementation, unrelated documentation, cleanup, dependency changes, another task's commit, unrelated commits, or a second post-review commit.
+A merge commit is never the permitted review-artifact child. An empty child is not the expected review artifact. Any other `dev` mutation after `R` invalidates the accepted lineage and requires a new Executor report plus Architect review. This includes implementation, unrelated documentation, cleanup, dependency changes, another task's commit, unrelated commits, or a second post-review commit.
 
 The previous broad idea of “all other intended release mutations” is deliberately not authority. If a mutation is not the single permitted review-artifact child, accepted lineage no longer covers it.
 
@@ -104,7 +108,7 @@ Prefer `existing solution → localized change → small local abstraction → l
 
 ## Executor flow
 
-`receive handoff → verify exact base/task/rules → verify structure and Git authority → execute restrictive scope → resolve LOCAL only → record FOLLOW_UP → stop on BLOCKING → run checks → write report → commit report only when task.git_authority permits → stop`
+`receive handoff → verify exact base/task/rules → verify structure and Git authority → execute restrictive scope → resolve LOCAL only → record FOLLOW_UP → stop on BLOCKING → run checks → write report → commit report only when task.git_authority permits → publish only when separately authorized and required by review transport → stop`
 
 ## Architect review flow
 

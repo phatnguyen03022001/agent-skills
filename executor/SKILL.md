@@ -13,6 +13,8 @@ Receive [templates/handoff.yaml](../templates/handoff.yaml). Before mutation ver
 
 Any mismatch means `BLOCKED`. Never refresh stale authority or silently substitute newer rules.
 
+`create_branch: false` is a hard tool boundary: do not invoke branch-creation capability for testing, probing, staging, temporary work, backup, commit construction, recovery, cleanup, or any other reason. Test forbidden Git operations only in isolated fixtures or mocks. `commit`, `push`, and promotion authority remain independent and do not imply branch creation or `main` mutation.
+
 ## Restrictive execution
 
 Change only authorized scope. No unrelated cleanup, adjacent fixes, speculative work, architecture/spec/public-contract drift, unauthorized dependencies, structural reorganization, or “while I'm here” refactors.
@@ -23,6 +25,8 @@ Discovered gaps are only `LOCAL`, `FOLLOW_UP`, or `BLOCKING` under the [Task Pro
 
 Executor owns implementation evidence and `report.yaml` content using [Implementation Report](../contracts/IMPLEMENTATION_REPORT.md) / [report template](../templates/report.yaml).
 
-`final_execution_head` is implementation HEAD before any report commit. Committing canonical report evidence is an Executor Git mutation and is permitted only when the exact task grants `git_authority.commit`. Ownership of `report.yaml` content alone is not commit authority.
+`final_execution_head` is implementation HEAD before any report commit. Committing canonical report evidence is an Executor Git mutation and is permitted only when the exact task grants `git_authority.commit`. Ownership of `report.yaml` content alone is not commit authority, and commit authority does not imply push.
+
+The report commit must be consumable by the intended Architect review context. If that context is remote-only, publish the authorized commit chain only when separate `git_authority.push` permits it. A local-only report commit is valid only in an explicitly shared trusted checkout/object environment where Architect can deterministically resolve the same commit and report.
 
 Executor does not write Architect-owned review content, choose `promotion_candidate_head`, declare authoritative project PASS, or promote branches. After the report is committed when authorized, Architect reviews that exact report commit.

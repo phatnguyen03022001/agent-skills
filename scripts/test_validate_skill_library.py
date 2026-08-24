@@ -181,6 +181,87 @@ class ValidatorRegressionTests(unittest.TestCase):
         output = self.assert_rejected(mutate)
         self.assertIn("missing required path 'contract_compliance.identity'", output)
 
+    def test_mapping_sequence_required_fields_and_types_are_enforced(self) -> None:
+        cases = [
+            (
+                "templates/task.yaml",
+                '  - id: AC-1\n    requirement: ""\n    evidence_required: ""',
+                "  - banana: potato",
+                "acceptance_criteria[0]",
+            ),
+            (
+                "templates/task.yaml",
+                "    precedence: 1",
+                '    precedence: "wrong"',
+                "authority_sources[0].precedence",
+            ),
+            (
+                "templates/report.yaml",
+                '  - path: ""\n    summary: ""\n    new_file: false\n    in_scope: false\n    structure_authorized: false',
+                '  - summary: ""\n    new_file: false\n    in_scope: false\n    structure_authorized: false',
+                "changed_files[0]",
+            ),
+            (
+                "templates/report.yaml",
+                '  - criterion_id: AC-1\n    status: NOT_PROVEN\n    evidence: ""',
+                '  - status: NOT_PROVEN\n    evidence: ""',
+                "acceptance_evidence[0]",
+            ),
+        ]
+        for relative, before, after, expected in cases:
+            with self.subTest(path=relative, expected=expected):
+                def mutate(root: Path, relative=relative, before=before, after=after) -> None:
+                    path = root / relative
+                    text = path.read_text(encoding="utf-8")
+                    self.assertIn(before, text)
+                    path.write_text(text.replace(before, after, 1), encoding="utf-8")
+                output = self.assert_rejected(mutate)
+                self.assertIn(expected, output)
+
+    def test_mapping_sequence_closed_values_and_keys_are_enforced(self) -> None:
+        cases = [
+            (
+                "templates/report.yaml",
+                "    classification: FOLLOW_UP",
+                "    classification: BANANA",
+                "unsupported value 'BANANA'",
+            ),
+            (
+                "templates/report.yaml",
+                '    message: ""',
+                '    message: ""\n    path: not-a-commit-record',
+                "unexpected fields ['path']",
+            ),
+        ]
+        for relative, before, after, expected in cases:
+            with self.subTest(expected=expected):
+                def mutate(root: Path, relative=relative, before=before, after=after) -> None:
+                    path = root / relative
+                    text = path.read_text(encoding="utf-8")
+                    self.assertIn(before, text)
+                    path.write_text(text.replace(before, after, 1), encoding="utf-8")
+                output = self.assert_rejected(mutate)
+                self.assertIn(expected, output)
+
+    def test_review_gap_disposition_schema_is_enforced(self) -> None:
+        def mutate(root: Path) -> None:
+            path = root / "templates" / "review.yaml"
+            text = path.read_text(encoding="utf-8")
+            before = "  - gap_id: GAP-001\n    decision: follow_up_task\n    rationale: \"\""
+            self.assertIn(before, text)
+            path.write_text(text.replace(before, "  - wrong_key: true", 1), encoding="utf-8")
+        output = self.assert_rejected(mutate)
+        self.assertIn("gap_disposition[0]", output)
+
+    def test_defined_gap_classification_remains_accepted(self) -> None:
+        _, root = self.fixture()
+        path = root / "templates" / "report.yaml"
+        text = path.read_text(encoding="utf-8")
+        self.assertIn("    classification: FOLLOW_UP", text)
+        path.write_text(text.replace("    classification: FOLLOW_UP", "    classification: LOCAL", 1), encoding="utf-8")
+        result = self.run_validator(root)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

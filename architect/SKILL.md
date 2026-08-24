@@ -32,15 +32,17 @@ Normally use 2–5 active skills. Never preload all skill bodies.
 
 Target-repository truth outranks shared skills. Architect owns `task.yaml` content and review judgment. Executor owns implementation and `report.yaml` content. The project verifier owns authoritative PASS / FAIL.
 
-Content ownership is not Git authority. `task.git_authority` governs Executor Git mutations. If an execution-ready task expects canonical committed report evidence, Architect must grant Executor commit capability explicitly; Architect review authority does not do that implicitly.
+Content ownership is not Git authority. `task.git_authority` governs Executor Git mutations. If an execution-ready task expects canonical committed report evidence, Architect must grant Executor commit capability explicitly; Architect review authority does not do that implicitly. `create_branch`, `commit`, `push`, and `promote_to_main` are independent capabilities, so no one capability is inferred from another.
+
+Architect must also plan a usable report transport for the intended review context. Remote-only review requires the report commit to become reachable from the authorized remote Git state, so grant only the minimum Executor push authority needed for that publication. A shared trusted checkout/object database may support local-only review without granting push.
 
 Architect-owned `review.yaml` may be committed by an authorized Architect or remain external when repository policy permits. Architect never rewrites Executor evidence.
 
 ## Review and promotion lineage
 
-Review the exact committed report identified by `reviewed_report.commit` using [Architect Review](../contracts/ARCHITECT_REVIEW.md).
+Review the exact committed report identified by `reviewed_report.commit` using [Architect Review](../contracts/ARCHITECT_REVIEW.md), and require the review context to resolve that exact commit and report content deterministically.
 
-Let `R = reviewed_report.commit` after acceptance. A valid `promotion_candidate_head` is only `R`, or the direct child of `R` when that one child contains solely the expected Architect-owned review artifact. Any other post-review mutation requires a new Executor report and Architect review.
+Let `R = reviewed_report.commit` after acceptance. A valid `promotion_candidate_head` is only `R`, or the single-parent direct child of `R` when that one child has only parent `R` and contains solely the expected Architect-owned review artifact. Merge commits, empty children, and any other post-review mutation require a new Executor report and Architect review.
 
 Authoritative project verification applies to the exact candidate SHA. `ACCEPTED` does not manufacture verifier PASS or promotion authority.
 

@@ -38,6 +38,8 @@ The project-designated verifier owns authoritative PASS / FAIL for the exact can
 
 Content ownership does not automatically grant Git commit authority. `task.git_authority` governs Executor Git mutations. Canonical committed report evidence therefore requires Executor commit capability when a task is execution-ready. Architect review authority is separate from Executor Git authority, and an Architect-owned `review.yaml` may remain external when target-repository policy permits.
 
+`reviewed_report.commit` must be resolvable by the Architect review context; remote-only handoff requires that commit to be reachable from the authorized remote Git state, while an explicitly shared trusted checkout may support local-only review.
+
 ## Four distinct SHA identities
 
 These values must not be collapsed into one convenient but incorrect “current SHA”:
@@ -50,7 +52,7 @@ These values must not be collapsed into one convenient but incorrect “current 
 After Architect accepts `R = reviewed_report.commit`, valid promotion lineage is only:
 
 - `promotion_candidate_head == R`; or
-- `promotion_candidate_head` is the direct child of `R`, and that single child commit contains only the expected Architect-owned review artifact.
+- `promotion_candidate_head` is the single-parent direct child of `R`, its only parent is `R`, and that one child commit contains only the expected Architect-owned review artifact.
 
 Any other mutation after `R` invalidates the accepted lineage and requires a new report plus Architect review. That includes implementation, unrelated documentation, cleanup, dependencies, another task, or a second post-review commit.
 
@@ -128,7 +130,7 @@ For repositories using the two-branch model:
 
 Authoritative verification applies to the exact `promotion_candidate_head`. If `dev` changes afterward, prior evidence is stale: `REVERIFY / REVIEW_REQUIRED`.
 
-A promotion candidate is valid after Architect accepts `reviewed_report.commit = R` only when it is `R` itself or the direct child of `R` containing only the expected Architect-owned review artifact. No vague “other intended release mutations” are allowed between accepted report lineage and candidate capture.
+A promotion candidate is valid after Architect accepts `reviewed_report.commit = R` only when it is `R` itself or the single-parent direct child of `R`, with only parent `R`, containing only the expected Architect-owned review artifact. No vague “other intended release mutations” are allowed between accepted report lineage and candidate capture.
 
 ## Validation and GitHub Actions
 
