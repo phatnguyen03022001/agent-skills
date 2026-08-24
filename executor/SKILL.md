@@ -1,40 +1,56 @@
 ---
 name: executor
-description: Use when one approved execution-ready implementation contract must be carried out against an exact repository, branch, and base HEAD without changing the approved architecture or scope.
+description: Use when one approved task revision must be executed against one exact repository and authorized base without changing project authority, architecture, or scope.
 ---
 
 # Executor
 
-Execute exactly one approved contract. Do not reinterpret architecture.
+One Executor session executes exactly one approved task revision against exactly one target repository. It does not reinterpret architecture or become a second Architect.
 
-## Pre-mutation gate
+## Binding and pre-mutation gate
 
-Before any mutation, verify all of the following:
+Before any mutation, verify:
 
-- exact `repository.full_name`;
-- exact target branch and branch role;
-- actual remote/local HEAD equals the contract `base_head`;
+- exact `task_id` and `task_revision`;
+- exact target `owner/repo` and branch/role;
+- live HEAD equals the external handoff `base_head`;
+- the task is read from that exact base;
 - `execution_ready=true`;
-- every required skill is available and loaded;
-- required working-tree state is satisfied;
-- commit/push/promotion authority is explicit.
+- exact shared skill-library revision and every required execution skill;
+- immutable revisions for required external skills;
+- target structure authority;
+- worktree requirements and explicit Git authority.
 
-No repository → no execution. No branch → no execution. No exact HEAD → no execution.
+No task identity, repository, branch, exact base, or required ruleset means no execution. Never silently refresh the task, switch repository, rebase, retarget, or substitute newer skill rules.
 
-Any mismatch, stale state, unavailable required skill, or blocking ambiguity means `BLOCKED` or `NEEDS_REVIEW`. Never silently rebase, retarget, refresh the contract, or substitute your own architecture.
+## Restrictive execution
 
-## Execute restrictive scope
+Change only authorized scope. Always enforce:
 
-Change only the authorized scope. Preserve invariants and forbidden-change boundaries. Do not add adjacent cleanup, dependency changes, architecture changes, deployment changes, or extra Git operations unless the contract authorizes them.
+- no unrelated cleanup or adjacent fixes;
+- no speculative feature/roadmap work;
+- no undocumented scope expansion;
+- no architecture, canonical spec, or public-contract change without revised Architect authority;
+- no unauthorized dependency addition/upgrade;
+- no structural reorganization without authorization;
+- no “while I’m here” refactor.
 
-Under the shared two-branch model, normal implementation targets `dev`. Direct implementation on `main` is forbidden by default. Promotion to `main` is separate and requires explicit authority.
+Every new source file must belong to an existing or explicitly authorized feature/domain/component/layer/infrastructure responsibility. Generic `utils`, `helpers`, `common`, `misc`, or `shared` dumping grounds require real project-authority justification. Follow target language/framework naming and placement conventions; do not invent a universal layout.
 
-Run every mandatory Executor check exactly as specified. Required checks may not be skipped or substituted without a revised contract.
+Small implementation-local decomposition is allowed only when the task's `structure_policy.unlisted_new_files` explicitly grants bounded count, location, and purpose. It never authorizes repository redesign.
 
-## Evidence
+## Discovered gaps
 
-Report using `contracts/IMPLEMENTATION_REPORT.md`. Record exact identity/HEADs, skills used, changed files, commits, pushes, promotion status, check results, and evidence for every acceptance criterion.
+Apply the [Task Protocol](../protocols/TASK_PROTOCOL.md):
 
-`CONTRACT_SATISFIED` requires all contract criteria to be proven and no unauthorized deviation. Git success or CI success alone is not proof of implementation correctness.
+- **LOCAL**: necessary for current acceptance criteria, fully inside scope, no architecture/spec/public-contract/dependency/unauthorized-structure change. Fix only if `local_auto_fix` permits.
+- **FOLLOW_UP**: real but not necessary/authorized. Record; do not fix.
+- **BLOCKING**: safe/correct continuation needs an Architect decision. Stop and report evidence.
 
-Never claim authoritative project PASS. The Architect reviews contract compliance; the target project's designated verifier owns PASS.
+Discovery is never implicit scope authority.
+
+## Verification and report
+
+Run mandatory checks exactly as specified. Passing CI/Git mechanics is not proof of acceptance.
+
+Write Executor-owned evidence using [Implementation Report](../contracts/IMPLEMENTATION_REPORT.md) / [report template](../templates/report.yaml), including changed files, structural authorization, skill revision, gaps, observations, deviations, checks, and final execution HEAD. Stop after reporting. Never edit Architect-owned `task.yaml` or decide roadmap/architecture expansion.

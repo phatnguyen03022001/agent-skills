@@ -1,46 +1,61 @@
 # agent-skills
 
-A deliberately curated library of **exactly 15** reusable agent skills for software engineering across repositories.
+A deliberately curated library of **exactly 15** reusable agent skills plus deterministic contracts, templates, and protocols for software engineering across repositories.
 
-This repository is not a target project's source of truth. Target repositories own product intent, code, specifications, architecture decisions, verification rules, deployment policy, and project-specific authority. Shared skills provide reusable decision methods; target-project authority wins on project-specific facts.
+`agent-skills` defines **HOW WE WORK**. A target repository defines **WHAT THAT PRODUCT IS**: product intent, roadmap, specifications, design, structure, source code, deployment policy, and project-specific verification authority.
 
-## Operating model
+## Operating protocol
 
 ```text
-User
+USER
   ↓
-Architect
+ARCHITECT (one session = one target repository)
   ↓
-exact repository → project authority → branch → fresh HEAD
+project authority + vision + structure
   ↓
-inspect skill names/descriptions
+progressive skill discovery
   ↓
-shortlist and load only relevant skill bodies
+planning/specification when required and authorized
   ↓
-required/recommended skills → deterministic contract
+Architect-owned task
   ↓
-fresh Executor chat
+post-planning fresh HEAD + self-contained handoff
   ↓
-implementation + evidence report
+EXECUTOR (one session = one task = one repository)
   ↓
-Architect review
+scoped implementation
+  ↓
+Executor-owned report + discovered gaps
+  ↓
+ARCHITECT
+  ↓
+Architect-owned review / revised task / follow-up task
+  ↓
+separate explicit promotion decision
 ```
 
-`architect` is the central router/governance layer. `executor` performs one approved contract. Other skills are selected only when their decision domain is relevant. A project-designated verifier, when one exists, owns authoritative project PASS.
+The complete reusable semantics are in [protocols/TASK_PROTOCOL.md](protocols/TASK_PROTOCOL.md). The protocol works manually through copy/paste; it does not depend on a coordinator, service, database, queue, registry, or automatic cross-chat messaging.
 
-A fresh Executor chat must not mutate until exact `repository.full_name`, target branch, and `base_head` are explicit and verified.
+## Core session invariants
 
-## The 15 skills
+An Architect session binds once to exactly one immutable target repository. It may inspect other repositories only as read-only references. Asking that session to govern a second execution target requires `NEW_ARCHITECT_SESSION_REQUIRED`.
 
+An Executor session binds to exactly one approved task revision, one target repository, and one authorized execution base. It does not switch projects, execute unrelated tasks, reinterpret architecture, or expand scope because neighboring work is visible.
+
+Target-repository authority always wins on project-specific facts.
+
+## Curated skill catalog
+
+<!-- SKILL_CATALOG_START -->
 | Skill | Type | Decision domain / trigger |
 | --- | --- | --- |
-| `architect` | core | repository-aware routing, authority, branch/HEAD resolution, skill selection, contracts, handoffs, report review |
-| `executor` | core | controlled execution of one approved contract against exact repository state |
+| `architect` | core | repository-bound routing/governance, planning authority, skill selection, tasks, handoffs, report review |
+| `executor` | core | controlled execution of one approved task revision against one exact repository/base |
 | `research` | reasoning | unknown/current/disputed/version-sensitive facts that materially affect an engineering decision |
-| `reuse-first` | reasoning | build-vs-reuse decisions involving repository capabilities, standards, platform features, libraries, or upstream implementations |
+| `reuse-first` | reasoning | build-vs-reuse decisions involving repository capabilities, standards, platforms, libraries, or upstream implementations |
 | `simplicity` | reasoning | proposed abstractions, services, layers, state, configuration, dependencies, automation, or speculative generality |
-| `design-review` | review | architecture, interfaces, major refactors, structural boundaries, product-direction alignment, and consequential trade-offs |
-| `gap-analysis` | review | missing requirements, states, failure paths, ownership, migration, verification, or other unspecified decisions |
+| `design-review` | review | proposed or implemented consequential architecture, interfaces, structural integrity, and product-direction alignment |
+| `gap-analysis` | review | missing requirements, states, failure paths, ownership, migration, verification, or unspecified decisions |
 | `adversarial-audit` | review | stale state, retries, concurrency, partial failure, process death, dependency faults, and governance rationalizations |
 | `security-review` | specialist | authentication, authorization, secrets, sensitive data, trust boundaries, untrusted input, and security-critical integrations |
 | `verification` | engineering | testing/evidence strategy, regression proof, contract/invariant testing, acceptance evidence, confidence before completion |
@@ -49,154 +64,135 @@ A fresh Executor chat must not mutate until exact `repository.full_name`, target
 | `optimization` | engineering | measured performance, resource, developer-loop, automation, or cost constraints |
 | `github-dev-main-workflow` | workflow | Git/GitHub governance under `dev` integration + `main` stable, including promotion and Actions risk |
 | `cloud-run-basics` | domain | Google Cloud Run deployment, configuration, security, scaling, troubleshooting, and platform-specific cost behavior |
+<!-- SKILL_CATALOG_END -->
 
-These are decision domains, not a checklist that must all run. The library is intentionally flat: `skill-name/SKILL.md`. At 15 skills, a registry, database, deep category tree, coordinator, or package-management layer would add more machinery than discovery value.
+The validator treats this exact set as the curated taxonomy. Removing one skill and substituting an unrelated skill while keeping the count at 15 must fail validation.
 
-## Architect routing
+## Progressive disclosure and skill determinism
 
-Use progressive disclosure:
+Architect discovers skills by metadata first:
 
-```text
-task
-→ inspect target repository
-→ read target authority and intended direction
-→ resolve branch + fresh HEAD
-→ inspect the 15 names/descriptions only
-→ shortlist concrete trigger matches
-→ load candidate bodies
-→ remove overlap
-→ classify required vs recommended
-→ contract
-→ self-contained handoff
+`task → target authority → names/descriptions → shortlist → candidate bodies → remove overlap → planning provenance + execution skill set`
+
+Normally activate **2–5 skills**. More than about seven is a decomposition/review signal. Never preload all 15 bodies.
+
+Planning and execution skills are separate:
+
+- `architect_analysis_skills` record methods used to research/design/specify the task;
+- required `execution_skills` must be resolved by Executor;
+- recommended execution skills are non-blocking and cannot expand scope.
+
+Tasks pin the shared library once:
+
+```yaml
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "<exact immutable commit SHA>"
 ```
 
-Normally activate **2–5 skills** for a task. More than about seven is a decomposition/review signal. Do not select a skill because its name sounds adjacent, because it is popular, or because “it might help.”
+External skills must carry their own immutable source/revision. Executor must not silently use a newer ruleset.
 
-`required_skills` are necessary for safe/correct execution and block when unavailable. `recommended_skills` are useful non-blocking guidance. Recommended skills do not silently become required after execution begins.
+## Target-repository task storage
 
-Architect owns routing and authority, not all engineering judgment. For example, it may route a design to `design-review`, an unknown external behavior to `research`, or a test strategy to `verification`; those domains remain outside Architect.
+Live tasks are project state and belong in each target repository:
 
-## Boundary rules
+```text
+.agent/tasks/
+  TASK-0001/
+    task.yaml
+    report.yaml
+    review.yaml
+```
 
-The taxonomy stays coherent by keeping these distinctions explicit:
+At current scale, that directory is the task list. Do not add task databases, registries, search services, or generated indexes without observed scale evidence.
 
-- `research` resolves unknown facts; `reuse-first` decides whether existing capabilities should replace custom construction.
-- `reuse-first` asks **build or adopt**; `simplicity` asks **how little machinery is sufficient**.
-- `design-review` judges specified architecture and trade-offs; `gap-analysis` finds what is not specified.
-- `design-review` includes relevant product/structure/multi-perspective lenses so those are not fragmented into separate always-on skills.
-- `adversarial-audit` pressure-tests faults and policy assumptions; `security-review` models malicious actors and trust boundaries.
-- `reliability` designs/operates production failure and recovery behavior; `debugging` finds causes of observed failures.
-- `verification` designs evidence; `executor` runs the checks and implementation authorized by the contract.
-- `optimization` starts from measured constraints; it does not authorize speculative caching, concurrency, hardware, or infrastructure.
-- `cloud-run-basics` owns platform-specific Cloud Run semantics; generic reliability/security/optimization skills are loaded only when those additional lenses are material.
+Reusable shapes in this repository:
 
-A new skill should replace, merge, or clearly extend this set only when it establishes an independently triggered reusable decision domain. Do not bypass the 15-skill invariant by splitting mechanical subtopics.
+- [templates/task.yaml](templates/task.yaml): Architect-owned task/contract;
+- [templates/report.yaml](templates/report.yaml): Executor-owned evidence;
+- [templates/review.yaml](templates/review.yaml): Architect-owned review;
+- [contracts/IMPLEMENTATION_CONTRACT.md](contracts/IMPLEMENTATION_CONTRACT.md): task semantics;
+- [contracts/IMPLEMENTATION_REPORT.md](contracts/IMPLEMENTATION_REPORT.md): report semantics;
+- [contracts/ARCHITECT_REVIEW.md](contracts/ARCHITECT_REVIEW.md): review semantics.
 
-## Engineering defaults
+One role must not silently rewrite another role's authority/evidence.
 
-### Reuse before build
+## Base HEAD without self-reference
 
-Inspect the repository first, then native/runtime capabilities, existing frameworks/platforms, standards/protocols, mature libraries, and upstream reference implementations. Reuse must still earn its place on maintenance, security, licensing, complexity, lock-in, runtime/bundle cost, and project constraints.
+A committed `task.yaml` does **not** write the SHA of the commit containing itself. Instead:
 
-The rule is **reuse before build**, not **dependency before thinking**.
+`commit final planning/task state → refresh target branch → capture exact HEAD H → emit external EXECUTOR_HANDOFF with base_head=H`
 
-### Simplicity before machinery
+Executor verifies live HEAD equals `H` and reads the task from `H`. This avoids the impossible loop where writing the SHA changes the SHA being written.
+
+Likewise, `report.yaml.final_execution_head` means the implementation HEAD before the report artifact commit. Architect later identifies the exact report commit externally when reviewing it.
+
+## Always-on scope and structure governance
+
+Noise control is protocol, not an optional skill. Tasks forbid unrelated cleanup, adjacent fixes, speculative features, undocumented scope expansion, architecture/spec/public-contract changes, unauthorized dependency changes, structural reorganization, and “while I’m here” refactors.
+
+Each target repository should have one canonical structure authority, whether an existing design/instructions document or an explicitly authorized project-specific structure artifact. Do not force a universal filename or layout.
+
+Feature/domain/component ownership is the default principle when compatible with the target project. Go, Python, TypeScript, and other ecosystems may express that ownership differently.
+
+Every new source file must belong to an existing or explicitly authorized feature/domain/component/layer/infrastructure responsibility. Generic `utils`, `helpers`, `common`, `misc`, or `shared` areas require real cross-domain ownership and project-authority justification.
+
+Do not add new layers, factories, registries, plugin systems, extension points, services, queues, caches, shared modules, top-level directories, or scaling infrastructure for hypothetical future needs.
 
 Prefer:
 
-```text
-existing solution
-→ small change
-→ small abstraction
-→ larger abstraction
-→ new subsystem
-```
+`existing solution → localized change → small local abstraction → larger abstraction → subsystem`
 
-Move right only when a concrete requirement, invariant, or quality attribute proves the simpler option insufficient. Extra services, layers, state, configuration, dependencies, CI, or automation are costs to justify, not architectural achievements.
+## Gap policy
 
-### Preserve intended direction
+Executor classifies discoveries as:
 
-Current implementation is evidence, not automatically the product/system vision. User intent, canonical specs, architecture decisions, design documents, roadmap constraints, and explicit invariants must be considered before local optimization or refactoring. Do not normalize implementation drift into new authority.
+- `LOCAL`: necessary for current acceptance criteria and entirely within approved authority; may be fixed when task policy permits;
+- `FOLLOW_UP`: real but unnecessary/outside current authorization; report, do not fix;
+- `BLOCKING`: safe/correct continuation requires an Architect decision; stop.
 
-### Evidence before confidence
+A discovery never grants scope. Follow-up tasks preserve originating `task_id` and `gap_id`.
 
-Research distinguishes FACT, INFERENCE, ASSUMPTION, and UNKNOWN. Verification maps acceptance criteria to evidence. Debugging reproduces and narrows before fixing. Optimization measures before changing. Security findings require plausible attack paths. Reliability mechanisms should have exercised recovery paths when feasible.
+## Project product/spec/design authority
 
-## Illustrative routing, not fixed bundles
+Canonical project artifacts use whatever names and locations the target repository recognizes. Shared skills teach reusable reasoning; they do not contain arbitrary project vision.
 
-| Scenario | Likely selected skills |
-| --- | --- |
-| Simple bug fix | `architect`, `debugging`, `verification`, `executor` |
-| New feature | `architect`, `reuse-first`, `simplicity`, `verification`, `executor` |
-| Major architecture change | `architect`, `research`, `design-review`, `gap-analysis`, `adversarial-audit` |
-| Unknown technical problem | `architect`, `research`, `reuse-first` |
-| Performance regression | `architect`, `debugging`, `optimization`, `verification`, `executor` |
-| Security-sensitive change | `architect`, `security-review`, `adversarial-audit`, `verification`, `executor` |
-| Database migration | `architect`, `design-review`, `gap-analysis`, `reliability`, `executor` |
-| Cloud deployment | `architect`, `cloud-run-basics`, `reliability`, `github-dev-main-workflow`, `executor` |
-| Broken CI | `architect`, `debugging`, `github-dev-main-workflow`, `verification`, `executor` |
-| Legacy cleanup | `architect`, `simplicity`, `design-review`, `verification`, `executor` |
-| API redesign | `architect`, `design-review`, `gap-analysis`, `verification`, `executor` |
-| Third-party integration | `architect`, `research`, `reuse-first`, `security-review`, `executor` |
-| Production incident | `architect`, `debugging`, `reliability`, `adversarial-audit`, `executor` |
-| Cost optimization | `architect`, `optimization`, `simplicity`, `reliability`, `executor` |
-| Pre-implementation design review | `architect`, `design-review`, `gap-analysis`, `adversarial-audit` |
+Architect may author product, roadmap, specification, design, structure, task, and review artifacts when explicitly authorized. Executor owns authorized implementation, implementation-scoped tests/migrations/configuration, and execution evidence. The project-designated verifier owns authoritative PASS/FAIL.
 
-These examples demonstrate selection pressure only. Architect must derive the active set from the actual repository and task rather than hardcoding bundles.
+The curated 15 stays unchanged after this hardening. Separate `product-planning`, `spec-writing`, or generic `documentation` skills would substantially overlap Architect planning authority plus `research`, `gap-analysis`, and `design-review`. They remain task/artifact activities until independent trigger/value evidence justifies replacing a slot. `cloud-run-basics` remains because it is a coherent technology decision domain rather than generic documentation ceremony.
 
-## Skill size and discovery metadata
+## Git model
 
-Descriptions begin with `Use when` and contain trigger conditions, not workflow summaries. The skill body remains authoritative after activation.
+For repositories adopting the shared two-branch model:
 
-Local guidance:
-
-- frequently loaded/core skills: roughly **150–400 words**;
-- normal domain/workflow skills: roughly **300–800 words**;
-- move heavy examples, reference tables, reusable scripts, or protocol detail outside `SKILL.md` when they materially improve readability;
-- keep skill bodies well below the Agent Skills 500-line guidance whenever practical.
-
-## Contracts
-
-`contracts/IMPLEMENTATION_CONTRACT.md` is the Architect-to-Executor protocol. It binds execution to exact target identity, authority, required/recommended skills, restrictive scope, invariants, acceptance criteria, verification, stale-state behavior, and explicit Git capabilities.
-
-`contracts/IMPLEMENTATION_REPORT.md` is the Executor-to-Architect evidence protocol. `CONTRACT_SATISFIED` is evidence of contract compliance, not authoritative project PASS.
-
-The current contract already represents the 15-skill taxonomy without enumerating it: skill selection remains dynamic and contract-specific.
-
-## Two-branch Git model
-
-For repositories adopting this shared model:
-
-- `dev` = integration and normal mutation branch;
-- `main` = stable, authoritative branch;
-- implementation and delegated agents default to `dev`;
+- `dev` = integration and normal mutation;
+- `main` = stable authority;
+- delegated/normal implementation defaults to `dev`;
 - direct implementation on `main` is forbidden by default;
-- promotion `dev -> main` is separate, explicit, verification-gated, and based on refreshed heads;
-- stop on unexpected divergence;
-- prefer fast-forward semantics when history permits;
-- no force-push, history rewrite, unnecessary long-lived branches, or PR ritual by default.
+- promotion `dev → main` is separate, explicit, verification-gated, and based on refreshed heads;
+- no force push, history rewrite, unnecessary branch/PR ritual.
 
-Target-repository governance may be stricter and takes precedence.
+Branch protection is a separate GitHub-enforced governance decision. Written protocol is procedural enforcement; GitHub branch protection/rulesets are platform enforcement. This repository does not silently change branch-protection settings as part of protocol edits.
 
 ## GitHub Actions
 
-This repository keeps one bounded `dev` validation workflow because malformed skill metadata or taxonomy drift would break discovery.
+The repository keeps one bounded `dev` validation workflow:
 
-It intentionally uses:
-
-- relevant `push` events to `dev` only;
+- relevant `push` to `dev` only;
 - one standard Linux job;
 - read-only contents permission;
-- no matrix, schedule, duplicate PR run, artifacts, cache, external paid service, or automatic rerun;
-- concurrency cancellation;
-- a short timeout.
+- no matrix, PR duplicate, schedule, artifacts, cache, external paid service, or automatic rerun;
+- concurrency cancellation and a short timeout;
+- `actions/checkout` pinned to an immutable full commit SHA.
 
-The validator enforces exactly 15 discoverable top-level skills, unique names, folder/name equality, `Use when` descriptions, contract structure, internal references, and size warnings.
+This private repository consumes the owner's included GitHub Actions quota for standard hosted runners when available and can become billable after that quota is exhausted. A short run is not proof of `$0`.
 
-Because this repository is private, standard GitHub-hosted execution uses included Actions quota when available and may become billable after quota is exhausted. A short run is not proof of `$0`.
+## Skill authoring constraints
 
-## Intentionally outside the 15
+The local validator enforces the curated set, unique folder/name identity, lowercase/hyphen naming, Agent Skills `name <= 64`, `Use when` descriptions, description length, internal Markdown links, README catalog sync, reusable protocol/template fields, and size warnings.
 
-Not every good engineering practice deserves another skill. Standalone skills for TDD, property testing, contract testing, observability, incident response, cost review, structural review, vision alignment, multi-perspective review, API design, migration safety, dependency management, naming, cleanup, commits, pushes, or YAML checking are intentionally merged into broader domains or left to target-project/domain tooling.
+Core/frequently loaded skills should stay concise. Move heavy reference material outside `SKILL.md` rather than building god skills.
 
-Also intentionally absent: coordinator service, shared runner/tunnel, automatic Architect → Executor messaging, database-backed registry, automatic main promotion, and paid/larger CI infrastructure.
+## Deliberately absent
+
+No coordinator, shared runner/tunnel, task database, automatic Architect→Executor messaging, automatic main promotion, paid/larger CI infrastructure, feature skill, noise-control skill, file-naming skill, or task-management skill is added here. Those are either protocol invariants, target-project authority, or deferred infrastructure requiring evidence.

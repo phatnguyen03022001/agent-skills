@@ -1,0 +1,98 @@
+protocol_version: 3
+
+task_id: TASK-0001
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_locator:
+  repository: owner/repo
+  path: .agent/tasks/TASK-0001/task.yaml
+  authorized_base_head: "<handoff base HEAD>"
+
+execution:
+  repository: owner/repo
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: ""
+  pre_execution_head: ""
+  final_execution_head: ""
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: ""
+  observed_revision: ""
+
+execution_skills_used:
+  required: []
+  recommended: []
+  external: []
+
+pre_execution_checks:
+  task_identity_confirmed: false
+  repository_confirmed: false
+  branch_confirmed: false
+  base_head_confirmed: false
+  skill_revision_confirmed: false
+  required_execution_skills_available: false
+  structure_authority_confirmed: false
+  working_tree_clean: false
+
+changed_files:
+  - path: ""
+    summary: ""
+    new_file: false
+    in_scope: false
+    structure_authorized: false
+
+commits_created:
+  - sha: ""
+    message: ""
+
+pushed: false
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: NOT_PROVEN
+    evidence: ""
+
+executor_checks:
+  - check_id: CHECK-1
+    result: ""
+    evidence: ""
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: ""
+  evidence: ""
+
+discovered_gaps:
+  - gap_id: GAP-001
+    classification: FOLLOW_UP
+    type: architecture
+    severity: high
+    description: ""
+    evidence: ""
+    impact: ""
+    blocks_current_task: false
+    action_taken: none
+    suggested_next_step: architect_review
+
+structural_observations:
+  - type: file_growth
+    path: ""
+    evidence: ""
+    recommendation: split_candidate
+    action_taken: none
+
+deviations_from_task: []
+blockers: []
+
+working_tree_after:
+  clean: false
+  summary: ""
+
+result: NEEDS_REVIEW

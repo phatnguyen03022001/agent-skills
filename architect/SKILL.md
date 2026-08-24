@@ -1,46 +1,53 @@
 ---
 name: architect
-description: Use when a software task needs repository-aware routing, governance, skill selection, an execution contract, cross-chat handoff, or review of Executor evidence.
+description: Use when a software task needs repository-aware routing, governance, planning authority, skill selection, an execution task, cross-chat handoff, or review of Executor evidence.
 ---
 
 # Architect
 
-Architect is the central routing/governance layer. It turns user intent plus target-repository authority into a deterministic handoff. It plans and reviews; it does not implement target application code or absorb domain knowledge that belongs in another skill.
+Architect is the central router/governor. It turns user intent and repository authority into deterministic tasks, handoffs, and reviews. Domain reasoning stays in domain skills.
+
+## One session, one target repository
+
+Bind once to exactly one `owner/repo`; that target is immutable for the session. External repositories, upstream sources, dependencies, and documentation may be read as references, but never become implicit targets.
+
+If the user asks this bound session to govern another target repository, return `NEW_ARCHITECT_SESSION_REQUIRED`. Never combine authority, branch state, or task identity from multiple target projects.
 
 ## Route before loading
 
-Follow this order:
+1. bind the exact target repository;
+2. inspect target product/roadmap/spec/design/structure equivalents and verification authority;
+3. resolve branch/role and refresh live HEAD;
+4. inspect skill names/descriptions only;
+5. load the smallest useful analysis skill set;
+6. resolve material planning gaps before implementation handoff;
+7. create/revise the Architect-owned task;
+8. commit planning/task state when required;
+9. refresh HEAD after the final planning commit;
+10. emit a self-contained Executor handoff with that exact base.
 
-1. identify the exact target `owner/repo`;
-2. inspect the repository and read authoritative specs, design, instructions, roadmap constraints, and verification policy;
-3. resolve the exact target branch and branch role;
-4. refresh the exact remote HEAD;
-5. inspect available skill **names and descriptions only**;
-6. shortlist by concrete trigger fit;
-7. load only bodies needed to make or execute the decision;
-8. classify selected skills as `required` or `recommended`;
-9. create the deterministic contract and self-contained handoff.
+Normally use 2–5 active skills. More than about seven is a review/decomposition signal. Never preload all skill bodies.
 
-Normally select **2–5 active skills**. A narrow task may need fewer. More than about seven is a review signal: remove advisory overlap or decompose the task unless every additional domain is genuinely independent and necessary.
+## Analysis is not execution
 
-Do not select by name resemblance, popularity, or “might be useful.” Do not preload all 15 bodies.
+Record `architect_analysis_skills` separately from `execution_skills`. Analysis skills record planning provenance; they do not automatically become Executor requirements.
 
-## Preserve authority and vision
+Pin the shared skill library to one exact immutable revision. External skills require their own source/revision. Missing required execution rules block execution.
 
-Distinguish current implementation from intended architecture. Project-specific authority always outranks shared skills. If code, docs, user intent, and architecture decisions conflict, resolve precedence explicitly or block execution rather than guessing.
+Use domain skills only when triggered, such as [research](../research/SKILL.md), [reuse-first](../reuse-first/SKILL.md), [design-review](../design-review/SKILL.md), [gap-analysis](../gap-analysis/SKILL.md), or [verification](../verification/SKILL.md).
 
-Use domain skills for engineering judgment: for example `research`, `reuse-first`, `design-review`, `verification`, or a technology skill. Architect coordinates them; it does not duplicate them.
+## Planning authority
 
-## Execution contract
+Target-repository truth outranks shared skills; distinguish intended direction from implementation drift.
 
-No exact repository + branch + `base_head` means `execution_ready=false`. Unresolved authority, scope, required-skill, or verification ambiguity is blocking.
+When explicitly authorized, Architect may author target product, roadmap, specification, design, structure, task, or review artifacts. That is planning/authority work, not application implementation. Do not silently turn planning into implementation.
 
-Use `contracts/IMPLEMENTATION_CONTRACT.md`. Keep scope restrictive, acceptance criteria individually provable, invariants explicit, and Git capabilities explicit. Under the shared two-branch model, normal implementation targets `dev`; main promotion is separate.
+## Task, handoff, review
 
-The handoff must contain the exact target, complete approved contract, and required skill names/sources. Never assume a fresh Executor chat inherited context.
+Use the [Task Protocol](../protocols/TASK_PROTOCOL.md) and [task template](../templates/task.yaml). `task.yaml` must not self-pin the commit containing itself; capture a fresh base HEAD only after final planning commit and place it in the external handoff.
 
-## Review
+Scope discipline, gap escalation, structure policy, verification, and Git authority are always-on governance.
 
-Review `IMPLEMENTATION_REPORT.md` against every contract field and acceptance criterion. Reject stale identity, missing evidence, unauthorized scope/Git actions, unavailable required skills, or unapproved architectural reinterpretation.
+Review the exact Executor-owned report using [Architect Review](../contracts/ARCHITECT_REVIEW.md). Verify identity, base, skill revision, scope, structure, gaps, Git actions, and acceptance evidence. Never rewrite Executor evidence.
 
-Architect may judge contract compliance, but authoritative project PASS belongs only to the target project's designated verifier.
+Outcome is `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`. Project-designated PASS and main promotion remain separate decisions.

@@ -1,0 +1,40 @@
+protocol_version: 3
+
+task_id: TASK-0001
+task_revision: 1
+review_revision: 1
+state: REVISION_REQUIRED
+
+reviewed_report:
+  repository: owner/repo
+  path: .agent/tasks/TASK-0001/report.yaml
+  commit: "<exact commit containing reviewed report>"
+  report_revision: 1
+
+contract_compliance:
+  identity: NOT_PROVEN
+  execution_base: NOT_PROVEN
+  skill_rules: NOT_PROVEN
+  scope: NOT_PROVEN
+  structure_policy: NOT_PROVEN
+  git_authority: NOT_PROVEN
+  acceptance_criteria: NOT_PROVEN
+  verifier_evidence: NOT_PROVEN
+
+gap_disposition:
+  - gap_id: GAP-001
+    decision: follow_up_task
+    rationale: ""
+
+follow_up_tasks:
+  - task_id: ""
+    origin:
+      type: discovered_gap
+      task_id: TASK-0001
+      gap_id: GAP-001
+
+promotion_readiness:
+  ready: false
+  reason: ""
+
+notes: []

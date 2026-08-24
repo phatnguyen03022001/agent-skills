@@ -1,96 +1,44 @@
 # Implementation Contract
 
-Reusable Architect-to-Executor handoff. Keep it concise and deterministic. The Executor must not mutate unless `execution_ready` is exactly `true` and the live target matches every required identity/precondition field.
+The canonical Architect-owned task shape is [templates/task.yaml](../templates/task.yaml). Target repositories should copy that reusable shape into `.agent/tasks/TASK-NNNN/task.yaml` when this protocol is adopted.
 
-## Template
+The task is the approved implementation contract. It belongs to the target repository; `agent-skills` contains only the reusable protocol and template.
 
-```yaml
-contract_id: ""
-contract_version: 2
+## Contract identity
 
-repository:
-  full_name: ""
-  url: ""
-  branch:
-    name: ""
-    role: integration
-  base_head: ""
+A valid task binds:
 
-objective: ""
+- one `task_id` and explicit `task_revision`;
+- one Architect session target repository;
+- one target repository and branch role;
+- one immutable shared `skill_library.revision` for internal skills;
+- separate `architect_analysis_skills` and `execution_skills`;
+- immutable revisions for any external skills;
+- authority sources and structure authority;
+- restrictive scope, invariants, forbidden changes, gap policy, structure policy, acceptance criteria, verification, and Git capabilities.
 
-authority_sources:
-  - source: ""
-    role: ""
-    precedence: 1
+`execution_ready` must be false while any required identity, authority, scope, structure, skill, verification, or blocking decision is unresolved.
 
-required_skills:
-  - name: ""
-    source: ""
+## Execution base
 
-recommended_skills: []
+The task uses `execution_base.mode: handoff_snapshot`. Do **not** write the target branch HEAD that contains `task.yaml` back into that same task file.
 
-scope:
-  required_changes:
-    - ""
-  expected_files_or_components:
-    - ""
-  expected_files_are_restrictive: true
-  out_of_scope_change_authorization: revised_contract_required
+After the final planning/task commit, Architect refreshes the target branch and places that exact SHA in the external `EXECUTOR_HANDOFF.base_head`. Executor must match live HEAD to the handoff and read the task from that exact base before mutation. See the [Task Protocol](../protocols/TASK_PROTOCOL.md).
 
-invariants:
-  - ""
+## Skill semantics
 
-forbidden_changes:
-  - ""
+Analysis skills record how Architect reached the task; they do not automatically enter Executor context.
 
-acceptance_criteria:
-  - id: AC-1
-    requirement: ""
-    evidence_required: ""
+Required execution skills must resolve at the task-pinned library revision. Recommended execution skills are non-blocking and cannot broaden scope or reinterpret the task. External skills require their own exact source/revision.
 
-verification:
-  executor_checks:
-    - id: CHECK-1
-      command_or_check: ""
-      required: true
-  authoritative_verification:
-    required: false
-    mechanism: ""
-    expected_signal: ""
+## Scope and structure
 
-pre_execution_checks:
-  require_repository_match: true
-  require_branch_match: true
-  require_base_head_match: true
-  require_clean_worktree: true
-  require_required_skills: true
+No unrelated cleanup, adjacent fixes, speculative features, architecture/spec/public-contract changes, unauthorized dependencies, or structural reorganization are implied by task approval.
 
-git_authority:
-  create_branch: false
-  commit: false
-  push: false
-  promote_to_main: false
+Every new source file needs an existing or explicitly authorized ownership boundary. Unlisted new-file flexibility must be bounded by count, location, and purpose in `structure_policy`.
 
-blocking_decisions: []
+A dependency, public-contract, canonical-spec, architecture, or unauthorized structure change requires revised Architect authority.
 
-stale_contract_behavior: BLOCKED
-execution_ready: false
-```
+## Revisions
 
-## Semantics
-
-- `repository.full_name`, `repository.branch.name`, and `repository.base_head` bind the exact execution target. Missing any of them means no execution.
-- `repository.branch.role` records intent. In the shared model, normal implementation is `dev` / `integration`; `main` / `stable` is promotion-only by default.
-- `authority_sources` are ordered by `precedence`; lower numbers have higher authority. Unresolved conflicts block execution.
-- `required_skills` contain only skills necessary for safe/correct execution. An unavailable required skill blocks execution.
-- `recommended_skills` are non-blocking guidance. They do not silently expand scope or become required after execution starts.
-- `scope.required_changes` authorizes only the requested work. `expected_files_or_components` is restrictive when the flag is true.
-- `invariants` are conditions the implementation must preserve. `forbidden_changes` are explicit negative boundaries.
-- each acceptance criterion has a stable ID and required evidence so the report can answer it one-for-one.
-- mandatory `executor_checks` may not be skipped or substituted without a revised contract.
-- `authoritative_verification` is separate from Executor checks and Architect review.
-- `git_authority` is capability-based. False, omitted, or ambiguous means forbidden. Main promotion is separate from normal push.
-- `stale_contract_behavior` must be `BLOCKED` or `NEEDS_REVIEW`.
-- any blocking decision, identity ambiguity, required-skill ambiguity, scope ambiguity, or undefined required verification requires `execution_ready=false`.
-
-Never silently refresh, rebase, retarget, or reinterpret a stale contract. The Architect must issue or approve a revised contract.
+Architect owns task revisions. Increment `task_revision` and preserve lineage/history when meaning changes. Executor must never rewrite `task.yaml` to authorize work it discovered during execution.

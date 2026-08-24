@@ -1,0 +1,130 @@
+protocol_version: 3
+
+task_id: TASK-0001
+task_revision: 1
+state: DRAFT
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: ""
+
+architect_binding:
+  target_repository: owner/repo
+
+target:
+  repository: owner/repo
+  branch:
+    name: dev
+    role: integration
+  task_path: .agent/tasks/TASK-0001/task.yaml
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "<exact immutable commit SHA>"
+
+architect_analysis_skills: []
+
+execution_skills:
+  required:
+    - executor
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+  # External entry shape:
+  # - name: some-external-skill
+  #   source: owner/repo
+  #   revision: "<exact immutable SHA>"
+
+authority_sources:
+  - source: ""
+    role: ""
+    precedence: 1
+
+structure_authority:
+  source: ""
+  status: unresolved
+
+objective: ""
+
+scope:
+  required_changes:
+    - ""
+  allowed_existing_files_or_components:
+    - ""
+  expected_files_are_restrictive: true
+
+invariants:
+  - no unrelated cleanup or adjacent fixes
+  - no undocumented scope expansion
+  - no architecture, roadmap, canonical spec, or public-contract change without revised Architect authority
+  - no unauthorized dependency change
+  - no unauthorized structural reorganization
+  - no orphan source files
+  - no speculative scale structure
+
+forbidden_changes:
+  - ""
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - path: ""
+      purpose: ""
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: ""
+    evidence_required: ""
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: ""
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+pre_execution_checks:
+  require_task_identity_match: true
+  require_repository_match: true
+  require_branch_match: true
+  require_handoff_base_head_match: true
+  require_skill_library_revision: true
+  require_required_execution_skills: true
+  require_structure_authority: true
+  require_clean_worktree: true
+
+git_authority:
+  create_branch: false
+  commit: false
+  push: false
+  promote_to_main: false
+
+blocking_decisions: []
+execution_ready: false

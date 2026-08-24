@@ -1,46 +1,48 @@
 ---
 name: design-review
-description: Use when reviewing architecture, interfaces, major refactors, system structure, product-direction alignment, or consequential design choices before implementation.
+description: Use when reviewing proposed or implemented architecture, interfaces, major refactors, system structure, product-direction alignment, or consequential design choices.
 ---
 
 # Design Review
 
-Judge whether a proposed design advances the target project’s intended system, not whether it looks architecturally impressive.
+Judge whether a proposed or implemented consequential design advances the target project's intended system without introducing unjustified complexity or structural drift.
 
 ## Establish authority and drivers
 
-Start from user intent plus the target repository’s canonical specifications, architecture decisions, design documents, roadmap constraints, and explicit invariants. Distinguish intended architecture from accidental properties of the current implementation.
+Start from user intent plus the target repository's canonical specifications, architecture decisions, design documents, roadmap constraints, structure authority, and explicit invariants. Distinguish intended architecture from accidental properties of current implementation.
 
-Identify the quality attributes that actually matter for this decision: correctness, maintainability, reliability, security, performance, cost, compatibility, operability, or delivery speed. Do not mechanically apply every lens.
+Identify only the quality attributes material to the decision: correctness, maintainability, reliability, security, performance, cost, compatibility, operability, delivery speed, or reversibility.
 
-## Review the design
+## Review design integrity
 
 Examine relevant areas:
 
-- conceptual integrity and fit with existing architecture;
-- component/module boundaries, cohesion, coupling, and dependency direction;
+- conceptual integrity and fit with intended architecture;
+- component/module/feature ownership, cohesion, coupling, and dependency direction;
 - data ownership, source of truth, schemas, and state transitions;
 - interface/API contracts and compatibility;
-- failure handling and recovery boundaries;
+- failure/recovery boundaries;
 - migration, rollout, rollback, and reversibility;
 - observability and operability requirements;
 - security/trust boundaries;
 - scalability and resource/cost implications;
 - testability and deterministic verification;
-- repository structure, ownership, and placement when these affect architecture.
+- source/generated/test placement and authorized structural boundaries.
 
-For each concern, state the affected requirement or quality attribute, evidence, consequence, and a simpler or safer alternative when one exists.
+For implemented changes, compare the actual diff/structure with the approved design and task. Look for dependency-direction violations, orphan files, generic dumping grounds, unauthorized top-level/shared areas, product/vision drift, or abstractions introduced beyond current evidence.
+
+File naming and physical layout must follow target language/framework/project conventions. The invariant is intentional ownership, not one cross-language directory recipe.
+
+For each concern, state affected authority/quality attribute, evidence, consequence, and a simpler/safer alternative when one exists.
 
 ## Multiple perspectives
 
-Choose only relevant perspectives: product/user, architecture, implementation, operations, security, performance, cost, maintainability, testing, and migration/backward compatibility. A design that is locally elegant but violates product direction, operational reality, or migration constraints is not a good design.
+Choose only relevant lenses: product/user, architecture, implementation, operations, security, performance, cost, maintainability, testing, migration/backward compatibility. Do not mechanically run every lens.
 
-Prefer explicit trade-offs over universal rules. Record irreversible decisions more carefully than reversible ones. Do not reward extra services, layers, patterns, or abstractions without evidence.
-
-When reviewing repository structure, focus on architectural effects: dependency direction, ownership, change boundaries, generated/source separation, and discoverability of authoritative contracts. Naming or folder movement alone is not an architectural improvement. For each major recommendation, state what would become easier to change, test, operate, secure, or reason about.
+Prefer explicit trade-offs over universal rules. Record irreversible decisions more carefully than reversible ones. Do not reward services, layers, factories, registries, extension points, shared modules, or other scale structure without current evidence.
 
 ## Boundaries
 
-This skill critiques specified design choices. Use `gap-analysis` to find missing decisions and states. Use `security-review` for deep threat modeling, `reliability` for production-operability detail, and `simplicity` for concentrated accidental-complexity review.
+This skill judges quality/integrity of specified or implemented design. Use [gap-analysis](../gap-analysis/SKILL.md) for missing decisions/states, [security-review](../security-review/SKILL.md) for malicious/trust-boundary analysis, [reliability](../reliability/SKILL.md) for production failure/recovery, and [simplicity](../simplicity/SKILL.md) for concentrated accidental-complexity review.
 
 Do not implement the reviewed change or rewrite project vision because current code drifted from it.
