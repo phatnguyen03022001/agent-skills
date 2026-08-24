@@ -14,47 +14,27 @@ Target-repository governance may be stricter and takes precedence.
 
 ## Before writes
 
-Refresh and verify exact `owner/repo`, target branch, remote HEAD, expected base HEAD, write authority, and relevant workflow triggers. Read current files/blobs before replacement.
+Refresh exact repository, branch, remote HEAD, expected base, write authority, and workflow triggers. If the remote branch moved, fail closed. Do not create extra branches or PRs merely by convention. Force-push and history rewrite are forbidden unless exceptional target governance explicitly requires them.
 
-A fresh execution chat must not mutate without exact repository + branch + base HEAD. If the remote branch moved, fail closed and require review/re-contracting. Never silently reset, rebase, or discard unknown work.
+`task.git_authority` governs Executor Git mutations. Content ownership does not imply commit/push authority.
 
-Normal implementation and delegated-agent writes default to `dev`. Do not create extra branches or PRs merely by convention. Force-push and history rewrite are forbidden unless exceptional target governance explicitly requires them.
+## Promotion candidate lineage
 
-## Promotion candidate
+Let `R = reviewed_report.commit` for the exact report accepted by Architect.
 
-Promotion `dev -> main` is distinct from implementation and from Architect contract acceptance.
+A valid `promotion_candidate_head` is only:
 
-After every repository mutation intended for the release is committed, including report/review artifacts when repository policy includes them, refresh `dev` and capture that exact SHA as `promotion_candidate_head`. Required authoritative verification must apply to **that exact SHA**.
+1. `R`; or
+2. the direct child of `R`, with that single commit containing only the expected Architect-owned review artifact.
 
-Before promotion:
+Any implementation, unrelated documentation, cleanup, dependency change, other task commit, unrelated commit, or second post-review commit after `R` invalidates accepted lineage and requires a new report plus Architect review.
 
-1. refresh exact `dev` and `main` HEADs;
-2. require `dev` HEAD to still equal `promotion_candidate_head`;
-3. confirm the candidate descends cleanly from the intended `main` under project policy and stop on unexpected divergence;
-4. confirm required authoritative verification identifies the exact candidate SHA;
-5. confirm no `dev` mutation occurred after that verification;
-6. confirm explicit main-promotion authority;
-7. promote exactly the verified candidate, preferring fast-forward semantics.
+Before promotion, refresh `dev` and `main`, require current `dev` equals the candidate, require authoritative verification to identify that exact SHA, and require explicit promotion authority. If `dev` changes after verification: `REVERIFY / REVIEW_REQUIRED`.
 
-If `dev` changes after verification, the authorization is stale: `REVERIFY / REVIEW_REQUIRED`. A successful CI run for another SHA is not promotion evidence. Do not commit a “verification passed” artifact after verifying a candidate and then promote the new unverified HEAD.
-
-Do not auto-promote after a successful push, review, or CI run.
+Do not auto-promote after push, review, CI, or verifier success.
 
 ## GitHub Actions
 
-Actions on `dev` can be useful, but inspect cost/fan-out before push, rerun, dispatch, or workflow changes.
+Prefer one bounded `push`-to-`dev` validation workflow with relevant paths, one standard Linux job, read-only contents, immutable action pins, concurrency cancellation, short timeout, validator plus stdlib unittests, and no manual dispatch, schedule, duplicate PR workflow, matrix, artifacts, cache, automatic rerun, larger runner, or paid external service.
 
-Prefer bounded validation:
-
-- relevant `push` to `dev`;
-- one standard Linux job when practical;
-- no matrix unless required;
-- no duplicate push + PR validation;
-- no schedule or automatic reruns without a real need;
-- no artifacts/cache unless they materially help;
-- concurrency cancellation and short timeouts when appropriate;
-- no larger runners or external paid services by convenience.
-
-For private repositories, standard GitHub-hosted runners consume the repository owner's included quota and may become billable after it is exhausted. Do not call a run free merely because it is short.
-
-Git success, CI success, contract acceptance, Architect review, authoritative project PASS, promotion authorization, and actual promotion are separate signals.
+Git success, CI success, Architect acceptance, authoritative project PASS, promotion authorization, and actual promotion remain separate signals.

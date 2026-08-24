@@ -1,40 +1,22 @@
 # Architect Review
 
-The canonical Architect-owned review shape is [templates/review.yaml](../templates/review.yaml). Target repositories should store it as `.agent/tasks/TASK-NNNN/review.yaml` when this protocol is adopted.
+The canonical Architect-owned review shape is [templates/review.yaml](../templates/review.yaml). A target repository may commit `review.yaml` or keep Architect review external if its policy permits.
 
-Architect reviews Executor evidence; it does not rewrite it.
+Architect reviews Executor evidence; it does not rewrite it. Review authority is separate from Executor Git authority.
 
-## Review gate
+## Exact report identity
 
-Review the exact report commit/path and verify:
+`reviewed_report.commit` must name the exact commit containing the exact `report.yaml` revision being judged. Review checks protocol/task/report identity, execution base, skill rules, scope, structure policy, Git authority/actions, gaps, acceptance evidence, and verifier evidence.
 
-- supported protocol version and task/report identity;
-- authorized execution base and exact task-at-base evidence;
-- skill-library revision and required execution skills;
-- changed/new files against task scope and structure policy;
-- architecture/spec/product/vision drift;
-- gap classification and any LOCAL actions;
-- Git actions;
-- acceptance/check/verifier evidence.
+Architect chooses `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`. `ACCEPTED` is contract acceptance, not authoritative verifier PASS.
 
-A protocol-version mismatch is not repaired during review; it requires a compatible Architect-owned revision/handoff.
+## Promotion lineage
 
-## Outcomes
+Let `R = reviewed_report.commit` for an accepted review. A valid `promotion_candidate_head` is only:
 
-Architect chooses exactly one:
+- `R`; or
+- the direct child of `R` where that single commit contains only the expected Architect-owned review artifact.
 
-- `ACCEPTED`: the report proves the approved task is contract-compliant. This is still distinct from project-designated authoritative PASS.
-- `REVISION_REQUIRED`: current work/task needs an Architect-owned revised task revision or another bounded action.
-- `BLOCKED`: unresolved authority or safety issue prevents acceptance/progression.
+Any other post-`R` mutation requires a new Executor report and Architect review. There is no allowance for vague “other intended release mutations.”
 
-Gap dispositions may close a finding as invalid, accept it as a known limitation, revise the current task, or create a follow-up task. Follow-up lineage records the originating `task_id` and `gap_id`.
-
-## Promotion boundary
-
-Review may mark the work eligible for **promotion-candidate capture**, but `review.yaml` does not contain or manufacture the final candidate SHA when the review commit itself may be part of the release.
-
-After all intended `dev` mutations are complete, refresh `dev` and capture `promotion_candidate_head` externally. Required authoritative verification must identify that exact SHA. Architect must not manufacture verifier evidence.
-
-If `dev` changes after verification, promotion requires `REVERIFY / REVIEW_REQUIRED`.
-
-Actual `dev -> main` promotion remains a separate explicitly authorized operation under [github-dev-main-workflow](../github-dev-main-workflow/SKILL.md).
+Authoritative verification must apply to the exact candidate SHA. If `dev` changes after verification, use `REVERIFY / REVIEW_REQUIRED`. Actual promotion is separate under [github-dev-main-workflow](../github-dev-main-workflow/SKILL.md).

@@ -11,6 +11,7 @@ on:
       - "templates/**"
       - "protocols/**"
       - "scripts/validate_skill_library.py"
+      - "scripts/test_validate_skill_library.py"
       - ".github/workflows/validate-skill-library.yml"
 
 permissions:
@@ -29,3 +30,5 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Validate
         run: python3 scripts/validate_skill_library.py
+      - name: Unit tests
+        run: python3 -m unittest scripts/test_validate_skill_library.py

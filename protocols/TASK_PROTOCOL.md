@@ -1,272 +1,113 @@
 # Task Protocol
 
-This protocol defines reusable governance for Architect-to-Executor work across repositories. `agent-skills` owns **how work is governed**; each target repository owns **what its product is** and stores its live tasks.
+This protocol defines reusable Architect-to-Executor governance across repositories. `agent-skills` owns how work is governed; each target repository owns what its product is and stores its live tasks.
 
-Supported protocol version: **3**. Unsupported versions fail closed; they are never silently upgraded.
+Supported protocol version: **3**. Unsupported versions fail closed and are never silently upgraded.
 
 ## Core bindings
 
-### One Architect session → one target repository
+An Architect session binds to one immutable target repository. External repositories and documentation may be read as references but never become implicit targets. Asking the bound Architect to govern a different target produces `NEW_ARCHITECT_SESSION_REQUIRED`.
 
-An Architect session binds to exactly one immutable target repository. It may read external repositories, upstream source, dependencies, specifications, or documentation as references. Reference repositories never become implicit execution targets.
+An Executor session binds to one approved task revision, one repository, one branch, and one exact execution authorization. It does not execute unrelated work, reinterpret architecture, or broaden scope.
 
-If a bound Architect is asked to govern or execute work for a different target repository, the semantic outcome is `NEW_ARCHITECT_SESSION_REQUIRED`.
+## Artifact ownership and Git authority
 
-### One Executor session → one task revision → one repository
+Canonical target-repository artifacts are:
 
-An Executor session binds to exactly one approved task revision, one target repository, one branch, and one execution authorization. It must not execute unrelated tasks, switch targets, reinterpret project architecture, or broaden scope.
+- `task.yaml`: Architect-owned authority;
+- `report.yaml`: Executor-owned evidence;
+- `review.yaml`: Architect-owned judgment when repository policy stores it.
 
-## Project authority versus skills
+Content ownership and Git mutation authority are distinct. `task.git_authority` applies to Executor Git mutations. Executor may write `report.yaml` content, but an execution-ready task that requires canonical committed report evidence must authorize Executor commit capability. Architect review authority does not inherit Executor Git authority. Conversely, Executor commit authority does not authorize writing Architect-owned review content.
 
-Target repositories own project-specific authority: product intent, roadmap, specifications, architecture/design decisions, structure conventions, code, deployment policy, and verification authority. Exact file names are project-defined; `PRODUCT.md`, `ROADMAP.md`, `spec/`, `design/`, or `STRUCTURE.md` are examples, not mandates.
-
-Skills teach reusable methods for reasoning and execution. Shared skills must not contain another project's live product vision.
-
-When explicitly authorized, Architect may author planning/authority artifacts in the target repository. Executor may author only implementation-scoped artifacts authorized by the task. Project-designated verifier owns authoritative PASS/FAIL.
-
-## Target task storage
-
-At current scale, the target repository task directory is the task list:
-
-```text
-.agent/tasks/
-  TASK-0001/
-    task.yaml
-    report.yaml
-    review.yaml
-  TASK-0002/
-    task.yaml
-```
-
-Do not add a task database, generated registry, search service, queue, or coordinator without observed scale friction. A generated index may become justified only when directory enumeration and repository search no longer provide acceptable discovery.
-
-Artifact ownership is strict:
-
-- `task.yaml`: Architect-owned authority. Executor never rewrites it.
-- `report.yaml`: Executor-owned evidence. Architect never rewrites it.
-- `review.yaml`: Architect-owned review decision.
-
-Git history preserves artifact changes. Meaningful task changes increment `task_revision`; never silently overwrite task meaning.
-
-## Small state model
-
-Logical flow:
-
-`DRAFT → READY → EXECUTING → REPORTED → ACCEPTED`
-
-Exceptional transitions:
-
-- `DRAFT | READY | EXECUTING → BLOCKED`
-- `REPORTED → REVISION_REQUIRED | BLOCKED`
-- `REVISION_REQUIRED → DRAFT` as a new task revision
-- `BLOCKED → REVISION_REQUIRED` when Architect can resolve the blocker
-
-Ownership prevents roles from fighting over one mutable status field: task normally carries `DRAFT/READY`, Executor session/report establishes `EXECUTING/REPORTED/BLOCKED`, and Architect review records `ACCEPTED/REVISION_REQUIRED/BLOCKED`.
+An Architect-owned review artifact may remain external when target repository policy permits. No role manufactures another role's authority.
 
 ## Canonical Executor handoff
 
-The canonical reusable shape is [templates/handoff.yaml](../templates/handoff.yaml). It is deliberately a small authorization/locator envelope:
+The canonical reusable shape is [templates/handoff.yaml](../templates/handoff.yaml). It is a small authorization/locator envelope containing protocol/type, exact task identity/path, repository/branch, and exact `base_head`.
 
-```yaml
-protocol_version: 3
-handoff_type: EXECUTOR
-task:
-  id: TASK-0001
-  revision: 1
-  path: .agent/tasks/TASK-0001/task.yaml
-target:
-  repository: owner/repo
-  branch: dev
-  base_head: <exact HEAD captured after final planning commit>
-```
-
-The handoff does **not** duplicate scope, acceptance criteria, skill rules, structure policy, or authority sources. Those remain authoritative in `task.yaml` at the exact pinned base.
-
-Before mutation Executor verifies, in order:
-
-1. supported `protocol_version`;
-2. `handoff_type == EXECUTOR`;
-3. repository and branch match the execution session;
-4. live branch HEAD equals handoff `target.base_head`;
-5. `task.path` exists at that exact commit and is read from that commit;
-6. task ID/revision equal handoff ID/revision;
-7. task `architect_binding.target_repository` and `target.repository` both equal the handoff repository;
-8. task is `execution_ready=true`;
-9. task-pinned skill library and required execution rules resolve;
-10. structure and Git/worktree authority permit execution.
-
-Any mismatch means `BLOCKED`. Never refresh the handoff, read a newer task because the branch moved, repair an unsupported protocol, or substitute newer rules.
+Before mutation Executor verifies supported protocol, `handoff_type == EXECUTOR`, repository/branch identity, live HEAD equality with `base_head`, exact task identity at that commit, task binding, `execution_ready`, pinned skills, structure authority, and Executor Git authority. Any mismatch means `BLOCKED`.
 
 ## Execution base without self-reference
 
-A committed `task.yaml` must not contain the exact SHA of the commit that contains itself.
-
 Use `handoff_snapshot`:
 
-1. Architect completes planning/task changes.
-2. Commit final planning state when required.
+1. Architect completes final planning/task changes.
+2. Commit planning state when required.
 3. Refresh the target branch and capture exact HEAD `H`.
-4. Emit the canonical external handoff with `target.base_head=H`.
-5. Executor verifies live HEAD equals `H` and reads the task from `H`.
+4. Emit the handoff with `target.base_head=H`.
+5. Executor reads the task from `H` and requires live HEAD to equal `H` before mutation.
 
-The handoff is an execution authorization envelope, not a file that must be committed back into the same branch.
+No artifact needs to contain the SHA of the commit containing itself.
 
-A report uses the analogous rule: `final_execution_head` means the last implementation HEAD before committing the report artifact. The report commit is identified externally during Architect review. No artifact needs to contain its own commit SHA.
+## Four SHA identities
 
-## Skill determinism and progressive disclosure
+Keep these distinct:
 
-Architect first inspects skill names/descriptions, then loads only candidate bodies. Normally use 2–5 skills; more than about seven is a review/decomposition signal.
+- `base_head`: pre-execution authorization and task snapshot;
+- `final_execution_head`: last implementation HEAD before committing the report;
+- `reviewed_report.commit`: exact commit containing the report Architect reviewed;
+- `promotion_candidate_head`: exact `dev` SHA to which authoritative verification applies.
 
-`architect_analysis_skills` record reasoning provenance only. They do not automatically enter Executor context.
+`reviewed_report.commit` must identify a committed report, not an uncommitted working copy or a different report revision.
 
-`execution_skills.required` must be resolved and obeyed by Executor. Missing required skills block execution. `execution_skills.recommended` are non-blocking, do not broaden scope, and cannot reinterpret the approved task.
+## Promotion lineage after review
 
-Shared internal skills use one library-level exact commit revision. External skills must carry exact `name`, `source`, and immutable `revision`. Executor must not silently substitute newer rules.
+Let `R = reviewed_report.commit` after Architect accepts that exact report.
+
+Only two candidate lineages are valid:
+
+1. `promotion_candidate_head == R`; or
+2. `promotion_candidate_head` is the **direct child** of `R`, and that single child commit contains only the expected Architect-owned review artifact.
+
+Any other `dev` mutation after `R` invalidates the accepted lineage and requires a new Executor report plus Architect review. This includes implementation, unrelated documentation, cleanup, dependency changes, another task's commit, unrelated commits, or a second post-review commit.
+
+The previous broad idea of “all other intended release mutations” is deliberately not authority. If a mutation is not the single permitted review-artifact child, accepted lineage no longer covers it.
+
+Authoritative verification applies to the exact `promotion_candidate_head`. If `dev` changes afterward, the prior evidence is stale: `REVERIFY / REVIEW_REQUIRED`. Actual `dev -> main` promotion remains a separate explicitly authorized operation.
 
 ## Structure authority applicability
 
-Architect owns the decision; Executor may not change it to unblock execution.
+Architect owns `structure_authority.status`:
 
-`structure_authority.status` is exactly one of:
+- `RESOLVED`: non-empty source required;
+- `NOT_APPLICABLE`: non-empty rationale required and valid only when structure cannot materially change;
+- `UNRESOLVED`: execution cannot be ready.
 
-- `RESOLVED`: `source` is required. Executor follows that authority.
-- `NOT_APPLICABLE`: `rationale` is required. Valid only when the task cannot materially affect repository/module/file structure.
-- `UNRESOLVED`: fail closed. The task cannot be execution-ready.
-
-`NOT_APPLICABLE` is suitable for work such as a README typo when no repository/module/file structure can materially change. It is invalid for source-file creation, module moves, dependency-boundary changes, new top-level/shared areas, or structural reorganization.
-
-Regardless of status, no-orphan-file, naming/ownership, unauthorized-structure, and no-speculative-scale rules remain protocol invariants whenever relevant.
+Executor never changes this status to unblock itself.
 
 ## Gap policy
 
-Executor classifies every material discovered gap as exactly one of:
-
 ### LOCAL
 
-May be resolved only when all are true:
-
-- necessary to satisfy current acceptance criteria;
-- completely inside authorized scope;
-- no architecture change;
-- no canonical spec/roadmap change;
-- no public-contract broadening;
-- no unauthorized dependency change;
-- no unauthorized structural boundary;
-- task permits `local_auto_fix`.
+Necessary for current acceptance criteria, completely inside authorized scope, and permitted by `local_auto_fix`. No architecture/spec/public-contract/dependency/unauthorized-structure boundary may be crossed.
 
 ### FOLLOW_UP
 
-The issue is real but not required for the current task or outside current authorization. Record evidence and do not fix it. Architect may later create a follow-up task with lineage:
-
-```yaml
-origin:
-  type: discovered_gap
-  task_id: TASK-0001
-  gap_id: GAP-001
-```
+Real but unnecessary for the current task or outside current authorization. Record evidence and do not fix it.
 
 ### BLOCKING
 
-Safe/correct continuation requires missing or conflicting authority, specification, design, security, structure, dependency, or public-contract decision. Stop and report evidence. Executor never converts discovery into implicit authorization.
+Safe continuation requires missing or conflicting Architect authority. Stop and report evidence.
 
-## Always-on scope discipline
+Discovery is never authorization.
 
-Task approval never implies:
+## No orphan source files
 
-- unrelated cleanup or adjacent fixes;
-- speculative features or roadmap expansion;
-- undocumented scope expansion;
-- architecture or canonical-spec drift;
-- dependency upgrades/additions;
-- structural reorganization;
-- “while I'm here” refactors.
-
-These are core protocol invariants, not optional skill advice.
-
-## Structure authority
-
-Each target repository should have one canonical source for structure rules when structure matters. Use an existing authoritative document if one exists; otherwise Architect may define a project-specific structure artifact when explicitly authorized. Do not force one universal filename or layout.
-
-Structure authority should cover relevant module/feature/domain ownership, permitted roots, dependency direction, source/generated/test placement, legitimate shared areas, new top-level directory rules, project language/framework conventions, naming conventions, and decisions requiring Architect approval.
-
-Feature/domain/component ownership is the default principle where compatible with the project. Physical placement follows target conventions: Go, Python, TypeScript, and other ecosystems need not look alike.
-
-### No orphan source files
-
-Every new source file must belong to an existing or explicitly authorized feature, domain, component, layer, or infrastructure responsibility.
-
-Do not casually create generic dumping grounds such as `utils`, `helpers`, `common`, `misc`, or `shared`. They are allowed only when cross-domain ownership is real and justified by target architecture.
-
-File names must communicate responsibility according to target language/framework/project conventions. Do not impose a universal naming regex.
-
-### Structure authorization
-
-Tasks may enumerate expected new files and purpose. Unlisted new files default forbidden. Architect may explicitly grant small implementation-local decomposition with bounded `max`, `within`, and `purpose`. This does not authorize repository redesign.
-
-Executor reports structural concerns outside scope as `structural_observations`; Architect decides whether they become follow-up tasks.
+Every new source file must belong to an existing or explicitly authorized feature, domain, component, layer, or infrastructure responsibility. Generic dumping grounds are not justified by convenience.
 
 ## No speculative scale structure
 
-Do not create layers, factories, registries, plugin systems, extension points, interfaces, services, queues, caches, shared modules, top-level directories, or scaling infrastructure for hypothetical future needs.
+Do not create layers, factories, registries, plugin systems, services, queues, caches, shared modules, top-level directories, or scaling infrastructure for hypothetical future needs.
 
-Prefer:
-
-`existing solution → localized change → small local abstraction → larger abstraction → subsystem`
-
-Move right only when current evidence or explicit project authority proves the simpler option insufficient.
-
-## Architect task creation flow
-
-`user intent → bind one target repo → inspect project authority/vision/structure → refresh branch → discover skill metadata → load minimal analysis skills → resolve material product/spec/design gaps → author planning artifacts if authorized → create/revise task → resolve structure authority applicability → commit planning state if required → capture fresh execution base → emit canonical handoff`
-
-Architect must not emit an execution-ready task/handoff with an unsupported protocol version. A fresh Executor must need no hidden previous-chat context.
+Prefer `existing solution → localized change → small local abstraction → larger abstraction → subsystem` and move right only with current evidence or explicit authority.
 
 ## Executor flow
 
-`receive one handoff → verify protocol/type → verify repo/branch/base → load exact task at base → verify task identity/binding → verify pinned skill rules → verify structure authority → verify Git/worktree authority → execute restrictive scope → resolve LOCAL only → record FOLLOW_UP → stop on BLOCKING → run mandatory checks → write report → stop`
+`receive handoff → verify exact base/task/rules → verify structure and Git authority → execute restrictive scope → resolve LOCAL only → record FOLLOW_UP → stop on BLOCKING → run checks → write report → commit report only when task.git_authority permits → stop`
 
 ## Architect review flow
 
-Architect reviews exact report identity, protocol version, execution base, skill revision, acceptance evidence, changed/new files, structure authorization, gap classification, product/spec/vision drift, Git actions, and verifier evidence.
+Architect reviews the exact committed report identified by `reviewed_report.commit`, including protocol, identity, execution base, skills, scope, structure, gaps, Git actions, acceptance evidence, and verifier evidence. Architect outcome is `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`.
 
-Architect outcome is `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`. Architect may create follow-up tasks from discovered gaps but must never rewrite Executor evidence.
-
-`ACCEPTED` is contract acceptance, not authoritative verifier PASS and not promotion authorization.
-
-## Promotion candidate and exact-SHA verification
-
-These identities are intentionally different:
-
-- handoff `base_head`: pre-execution authorization/task snapshot;
-- report `final_execution_head`: implementation HEAD before report commit;
-- `reviewed_report.commit`: exact commit containing the report reviewed by Architect;
-- `promotion_candidate_head`: final `dev` SHA after **all repository mutations intended for promotion**.
-
-Promotion sequence:
-
-`implementation → report commit if required → Architect review → review commit if required → refresh dev → capture promotion_candidate_head H → authoritative verification of exact H → no further dev mutation → explicit promotion decision → promote exact H`
-
-Verification evidence should live outside the candidate commit when recording it would mutate `dev` after verification.
-
-A small external authorization envelope is sufficient when needed:
-
-```yaml
-PROMOTION_AUTHORIZATION:
-  protocol_version: 3
-  repository: owner/repo
-  from_branch: dev
-  to_branch: main
-  promotion_candidate_head: "<exact SHA>"
-  verification:
-    mechanism: ""
-    expected_signal: ""
-    result: PASS
-    evidence: ""
-  authorized: true
-```
-
-Before promotion, candidate `H` must still be current `dev` HEAD, must satisfy project ancestry/divergence policy against intended `main`, and required authoritative verification must explicitly apply to `H`.
-
-If `dev` changes after verification, the prior verification/authorization does not cover the new HEAD: `REVERIFY / REVIEW_REQUIRED`. Do not verify `H`, commit a “verification passed” artifact producing `H+1`, then promote `H+1` without re-verifying.
-
-Actual promotion remains a separate explicitly authorized operation.
+`ACCEPTED` is contract acceptance. It is not authoritative verifier PASS and not promotion authorization.
