@@ -19,7 +19,7 @@ planning/specification when required and authorized
   ↓
 Architect-owned task
   ↓
-post-planning fresh HEAD + self-contained handoff
+post-planning fresh HEAD + canonical handoff
   ↓
 EXECUTOR (one session = one task = one repository)
   ↓
@@ -31,10 +31,12 @@ ARCHITECT
   ↓
 Architect-owned review / revised task / follow-up task
   ↓
-separate explicit promotion decision
+separate exact-SHA verification + promotion decision
 ```
 
 The complete reusable semantics are in [protocols/TASK_PROTOCOL.md](protocols/TASK_PROTOCOL.md). The protocol works manually through copy/paste; it does not depend on a coordinator, service, database, queue, registry, or automatic cross-chat messaging.
+
+Supported protocol version is **3**. Unsupported versions fail closed and are never silently upgraded.
 
 ## Core session invariants
 
@@ -109,6 +111,7 @@ At current scale, that directory is the task list. Do not add task databases, re
 Reusable shapes in this repository:
 
 - [templates/task.yaml](templates/task.yaml): Architect-owned task/contract;
+- [templates/handoff.yaml](templates/handoff.yaml): small Architect-to-Executor execution authorization/locator;
 - [templates/report.yaml](templates/report.yaml): Executor-owned evidence;
 - [templates/review.yaml](templates/review.yaml): Architect-owned review;
 - [contracts/IMPLEMENTATION_CONTRACT.md](contracts/IMPLEMENTATION_CONTRACT.md): task semantics;
@@ -117,21 +120,33 @@ Reusable shapes in this repository:
 
 One role must not silently rewrite another role's authority/evidence.
 
-## Base HEAD without self-reference
+## Base HEAD and authority deduplication
 
-A committed `task.yaml` does **not** write the SHA of the commit containing itself. Instead:
+A committed `task.yaml` does **not** write the SHA of the commit containing itself.
 
-`commit final planning/task state → refresh target branch → capture exact HEAD H → emit external EXECUTOR_HANDOFF with base_head=H`
+`commit final planning/task state → refresh target branch → capture exact HEAD H → emit canonical handoff with base_head=H`
 
-Executor verifies live HEAD equals `H` and reads the task from `H`. This avoids the impossible loop where writing the SHA changes the SHA being written.
+The handoff contains only protocol/type, task identity/path, repository/branch, and exact base. Executor verifies live HEAD equals `H` and reads the task from `H`. Scope, skill rules, structure policy, authority sources, and acceptance criteria are not duplicated into the handoff.
 
-Likewise, `report.yaml.final_execution_head` means the implementation HEAD before the report artifact commit. Architect later identifies the exact report commit externally when reviewing it.
+Likewise, `report.yaml.final_execution_head` means the implementation HEAD before the report artifact commit. Architect identifies the exact report commit externally when reviewing it.
+
+## Structure authority
+
+Architect classifies structure applicability in the task:
+
+- `RESOLVED`: a canonical source is required;
+- `NOT_APPLICABLE`: a rationale is required and the task cannot materially affect repository/module/file structure;
+- `UNRESOLVED`: execution is not ready.
+
+A README typo may legitimately be `NOT_APPLICABLE`. Adding source files, moving modules, changing dependency boundaries, or reorganizing structure may not.
+
+Executor cannot change this status to unblock itself. No-orphan-file, ownership/naming, unauthorized-structure, and no-speculative-scale rules remain in force whenever relevant.
 
 ## Always-on scope and structure governance
 
-Noise control is protocol, not an optional skill. Tasks forbid unrelated cleanup, adjacent fixes, speculative features, undocumented scope expansion, architecture/spec/public-contract changes, unauthorized dependency changes, structural reorganization, and “while I’m here” refactors.
+Noise control is protocol, not an optional skill. Tasks forbid unrelated cleanup, adjacent fixes, speculative features, undocumented scope expansion, architecture/spec/public-contract changes, unauthorized dependency changes, structural reorganization, and “while I'm here” refactors.
 
-Each target repository should have one canonical structure authority, whether an existing design/instructions document or an explicitly authorized project-specific structure artifact. Do not force a universal filename or layout.
+Each target repository should have one canonical structure authority when structure matters, whether an existing design/instructions document or an explicitly authorized project-specific structure artifact. Do not force a universal filename or layout.
 
 Feature/domain/component ownership is the default principle when compatible with the target project. Go, Python, TypeScript, and other ecosystems may express that ownership differently.
 
@@ -159,9 +174,9 @@ Canonical project artifacts use whatever names and locations the target reposito
 
 Architect may author product, roadmap, specification, design, structure, task, and review artifacts when explicitly authorized. Executor owns authorized implementation, implementation-scoped tests/migrations/configuration, and execution evidence. The project-designated verifier owns authoritative PASS/FAIL.
 
-The curated 15 stays unchanged after this hardening. Separate `product-planning`, `spec-writing`, or generic `documentation` skills would substantially overlap Architect planning authority plus `research`, `gap-analysis`, and `design-review`. They remain task/artifact activities until independent trigger/value evidence justifies replacing a slot. `cloud-run-basics` remains because it is a coherent technology decision domain rather than generic documentation ceremony.
+The curated 15 stays unchanged. Separate `product-planning`, `spec-writing`, or generic `documentation` skills would substantially overlap Architect planning authority plus `research`, `gap-analysis`, and `design-review`.
 
-## Git model
+## Git and promotion identity model
 
 For repositories adopting the shared two-branch model:
 
@@ -169,8 +184,26 @@ For repositories adopting the shared two-branch model:
 - `main` = stable authority;
 - delegated/normal implementation defaults to `dev`;
 - direct implementation on `main` is forbidden by default;
-- promotion `dev → main` is separate, explicit, verification-gated, and based on refreshed heads;
 - no force push, history rewrite, unnecessary branch/PR ritual.
+
+Promotion identities are deliberately distinct:
+
+```text
+planning commit
+→ handoff base_head
+→ implementation commit(s)
+→ report final_execution_head
+→ report commit
+→ Architect review
+→ review commit if required
+→ refresh dev
+→ promotion_candidate_head
+→ authoritative verification of EXACT promotion_candidate_head
+→ no further dev mutation
+→ separate promotion of EXACT verified SHA
+```
+
+If `dev` changes after candidate verification, prior verification is stale: `REVERIFY / REVIEW_REQUIRED`. Architect `ACCEPTED`, CI green, and verifier PASS remain separate signals.
 
 Branch protection is a separate GitHub-enforced governance decision. Written protocol is procedural enforcement; GitHub branch protection/rulesets are platform enforcement. This repository does not silently change branch-protection settings as part of protocol edits.
 
@@ -187,9 +220,11 @@ The repository keeps one bounded `dev` validation workflow:
 
 This private repository consumes the owner's included GitHub Actions quota for standard hosted runners when available and can become billable after that quota is exhausted. A short run is not proof of `$0`.
 
-## Skill authoring constraints
+## Skill and protocol validation
 
-The local validator enforces the curated set, unique folder/name identity, lowercase/hyphen naming, Agent Skills `name <= 64`, `Use when` descriptions, description length, internal Markdown links, README catalog sync, reusable protocol/template fields, and size warnings.
+The local validator enforces the curated set, unique folder/name identity, lowercase/hyphen naming, Agent Skills `name <= 64`, `Use when` descriptions, description length, internal Markdown links, README catalog sync, supported protocol version, and structure-aware paths/types for the canonical task/handoff/report/review templates.
+
+The YAML validation is intentionally constrained and stdlib-only. It rejects duplicate mapping keys and invalid indentation for this protocol subset; it is not a general YAML implementation.
 
 Core/frequently loaded skills should stay concise. Move heavy reference material outside `SKILL.md` rather than building god skills.
 

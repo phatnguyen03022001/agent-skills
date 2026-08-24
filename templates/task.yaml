@@ -17,7 +17,6 @@ target:
   branch:
     name: dev
     role: integration
-  task_path: .agent/tasks/TASK-0001/task.yaml
 
 execution_base:
   mode: handoff_snapshot
@@ -50,8 +49,9 @@ authority_sources:
     precedence: 1
 
 structure_authority:
+  status: UNRESOLVED
   source: ""
-  status: unresolved
+  rationale: ""
 
 objective: ""
 
@@ -84,9 +84,7 @@ gap_policy:
   blocking_gap_behavior: BLOCKED
 
 structure_policy:
-  expected_new_files:
-    - path: ""
-      purpose: ""
+  expected_new_files: []
   unlisted_new_files:
     allowed: false
     max: 0
@@ -109,16 +107,6 @@ verification:
     required: false
     mechanism: ""
     expected_signal: ""
-
-pre_execution_checks:
-  require_task_identity_match: true
-  require_repository_match: true
-  require_branch_match: true
-  require_handoff_base_head_match: true
-  require_skill_library_revision: true
-  require_required_execution_skills: true
-  require_structure_authority: true
-  require_clean_worktree: true
 
 git_authority:
   create_branch: false

@@ -12,6 +12,7 @@ reviewed_report:
   report_revision: 1
 
 contract_compliance:
+  protocol_version: NOT_PROVEN
   identity: NOT_PROVEN
   execution_base: NOT_PROVEN
   skill_rules: NOT_PROVEN
@@ -34,7 +35,7 @@ follow_up_tasks:
       gap_id: GAP-001
 
 promotion_readiness:
-  ready: false
+  eligible_for_candidate_capture: false
   reason: ""
 
 notes: []

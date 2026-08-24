@@ -1,0 +1,12 @@
+protocol_version: 3
+handoff_type: EXECUTOR
+
+task:
+  id: TASK-0001
+  revision: 1
+  path: .agent/tasks/TASK-0001/task.yaml
+
+target:
+  repository: owner/repo
+  branch: dev
+  base_head: "<exact SHA after final planning commit>"

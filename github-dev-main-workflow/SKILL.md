@@ -20,17 +20,25 @@ A fresh execution chat must not mutate without exact repository + branch + base 
 
 Normal implementation and delegated-agent writes default to `dev`. Do not create extra branches or PRs merely by convention. Force-push and history rewrite are forbidden unless exceptional target governance explicitly requires them.
 
-## Promotion
+## Promotion candidate
 
-Promotion `dev -> main` is distinct from implementation. Before promotion:
+Promotion `dev -> main` is distinct from implementation and from Architect contract acceptance.
+
+After every repository mutation intended for the release is committed, including report/review artifacts when repository policy includes them, refresh `dev` and capture that exact SHA as `promotion_candidate_head`. Required authoritative verification must apply to **that exact SHA**.
+
+Before promotion:
 
 1. refresh exact `dev` and `main` HEADs;
-2. stop on unexpected divergence;
-3. confirm required verification passed on the intended `dev` SHA;
-4. confirm explicit main-promotion authority;
-5. prefer fast-forward semantics when history permits.
+2. require `dev` HEAD to still equal `promotion_candidate_head`;
+3. confirm the candidate descends cleanly from the intended `main` under project policy and stop on unexpected divergence;
+4. confirm required authoritative verification identifies the exact candidate SHA;
+5. confirm no `dev` mutation occurred after that verification;
+6. confirm explicit main-promotion authority;
+7. promote exactly the verified candidate, preferring fast-forward semantics.
 
-Do not auto-promote after a successful push or CI run.
+If `dev` changes after verification, the authorization is stale: `REVERIFY / REVIEW_REQUIRED`. A successful CI run for another SHA is not promotion evidence. Do not commit a “verification passed” artifact after verifying a candidate and then promote the new unverified HEAD.
+
+Do not auto-promote after a successful push, review, or CI run.
 
 ## GitHub Actions
 
@@ -47,8 +55,6 @@ Prefer bounded validation:
 - concurrency cancellation and short timeouts when appropriate;
 - no larger runners or external paid services by convenience.
 
-For private repositories, standard GitHub-hosted runners consume the repository owner's included quota and may become billable after it is exhausted. Do not call a run free merely because it is short. Check current GitHub billing rules when cost matters.
+For private repositories, standard GitHub-hosted runners consume the repository owner's included quota and may become billable after it is exhausted. Do not call a run free merely because it is short.
 
-Local verification can reduce unnecessary remote runs, but cost optimization must not weaken required correctness.
-
-Git success, CI success, contract compliance, Architect review, and authoritative project PASS are separate signals.
+Git success, CI success, contract acceptance, Architect review, authoritative project PASS, promotion authorization, and actual promotion are separate signals.

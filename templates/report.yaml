@@ -5,10 +5,8 @@ task_revision: 1
 report_revision: 1
 state: REPORTED
 
-task_locator:
-  repository: owner/repo
+task_source:
   path: .agent/tasks/TASK-0001/task.yaml
-  authorized_base_head: "<handoff base HEAD>"
 
 execution:
   repository: owner/repo
@@ -30,7 +28,11 @@ execution_skills_used:
   external: []
 
 pre_execution_checks:
+  protocol_version_supported: false
+  handoff_type_confirmed: false
+  task_at_base_confirmed: false
   task_identity_confirmed: false
+  architect_binding_confirmed: false
   repository_confirmed: false
   branch_confirmed: false
   base_head_confirmed: false
