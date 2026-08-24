@@ -3,6 +3,9 @@
 
 from __future__ import annotations
 
+import contextlib
+import importlib.util
+import io
 import shutil
 import subprocess
 import tempfile
@@ -11,6 +14,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 VALIDATOR = Path("scripts/validate_skill_library.py")
+_VALIDATOR_SPEC = importlib.util.spec_from_file_location(
+    "validate_skill_library_under_test",
+    ROOT / VALIDATOR,
+)
+assert _VALIDATOR_SPEC is not None and _VALIDATOR_SPEC.loader is not None
+VALIDATOR_MODULE = importlib.util.module_from_spec(_VALIDATOR_SPEC)
+_VALIDATOR_SPEC.loader.exec_module(VALIDATOR_MODULE)
 
 
 class ValidatorRegressionTests(unittest.TestCase):
@@ -22,13 +32,20 @@ class ValidatorRegressionTests(unittest.TestCase):
         return temp, root
 
     def run_validator(self, root: Path) -> subprocess.CompletedProcess[str]:
-        return subprocess.run(
-            ["python3", str(root / VALIDATOR)],
-            cwd=root,
-            text=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            check=False,
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+        original_root = VALIDATOR_MODULE.ROOT
+        try:
+            VALIDATOR_MODULE.ROOT = root
+            with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+                returncode = VALIDATOR_MODULE.main()
+        finally:
+            VALIDATOR_MODULE.ROOT = original_root
+        return subprocess.CompletedProcess(
+            args=["python3", str(root / VALIDATOR)],
+            returncode=returncode,
+            stdout=stdout.getvalue(),
+            stderr=stderr.getvalue(),
         )
 
     def assert_rejected(self, mutate) -> str:
@@ -261,6 +278,147 @@ class ValidatorRegressionTests(unittest.TestCase):
         path.write_text(text.replace("    classification: FOLLOW_UP", "    classification: LOCAL", 1), encoding="utf-8")
         result = self.run_validator(root)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+
+    def test_newly_protected_canonical_fields_are_required(self) -> None:
+        cases = [
+            ("templates/task.yaml", "origin.type", "  type: user_request"),
+            ("templates/task.yaml", "origin.task_id", '  task_id: ""'),
+            ("templates/task.yaml", "origin.gap_id", '  gap_id: ""'),
+            ("templates/task.yaml", "target.branch.role", "    role: integration"),
+            ("templates/task.yaml", "execution_base.capture", "  capture: after_final_planning_commit"),
+            ("templates/task.yaml", "architect_analysis_skills", "architect_analysis_skills: []"),
+            ("templates/task.yaml", "external_skills.architect_analysis", "  architect_analysis: []"),
+            ("templates/task.yaml", "external_skills.execution_required", "  execution_required: []"),
+            ("templates/task.yaml", "external_skills.execution_recommended", "  execution_recommended: []"),
+            ("templates/task.yaml", "objective", 'objective: ""'),
+            (
+                "templates/task.yaml",
+                "scope.allowed_existing_files_or_components",
+                '  allowed_existing_files_or_components:\n    - ""',
+            ),
+            ("templates/task.yaml", "gap_policy.scope_expansion", "  scope_expansion: forbidden"),
+            ("templates/task.yaml", "gap_policy.architecture_change", "  architecture_change: forbidden"),
+            ("templates/task.yaml", "gap_policy.spec_change", "  spec_change: forbidden"),
+            ("templates/task.yaml", "gap_policy.dependency_change", "  dependency_change: revised_contract_required"),
+            ("templates/task.yaml", "gap_policy.public_contract_change", "  public_contract_change: revised_contract_required"),
+            (
+                "templates/task.yaml",
+                "verification.authoritative_verification.required",
+                "    required: false",
+            ),
+            (
+                "templates/task.yaml",
+                "verification.authoritative_verification.mechanism",
+                '    mechanism: ""',
+            ),
+            (
+                "templates/task.yaml",
+                "verification.authoritative_verification.expected_signal",
+                '    expected_signal: ""',
+            ),
+            ("templates/report.yaml", "execution.branch.role", "    role: integration"),
+            (
+                "templates/report.yaml",
+                "skill_library.repository",
+                "  repository: phatnguyen03022001/agent-skills",
+            ),
+            (
+                "templates/report.yaml",
+                "execution_skills_used.recommended",
+                "  recommended: []",
+            ),
+            (
+                "templates/report.yaml",
+                "execution_skills_used.external",
+                "  external: []",
+            ),
+            ("templates/report.yaml", "pushed", "pushed: false"),
+            ("templates/report.yaml", "promoted_to_main", "promoted_to_main: false"),
+            (
+                "templates/report.yaml",
+                "authoritative_verification.required",
+                "  required: false",
+            ),
+            (
+                "templates/report.yaml",
+                "authoritative_verification.performed",
+                "  performed: false",
+            ),
+            (
+                "templates/report.yaml",
+                "authoritative_verification.result",
+                '  result: ""',
+            ),
+            (
+                "templates/report.yaml",
+                "authoritative_verification.evidence",
+                '  evidence: ""',
+            ),
+            ("templates/report.yaml", "working_tree_after.clean", "  clean: false"),
+            ("templates/report.yaml", "working_tree_after.summary", '  summary: ""'),
+            (
+                "templates/review.yaml",
+                "promotion_readiness.reason",
+                '  reason: ""',
+            ),
+        ]
+        for relative, dotted, before in cases:
+            with self.subTest(path=dotted):
+                def mutate(root: Path, relative=relative, before=before) -> None:
+                    path = root / relative
+                    text = path.read_text(encoding="utf-8")
+                    needle = f"\n{before}\n"
+                    self.assertIn(needle, text)
+                    path.write_text(text.replace(needle, "\n", 1), encoding="utf-8")
+                output = self.assert_rejected(mutate)
+                self.assertIn(f"missing required path '{dotted}'", output)
+
+    def test_review_ineligible_states_cannot_be_candidate_eligible(self) -> None:
+        for state in ("REVISION_REQUIRED", "BLOCKED"):
+            with self.subTest(state=state):
+                _, root = self.fixture()
+                path = root / "templates" / "review.yaml"
+                text = path.read_text(encoding="utf-8")
+                text = text.replace("state: REVISION_REQUIRED", f"state: {state}", 1)
+                text = text.replace(
+                    "  eligible_for_candidate_capture: false",
+                    "  eligible_for_candidate_capture: true",
+                    1,
+                )
+                path.write_text(text, encoding="utf-8")
+                result = self.run_validator(root)
+                self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertIn("only ACCEPTED review may be candidate-eligible", result.stdout + result.stderr)
+
+    def test_review_accepted_eligibility_combinations_are_valid(self) -> None:
+        for eligible in (True, False):
+            with self.subTest(eligible=eligible):
+                _, root = self.fixture()
+                path = root / "templates" / "review.yaml"
+                text = path.read_text(encoding="utf-8")
+                text = text.replace("state: REVISION_REQUIRED", "state: ACCEPTED", 1)
+                if eligible:
+                    text = text.replace(
+                        "  eligible_for_candidate_capture: false",
+                        "  eligible_for_candidate_capture: true",
+                        1,
+                    )
+                path.write_text(text, encoding="utf-8")
+                result = self.run_validator(root)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_review_state_values_are_closed(self) -> None:
+        _, root = self.fixture()
+        path = root / "templates" / "review.yaml"
+        text = path.read_text(encoding="utf-8")
+        path.write_text(
+            text.replace("state: REVISION_REQUIRED", "state: UNKNOWN", 1),
+            encoding="utf-8",
+        )
+        result = self.run_validator(root)
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("unsupported review state", result.stdout + result.stderr)
 
 
 if __name__ == "__main__":

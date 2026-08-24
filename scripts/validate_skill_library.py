@@ -356,6 +356,7 @@ FOLLOW_UP_ORIGIN_SCHEMA: dict[str, type] = {
     "gap_id": str,
 }
 GAP_CLASSIFICATIONS = frozenset({"LOCAL", "FOLLOW_UP", "BLOCKING"})
+REVIEW_STATES = frozenset({"ACCEPTED", "REVISION_REQUIRED", "BLOCKED"})
 
 
 def get_path(document: dict[str, Any], dotted: str) -> Any:
@@ -458,16 +459,28 @@ def validate_task_template() -> None:
     validate_version(label, doc)
     for dotted, expected_type in [
         ("task_id", str), ("task_revision", int), ("state", str),
+        ("origin.type", str), ("origin.task_id", str), ("origin.gap_id", str),
         ("architect_binding.target_repository", str), ("target.repository", str),
-        ("target.branch.name", str), ("execution_base.mode", str),
+        ("target.branch.name", str), ("target.branch.role", str),
+        ("execution_base.mode", str), ("execution_base.capture", str),
         ("execution_base.require_exact_match", bool),
         ("skill_library.repository", str), ("skill_library.revision", str),
+        ("architect_analysis_skills", list),
         ("execution_skills.required", list), ("execution_skills.recommended", list),
+        ("external_skills.architect_analysis", list),
+        ("external_skills.execution_required", list),
+        ("external_skills.execution_recommended", list),
         ("structure_authority.status", str), ("structure_authority.source", str),
-        ("structure_authority.rationale", str), ("scope.required_changes", list),
+        ("structure_authority.rationale", str), ("objective", str),
+        ("scope.required_changes", list),
+        ("scope.allowed_existing_files_or_components", list),
         ("scope.expected_files_are_restrictive", bool),
         ("invariants", list), ("forbidden_changes", list),
-        ("gap_policy.local_auto_fix", bool), ("gap_policy.blocking_gap_behavior", str),
+        ("gap_policy.local_auto_fix", bool),
+        ("gap_policy.scope_expansion", str), ("gap_policy.architecture_change", str),
+        ("gap_policy.spec_change", str), ("gap_policy.dependency_change", str),
+        ("gap_policy.public_contract_change", str),
+        ("gap_policy.blocking_gap_behavior", str),
         ("structure_policy.expected_new_files", list),
         ("structure_policy.unlisted_new_files.allowed", bool),
         ("structure_policy.unlisted_new_files.max", int),
@@ -476,6 +489,9 @@ def validate_task_template() -> None:
         ("structure_policy.allow_new_top_level_directories", bool),
         ("structure_policy.allow_new_shared_modules", bool),
         ("verification.authoritative_verification", dict),
+        ("verification.authoritative_verification.required", bool),
+        ("verification.authoritative_verification.mechanism", str),
+        ("verification.authoritative_verification.expected_signal", str),
         ("git_authority.create_branch", bool), ("git_authority.commit", bool),
         ("git_authority.push", bool), ("git_authority.promote_to_main", bool),
         ("blocking_decisions", list), ("execution_ready", bool),
@@ -532,10 +548,14 @@ def validate_report_template() -> None:
     for dotted, expected_type in [
         ("task_id", str), ("task_revision", int), ("report_revision", int),
         ("state", str), ("task_source.path", str), ("execution.repository", str),
-        ("execution.branch.name", str), ("execution.authorized_base_head", str),
+        ("execution.branch.name", str), ("execution.branch.role", str),
+        ("execution.authorized_base_head", str),
         ("execution.pre_execution_head", str), ("execution.final_execution_head", str),
+        ("skill_library.repository", str),
         ("skill_library.authorized_revision", str), ("skill_library.observed_revision", str),
         ("execution_skills_used.required", list),
+        ("execution_skills_used.recommended", list),
+        ("execution_skills_used.external", list),
         ("pre_execution_checks.protocol_version_supported", bool),
         ("pre_execution_checks.handoff_type_confirmed", bool),
         ("pre_execution_checks.task_at_base_confirmed", bool),
@@ -548,7 +568,14 @@ def validate_report_template() -> None:
         ("pre_execution_checks.required_execution_skills_available", bool),
         ("pre_execution_checks.structure_authority_confirmed", bool),
         ("pre_execution_checks.working_tree_clean", bool),
-        ("authoritative_verification", dict), ("result", str),
+        ("pushed", bool), ("promoted_to_main", bool),
+        ("authoritative_verification", dict),
+        ("authoritative_verification.required", bool),
+        ("authoritative_verification.performed", bool),
+        ("authoritative_verification.result", str),
+        ("authoritative_verification.evidence", str),
+        ("working_tree_after.clean", bool), ("working_tree_after.summary", str),
+        ("result", str),
     ]:
         require_field(label, doc, dotted, expected_type)
     for dotted, schema in REPORT_SEQUENCE_SCHEMAS.items():
@@ -582,6 +609,7 @@ def validate_review_template() -> None:
         ("contract_compliance.acceptance_criteria", str),
         ("contract_compliance.verifier_evidence", str),
         ("promotion_readiness.eligible_for_candidate_capture", bool),
+        ("promotion_readiness.reason", str),
         ("notes", list),
     ]:
         require_field(label, doc, dotted, expected_type)
@@ -595,6 +623,13 @@ def validate_review_template() -> None:
                     f"follow_up_tasks[{index}].origin",
                     FOLLOW_UP_ORIGIN_SCHEMA,
                 )
+
+    state = get_path(doc, "state")
+    eligible = get_path(doc, "promotion_readiness.eligible_for_candidate_capture")
+    if state is not _MISSING and state not in REVIEW_STATES:
+        error(f"{label}: unsupported review state {state!r}")
+    if eligible is True and state != "ACCEPTED":
+        error(f"{label}: only ACCEPTED review may be candidate-eligible")
 
 
 def require_tokens(path: Path, tokens: list[str]) -> None:
