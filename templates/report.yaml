@@ -50,6 +50,12 @@ capability_preflight:
     - repository_content_write
   passed: false
 
+authoritative_verification:
+  required: false
+  performed: false
+  result: ""
+  evidence: ""
+
 local_hygiene:
   result: PASS
   run_root: ""
@@ -80,12 +86,6 @@ executor_checks:
   - check_id: CHECK-1
     result: ""
     evidence: ""
-
-authoritative_verification:
-  required: false
-  performed: false
-  result: ""
-  evidence: ""
 
 discovered_gaps:
   - gap_id: GAP-001

@@ -14,7 +14,7 @@ Target-repository governance may be stricter and takes precedence.
 
 ## Before writes
 
-Refresh exact repository, branch, remote HEAD, expected base, write authority, workflow triggers, and the semantic capabilities required for the current phase. Authorized remote Git state is canonical repository truth; local state is an execution copy. If the remote branch moved, that remote drift invalidates stale authority and fails closed. If a current-phase capability is unavailable, block before mutation. Do not require a later-phase capability to finish an earlier authorized phase.
+Refresh exact repository, branch, remote HEAD, expected base, write authority, workflow triggers, and the semantic capabilities required for the current phase. Treat authorized remote Git state as canonical repository truth; local state is an execution copy. If the remote branch moved, that remote drift invalidates stale authority and fails closed. If a current-phase capability is unavailable, block before mutation. Do not require a later-phase capability to finish an earlier authorized phase.
 
 A local clean/behind copy may be synchronized when authorized. Local ahead or local dirty state is divergence or unknown work and must not be auto-pushed, reset, deleted, or silently adopted as authority.
 
