@@ -222,7 +222,7 @@ class ValidatorRegressionTests(unittest.TestCase):
                 "templates/report.yaml",
                 '  - criterion_id: AC-1\n    status: NOT_PROVEN\n    evidence: ""',
                 '  - status: NOT_PROVEN\n    evidence: ""',
-                "acceptance_criteria[0]",
+                "acceptance_evidence[0]",
             ),
         ]
         for relative, before, after, expected in cases:
