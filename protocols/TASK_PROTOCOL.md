@@ -56,6 +56,8 @@ Keep these identities distinct:
 - authoritative verifier identity/result: verifier-owned evidence applying to the exact candidate SHA;
 - lifecycle state: a derived conclusion from authoritative artifacts, refs, and evidence, never a shared role-writable state file.
 
+`reviewed_report.commit` must resolve the exact committed report. Normal cross-session remote review requires remote Git reachability. A local-only report commit is valid only when reviewer and Executor use an explicitly **shared trusted** checkout or Git object database that deterministically resolves the same commit and report content.
+
 `report.yaml` state belongs to Executor evidence. It may remain `REPORTED` / `NEEDS_REVIEW` after a separate Architect accepts that exact report. Architect acceptance is separate evidence and does not justify rewriting the Executor report merely to mirror later review state.
 
 ## Derived workflow lifecycle
