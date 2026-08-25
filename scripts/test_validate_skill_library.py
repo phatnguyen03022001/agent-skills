@@ -334,8 +334,8 @@ class ValidatorRegressionTests(unittest.TestCase):
         text = path.read_text(encoding="utf-8")
         required = [
             "handoff_type: CONTINUATION", "phase: PROMOTION", "reviewed_report:",
-            "promotion_candidate_head:", "expected_refs:", "prior_result:",
-            "prior_lifecycle_state:", "next_authorized_action:",
+            "promotion_candidate_head:", "expected_refs:", "expected_state:",
+            "prior_result:", "prior_lifecycle_state:", "next_authorized_action:",
         ]
         for token in required:
             self.assertIn(token, text)
@@ -363,6 +363,15 @@ class ValidatorRegressionTests(unittest.TestCase):
         result = self.run_validator(root)
         self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("unsupported continuation mode", result.stdout + result.stderr)
+
+    def test_continuation_stop_conditions_are_non_waivable(self) -> None:
+        def mutate(root: Path) -> None:
+            path = root / "templates" / "task.yaml"
+            text = path.read_text(encoding="utf-8")
+            self.assertIn("    - STALE_STATE\n", text)
+            path.write_text(text.replace("    - STALE_STATE\n", "", 1), encoding="utf-8")
+        output = self.assert_rejected(mutate)
+        self.assertIn("missing non-waivable continuation stop conditions", output)
 
     def test_malformed_continuation_policy_is_rejected(self) -> None:
         def mutate(root: Path) -> None:
