@@ -20,6 +20,9 @@ expected_refs:
   dev: "<exact expected dev SHA>"
   main: "<exact expected main SHA>"
 
+expected_state:
+  lifecycle: ACCEPTED
+
 prior_result: ACCEPTED
 prior_lifecycle_state: ACCEPTED
 next_authorized_action: PROMOTE_TO_MAIN
