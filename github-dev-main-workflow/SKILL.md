@@ -16,7 +16,7 @@ Target-repository governance may be stricter and takes precedence.
 
 Refresh exact repository, branch, remote HEAD, expected base, write authority, workflow triggers, and the semantic capabilities required for the current phase. Treat authorized remote Git state as canonical repository truth; local state is an execution copy. If the remote branch moved, that remote drift invalidates stale authority and fails closed. If a current-phase capability is unavailable, block before mutation. Do not require a later-phase capability to finish an earlier authorized phase.
 
-A local clean/behind copy may be synchronized when authorized. Local ahead or local dirty state is divergence or unknown work and must not be auto-pushed, reset, deleted, or silently adopted as authority.
+A local clean/behind copy may be synchronized when authorized; local ahead or local dirty state is divergence or unknown work and must not be auto-pushed, reset, deleted, or silently adopted as authority.
 
 `task.git_authority` governs Executor Git mutations. `create_branch`, `commit`, `push`, and `promote_to_main` are independent. When `create_branch: false`, do not invoke branch creation even for tests or temporary work. Commit does not imply push, force push, `main` mutation, or promotion.
 
