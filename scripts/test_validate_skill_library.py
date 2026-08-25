@@ -525,7 +525,7 @@ class ValidatorRegressionTests(unittest.TestCase):
         for token in (
             "TASK LAUNCH",
             "Chat",
-            "Role",
+            "Executor",
             "Model",
             "Effort",
             "Progress",
@@ -587,6 +587,101 @@ class ValidatorRegressionTests(unittest.TestCase):
         path.write_text(text[:start] + text[end + 1 :], encoding="utf-8")
         result = self.run_validator(root)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_task0003_architect_sequential_repository_switching(self) -> None:
+        architect = (ROOT / "architect" / "SKILL.md").read_text(encoding="utf-8")
+        protocol = (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8")
+        combined = architect + protocol
+        self.assertNotIn("NEW_ARCHITECT_SESSION_REQUIRED", combined)
+        for token in (
+            "one active target repository",
+            "close the current repository-specific phase",
+            "explicitly identify the next `owner/repo`",
+            "refresh canonical GitHub truth",
+            "discard previous repository-specific assumptions",
+            "simultaneous ambiguous active target is forbidden",
+        ):
+            self.assertIn(token, combined)
+
+    def test_task0003_executor_rebind_requires_terminal_execution(self) -> None:
+        executor = (ROOT / "executor" / "SKILL.md").read_text(encoding="utf-8")
+        protocol = (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8")
+        combined = executor + protocol
+        for token in (
+            "active task/repository binding remains immutable",
+            "explicit terminal handoff/result",
+            "previous evidence finalized",
+            "no outstanding mutation authority carried forward",
+            "fresh repository-local task",
+            "fresh exact handoff",
+            "fresh exact base HEAD",
+        ):
+            self.assertIn(token, combined)
+
+    def test_task0003_authority_and_lineage_never_carry_between_repositories(self) -> None:
+        executor = (ROOT / "executor" / "SKILL.md").read_text(encoding="utf-8")
+        protocol = (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8")
+        combined = executor + protocol
+        for token in (
+            "authority for repository A never grants authority for repository B",
+            "report/review/verifier/promotion/release lineage remains repository-local",
+            "repository identity",
+            "branch identity",
+            "task ID/revision",
+            "base HEAD",
+        ):
+            self.assertIn(token, combined)
+
+    def test_task0003_program_is_presentation_only(self) -> None:
+        architect = (ROOT / "architect" / "SKILL.md").read_text(encoding="utf-8")
+        protocol = (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        combined = architect + protocol + readme
+        for token in (
+            "PROGRAM",
+            "ordered repository-local tasks",
+            "presentation only",
+            "not a universal multi-repository task authority",
+            "shared mutable cross-repository authority",
+        ):
+            self.assertIn(token, combined)
+        self.assertFalse(any("program" in path.name.lower() for path in (ROOT / "templates").iterdir()))
+
+    def test_task0003_task_launch_fields_and_concrete_program_progress(self) -> None:
+        architect = (ROOT / "architect" / "SKILL.md").read_text(encoding="utf-8")
+        protocol = (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        combined = architect + protocol + readme
+        for token in (
+            "Chat",
+            "Executor",
+            "Model",
+            "Effort",
+            "Progress",
+            "Giải thích",
+            "PROMPT TO COPY",
+            "Program 2/4 · agent-standards · execution",
+            "fake percentages",
+        ):
+            self.assertIn(token, combined)
+
+    def test_task0003_two_roles_and_no_orchestration_framework(self) -> None:
+        architect = (ROOT / "architect" / "SKILL.md").read_text(encoding="utf-8")
+        protocol = (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8")
+        combined = architect + protocol
+        for token in (
+            "two organizational roles",
+            "Architect and Executor",
+            "Executor specializations",
+            "no orchestrator",
+            "no registry",
+            "no queue",
+            "no database",
+            "no workflow engine",
+        ):
+            self.assertIn(token, combined)
+        self.assertEqual(len(VALIDATOR_MODULE.EXPECTED_SKILLS), 15)
+        self.assertIn("Supported protocol version: **3**", protocol)
 
 
 if __name__ == "__main__":
