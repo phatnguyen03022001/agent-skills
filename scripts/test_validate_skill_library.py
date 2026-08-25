@@ -470,6 +470,124 @@ class ValidatorRegressionTests(unittest.TestCase):
         self.assertEqual(task["task_revision"], review["task_revision"])
         self.assertEqual(task["task_revision"], continuation["task"]["revision"])
 
+    def test_task0002_durable_objective_and_material_decision_doctrine(self) -> None:
+        architect = (ROOT / "architect" / "SKILL.md").read_text(encoding="utf-8")
+        protocol = (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8")
+        combined = architect + protocol
+        for token in (
+            "durable user objective",
+            "governing, not infallible",
+            "compatible",
+            "trade-off",
+            "regression",
+            "explicit informed override",
+            "casual assent",
+        ):
+            self.assertIn(token, combined)
+
+    def test_task0002_current_capability_and_pre_mutation_verification_doctrine(self) -> None:
+        protocol = (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8")
+        executor = (ROOT / "executor" / "SKILL.md").read_text(encoding="utf-8")
+        architect = (ROOT / "architect" / "SKILL.md").read_text(encoding="utf-8")
+        combined = protocol + executor + architect
+        for token in (
+            "known capability",
+            "currently available capability",
+            "least-powerful",
+            "bounded escalation",
+            "before the first mutation",
+            "native verification",
+        ):
+            self.assertIn(token, combined)
+
+    def test_task0002_remote_truth_and_local_divergence_doctrine(self) -> None:
+        workflow = (ROOT / "github-dev-main-workflow" / "SKILL.md").read_text(encoding="utf-8")
+        executor = (ROOT / "executor" / "SKILL.md").read_text(encoding="utf-8")
+        protocol = (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8")
+        combined = workflow + executor + protocol
+        for token in (
+            "authorized remote Git state",
+            "canonical repository truth",
+            "local state is an execution copy",
+            "local ahead",
+            "local dirty",
+            "remote drift",
+        ):
+            self.assertIn(token, combined)
+        for token in ("auto-push", "reset", "adopt"):
+            self.assertIn(token, combined)
+
+    def test_task0002_task_launch_is_architect_only_non_authority_ux(self) -> None:
+        architect = (ROOT / "architect" / "SKILL.md").read_text(encoding="utf-8")
+        protocol = (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        combined = architect + protocol + readme
+        for token in (
+            "TASK LAUNCH",
+            "Chat",
+            "Role",
+            "Model",
+            "Effort",
+            "Progress",
+            "short explanation",
+            "PROMPT TO COPY",
+            "presentation only",
+            "not persisted",
+        ):
+            self.assertIn(token, combined)
+        self.assertFalse(any("launch" in path.name.lower() for path in (ROOT / "templates").iterdir()))
+
+    def test_task0002_local_hygiene_results_are_closed(self) -> None:
+        self.assertEqual(
+            getattr(VALIDATOR_MODULE, "LOCAL_HYGIENE_RESULTS", frozenset()),
+            frozenset({"PASS", "RETAINED_FOR_EVIDENCE", "BLOCKED"}),
+        )
+        report = (ROOT / "templates" / "report.yaml").read_text(encoding="utf-8")
+        self.assertIn("local_hygiene:", report)
+        self.assertIn("  result: PASS", report)
+
+        _, root = self.fixture()
+        path = root / "templates" / "report.yaml"
+        text = path.read_text(encoding="utf-8")
+        self.assertIn("  result: PASS", text)
+        path.write_text(text.replace("  result: PASS", "  result: UNKNOWN", 1), encoding="utf-8")
+        result = self.run_validator(root)
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("unsupported local hygiene result", result.stdout + result.stderr)
+
+    def test_task0002_local_hygiene_deletion_safety_markers(self) -> None:
+        protocol = (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8")
+        executor = (ROOT / "executor" / "SKILL.md").read_text(encoding="utf-8")
+        combined = protocol + executor
+        for token in (
+            "run-owned root",
+            "realpath",
+            "symlink",
+            "filesystem root",
+            "home",
+            "workspace root",
+            "repository root",
+            "pre-existing",
+            "sibling project",
+            "arbitrary user-supplied",
+            "RETAINED_FOR_EVIDENCE",
+            "BLOCKED",
+        ):
+            self.assertIn(token, combined)
+
+    def test_task0002_legacy_v3_report_without_local_hygiene_remains_valid(self) -> None:
+        _, root = self.fixture()
+        path = root / "templates" / "report.yaml"
+        text = path.read_text(encoding="utf-8")
+        marker = "local_hygiene:\n"
+        self.assertIn(marker, text)
+        start = text.index(marker)
+        end_marker = "\nchanged_files:\n"
+        end = text.index(end_marker, start)
+        path.write_text(text[:start] + text[end + 1 :], encoding="utf-8")
+        result = self.run_validator(root)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()
