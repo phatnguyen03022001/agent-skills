@@ -1,0 +1,223 @@
+protocol_version: 3
+
+task_id: TASK-0003
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: ""
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "d506f5caef3808fc2f7356172b5b648be78b628f"
+
+architect_analysis_skills:
+  - architect
+  - simplicity
+  - gap-analysis
+  - verification
+  - github-dev-main-workflow
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+    - github-dev-main-workflow
+  recommended:
+    - gap-analysis
+    - adversarial-audit
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "Operator request in the current Architect session to support one stable ChatGPT Architect and interchangeable Executors working across repositories sequentially, with explicit target confirmation and minimal copy/paste."
+    role: user_objective
+    precedence: 1
+  - source: "protocols/TASK_PROTOCOL.md@d506f5caef3808fc2f7356172b5b648be78b628f"
+    role: current_governance
+    precedence: 2
+  - source: "architect/SKILL.md@d506f5caef3808fc2f7356172b5b648be78b628f"
+    role: current_architect_contract
+    precedence: 3
+  - source: "executor/SKILL.md@d506f5caef3808fc2f7356172b5b648be78b628f"
+    role: current_executor_contract
+    precedence: 4
+
+structure_authority:
+  status: RESOLVED
+  source: "Existing Architect/Executor skills, Task Protocol, README, validator, tests, and canonical v3 task/report machinery at d506f5caef3808fc2f7356172b5b648be78b628f."
+  rationale: "Sequential rebinding is a bounded evolution of existing repository-binding semantics. It does not require a new role, skill, protocol version, task schema, orchestrator, registry, queue, database, or cross-repository authority artifact."
+
+objective: "Evolve protocol v3 so a ChatGPT Architect or Executor chat may work across multiple repositories sequentially while preserving exactly one active repository binding at a time, fresh repository-local task/handoff/base authority for every rebind, independent evidence/review/promotion lineage per repository, and backward compatibility for existing single-repository v3 workflows."
+
+scope:
+  required_changes:
+    - "Replace permanent one-session-one-repository Architect semantics with one-active-target-at-a-time semantics. Architect may switch repositories only after explicitly identifying the next owner/repo, refreshing canonical GitHub truth, and discarding previous repository-specific assumptions."
+    - "Permit an Executor chat to be reused across repositories only sequentially. The current task/repository binding remains immutable while active; rebinding requires the prior execution to be terminal/finalized and requires a fresh exact repository-local task, handoff, branch, and base identity."
+    - "Preserve repository-local authority: authority for repository A never grants authority for repository B, and report/review/verifier/promotion/release lineage remains independent for each repository."
+    - "Define cross-repository PROGRAM only as Architect/operator presentation for an ordered set of repository-local tasks. PROGRAM must not become a universal task authority, persisted shared mutable lifecycle object, orchestrator, transaction, registry, queue, scheduler, or database."
+    - "Align TASK LAUNCH presentation with the operator-facing fields Chat, Executor, Model, Effort, Progress, and concise explanation, followed separately by a self-contained PROMPT TO COPY; presentation remains non-authoritative and non-persisted."
+    - "Allow concrete program progress such as 'Program 2/4 · agent-standards · execution' while forbidding fake percentages when no real denominator exists."
+    - "Preserve generic least-powerful-sufficient execution-surface selection, low human-in-the-loop behavior, and bounded cost/quota discipline without hard-coding personal machines, Codex/Luna, tunnel names, or provider-specific defaults into reusable governance."
+    - "Add focused TDD/validator coverage for repository switching/rebinding, authority non-carryover, program non-authority, task-launch presentation, and backward compatibility."
+  allowed_existing_files_or_components:
+    - README.md
+    - architect/SKILL.md
+    - executor/SKILL.md
+    - protocols/TASK_PROTOCOL.md
+    - scripts/validate_skill_library.py
+    - scripts/test_validate_skill_library.py
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Operate this self-hosting execution entirely under pinned pre-task authority d506f5caef3808fc2f7356172b5b648be78b628f; newly edited semantics are not authority during this execution."
+  - "This execution targets only phatnguyen03022001/agent-skills on dev."
+  - "Keep protocol_version exactly 3 and preserve existing valid single-repository v3 behavior."
+  - "Exactly one repository binding may be active for a given Architect or Executor execution context at a time."
+  - "Repository switching/rebinding is sequential, explicit, fail-closed, and never carries Git/task/capability/promotion/release authority across repositories."
+  - "Every new repository binding requires fresh repository-local task identity, branch identity, handoff, and exact base HEAD."
+  - "PROGRAM is presentation/orchestration context only and never an authority source or shared mutable lifecycle object."
+  - "There remain only two organizational roles: Architect and Executor; reviewer/verifier/red-team/debugger/researcher/coder remain Executor specializations."
+  - "Keep exactly the current 15 top-level skills."
+  - "Do not hard-code operator-specific Mac paths, machine specs, Codex/Luna, tunnel names, or provider/model defaults into reusable governance."
+  - "Do not introduce speculative staging behavior; branch creation is not authorized by this task."
+  - "Do not mutate agent-standards, agent-documents, or agent-runtime during this execution."
+
+forbidden_changes:
+  - "Do not create a sixteenth skill, new protocol version, alternate task schema, universal multi-repository task, program authority artifact, orchestrator, scheduler, queue, database, registry, workflow engine, distributed lock, transaction mechanism, launcher framework, or extra organizational role."
+  - "Do not create branches or mutate main."
+  - "Do not promote, tag, publish a release, or mutate repository metadata."
+  - "Do not add dependencies."
+  - "Do not modify .github/workflows/validate-skill-library.yml unless a concrete blocker proves it necessary; if required, stop as BLOCKING because workflow mutation is not authorized."
+  - "Do not modify templates unless existing canonical envelopes are proven incapable of expressing the required fresh repository-local binding; if so stop as BLOCKING for Architect revision rather than broadening scope."
+  - "Do not modify agent-standards, agent-documents, or agent-runtime."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0003/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_write
+    - exact_remote_ref_read
+    - native_verification_execution
+  REVIEW:
+    - exact_commit_report_resolution
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Architect semantics allow sequential repository switching in one conversation while enforcing exactly one explicit active target and fresh GitHub truth before repository-specific work."
+    evidence_required: "Architect skill/protocol wording plus focused validator/unit tests including rejection of ambiguous simultaneous target semantics."
+  - id: AC-2
+    requirement: "Executor semantics allow sequential rebinding only after the prior execution is terminal/finalized; an active task/repository binding remains immutable."
+    evidence_required: "Executor skill/protocol wording plus focused positive and negative tests."
+  - id: AC-3
+    requirement: "Authority cannot carry from repository A to repository B; every rebind requires fresh repository-local task/handoff/branch/base identity."
+    evidence_required: "Protocol/Executor wording and tests proving missing/fresh identity behavior fails closed."
+  - id: AC-4
+    requirement: "Report, review, verifier, promotion, and release lineage remain independent per repository."
+    evidence_required: "Protocol wording and focused assertions that no cross-repository lineage shortcut is introduced."
+  - id: AC-5
+    requirement: "PROGRAM is presentation only for ordered repository-local tasks and creates no universal task authority, shared mutable state, or orchestration framework."
+    evidence_required: "Architect/protocol/README wording and negative validator/test assertions for forbidden authority/framework concepts."
+  - id: AC-6
+    requirement: "TASK LAUNCH supports Chat, Executor, Model, Effort, Progress, concise explanation, then separate self-contained PROMPT TO COPY, without becoming persisted authority."
+    evidence_required: "Architect skill/protocol/README wording and focused tests."
+  - id: AC-7
+    requirement: "Existing valid single-repository protocol-v3 workflows remain valid and unchanged in effective semantics."
+    evidence_required: "Backward-compatibility tests using existing valid v3 artifacts plus validator PASS."
+  - id: AC-8
+    requirement: "No new role, skill, dependency, protocol version, template, workflow, branch, staging machinery, runtime, orchestrator, queue, registry, database, or cross-repository authority artifact is introduced."
+    evidence_required: "Exact base..final diff/tree inventory and validator/test assertions."
+  - id: AC-9
+    requirement: "The exact final implementation HEAD passes repository-native verification and only authorized paths changed."
+    evidence_required: "Validator, unit tests, py_compile, git diff --check, exact changed-path inventory, exact final HEAD, and clean final checkout evidence."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Before first implementation mutation, prove repository_content_write, exact_remote_ref_read, and native_verification_execution are currently available; verify live repository == phatnguyen03022001/agent-skills, branch == dev, live HEAD == handoff base_head, and branch set remains exactly {dev, main}."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Use TDD: add focused failing tests first for Architect sequential switch, Executor terminal rebind, authority non-carryover, fresh repository-local binding identity, PROGRAM non-authority, TASK LAUNCH fields/progress, and legacy single-repository v3 compatibility; capture causal RED before production-governance edits."
+      required: true
+    - id: CHECK-3
+      command_or_check: "python3 scripts/validate_skill_library.py"
+      required: true
+    - id: CHECK-4
+      command_or_check: "python3 -m unittest scripts/test_validate_skill_library.py"
+      required: true
+    - id: CHECK-5
+      command_or_check: "python3 -m py_compile scripts/validate_skill_library.py scripts/test_validate_skill_library.py"
+      required: true
+    - id: CHECK-6
+      command_or_check: "git diff --check"
+      required: true
+    - id: CHECK-7
+      command_or_check: "Inspect exact base..final_execution_head diff and prove only authorized paths changed; exactly 15 SKILL.md locations remain; no dependency/workflow/branch/main/tag/release/metadata mutation occurred; no other repository was mutated; final checkout/local hygiene is clean or safely retained with bounded evidence."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
