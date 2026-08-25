@@ -684,5 +684,185 @@ class ValidatorRegressionTests(unittest.TestCase):
         self.assertIn("Supported protocol version: **3**", protocol)
 
 
+class Task0004GovernanceTests(unittest.TestCase):
+    def read(self, relative: str) -> str:
+        return (ROOT / relative).read_text(encoding="utf-8")
+
+    def test_ac1_operator_profile_is_generic_context_not_authority(self) -> None:
+        combined = self.read("architect/SKILL.md") + self.read("protocols/TASK_PROTOCOL.md")
+        for token in (
+            "optional operator profile",
+            "host/session/operator",
+            "durable preference/environment context",
+            "not target-repository factual or mutation authority",
+            "explicit current user decisions",
+        ):
+            self.assertIn(token, combined)
+        for forbidden in ("architect-profile", "MacBook", "M3"):
+            self.assertNotIn(forbidden, combined)
+
+    def test_ac2_prompt_to_copy_is_compact_authority_locator(self) -> None:
+        combined = (
+            self.read("architect/SKILL.md")
+            + self.read("protocols/TASK_PROTOCOL.md")
+            + self.read("README.md")
+        )
+        for token in (
+            "authority locator",
+            "target owner/repo",
+            "task ID/revision/path",
+            "exact base HEAD",
+            "current phase",
+            "resolve canonical authority",
+            "Do not duplicate",
+        ):
+            self.assertIn(token, combined)
+
+    def test_ac3_executor_binding_terminal_is_not_task_lifecycle(self) -> None:
+        combined = self.read("executor/SKILL.md") + self.read("protocols/TASK_PROTOCOL.md")
+        for token in (
+            "Executor-binding terminal",
+            "whole-task lifecycle",
+            "NEEDS_REVIEW",
+            "STALE_STATE",
+            "AUTHORITY_REQUIRED",
+            "CURRENT_PHASE_CAPABILITY_UNAVAILABLE",
+            "no mutation authority remains",
+            "does not imply acceptance, promotion, or release",
+        ):
+            self.assertIn(token, combined)
+
+    def test_ac4_one_current_architect_owns_final_judgment(self) -> None:
+        combined = (
+            self.read("architect/SKILL.md")
+            + self.read("protocols/TASK_PROTOCOL.md")
+            + self.read("contracts/ARCHITECT_REVIEW.md")
+        )
+        for token in (
+            "one current governing Architect",
+            "ACCEPT/REJECT/REVISE",
+            "Executor specialization",
+            "advisory evidence",
+            "designated verifier",
+        ):
+            self.assertIn(token, combined)
+
+    def test_ac5_execution_lanes_are_risk_proportional(self) -> None:
+        combined = self.read("architect/SKILL.md") + self.read("protocols/TASK_PROTOCOL.md")
+        for token in (
+            "DIRECT",
+            "BOUNDED",
+            "HIGH_ASSURANCE",
+            "small reversible low-risk",
+            "normal task",
+            "release-critical",
+            "DIRECT never bypasses",
+            "HIGH_ASSURANCE must not become the default",
+        ):
+            self.assertIn(token, combined)
+
+    def test_ac6_git_topologies_are_target_authoritative(self) -> None:
+        combined = (
+            self.read("github-dev-main-workflow/SKILL.md")
+            + self.read("protocols/TASK_PROTOCOL.md")
+        )
+        for token in (
+            "MAIN_ONLY",
+            "DEV_MAIN",
+            "DEV_STAGING_MAIN",
+            "explicitly activated",
+            "Never infer or create staging",
+            "repository-specific branch policy",
+        ):
+            self.assertIn(token, combined)
+
+    def test_ac7_normative_external_authority_is_immutable(self) -> None:
+        combined = self.read("architect/SKILL.md") + self.read("protocols/TASK_PROTOCOL.md")
+        for token in (
+            "external repository used as normative authority",
+            "immutable revision",
+            "before mutation",
+            "research/reference evidence",
+            "does not become normative authority",
+        ):
+            self.assertIn(token, combined)
+
+    def test_ac8_evidence_dedup_keeps_legacy_v3(self) -> None:
+        protocol = self.read("protocols/TASK_PROTOCOL.md")
+        for token in (
+            "unconditional protocol boilerplate",
+            "task-specific material authority",
+            "record evidence once",
+            "legacy inline evidence",
+            "no parallel compact schema",
+        ):
+            self.assertIn(token, protocol)
+        self.assertIn("Supported protocol version: **3**", protocol)
+
+    def test_ac9_design_readiness_is_material_and_proportional(self) -> None:
+        combined = (
+            self.read("architect/SKILL.md")
+            + self.read("gap-analysis/SKILL.md")
+            + self.read("design-review/SKILL.md")
+            + self.read("protocols/TASK_PROTOCOL.md")
+        )
+        for token in (
+            "material-design-readiness",
+            "applicable target product/design authority",
+            "material missing decisions",
+            "consequential implementation",
+            "trivial, mechanical, reversible, or well-specified",
+        ):
+            self.assertIn(token, combined)
+
+    def test_ac10_operator_attention_is_constrained_resource(self) -> None:
+        combined = self.read("architect/SKILL.md") + self.read("protocols/TASK_PROTOCOL.md")
+        for token in (
+            "operator attention/manual labor",
+            "constrained resource",
+            "manual command/RPC bridge",
+            "unavailable capability",
+            "destructive/irreversible authority",
+            "material paid-cost approval",
+        ):
+            self.assertIn(token, combined)
+
+    def test_ac11_maintenance_defaults_to_no_change(self) -> None:
+        combined = (
+            self.read("architect/SKILL.md")
+            + self.read("simplicity/SKILL.md")
+            + self.read("protocols/TASK_PROTOCOL.md")
+            + self.read("README.md")
+        )
+        for token in (
+            "NO CHANGE REQUIRED",
+            "evidence-backed defect",
+            "recurring missing capability",
+            "security issue",
+            "compatibility failure",
+            "material cost/usability/maintainability regression",
+            "smallest safe correction",
+            "Preference, novelty, elegance, architectural fashion, and hypothetical future scale",
+        ):
+            self.assertIn(token, combined)
+
+    def test_ac12_fifteen_skill_taxonomy_is_closed_by_default(self) -> None:
+        combined = (
+            self.read("architect/SKILL.md")
+            + self.read("simplicity/SKILL.md")
+            + self.read("README.md")
+        )
+        for token in (
+            "15-skill taxonomy",
+            "closed by default",
+            "materially distinct recurring responsibility",
+            "exceptional correctness/security",
+            "arbitrary numeric threshold",
+        ):
+            self.assertIn(token, combined)
+        self.assertEqual(len(VALIDATOR_MODULE.EXPECTED_SKILLS), 15)
+        self.assertEqual(len(list(ROOT.rglob("SKILL.md"))), 15)
+
+
 if __name__ == "__main__":
     unittest.main()
