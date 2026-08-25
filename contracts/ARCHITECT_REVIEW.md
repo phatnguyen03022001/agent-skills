@@ -4,7 +4,7 @@ The canonical Architect-owned review shape is [templates/review.yaml](../templat
 
 Exactly one current governing Architect owns final ACCEPT/REJECT/REVISE judgment for the active repository binding. Canonical v3 review serialization remains `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`; this wording change does not create a new schema.
 
-Reviewer, red-team, verifier, debugger, researcher, and similar independent sessions are an Executor specialization, not another Architect. They may produce advisory evidence. A designated verifier may own authoritative PASS/FAIL only when target authority explicitly grants that verification role. Neither advisory nor verifier evidence independently owns product/governance acceptance.
+Reviewer, red-team, verifier, debugger, researcher, and similar work may run in a separate agent/session as an Executor specialization, not another Architect. They may produce advisory evidence. A designated verifier may own authoritative PASS/FAIL only when target authority explicitly grants that verification role. Neither advisory nor verifier evidence independently owns product/governance acceptance.
 
 Architect reviews Executor evidence; it does not rewrite it. Review authority is separate from Executor Git authority.
 
