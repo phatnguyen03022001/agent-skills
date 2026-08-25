@@ -14,9 +14,15 @@ A single Executor chat may also be reused sequentially. While work is active, th
 
 The approved exact task plus handoff is prior authorization for bounded Executor actions inside the active binding; a role must not invent extra user approvals for phases already authorized by those artifacts.
 
-## Organizational roles
+## Optional operator profile
+
+A host/session/operator may supply an optional operator profile location/content at bootstrap. It is durable preference/environment context, not target-repository factual or mutation authority. Explicit current user decisions, target-repository canonical facts, and exact task authority outrank profile preferences. Reusable governance does not hard-code operator identity, profile location, machine, secret, personal provider/model default, personal path, or branch preference. A missing profile is not a blocker.
+
+## Organizational roles and acceptance ownership
 
 There are two organizational roles: Architect and Executor. Architect is ChatGPT. Reviewer, verifier, red-team, debugger, researcher, coder, and similar execution modes are Executor specializations, not additional organizational roles. Other execution agents/sessions, including Codex, operate as Executors when used. Role specialization never changes artifact ownership or authority boundaries.
+
+Exactly one current governing Architect owns final ACCEPT/REJECT/REVISE judgment for the active repository binding. Independent reviewer/red-team/verifier sessions are an Executor specialization and produce advisory evidence unless the target explicitly designates verifier-owned authoritative PASS/FAIL. They never become a second Architect or independently own product/governance acceptance. Existing v3 `review.yaml` values remain `ACCEPTED`, `REVISION_REQUIRED`, and `BLOCKED` for backward compatibility.
 
 ## Repository-local authority across sequential bindings
 
@@ -36,11 +42,25 @@ Architect optimizes for the user's durable user objective and explicit current p
 
 Classify material user decisions by impact. A compatible decision may proceed. A trade-off requires a warning and recommendation. A regression requires a strong warning. A decision that contradicts the durable objective stops for explicit informed override. Ambiguity or casual assent is not informed approval for material architecture, protocol, security, compatibility, destructive, or irreversible change.
 
+## Material-design-readiness gate
+
+Before consequential implementation, Architect identifies the applicable target product/design authority and resolves only material missing decisions that could change correctness, compatibility, security, ownership, irreversible behavior, or acceptance. Trivial, mechanical, reversible, or well-specified work is not forced through documentation ceremony. Gap analysis and design review remain proportional to material risk, and detailed documentation structure remains outside this protocol.
+
+## Risk-proportional execution lanes
+
+The one canonical v3 task/protocol supports three proportional lanes without another task schema, role, framework, or lifecycle:
+
+- `DIRECT`: small reversible low-risk changes with clear authority and cheap deterministic verification.
+- `BOUNDED`: normal task → Executor → verification → Architect review flow.
+- `HIGH_ASSURANCE`: materially consequential security, protocol, migration, irreversible, or release-critical work requiring stronger evidence/independence as explicitly specified by task authority.
+
+DIRECT never bypasses target truth, explicit write authority, safety, scope, or required verification. HIGH_ASSURANCE must not become the default ceremony. Lane choice affects evidence rigor only; it never manufactures Git/release authority or changes artifact ownership.
+
 ## Artifact ownership and authority
 
 Canonical target-repository artifacts are:
 
-- `task.yaml`: Architect-owned authority;
+- `task.yaml`: Architect-owned material authority;
 - `report.yaml`: Executor-owned evidence;
 - `review.yaml`: Architect-owned judgment when repository policy stores it;
 - [templates/continuation.yaml](../templates/continuation.yaml): a small machine-readable continuation envelope, not shared mutable state.
@@ -51,13 +71,19 @@ Content ownership, authority, and capability availability are distinct. Capabili
 
 `task.release_authority`, when present, is separately owned authority with three independent booleans: `create_version_tag`, `mutate_repository_metadata`, and `publish_release`. If absent, all three are false. Commit, push, and `promote_to_main` never imply any release authority.
 
-## Canonical handoffs
+## External normative authority
+
+Any external repository used as normative authority must be resolved to an immutable revision before mutation and represented through existing authority-source/task mechanisms. Mutable branch tips, latest documentation, or unpinned external repository state cannot govern execution. Current documentation, libraries, upstream repositories, examples, and other material used only as research/reference evidence does not become normative authority. This rule does not require a universal dependency registry.
+
+## Canonical handoffs and compact prompt locators
 
 [templates/handoff.yaml](../templates/handoff.yaml) is the Architect-to-Executor envelope containing protocol/type, exact task identity/path, repository/branch, and exact `base_head`.
 
 Before mutation Executor verifies supported protocol, `handoff_type == EXECUTOR`, repository/branch identity, live HEAD equality with `base_head`, exact task identity at that commit, task binding, `execution_ready`, pinned skills, structure authority, current-phase capability availability, and applicable mutation authority. Any mismatch is `BLOCKED`.
 
 A handoff authorizes only its repository. Rebinding to another repository always requires a fresh exact handoff and fresh exact base HEAD; prior handoff, task, Git authority, capability evidence, or lifecycle state cannot be reused as authority.
+
+Operator-facing `PROMPT TO COPY` is an authority locator, not another authority artifact. Normal content is target owner/repo, branch, exact task ID/revision/path, exact base HEAD, current phase when needed, and a concise instruction to resolve canonical authority, preflight, execute, verify, report, and stop. Do not duplicate scope, invariants, forbidden changes, acceptance criteria, capabilities, Git/release authority, verification detail, or unconditional protocol boilerplate already available from canonical artifacts unless access to canonical authority is genuinely unavailable.
 
 [templates/continuation.yaml](../templates/continuation.yaml) carries exact identity for a later post-review phase: protocol/task identity, phase, `reviewed_report.commit`, report revision, `promotion_candidate_head`, expected refs, prior result/lifecycle state, and one next authorized action. It does not create authority and does not implement an orchestrator, scheduler, queue, daemon, registry, database, or cross-session messaging runtime.
 
@@ -79,14 +105,20 @@ Keep these identities distinct within each repository binding:
 
 - `base_head`: Architect handoff identity for the pre-execution task snapshot;
 - `final_execution_head`: Executor implementation HEAD before committing `report.yaml`;
-- `reviewed_report.commit`: exact commit containing the report an independent Architect actually reviewed;
-- `promotion_candidate_head`: accepted-lineage `dev` SHA used for authoritative verification and promotion;
-- authoritative verifier identity/result: verifier-owned evidence applying to the exact candidate SHA;
+- `reviewed_report.commit`: exact commit containing the report the current governing Architect actually judged;
+- `promotion_candidate_head`: accepted-lineage SHA used for authoritative verification and promotion;
+- authoritative verifier identity/result: verifier-owned evidence applying to the exact candidate SHA when explicitly designated;
 - lifecycle state: a derived conclusion from authoritative artifacts, refs, and evidence, never a shared role-writable state file.
 
-`reviewed_report.commit` must resolve the exact committed report. Normal cross-session remote review requires remote Git reachability. A local-only report commit is valid only when reviewer and Executor use an explicitly **shared trusted** checkout or Git object database that deterministically resolves the same commit and report content.
+`reviewed_report.commit` must resolve the exact committed report. Normal cross-session remote review requires remote Git reachability. A local-only report commit is valid only when review and Executor contexts use an explicitly **shared trusted** checkout or Git object database that deterministically resolves the same commit and report content.
 
-`report.yaml` state belongs to Executor evidence. It may remain `REPORTED` / `NEEDS_REVIEW` after a separate Architect accepts that exact report. Architect acceptance is separate evidence and does not justify rewriting the Executor report merely to mirror later review state.
+`report.yaml` state belongs to Executor evidence. It may remain `REPORTED` / `NEEDS_REVIEW` after the Architect accepts that exact report. Architect acceptance is separate evidence and does not justify rewriting the Executor report merely to mirror later review state.
+
+## Executor-binding terminal vs whole-task lifecycle
+
+An Executor-binding terminal ends current mutation authority when required execution evidence is finalized. `NEEDS_REVIEW` / `REPORTED`, `BLOCKED`, `STALE_STATE`, `AUTHORITY_REQUIRED`, `CURRENT_PHASE_CAPABILITY_UNAVAILABLE`, failed terminal execution, or completed execution may all close an Executor binding when no mutation authority remains. This does not imply acceptance, promotion, or release and does not skip later lifecycle boundaries.
+
+Only after that explicit terminal boundary may a reused Executor context establish another repository binding from fresh repository-local authority.
 
 ## Derived workflow lifecycle
 
@@ -94,29 +126,29 @@ Lifecycle is derived per repository, not assigned by a multi-writer state servic
 
 - `PLANNED`: approved task and exact handoff exist.
 - `REPORTED`: Executor has produced the exact report evidence.
-- `ACCEPTED`: an independent Architect/session accepted the exact `reviewed_report.commit`.
-- `VERIFIED`: the authoritative verifier produced the required result for the exact `promotion_candidate_head`.
-- `PROMOTED_NOT_RELEASED`: `main` has been explicitly promoted to the exact accepted candidate, but one or more separately authorized release actions are not completed. Missing release capability does not invalidate the completed promotion.
+- `ACCEPTED`: the current governing Architect accepted the exact `reviewed_report.commit`.
+- `VERIFIED`: the designated authoritative verifier produced the required result for the exact `promotion_candidate_head`.
+- `PROMOTED_NOT_RELEASED`: the stable target ref has been explicitly promoted to the exact accepted candidate, but one or more separately authorized release actions are not completed.
 - `RELEASED`: separately authorized release actions are complete and final identity verification succeeds.
 
-`BLOCKED`, `REVISION_REQUIRED`, and `REVERIFY / REVIEW_REQUIRED` are stop/results, not permission to skip a lifecycle boundary. A terminal result closes the current execution but does not authorize the next repository.
+`BLOCKED`, `REVISION_REQUIRED`, and `REVERIFY / REVIEW_REQUIRED` are stop/results, not permission to skip a lifecycle boundary. A terminal result closes the current execution binding but does not authorize the next repository.
 
 ## Pre-authorized continuation
 
 Optional `continuation_policy.mode` is one of:
 
 - `MANUAL`: return control after the current bounded phase;
-- `AUTO_UNTIL_STOP`: an orchestration environment MAY dispatch the next required independent role or phase without returning to the user when existing exact authority already covers it.
+- `AUTO_UNTIL_STOP`: an orchestration environment MAY dispatch the next required independent phase without returning to the user when existing exact authority already covers it.
 
 If `continuation_policy` is absent, behavior is `MANUAL`.
 
 `AUTO_UNTIL_STOP` does not merge roles, let Executor self-accept, manufacture verifier PASS, infer promotion/release authority, or treat absence of a human as approval. It stops on `BLOCKED`, `STALE_STATE`, `AUTHORITY_REQUIRED`, `CURRENT_PHASE_CAPABILITY_UNAVAILABLE`, `REVIEW_REQUIRED`, `REVERIFY_REQUIRED`, or `USER_STOP`.
 
-Independent Architect review may be performed by a separate agent/session. Independence means distinct Architect role/session plus exact-evidence separation from the Executor, not a human-only requirement.
-
-## Execution environment and surface selection
+## Execution environment, operator attention, and surface selection
 
 Model, effort, and execution surfaces are supplied or established by the operator/environment, not guessed by Architect. Choose the least-powerful currently available surface sufficient for the phase. Use bounded escalation only when an authorized requirement cannot be satisfied on the lesser surface. Capability availability and authority remain separate facts.
+
+Treat operator attention/manual labor as a constrained resource. When an available authorized agent/tool can safely perform an action, do not use the operator as a manual command/RPC bridge. Human input remains valid for unavailable capability, physical/local-only action that cannot be automated, unresolved product intent, destructive/irreversible authority, material paid-cost approval, or a major informed trade-off.
 
 Keep resource use bounded. GitHub Actions must not become an iterative debugger when cheaper/native verification exists. Avoid repeated identical external/plugin/API calls; prefer bounded, narrow inspection over unnecessary full scans. Tool availability is not permission to consume quota. Paid or quota-limited resources are used only when materially justified. This is execution doctrine, not a billing subsystem.
 
@@ -127,6 +159,16 @@ Optional `capability_requirements` maps semantic phases such as `EXECUTION`, `RE
 Immediately before the first mutation or authoritative action of the current phase, preflight that phase's required capabilities. If the approved task already knows that native verification or another mandatory current-execution capability is required to complete the current execution, prove that currently available capability before the first mutation. If a required current-phase capability is unavailable, return `CURRENT_PHASE_CAPABILITY_UNAVAILABLE` and block before mutation. Do not preflight later phases as a prerequisite to completing an earlier authorized phase.
 
 Examples: repository content write/test execution for `EXECUTION`; exact commit/report resolution for `REVIEW`; exact-SHA verifier access for `VERIFICATION`; non-force target-ref update for `PROMOTION`; tag, repository-metadata, and release-publication APIs for `RELEASE`.
+
+## Target-authoritative Git topologies
+
+Repository-specific branch policy and exact live refs outrank generic defaults. The existing Git workflow owner supports:
+
+- `MAIN_ONLY`: one stable/working `main`-style branch when target authority says so;
+- `DEV_MAIN`: mutable `dev` integration plus stable `main`, preserving existing dev/main behavior;
+- `DEV_STAGING_MAIN`: `dev` → `staging` → `main` only when explicitly activated by target authority.
+
+Never infer or create staging merely because `DEV_STAGING_MAIN` is supported. Never create any branch without explicit branch-creation authority. Promotion semantics must be interpreted against the target-authoritative topology rather than hard-coded branch names.
 
 ## GitHub/local drift
 
@@ -142,9 +184,13 @@ Recursive cleanup is legal only when all safety proof is present. The target mus
 
 Missing cleanup proof means retain or return `BLOCKED`; never guess and delete. Evidence still required for diagnosis is retained with bounded artifact identity and reason and reported as `RETAINED_FOR_EVIDENCE`. Later stale cleanup obeys the same ownership, identity, realpath, and containment rules. A safely cleaned/no-artifact execution reports `PASS`.
 
+## Evidence deduplication and v3 compatibility
+
+Keep unconditional protocol boilerplate here, task-specific material authority in `task.yaml`, and record evidence once where practical instead of copying the same prose through task/report/review. Existing legacy inline evidence remains valid protocol-v3 input. Additive evidence references may be used only when existing validators/contracts support them; there is no parallel compact schema, task-lite variant, or new protocol version.
+
 ## TASK LAUNCH presentation
 
-TASK LAUNCH is Architect-only operator UX and presentation only. It is not persisted per task, is not execution authority, and Executor does not own it. It contains only Chat, Executor, operator/environment-supplied Model, operator/environment-supplied Effort, Progress, and Giải thích / short explanation. Follow it separately with a self-contained `PROMPT TO COPY`.
+TASK LAUNCH is Architect-only operator UX and presentation only. It is not persisted per task, is not execution authority, and Executor does not own it. It contains only Chat, Executor, operator/environment-supplied Model, operator/environment-supplied Effort, Progress, and Giải thích / short explanation. Follow it separately with the compact `PROMPT TO COPY` authority locator defined above.
 
 For a multi-repository program, Progress may use a concrete denominator such as `Program 2/4 · agent-standards · execution`. Do not invent fake percentages. No reusable launch artifact, launcher subsystem, or second authority source is created.
 
@@ -157,9 +203,9 @@ Only two candidate lineages are valid:
 1. `promotion_candidate_head == R`; or
 2. `promotion_candidate_head` is the **single-parent direct child** of `R`, its only parent is `R`, and that one child commit contains only the expected Architect-owned review artifact.
 
-A merge commit is never the permitted review-artifact child. An empty child is not the expected review artifact. Any other `dev` mutation after `R` invalidates the accepted lineage and requires a new Executor report plus Architect review. This exact accepted-lineage rule is unchanged.
+A merge commit is never the permitted review-artifact child. An empty child is not the expected review artifact. Any other target-branch mutation after `R` invalidates the accepted lineage and requires a new Executor report plus Architect review. This exact accepted-lineage rule is unchanged.
 
-Authoritative verification applies to the exact `promotion_candidate_head`. If `dev` changes afterward, prior evidence is stale: `REVERIFY / REVIEW_REQUIRED`. Actual `dev -> main` promotion is a separate explicitly authorized operation. Release remains separate again.
+Authoritative verification applies to the exact `promotion_candidate_head`. If the candidate branch changes afterward, prior evidence is stale: `REVERIFY / REVIEW_REQUIRED`. Actual promotion is a separate explicitly authorized operation. Release remains separate again.
 
 ## Structure authority applicability
 
@@ -175,6 +221,12 @@ Executor never changes this status to unblock itself.
 
 `LOCAL` is necessary for current acceptance criteria, completely inside authorized scope, and permitted by task policy. `FOLLOW_UP` is real but unnecessary or unauthorized for the current task; record it and do not fix it. `BLOCKING` means safe continuation requires missing or conflicting authority; stop with evidence. Discovery is never authorization.
 
+## Stable maintenance and change admission
+
+For mature governance, NO CHANGE REQUIRED is valid and preferred when no material problem is reproduced. Admit change only for an evidence-backed defect, stale rule/external reality, recurring missing capability, security issue, compatibility failure, material cost/usability/maintainability regression, or explicit durable maintainer objective change. Preference, novelty, elegance, architectural fashion, and hypothetical future scale are insufficient authority. Corrective maintenance remains permitted through the normal smallest safe correction path.
+
+The 15-skill taxonomy is closed by default. New-skill admission requires repeated real evidence of a materially distinct recurring responsibility that cannot fit an existing owner cleanly, or exceptional correctness/security justification. No arbitrary numeric threshold is universal authority for admission.
+
 ## Global structure invariants
 
 No orphan source files. Every new source file belongs to an existing or explicitly authorized responsibility. No speculative scale structure. Do not create layers, factories, registries, plugin systems, services, queues, caches, shared modules, top-level directories, or scaling infrastructure for hypothetical needs.
@@ -189,6 +241,6 @@ Executor never self-accepts its report. Only after that terminal boundary may a 
 
 ## Architect review and continuation
 
-An independent Architect/session resolves the exact committed report identified by `reviewed_report.commit` and reviews protocol, identity, execution base, skills, scope, structure, gaps, Git actions, acceptance evidence, and verifier evidence. Outcome is `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`.
+The current governing Architect resolves the exact committed report identified by `reviewed_report.commit` and reviews protocol, identity, execution base, skills, scope, structure, gaps, Git actions, acceptance evidence, advisory evidence, and designated verifier evidence. Final serialized outcome is `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`.
 
 `ACCEPTED` is contract acceptance. It is not authoritative verifier PASS, promotion authority, release authority, or proof that those later capabilities are available. When continuation is authorized, emit/use only exact evidence and refs; stale identity fails closed.

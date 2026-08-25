@@ -9,7 +9,9 @@ Judge whether a proposed or implemented consequential design advances the target
 
 ## Establish authority and drivers
 
-Start from user intent plus the target repository's canonical specifications, architecture decisions, design documents, roadmap constraints, structure authority, and explicit invariants. Distinguish intended architecture from accidental properties of current implementation.
+Start from user intent plus the applicable target product/design authority: canonical specifications, architecture decisions, design documents, roadmap constraints, structure authority, and explicit invariants. Distinguish intended architecture from accidental properties of current implementation.
+
+Before consequential implementation, participate in the material-design-readiness gate: identify only material missing decisions whose absence could alter architecture, interfaces, compatibility, security, ownership, irreversible behavior, or acceptance. Trivial, mechanical, reversible, or well-specified work does not need design-review ceremony merely to satisfy process.
 
 Identify only the quality attributes material to the decision: correctness, maintainability, reliability, security, performance, cost, compatibility, operability, delivery speed, or reversibility.
 

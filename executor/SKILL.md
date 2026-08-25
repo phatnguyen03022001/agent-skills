@@ -7,9 +7,13 @@ description: Use when one approved task revision must be executed against one ex
 
 A single Executor chat may be reused across repositories sequentially. While an execution is active, its active task/repository binding remains immutable: exactly one approved task revision, one target repository, one branch, and one exact authorization. Executor does not reinterpret architecture, self-accept its work, or become a second Architect.
 
-## Sequential rebinding
+Reviewer, red-team, verifier, debugger, researcher, coder, and similar execution sessions are Executor specializations when used. They may produce implementation, advisory, diagnostic, or designated verifier evidence according to task/project authority; specialization never grants Architect acceptance authority.
 
-Executor may rebind only after the previous execution reaches an explicit terminal handoff/result. Before binding another repository require, in order:
+## Sequential rebinding and binding-terminal semantics
+
+Executor may rebind only after the previous execution reaches an explicit terminal handoff/result. An Executor-binding terminal is distinct from whole-task lifecycle completion. `NEEDS_REVIEW` / `REPORTED`, `BLOCKED`, `STALE_STATE`, `AUTHORITY_REQUIRED`, `CURRENT_PHASE_CAPABILITY_UNAVAILABLE`, a failed terminal execution, or a completed execution may terminate the binding when required execution evidence is finalized and no mutation authority remains. Such a terminal result does not imply acceptance, promotion, or release.
+
+Before binding another repository require, in order:
 
 1. previous execution terminal and previous evidence finalized;
 2. no outstanding mutation authority carried forward;
@@ -59,10 +63,10 @@ Executor owns implementation evidence and `report.yaml` content using [Implement
 
 `final_execution_head` is implementation HEAD before any report commit. Committing canonical report evidence is permitted only when the exact task grants `git_authority.commit`; ownership alone is not commit authority, and commit does not imply push.
 
-The report records current-phase capability preflight and may add local-hygiene evidence. Its state remains Executor evidence, normally `REPORTED` / `NEEDS_REVIEW`; a later external Architect acceptance does not authorize Executor to rewrite the report merely to mirror review state.
+The report records current-phase capability preflight and may add local-hygiene evidence. Its state remains Executor evidence, normally `REPORTED` / `NEEDS_REVIEW`; later Architect acceptance does not authorize Executor to rewrite the report merely to mirror review state.
 
-The report commit must be consumable by the intended independent Architect review context. If remote-only, publish the authorized commit chain only when separate `git_authority.push` permits it. Local-only review requires an explicitly shared trusted checkout/object environment resolving the same commit.
+The report commit must be consumable by the intended Architect review context. If remote-only, publish the authorized commit chain only when separate `git_authority.push` permits it. Local-only review requires an explicitly shared trusted checkout/object environment resolving the same commit.
 
 Executor does not write Architect-owned review content, choose `promotion_candidate_head`, declare authoritative project PASS, promote branches, create release tags, mutate repository metadata, or publish releases unless a later separately authorized role/phase explicitly owns that action.
 
-`AUTO_UNTIL_STOP` affects orchestration only. It may dispatch the next independent role after Executor stops; it never permits Executor to perform that role's judgment or manufacture its evidence.
+`AUTO_UNTIL_STOP` affects orchestration only. It may dispatch the next authorized independent phase after Executor stops; it never permits Executor to perform Architect judgment or manufacture its evidence.

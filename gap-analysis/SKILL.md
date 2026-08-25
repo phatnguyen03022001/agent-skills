@@ -29,6 +29,10 @@ Probe for missing:
 
 Trace at least one normal path and relevant exceptional paths end-to-end. For stateful changes, ask what happens before, during, and after transition. For integrations, ask what happens when the dependency is slow, unavailable, duplicated, reordered, or returns unexpected data.
 
+## Material-design-readiness
+
+For consequential implementation, identify the applicable target product/design authority and surface material missing decisions that could change correctness, security, compatibility, ownership, irreversible behavior, or verification. Resolve those decisions before large or consequential coding. Trivial, mechanical, reversible, or well-specified work should not receive exhaustive documentation ceremony merely because gap analysis exists.
+
 ## Classify gaps
 
 For every real gap, record:

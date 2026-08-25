@@ -31,6 +31,12 @@ Protect decisions that are expensive to retrofit, such as data integrity, securi
 
 Prefer reversible, local changes. Keep abstractions narrow until repeated use demonstrates a stable concept. Remove duplicate representations and unnecessary indirection. Avoid configuration when a single project-wide choice is sufficient.
 
+## Stable maintenance and change admission
+
+For mature governance, NO CHANGE REQUIRED is a valid and preferred outcome when no material reproduced problem exists. Admit change for an evidence-backed defect, stale rule/external reality, recurring missing capability, security issue, compatibility failure, material cost/usability/maintainability regression, or explicit durable maintainer objective change. Preference, novelty, elegance, architectural fashion, and hypothetical future scale are insufficient authority. Corrective maintenance remains valid and should take the smallest safe correction.
+
+For this library, the 15-skill taxonomy is closed by default. A new skill requires repeated real evidence of a materially distinct recurring responsibility that cannot fit an existing owner cleanly, or exceptional correctness/security justification. Do not encode an arbitrary numeric threshold as a universal rule; the evidence must establish a distinct owner boundary.
+
 ## Source structure defaults
 
 Prefer the shallowest source structure that preserves real ownership and keeps navigation obvious. These are preferred review defaults, not absolute maximums. Apply them primarily to new directories, new modules, proposed structural expansion, and review of newly introduced nesting.
