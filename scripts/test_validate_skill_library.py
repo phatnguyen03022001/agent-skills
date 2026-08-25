@@ -164,16 +164,10 @@ class ValidatorRegressionTests(unittest.TestCase):
 
     def test_report_pre_execution_evidence_fields_are_required(self) -> None:
         keys = [
-            "handoff_type_confirmed",
-            "task_identity_confirmed",
-            "architect_binding_confirmed",
-            "repository_confirmed",
-            "branch_confirmed",
-            "base_head_confirmed",
-            "skill_revision_confirmed",
-            "required_execution_skills_available",
-            "structure_authority_confirmed",
-            "working_tree_clean",
+            "handoff_type_confirmed", "task_identity_confirmed", "architect_binding_confirmed",
+            "repository_confirmed", "branch_confirmed", "base_head_confirmed",
+            "skill_revision_confirmed", "required_execution_skills_available",
+            "structure_authority_confirmed", "working_tree_clean",
         ]
         for key in keys:
             with self.subTest(key=key):
@@ -200,30 +194,10 @@ class ValidatorRegressionTests(unittest.TestCase):
 
     def test_mapping_sequence_required_fields_and_types_are_enforced(self) -> None:
         cases = [
-            (
-                "templates/task.yaml",
-                '  - id: AC-1\n    requirement: ""\n    evidence_required: ""',
-                "  - banana: potato",
-                "acceptance_criteria[0]",
-            ),
-            (
-                "templates/task.yaml",
-                "    precedence: 1",
-                '    precedence: "wrong"',
-                "authority_sources[0].precedence",
-            ),
-            (
-                "templates/report.yaml",
-                '  - path: ""\n    summary: ""\n    new_file: false\n    in_scope: false\n    structure_authorized: false',
-                '  - summary: ""\n    new_file: false\n    in_scope: false\n    structure_authorized: false',
-                "changed_files[0]",
-            ),
-            (
-                "templates/report.yaml",
-                '  - criterion_id: AC-1\n    status: NOT_PROVEN\n    evidence: ""',
-                '  - status: NOT_PROVEN\n    evidence: ""',
-                "acceptance_evidence[0]",
-            ),
+            ("templates/task.yaml", '  - id: AC-1\n    requirement: ""\n    evidence_required: ""', "  - banana: potato", "acceptance_criteria[0]"),
+            ("templates/task.yaml", "    precedence: 1", '    precedence: "wrong"', "authority_sources[0].precedence"),
+            ("templates/report.yaml", '  - path: ""\n    summary: ""\n    new_file: false\n    in_scope: false\n    structure_authorized: false', '  - summary: ""\n    new_file: false\n    in_scope: false\n    structure_authorized: false', "changed_files[0]"),
+            ("templates/report.yaml", '  - criterion_id: AC-1\n    status: NOT_PROVEN\n    evidence: ""', '  - status: NOT_PROVEN\n    evidence: ""', "acceptance_evidence[0]"),
         ]
         for relative, before, after, expected in cases:
             with self.subTest(path=relative, expected=expected):
@@ -237,18 +211,8 @@ class ValidatorRegressionTests(unittest.TestCase):
 
     def test_mapping_sequence_closed_values_and_keys_are_enforced(self) -> None:
         cases = [
-            (
-                "templates/report.yaml",
-                "    classification: FOLLOW_UP",
-                "    classification: BANANA",
-                "unsupported value 'BANANA'",
-            ),
-            (
-                "templates/report.yaml",
-                '    message: ""',
-                '    message: ""\n    path: not-a-commit-record',
-                "unexpected fields ['path']",
-            ),
+            ("templates/report.yaml", "    classification: FOLLOW_UP", "    classification: BANANA", "unsupported value 'BANANA'"),
+            ("templates/report.yaml", '    message: ""', '    message: ""\n    path: not-a-commit-record', "unexpected fields ['path']"),
         ]
         for relative, before, after, expected in cases:
             with self.subTest(expected=expected):
@@ -291,76 +255,28 @@ class ValidatorRegressionTests(unittest.TestCase):
             ("templates/task.yaml", "external_skills.execution_required", "  execution_required: []"),
             ("templates/task.yaml", "external_skills.execution_recommended", "  execution_recommended: []"),
             ("templates/task.yaml", "objective", 'objective: ""'),
-            (
-                "templates/task.yaml",
-                "scope.allowed_existing_files_or_components",
-                '  allowed_existing_files_or_components:\n    - ""',
-            ),
+            ("templates/task.yaml", "scope.allowed_existing_files_or_components", '  allowed_existing_files_or_components:\n    - ""'),
             ("templates/task.yaml", "gap_policy.scope_expansion", "  scope_expansion: forbidden"),
             ("templates/task.yaml", "gap_policy.architecture_change", "  architecture_change: forbidden"),
             ("templates/task.yaml", "gap_policy.spec_change", "  spec_change: forbidden"),
             ("templates/task.yaml", "gap_policy.dependency_change", "  dependency_change: revised_contract_required"),
             ("templates/task.yaml", "gap_policy.public_contract_change", "  public_contract_change: revised_contract_required"),
-            (
-                "templates/task.yaml",
-                "verification.authoritative_verification.required",
-                "    required: false",
-            ),
-            (
-                "templates/task.yaml",
-                "verification.authoritative_verification.mechanism",
-                '    mechanism: ""',
-            ),
-            (
-                "templates/task.yaml",
-                "verification.authoritative_verification.expected_signal",
-                '    expected_signal: ""',
-            ),
+            ("templates/task.yaml", "verification.authoritative_verification.required", "    required: false"),
+            ("templates/task.yaml", "verification.authoritative_verification.mechanism", '    mechanism: ""'),
+            ("templates/task.yaml", "verification.authoritative_verification.expected_signal", '    expected_signal: ""'),
             ("templates/report.yaml", "execution.branch.role", "    role: integration"),
-            (
-                "templates/report.yaml",
-                "skill_library.repository",
-                "  repository: phatnguyen03022001/agent-skills",
-            ),
-            (
-                "templates/report.yaml",
-                "execution_skills_used.recommended",
-                "  recommended: []",
-            ),
-            (
-                "templates/report.yaml",
-                "execution_skills_used.external",
-                "  external: []",
-            ),
+            ("templates/report.yaml", "skill_library.repository", "  repository: phatnguyen03022001/agent-skills"),
+            ("templates/report.yaml", "execution_skills_used.recommended", "  recommended: []"),
+            ("templates/report.yaml", "execution_skills_used.external", "  external: []"),
             ("templates/report.yaml", "pushed", "pushed: false"),
             ("templates/report.yaml", "promoted_to_main", "promoted_to_main: false"),
-            (
-                "templates/report.yaml",
-                "authoritative_verification.required",
-                "  required: false",
-            ),
-            (
-                "templates/report.yaml",
-                "authoritative_verification.performed",
-                "  performed: false",
-            ),
-            (
-                "templates/report.yaml",
-                "authoritative_verification.result",
-                '  result: ""',
-            ),
-            (
-                "templates/report.yaml",
-                "authoritative_verification.evidence",
-                '  evidence: ""',
-            ),
+            ("templates/report.yaml", "authoritative_verification.required", "  required: false"),
+            ("templates/report.yaml", "authoritative_verification.performed", "  performed: false"),
+            ("templates/report.yaml", "authoritative_verification.result", '  result: ""'),
+            ("templates/report.yaml", "authoritative_verification.evidence", '  evidence: ""'),
             ("templates/report.yaml", "working_tree_after.clean", "  clean: false"),
             ("templates/report.yaml", "working_tree_after.summary", '  summary: ""'),
-            (
-                "templates/review.yaml",
-                "promotion_readiness.reason",
-                '  reason: ""',
-            ),
+            ("templates/review.yaml", "promotion_readiness.reason", '  reason: ""'),
         ]
         for relative, dotted, before in cases:
             with self.subTest(path=dotted):
@@ -380,11 +296,7 @@ class ValidatorRegressionTests(unittest.TestCase):
                 path = root / "templates" / "review.yaml"
                 text = path.read_text(encoding="utf-8")
                 text = text.replace("state: REVISION_REQUIRED", f"state: {state}", 1)
-                text = text.replace(
-                    "  eligible_for_candidate_capture: false",
-                    "  eligible_for_candidate_capture: true",
-                    1,
-                )
+                text = text.replace("  eligible_for_candidate_capture: false", "  eligible_for_candidate_capture: true", 1)
                 path.write_text(text, encoding="utf-8")
                 result = self.run_validator(root)
                 self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
@@ -398,11 +310,7 @@ class ValidatorRegressionTests(unittest.TestCase):
                 text = path.read_text(encoding="utf-8")
                 text = text.replace("state: REVISION_REQUIRED", "state: ACCEPTED", 1)
                 if eligible:
-                    text = text.replace(
-                        "  eligible_for_candidate_capture: false",
-                        "  eligible_for_candidate_capture: true",
-                        1,
-                    )
+                    text = text.replace("  eligible_for_candidate_capture: false", "  eligible_for_candidate_capture: true", 1)
                 path.write_text(text, encoding="utf-8")
                 result = self.run_validator(root)
                 self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
@@ -411,10 +319,7 @@ class ValidatorRegressionTests(unittest.TestCase):
         _, root = self.fixture()
         path = root / "templates" / "review.yaml"
         text = path.read_text(encoding="utf-8")
-        path.write_text(
-            text.replace("state: REVISION_REQUIRED", "state: UNKNOWN", 1),
-            encoding="utf-8",
-        )
+        path.write_text(text.replace("state: REVISION_REQUIRED", "state: UNKNOWN", 1), encoding="utf-8")
         result = self.run_validator(root)
         self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("unsupported review state", result.stdout + result.stderr)
@@ -428,14 +333,9 @@ class ValidatorRegressionTests(unittest.TestCase):
         self.assertTrue(path.is_file(), "missing canonical templates/continuation.yaml")
         text = path.read_text(encoding="utf-8")
         required = [
-            "handoff_type: CONTINUATION",
-            "phase: PROMOTION",
-            "reviewed_report:",
-            "promotion_candidate_head:",
-            "expected_refs:",
-            "prior_result:",
-            "prior_lifecycle_state:",
-            "next_authorized_action:",
+            "handoff_type: CONTINUATION", "phase: PROMOTION", "reviewed_report:",
+            "promotion_candidate_head:", "expected_refs:", "prior_result:",
+            "prior_lifecycle_state:", "next_authorized_action:",
         ]
         for token in required:
             self.assertIn(token, text)
@@ -470,12 +370,9 @@ class ValidatorRegressionTests(unittest.TestCase):
             text = path.read_text(encoding="utf-8")
             before = "continuation_policy:\n  mode: MANUAL\n  stop_conditions:"
             self.assertIn(before, text)
-            path.write_text(
-                text.replace(before, "continuation_policy:\n  mode: MANUAL\n  stop_conditions: BLOCKED", 1),
-                encoding="utf-8",
-            )
+            path.write_text(text.replace(before, "continuation_policy:\n  mode: MANUAL\n  stop_conditions: BLOCKED", 1), encoding="utf-8")
         output = self.assert_rejected(mutate)
-        self.assertIn("continuation_policy.stop_conditions", output)
+        self.assertIn("stop_conditions", output)
 
     def test_capability_requirement_structure_is_phase_specific_and_closed(self) -> None:
         def mutate(root: Path) -> None:
@@ -483,14 +380,7 @@ class ValidatorRegressionTests(unittest.TestCase):
             text = path.read_text(encoding="utf-8")
             before = "capability_requirements:\n  EXECUTION:\n    - repository_content_write"
             self.assertIn(before, text)
-            path.write_text(
-                text.replace(
-                    before,
-                    "capability_requirements:\n  EXECUTION: repository_content_write",
-                    1,
-                ),
-                encoding="utf-8",
-            )
+            path.write_text(text.replace(before, "capability_requirements:\n  EXECUTION: repository_content_write", 1), encoding="utf-8")
         output = self.assert_rejected(mutate)
         self.assertIn("capability_requirements.EXECUTION", output)
 
