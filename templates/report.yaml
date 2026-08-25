@@ -41,6 +41,15 @@ pre_execution_checks:
   structure_authority_confirmed: false
   working_tree_clean: false
 
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - repository_content_write
+  available: []
+  missing:
+    - repository_content_write
+  passed: false
+
 changed_files:
   - path: ""
     summary: ""
