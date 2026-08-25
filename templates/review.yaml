@@ -11,6 +11,11 @@ reviewed_report:
   commit: "<exact commit containing reviewed report>"
   report_revision: 1
 
+independence:
+  reviewer_role: ARCHITECT
+  separate_session_from_executor: true
+  exact_report_identity_verified: false
+
 contract_compliance:
   protocol_version: NOT_PROVEN
   identity: NOT_PROVEN
