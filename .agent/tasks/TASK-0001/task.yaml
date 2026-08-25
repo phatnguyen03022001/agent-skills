@@ -1,0 +1,238 @@
+protocol_version: 3
+
+task_id: TASK-0001
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: ""
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "85bf97ad5aad4a89157e83e37655b805fc8ae280"
+
+architect_analysis_skills:
+  - architect
+  - simplicity
+  - gap-analysis
+  - verification
+  - reliability
+  - github-dev-main-workflow
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+    - github-dev-main-workflow
+  recommended:
+    - gap-analysis
+    - adversarial-audit
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "User authorization in Architect session: reduce human-in-loop while preserving deterministic fail-closed governance and implement all bounded hardening findings from the agent-standards release exercise."
+    role: user_objective
+    precedence: 1
+  - source: "protocols/TASK_PROTOCOL.md@85bf97ad5aad4a89157e83e37655b805fc8ae280"
+    role: current_governance
+    precedence: 2
+  - source: "contracts/IMPLEMENTATION_CONTRACT.md@85bf97ad5aad4a89157e83e37655b805fc8ae280"
+    role: current_task_contract
+    precedence: 3
+  - source: "contracts/ARCHITECT_REVIEW.md@85bf97ad5aad4a89157e83e37655b805fc8ae280"
+    role: current_review_contract
+    precedence: 4
+  - source: "README.md@85bf97ad5aad4a89157e83e37655b805fc8ae280"
+    role: repository_model
+    precedence: 5
+
+structure_authority:
+  status: RESOLVED
+  source: "Current repository tree and README at 85bf97ad5aad4a89157e83e37655b805fc8ae280. One new reusable non-skill template under existing templates/ is authorized; the Architect-owned .agent task tree is already created by the planning commit."
+  rationale: "The hardening belongs in the existing protocol/contracts/templates/core skills/validator surfaces. No new skill, role, subsystem, top-level product directory, dependency, service, runtime, coordinator, registry, queue, or database is justified."
+
+objective: "Harden protocol v3 so a user or Architect can authorize one bounded objective once and independent agent roles can continue deterministically through implementation, review, verification, promotion, and release without redundant human checkpoints, while preserving exact-SHA lineage, separation of duties, fail-closed behavior, and backward compatibility with existing v3 tasks."
+
+scope:
+  required_changes:
+    - "Add an explicit, derived workflow lifecycle and canonical result vocabulary covering planning, execution, reporting, independent acceptance, promotion, the PROMOTED_NOT_RELEASED intermediate release state, and final release."
+    - "Add a pre-authorized continuation policy that can express MANUAL versus AUTO_UNTIL_STOP behavior and fixed stop conditions. Automatic continuation must never create missing authority, evidence, verifier PASS, review acceptance, or capability."
+    - "Add semantic execution-surface capability requirements by phase and define a fail-closed capability preflight. Keep authority and observed capability availability strictly separate."
+    - "Define that a capability missing for the current phase blocks before mutation, while a capability needed only by a later phase does not block completion of an explicitly valid earlier lifecycle state."
+    - "Add explicit release-level authority for version-tag creation, repository metadata mutation, and release publication without weakening the existing independence of Git capabilities."
+    - "Add one small canonical continuation handoff shape for post-report/post-review phase transitions so exact task identity, reviewed report identity, promotion candidate, expected refs, prior result, and next action can be passed machine-readably across sessions."
+    - "Formalize that independent Architect review may be performed by a separate agent/session and does not inherently require a human, but an Executor must never self-accept or manufacture Architect-owned judgment."
+    - "Formalize that an already approved exact task/handoff is sufficient prior approval for actions inside its authorization envelope; Executor must not ask for redundant user confirmation unless a defined stop condition is reached or a stricter non-waivable safety policy applies."
+    - "Clarify report state versus review state: report.yaml remains Executor evidence and is not rewritten merely because an external Architect later accepts it."
+    - "Make canonical task authoring more compact without creating a second task schema/profile or duplicating authority. Remove only boilerplate that is already unconditional protocol truth or safely optional; keep all safety-significant per-task authority, scope, verification, structure, and exact-identity decisions explicit. Existing expanded v3 tasks must remain valid."
+    - "Add a concise canonical identity/lifecycle cheat sheet so base_head, final_execution_head, reviewed_report.commit, promotion_candidate_head, verifier identity, lifecycle state, and ownership are not conflated."
+    - "Update validator and tests with TDD so the new canonical templates/semantics are deterministic and current v3 compatibility is regression-covered."
+  allowed_existing_files_or_components:
+    - README.md
+    - protocols/TASK_PROTOCOL.md
+    - contracts/IMPLEMENTATION_CONTRACT.md
+    - contracts/IMPLEMENTATION_REPORT.md
+    - contracts/ARCHITECT_REVIEW.md
+    - architect/SKILL.md
+    - executor/SKILL.md
+    - github-dev-main-workflow/SKILL.md
+    - templates/task.yaml
+    - templates/handoff.yaml
+    - templates/report.yaml
+    - templates/review.yaml
+    - scripts/validate_skill_library.py
+    - scripts/test_validate_skill_library.py
+    - .agent/tasks/TASK-0001/report.yaml
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Keep supported protocol_version exactly 3. This is an additive/backward-compatible hardening, not a protocol v4 redesign."
+  - "Existing valid protocol-v3 task/handoff/report/review artifacts must remain semantically valid; absent new optional controls default fail-closed/manual, never permissive."
+  - "Do not add a new agent role, skill, coordinator, orchestrator, runtime service, daemon, queue, database, registry, or shared state service."
+  - "Keep exactly the current 15 top-level skills."
+  - "Do not create a second compact task schema or parallel protocol. There is one canonical v3 task model."
+  - "Authority and capability availability are orthogonal: authority without capability cannot execute; capability without authority never permits execution."
+  - "AUTO_UNTIL_STOP authorizes continuation orchestration only. It never permits Executor self-review, self-acceptance, bypass of independent review, bypass of authoritative verification, or implicit Git/release authority."
+  - "Independent review means role/session separation and exact evidence identity, not necessarily a human reviewer."
+  - "Exact-SHA rules remain unchanged: base_head, final_execution_head, reviewed_report.commit, and promotion_candidate_head stay distinct; accepted lineage remains R or exactly one permitted review-artifact child."
+  - "No automatic promotion or release is permitted merely because implementation, CI, review, or verification succeeded. The exact task must explicitly authorize each mutation."
+  - "A current-phase required capability must be proven before the first mutation of that phase. Capability probing itself must not mutate the target."
+  - "Later-phase capability absence may yield a valid intermediate lifecycle state such as PROMOTED_NOT_RELEASED when the earlier phase is independently authorized and complete."
+  - "Report ownership remains Executor-only; Architect review judgment remains Architect-only."
+  - "No unrelated cleanup or adjacent fixes."
+  - "No undocumented scope expansion."
+  - "No unauthorized dependency change."
+  - "No unauthorized structural reorganization."
+  - "No orphan source files."
+  - "No speculative scale structure."
+
+forbidden_changes:
+  - "Do not increment or reinterpret protocol_version 3 incompatibly."
+  - "Do not weaken exact-base, exact-report, exact-candidate, stale-state, or accepted-lineage checks."
+  - "Do not allow one actor to self-accept its own execution report."
+  - "Do not make human absence equivalent to approval. Approval must come from the exact task/authority chain."
+  - "Do not make tool availability equivalent to permission."
+  - "Do not make permission equivalent to tool availability."
+  - "Do not introduce scores, heuristics, probabilistic acceptance, fuzzy matching, latest-branch authority, or non-exact release identity."
+  - "Do not add a generic plugin system, capability registry service, scheduler, workflow engine, or cross-session messaging implementation."
+  - "Do not add dependencies; validator/tests remain stdlib-only."
+  - "Do not broaden or duplicate the GitHub Actions workflow."
+  - "Do not modify .github/workflows/validate-skill-library.yml unless a concrete test proves the current relevant-path coverage is insufficient; if such a need appears, classify it BLOCKING because this task does not authorize workflow mutation."
+  - "Do not create branches, temporary branches, backup branches, PR branches, release branches, or test branches."
+  - "Do not mutate main."
+  - "Do not promote dev to main."
+  - "Do not create tags or GitHub Releases as part of this implementation task."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - templates/continuation.yaml
+    - .agent/tasks/TASK-0001/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Protocol v3 remains supported as version 3 and legacy expanded v3 artifacts remain valid; all new controls are additive with manual/fail-closed defaults when absent."
+    evidence_required: "Focused validator unit tests for backward compatibility plus exact protocol/template inspection."
+  - id: AC-2
+    requirement: "The protocol defines deterministic lifecycle semantics through independent acceptance, promotion, PROMOTED_NOT_RELEASED, and RELEASED without creating a shared mutable lifecycle artifact owned by multiple roles."
+    evidence_required: "Protocol/contracts/templates show derived state rules, legal transitions, invalidation conditions, and canonical result vocabulary."
+  - id: AC-3
+    requirement: "A continuation policy supports MANUAL and AUTO_UNTIL_STOP, with explicit stop conditions and a rule that automatic continuation never crosses role/evidence/authority boundaries by implication."
+    evidence_required: "Task template + Task Protocol + Architect/Executor wording and validator tests for allowed values/default behavior."
+  - id: AC-4
+    requirement: "Capability requirements are declared semantically by phase and observed by preflight; missing current-phase capability blocks before mutation; future-phase absence does not retroactively invalidate a completed earlier phase."
+    evidence_required: "Task/report or continuation shapes, protocol semantics, GitHub workflow mapping, and negative tests for malformed capability structures."
+  - id: AC-5
+    requirement: "Release mutations have explicit independent authority for version tag, repository metadata, and release publication; none is inferred from commit/push/promotion authority."
+    evidence_required: "Canonical task contract/template and GitHub workflow skill explicitly show independent release authority and exact-SHA requirements."
+  - id: AC-6
+    requirement: "A single small continuation template supports deterministic post-review handoff with exact task/report/candidate/ref identities, prior result, phase, and next action; no second task schema or orchestration subsystem is introduced."
+    evidence_required: "templates/continuation.yaml plus protocol/validator coverage."
+  - id: AC-7
+    requirement: "Independent Architect acceptance can be agent/session-based, but Executor self-acceptance remains forbidden and external review does not require rewriting report.yaml."
+    evidence_required: "Architect/Executor skills, Architect Review contract, Implementation Report contract, and review template wording."
+  - id: AC-8
+    requirement: "An approved exact task/handoff is treated as prior authorization for its bounded actions, preventing redundant human approval prompts unless a defined stop condition or stricter non-waivable safety gate is reached."
+    evidence_required: "Task Protocol and Executor skill state this rule without weakening fail-closed behavior."
+  - id: AC-9
+    requirement: "Canonical task authoring is materially less repetitive without a parallel compact profile/schema and without making safety-significant per-task authority implicit."
+    evidence_required: "Diff of templates/task.yaml and corresponding compatibility tests; protocol-owned defaults are explicit in contracts."
+  - id: AC-10
+    requirement: "README contains a concise lifecycle/identity/ownership cheat sheet and main flow reflects autonomous continuation as optional, not mandatory infrastructure."
+    evidence_required: "README inspection and validator/catalog/link PASS."
+  - id: AC-11
+    requirement: "Validator and tests deterministically enforce the new template/semantic invariants using stdlib only, including negative cases and legacy-v3 compatibility."
+    evidence_required: "Red-green evidence for focused tests followed by full validator and unittest PASS."
+  - id: AC-12
+    requirement: "Repository remains exactly 15 skills, no new dependency/service/runtime/workflow surface is added, and changes stay inside the restrictive file set."
+    evidence_required: "Final tree/diff inspection, validator PASS, git diff --check, and changed-file inventory."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Write focused failing tests first for the new canonical template/semantic validation and legacy-v3 compatibility; run those tests and capture the expected pre-implementation failure before changing validator/production protocol surfaces."
+      required: true
+    - id: CHECK-2
+      command_or_check: "python3 scripts/validate_skill_library.py"
+      required: true
+    - id: CHECK-3
+      command_or_check: "python3 -m unittest scripts/test_validate_skill_library.py"
+      required: true
+    - id: CHECK-4
+      command_or_check: "python3 -m py_compile scripts/validate_skill_library.py scripts/test_validate_skill_library.py"
+      required: true
+    - id: CHECK-5
+      command_or_check: "git diff --check"
+      required: true
+    - id: CHECK-6
+      command_or_check: "Inspect the exact final diff and prove: only authorized files changed; exactly 15 SKILL.md locations remain; no dependency/workflow/main/branch/tag/release mutation occurred; legacy protocol-v3 compatibility tests pass."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+blocking_decisions: []
+execution_ready: true
