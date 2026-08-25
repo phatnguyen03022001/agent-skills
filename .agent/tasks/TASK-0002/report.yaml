@@ -2,7 +2,7 @@ protocol_version: 3
 
 task_id: TASK-0002
 task_revision: 1
-report_revision: 1
+report_revision: 2
 state: REPORTED
 
 task_source:
@@ -19,8 +19,8 @@ execution:
 
 skill_library:
   repository: phatnguyen03022001/agent-skills
-  authorized_revision: "85bf97ad5aad4a89157e83e37655b805fc8ae280"
-  observed_revision: "85bf97ad5aad4a89157e83e37655b805fc8ae280"
+  authorized_revision: "d2835ea47346989d8817c67c71d24fc7b3e57972"
+  observed_revision: "d2835ea47346989d8817c67c71d24fc7b3e57972"
 
 execution_skills_used:
   required:
