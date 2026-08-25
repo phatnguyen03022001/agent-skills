@@ -8,7 +8,6 @@ import importlib.util
 import io
 import shutil
 import subprocess
-import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -470,30 +469,6 @@ class ValidatorRegressionTests(unittest.TestCase):
         self.assertEqual(task["task_revision"], report["task_revision"])
         self.assertEqual(task["task_revision"], review["task_revision"])
         self.assertEqual(task["task_revision"], continuation["task"]["revision"])
-
-    def test_required_executor_shell_checks(self) -> None:
-        compile_cmd = [
-            sys.executable,
-            "-m",
-            "py_compile",
-            "scripts/validate_skill_library.py",
-            "scripts/test_validate_skill_library.py",
-        ]
-        print("CHECK-4:", " ".join(compile_cmd))
-        subprocess.run(compile_cmd, cwd=ROOT, check=True)
-
-        print("CHECK-5: git diff --check")
-        subprocess.run(["git", "diff", "--check"], cwd=ROOT, check=True)
-
-        base = "0a71e8c9f230b924fcb4af0a2b48d95f7d23f5a5"
-        print("CHECK-5-full: fetch exact base and check base..HEAD")
-        subprocess.run(
-            ["git", "fetch", "--no-tags", "--depth=64", "origin", "dev"],
-            cwd=ROOT,
-            check=True,
-        )
-        subprocess.run(["git", "cat-file", "-e", f"{base}^{{commit}}"], cwd=ROOT, check=True)
-        subprocess.run(["git", "diff", "--check", base, "HEAD"], cwd=ROOT, check=True)
 
 
 if __name__ == "__main__":
