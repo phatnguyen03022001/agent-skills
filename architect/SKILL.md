@@ -5,7 +5,7 @@ description: Use when a software task needs repository-aware routing, governance
 
 # Architect
 
-Architect is the central router/governor. It turns user intent and repository authority into deterministic tasks, handoffs, and reviews. Domain reasoning stays in domain skills.
+Architect is the central router/governor. It turns user intent and repository authority into deterministic tasks, handoffs, reviews, and exact continuation evidence. Domain reasoning stays in domain skills.
 
 ## One session, one target repository
 
@@ -16,12 +16,12 @@ If asked to govern another target repository, return `NEW_ARCHITECT_SESSION_REQU
 ## Route before loading
 
 1. bind the exact target repository;
-2. inspect target product/spec/design/structure and verification authority;
+2. inspect target truth and verification authority;
 3. refresh branch state;
 4. load the smallest useful skill set;
 5. resolve material planning gaps;
-6. create/revise Architect-owned task authority;
-7. resolve `structure_authority`;
+6. create/revise the one canonical v3 task authority;
+7. resolve `structure_authority` and task-specific capability/continuation/release controls;
 8. commit planning state when authorized/required;
 9. refresh HEAD;
 10. emit [templates/handoff.yaml](../templates/handoff.yaml) with exact task identity and base HEAD.
@@ -32,18 +32,22 @@ Normally use 2–5 active skills. Never preload all skill bodies.
 
 Target-repository truth outranks shared skills. Architect owns `task.yaml` content and review judgment. Executor owns implementation and `report.yaml` content. The project verifier owns authoritative PASS / FAIL.
 
-Content ownership is not Git authority. `task.git_authority` governs Executor Git mutations. If an execution-ready task expects canonical committed report evidence, Architect must grant Executor commit capability explicitly; Architect review authority does not do that implicitly. `create_branch`, `commit`, `push`, and `promote_to_main` are independent capabilities, so no one capability is inferred from another.
+Authority and capability availability are separate. `task.git_authority` governs Executor Git mutations; `release_authority` separately governs version-tag creation, repository-metadata mutation, and release publication. No field is inferred from commit, push, promotion, tool availability, or the absence of a human.
 
-Architect must also plan a usable report transport for the intended review context. Remote-only review requires the report commit to become reachable from the authorized remote Git state, so grant only the minimum Executor push authority needed for that publication. A shared trusted checkout/object database may support local-only review without granting push.
+An approved exact task/handoff may pre-authorize bounded work once. `continuation_policy: AUTO_UNTIL_STOP` permits an orchestration environment to dispatch the next already-authorized independent role without returning to the user, but does not let one role manufacture another role's authority, evidence, review, or verifier PASS.
 
-Architect-owned `review.yaml` may be committed by an authorized Architect or remain external when repository policy permits. Architect never rewrites Executor evidence.
+## Independent review
+
+Architect review may be performed by a separate agent/session; it is not human-only. The reviewer must be independent from the Executor by role/session and exact-evidence separation, and must resolve the exact committed report identified by `reviewed_report.commit`.
+
+Architect never rewrites Executor evidence merely to mirror a later review state. `report.yaml` may remain `REPORTED` / `NEEDS_REVIEW` after the external review is `ACCEPTED`.
 
 ## Review and promotion lineage
 
-Review the exact committed report identified by `reviewed_report.commit` using [Architect Review](../contracts/ARCHITECT_REVIEW.md), and require the review context to resolve that exact commit and report content deterministically.
-
 Let `R = reviewed_report.commit` after acceptance. A valid `promotion_candidate_head` is only `R`, or the single-parent direct child of `R` when that one child has only parent `R` and contains solely the expected Architect-owned review artifact. Merge commits, empty children, and any other post-review mutation require a new Executor report and Architect review.
 
-Authoritative project verification applies to the exact candidate SHA. `ACCEPTED` does not manufacture verifier PASS or promotion authority.
+Authoritative verification applies to the exact candidate SHA. `ACCEPTED` does not manufacture verifier PASS, promotion authority, release authority, or later capability availability.
+
+For post-review continuation use [templates/continuation.yaml](../templates/continuation.yaml) only as an exact identity envelope. Current-phase required capability unavailable blocks that phase before mutation. A later release capability gap does not invalidate an earlier valid promotion; the derived state may be `PROMOTED_NOT_RELEASED`.
 
 See the [Task Protocol](../protocols/TASK_PROTOCOL.md) and [task template](../templates/task.yaml).
