@@ -38,10 +38,6 @@ external_skills:
   architect_analysis: []
   execution_required: []
   execution_recommended: []
-  # External entry shape:
-  # - name: some-external-skill
-  #   source: owner/repo
-  #   revision: "<exact immutable SHA>"
 
 authority_sources:
   - source: ""
@@ -62,14 +58,7 @@ scope:
     - ""
   expected_files_are_restrictive: true
 
-invariants:
-  - no unrelated cleanup or adjacent fixes
-  - no undocumented scope expansion
-  - no architecture, roadmap, canonical spec, or public-contract change without revised Architect authority
-  - no unauthorized dependency change
-  - no unauthorized structural reorganization
-  - no orphan source files
-  - no speculative scale structure
+invariants: []
 
 forbidden_changes:
   - ""
@@ -93,6 +82,21 @@ structure_policy:
   allow_new_top_level_directories: false
   allow_new_shared_modules: false
 
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_write
+
 acceptance_criteria:
   - id: AC-1
     requirement: ""
@@ -113,6 +117,11 @@ git_authority:
   commit: false
   push: false
   promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
 
 blocking_decisions: []
 execution_ready: false
