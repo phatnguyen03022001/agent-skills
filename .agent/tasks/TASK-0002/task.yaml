@@ -1,0 +1,256 @@
+protocol_version: 3
+
+task_id: TASK-0002
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: ""
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "d2835ea47346989d8817c67c71d24fc7b3e57972"
+
+architect_analysis_skills:
+  - architect
+  - simplicity
+  - gap-analysis
+  - verification
+  - reliability
+  - github-dev-main-workflow
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+    - github-dev-main-workflow
+  recommended:
+    - gap-analysis
+    - adversarial-audit
+    - security-review
+    - reliability
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "User approval in the Architect session to harden successor-Architect judgment, operator execution-surface awareness, task-launch presentation, GitHub/local drift handling, verification-surface preflight, and fail-closed local hygiene/deletion safety."
+    role: user_objective
+    precedence: 1
+  - source: "protocols/TASK_PROTOCOL.md@d2835ea47346989d8817c67c71d24fc7b3e57972"
+    role: current_governance
+    precedence: 2
+  - source: "architect/SKILL.md@d2835ea47346989d8817c67c71d24fc7b3e57972"
+    role: current_architect_contract
+    precedence: 3
+  - source: "executor/SKILL.md@d2835ea47346989d8817c67c71d24fc7b3e57972"
+    role: current_executor_contract
+    precedence: 4
+  - source: "github-dev-main-workflow/SKILL.md@d2835ea47346989d8817c67c71d24fc7b3e57972"
+    role: current_git_model
+    precedence: 5
+
+structure_authority:
+  status: RESOLVED
+  source: "Existing protocol, Architect/Executor skills, GitHub workflow skill, README, report template, validator, and tests at d2835ea47346989d8817c67c71d24fc7b3e57972."
+  rationale: "The hardening belongs in existing governance surfaces. No new role, skill, runtime, operator service, launcher, registry, state store, or reusable template is needed."
+
+objective: "Harden protocol v3 so successor Architects optimize for durable user objectives rather than blindly preserving current authority or the latest casual instruction; choose and preflight currently available execution capabilities correctly; present deterministic operator launch handoffs; handle GitHub/local drift fail-closed; and require isolated, ownership-proven, bounded cleanup for local execution so agent-created temporary artifacts are removed without risking pre-existing user projects or filesystem state."
+
+scope:
+  required_changes:
+    - "Define successor-Architect judgment hierarchy: durable user objective and explicit current product/design authority outrank derived architecture, implementation accident, and reviewer preference; canonical means governing, not infallible. Architect may challenge stale, contradictory, incomplete, or objective-regressing authority with evidence."
+    - "Define user-decision impact handling: compatible decisions may proceed; trade-offs require warning/recommendation; regressions require strong warning; contradiction of durable objective requires a stop for explicit informed override. Ambiguity or casual assent is not informed approval for material architecture, protocol, security, compatibility, destructive, or irreversible change."
+    - "Define that model/effort and operator execution surfaces are supplied or established by the operator/environment, not guessed by Architect. Known capability is distinct from currently available capability."
+    - "Define generic least-powerful-sufficient execution-surface selection and bounded escalation without hard-coding user-specific mode numbers, machine paths, agent-runtime, Codex, or other personal operator setup into reusable governance."
+    - "Strengthen capability preflight so when an approved task already knows a mandatory final/native verification capability is required for the current execution phase, that capability must be proven currently available before the first mutation rather than discovered only at the end."
+    - "Define GitHub/local drift semantics: authorized remote Git state is canonical repository truth; local state is an execution copy. Local clean/behind may be synchronized when authorized; local ahead or dirty is divergence/unknown work and must not be auto-pushed, adopted as authority, reset, or deleted; remote drift during execution invalidates stale authority and fails closed."
+    - "Define a Local Hygiene Contract for any local execution surface: temporary work is isolated under one run-owned root, cleanup is part of completion, and agents may clean only artifacts created by the current run or explicitly disposable runtime-owned state."
+    - "Define fail-closed recursive-deletion invariants: deletion target must be the current run root or explicitly disposable runtime-owned root; creation/ownership/run identity and canonical realpath containment must be proven; symlink traversal, unresolved/empty targets, ancestors such as filesystem root/home/workspace/repository root, pre-existing paths, sibling projects, and user-supplied arbitrary paths are never eligible cleanup targets. Missing proof must preserve the artifact and return a blocked/retained cleanup result rather than risk deletion."
+    - "Define interruption/evidence retention behavior: do not delete evidence still required for diagnosis; any retained artifact must have a bounded reason/identity and later stale cleanup must still obey ownership/containment rules."
+    - "Add local-hygiene evidence semantics to Executor reporting, with outcomes equivalent to PASS, RETAINED_FOR_EVIDENCE, or BLOCKED, while preserving backward compatibility for legacy v3 reports that lack the optional evidence."
+    - "Define the Architect-only TASK LAUNCH presentation contract as operator UX, separate from execution authority. It contains only Chat, Role, operator-supplied Model, operator-supplied Effort, Progress, and a short explanation, followed separately by a self-contained PROMPT TO COPY. It is not persisted per task and Executor does not own it."
+    - "Update deterministic validator/tests with TDD for the new protocol/report/presentation and safety invariants while preserving protocol version 3 and existing valid v3 artifacts."
+  allowed_existing_files_or_components:
+    - README.md
+    - architect/SKILL.md
+    - executor/SKILL.md
+    - github-dev-main-workflow/SKILL.md
+    - protocols/TASK_PROTOCOL.md
+    - contracts/IMPLEMENTATION_CONTRACT.md
+    - contracts/IMPLEMENTATION_REPORT.md
+    - templates/report.yaml
+    - scripts/validate_skill_library.py
+    - scripts/test_validate_skill_library.py
+    - .agent/tasks/TASK-0002/report.yaml
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Keep protocol_version exactly 3 and preserve semantic validity of existing valid protocol-v3 artifacts; new report/local-hygiene evidence is additive and optional for legacy artifacts."
+  - "Do not add a new role, skill, task schema, protocol version, launcher subsystem, plugin, runtime service, daemon, queue, database, registry, shared state service, operator profile file, or reusable template."
+  - "Keep exactly the current 15 top-level skills."
+  - "Do not hard-code personal operator modes, usernames, /Users paths, project roots, agent-runtime, Codex, or a specific computer into reusable library semantics."
+  - "Architect optimizes for the user's durable objective, not merely the latest sentence, while still respecting explicit informed override within non-waivable safety/policy boundaries."
+  - "Canonical authority is governing evidence, not presumed infallibility; challenging it requires concrete contradiction, staleness, incompleteness, or objective-regression evidence."
+  - "Known capability never proves current availability. Capability availability never grants authority."
+  - "Mandatory current-execution capabilities known before mutation must be preflighted before the first mutation of that execution phase."
+  - "Authorized remote Git state remains canonical repository truth; local dirty/ahead state is not silently destroyed, promoted to authority, or pushed."
+  - "Cleanup is part of completion whenever the current execution created local temporary artifacts."
+  - "Cleanup authority is narrower than filesystem mutation authority: recursive cleanup may target only a proven run-owned isolated root or explicitly disposable runtime-owned root."
+  - "No cleanup rule may infer that a path is disposable from its name, location near another project, cache-like appearance, or user-supplied path alone."
+  - "Any path that existed before the run is preserved unless separate explicit authority independently permits its mutation; sibling projects and pre-existing workspace state are never cleanup targets."
+  - "When safe cleanup proof is missing, retain/block rather than delete."
+  - "TASK LAUNCH is presentation only and must not become a second authority artifact or persisted per-task state."
+  - "No unrelated cleanup, architecture drift, dependency change, workflow expansion, or speculative automation."
+
+forbidden_changes:
+  - "Do not increment protocol version or create a parallel compact/operator protocol."
+  - "Do not add a generic filesystem cleaner, arbitrary-path deletion API, cleanup daemon, workspace sweeper, cache scavenger, or repository discovery/deletion mechanism."
+  - "Do not authorize recursive deletion of arbitrary task/user/config paths."
+  - "Do not weaken symlink/path-containment/identity requirements for cleanup convenience."
+  - "Do not treat local-ahead/dirty state as disposable merely because GitHub is canonical."
+  - "Do not encode /Users/tienphat/Developer or any other personal filesystem path into reusable governance."
+  - "Do not hard-code Mode 1/2/3/4 labels or a specific tool/provider as universal execution policy."
+  - "Do not make model or effort selection an Architect default when the operator has not supplied it."
+  - "Do not turn TASK LAUNCH into a persisted task artifact, app, button, slash command, or launcher implementation."
+  - "Do not add dependencies; validator/tests remain stdlib-only."
+  - "Do not modify .github/workflows/validate-skill-library.yml unless a concrete blocker proves current relevant-path coverage insufficient; if so stop as BLOCKING because workflow mutation is not authorized."
+  - "Do not create branches or mutate main."
+  - "Do not promote, tag, publish a release, or mutate repository metadata."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0002/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_write
+    - exact_remote_ref_read
+    - native_verification_execution
+  REVIEW:
+    - exact_commit_report_resolution
+
+authority_sources_note: "Current execution may use any operator-established surface satisfying the semantic capabilities above; task authority does not name or grant a specific local/runtime tool."
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Architect guidance defines durable-objective-first judgment, evidence-based challenge of current authority, and canonical-as-governing-not-infallible semantics without making Architect free to ignore explicit authority."
+    evidence_required: "Architect skill + Task Protocol wording and focused validator/test assertions."
+  - id: AC-2
+    requirement: "Material user decisions are classified by impact and ambiguity/casual assent is not treated as informed approval for material regressions or destructive/irreversible changes."
+    evidence_required: "Architect skill/protocol wording plus negative tests for required doctrine markers."
+  - id: AC-3
+    requirement: "Operator-supplied model/effort and known-vs-current capability availability are explicit; reusable governance does not hard-code personal mode labels, machine paths, or provider-specific execution policy."
+    evidence_required: "Architect/protocol/README inspection plus forbidden-token regression tests scoped to the new generic operator guidance."
+  - id: AC-4
+    requirement: "A least-powerful-sufficient execution-surface rule and bounded escalation semantics exist, and mandatory current-execution verification capability known up front must be preflighted before first mutation."
+    evidence_required: "Protocol/Architect/Executor wording and focused tests proving the preflight invariant."
+  - id: AC-5
+    requirement: "GitHub/local drift semantics preserve authorized remote truth without deleting, auto-pushing, or silently adopting local dirty/ahead work; remote drift invalidates stale execution authority."
+    evidence_required: "GitHub workflow/Executor/Protocol wording and focused tests."
+  - id: AC-6
+    requirement: "Local Hygiene Contract requires one isolated run-owned root for temporary local work and makes cleanup part of completion when the run created local artifacts."
+    evidence_required: "Protocol/Executor/report contract/template wording and validator tests."
+  - id: AC-7
+    requirement: "Recursive cleanup is fail-closed: only proven current-run or explicitly disposable runtime-owned roots are eligible; ownership/run identity, realpath containment, non-symlink target, and post-run creation/disposable proof are required; home/workspace/repository roots, ancestors, pre-existing paths, sibling projects, unresolved variables, and arbitrary user-supplied paths are forbidden cleanup targets."
+    evidence_required: "Protocol/Executor contract plus deterministic negative tests for each safety class."
+  - id: AC-8
+    requirement: "Interruption preserves required diagnostic evidence; retained artifacts carry bounded reason/identity; missing cleanup proof returns retained/blocked state rather than destructive fallback."
+    evidence_required: "Protocol/report contract/template and tests for closed local-hygiene outcomes."
+  - id: AC-9
+    requirement: "Executor report can record optional local-hygiene result PASS, RETAINED_FOR_EVIDENCE, or BLOCKED without invalidating legacy v3 reports that lack the field."
+    evidence_required: "Report template/validator/tests including backward-compatibility fixture."
+  - id: AC-10
+    requirement: "Architect-only TASK LAUNCH output contains exactly Chat, Role, operator-supplied Model, operator-supplied Effort, Progress, and short explanation, followed separately by self-contained PROMPT TO COPY; it remains presentation, not persisted authority."
+    evidence_required: "Architect skill + README/protocol wording and validator/test coverage that no reusable launch artifact is introduced."
+  - id: AC-11
+    requirement: "Protocol remains v3; exactly 15 skills remain; no new dependency/workflow/role/skill/runtime/template/launcher is added; changes stay within the restrictive file set."
+    evidence_required: "Final tree/diff inspection, validator PASS, unit tests, py_compile, git diff --check, and exact changed-file inventory."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Before the first implementation mutation, prove the currently available execution environment can satisfy repository_content_write, exact_remote_ref_read, and native_verification_execution for this task. If native verification is operator-assisted local execution, establish an isolated OS-temp run root and safe-cleanup strategy before mutation. Capture the preflight evidence in the report."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Use TDD: add focused failing tests first for durable-objective judgment markers, availability/preflight semantics, GitHub/local drift, TASK LAUNCH non-authority semantics, local-hygiene closed outcomes, and fail-closed cleanup invariants; capture valid RED before production-governance changes."
+      required: true
+    - id: CHECK-3
+      command_or_check: "python3 scripts/validate_skill_library.py"
+      required: true
+    - id: CHECK-4
+      command_or_check: "python3 -m unittest scripts/test_validate_skill_library.py"
+      required: true
+    - id: CHECK-5
+      command_or_check: "python3 -m py_compile scripts/validate_skill_library.py scripts/test_validate_skill_library.py"
+      required: true
+    - id: CHECK-6
+      command_or_check: "git diff --check"
+      required: true
+    - id: CHECK-7
+      command_or_check: "Inspect exact base..final_execution_head diff and prove only authorized paths changed; exactly 15 SKILL.md locations remain; no dependency/workflow/main/branch/tag/release/metadata mutation occurred; no new reusable file or operator-specific mode/path/provider token was introduced; local temporary artifacts created for verification were safely cleaned or explicitly retained with bounded evidence."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
