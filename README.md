@@ -2,59 +2,55 @@
 
 A deliberately curated library of **exactly 15** reusable agent skills plus deterministic contracts, templates, and protocols for software engineering across repositories.
 
-`agent-skills` defines **HOW WE WORK**. A target repository defines **WHAT THE PRODUCT IS**: product intent, roadmap, specifications, design, structure, source code, deployment policy, and project-specific verification authority. Live project tasks belong to the target repository; reusable methods and protocol shapes belong here.
+`agent-skills` defines **HOW WE WORK**. A target repository defines **WHAT THE PRODUCT IS** and stores live tasks/evidence.
+
+Supported protocol version is **3**. The lifecycle/continuation hardening is additive and backward-compatible; existing valid expanded v3 artifacts remain valid.
 
 ## Main flow
 
 ```text
-User
-→ Architect
-→ Task + Handoff
-→ Executor
-→ Report
-→ Architect Review
-→ Exact-SHA Verification
-→ Explicit Promotion
-→ main
+bounded user authorization
+→ Architect task + exact handoff
+→ Executor implementation + REPORTED evidence
+→ independent Architect/session review
+→ exact-SHA verification when required
+→ explicit promotion
+→ PROMOTED_NOT_RELEASED
+→ separately authorized release
+→ RELEASED + final identity verification
 ```
 
-A discovered gap may return Executor → Architect. The reusable flow is intentionally manual-capable; it does not require a coordinator, queue, database, registry, shared service, or automatic cross-session messaging.
+`MANUAL` continuation returns control after a bounded phase. `AUTO_UNTIL_STOP` may let an orchestration environment dispatch the next already-authorized independent role/phase without asking the user again. It never merges roles, creates authority, manufactures review/verifier evidence, or treats the absence of a human as approval. No orchestrator is implemented here.
 
-Supported protocol version is **3**. Unsupported versions fail closed and are never silently upgraded.
+## Identity / ownership cheat sheet
 
-## Ownership and authority
+| Identity or result | Meaning | Owner / authority source |
+| --- | --- | --- |
+| `base_head` | Exact pre-execution task snapshot from the handoff | Architect handoff |
+| `final_execution_head` | Last implementation HEAD before the Executor report commit | Executor evidence |
+| `reviewed_report.commit` | Exact commit containing the report actually reviewed | Independent Architect review identity |
+| `promotion_candidate_head` | Exact accepted-lineage `dev` SHA eligible for verifier/promotion checks | Derived from accepted review lineage |
+| authoritative verifier identity/result | Verifier-owned evidence for the exact candidate SHA | Project-designated verifier |
+| lifecycle state | Derived conclusion from authoritative artifacts, refs, and evidence | Derived, never a shared role-writable state file |
 
-Architect owns:
+A report may remain `REPORTED` / `NEEDS_REVIEW` after an external Architect accepts that exact report. Review state is separate evidence.
 
-- `task.yaml` content and task revisions;
-- Architect review judgment, normally represented by `review.yaml` when repository policy stores it.
+## Authority, capability, and release
 
-Executor owns:
+Authority never proves capability availability; capability availability never grants authority. Before the first action of a phase, preflight only that phase's required semantic capabilities. Missing current-phase capability blocks before mutation. Missing later-phase capability does not invalidate an earlier completed phase.
 
-- the implementation authorized by the exact task and handoff;
-- `report.yaml` content and the evidence it records.
+`create_branch`, `commit`, `push`, and `promote_to_main` are independent Git authorities. Release authority is independent again: version tag creation, repository metadata mutation, and release publication must each be explicitly authorized. None is inferred from commit, push, or promotion.
 
-The project-designated verifier owns authoritative PASS / FAIL for the exact candidate SHA. Architect acceptance, Executor evidence, CI status, verifier PASS, promotion authorization, and actual `main` mutation are separate signals.
+After exact promotion, incomplete or unavailable release work yields the valid derived state `PROMOTED_NOT_RELEASED`. `RELEASED` requires the separately authorized release actions plus final verification.
 
-Content ownership does not automatically grant Git commit authority. `task.git_authority` governs Executor Git mutations. Canonical committed report evidence therefore requires Executor commit capability when a task is execution-ready. Architect review authority is separate from Executor Git authority, and an Architect-owned `review.yaml` may remain external when target-repository policy permits.
+## Accepted promotion lineage
 
-`reviewed_report.commit` must be resolvable by the Architect review context; remote-only handoff requires that commit to be reachable from the authorized remote Git state, while an explicitly shared trusted checkout may support local-only review.
+Let `R = reviewed_report.commit` after independent Architect acceptance. A valid `promotion_candidate_head` is only:
 
-## Four distinct SHA identities
+- `R`; or
+- the single-parent direct child of `R`, whose only parent is `R`, where that one child contains only the expected Architect-owned review artifact.
 
-These values must not be collapsed into one convenient but incorrect “current SHA”:
-
-1. `base_head`: the exact pre-execution task snapshot named by the handoff.
-2. `final_execution_head`: implementation HEAD before the Executor-owned report artifact is committed.
-3. `reviewed_report.commit`: the exact commit containing the report Architect actually reviewed.
-4. `promotion_candidate_head`: the exact `dev` SHA eligible for authoritative verification and a later explicit promotion decision.
-
-After Architect accepts `R = reviewed_report.commit`, valid promotion lineage is only:
-
-- `promotion_candidate_head == R`; or
-- `promotion_candidate_head` is the single-parent direct child of `R`, its only parent is `R`, and that one child commit contains only the expected Architect-owned review artifact.
-
-Any other mutation after `R` invalidates the accepted lineage and requires a new report plus Architect review. That includes implementation, unrelated documentation, cleanup, dependencies, another task, or a second post-review commit.
+A merge commit, empty child, or any other post-`R` mutation requires a new Executor report and Architect review. Authoritative verification applies to the exact candidate SHA. If `dev` changes afterward: `REVERIFY / REVIEW_REQUIRED`.
 
 ## Curated skill catalog
 
@@ -78,62 +74,32 @@ Any other mutation after `R` invalidates the accepted lineage and requires a new
 | `cloud-run-basics` | domain | Google Cloud Run deployment, configuration, security, scaling, troubleshooting, and platform-specific cost behavior |
 <!-- SKILL_CATALOG_END -->
 
-The validator recursively discovers every `SKILL.md` and accepts only these exact fifteen top-level locations. A hidden or nested sixteenth skill is an error, not a cute loophole.
+The validator recursively discovers every `SKILL.md` and accepts only these exact fifteen top-level locations. A hidden or nested sixteenth skill is an error.
 
-## Task artifacts
+## Canonical v3 artifacts
 
-Target repositories adopting the protocol normally keep live artifacts under:
-
-```text
-.agent/tasks/TASK-0001/
-  task.yaml
-  report.yaml
-  review.yaml
-```
-
-Reusable shapes live here:
+There is one task model, not task-lite/task-compact variants. Reusable shapes are:
 
 - [templates/task.yaml](templates/task.yaml): Architect-owned implementation authority;
-- [templates/handoff.yaml](templates/handoff.yaml): Architect-to-Executor locator/authorization;
+- [templates/handoff.yaml](templates/handoff.yaml): exact Architect-to-Executor locator/authorization;
 - [templates/report.yaml](templates/report.yaml): Executor-owned evidence;
 - [templates/review.yaml](templates/review.yaml): Architect-owned judgment;
-- [contracts/IMPLEMENTATION_CONTRACT.md](contracts/IMPLEMENTATION_CONTRACT.md): task semantics;
-- [contracts/IMPLEMENTATION_REPORT.md](contracts/IMPLEMENTATION_REPORT.md): report semantics;
-- [contracts/ARCHITECT_REVIEW.md](contracts/ARCHITECT_REVIEW.md): review semantics.
+- [templates/continuation.yaml](templates/continuation.yaml): small post-review exact-identity continuation envelope;
+- [contracts/IMPLEMENTATION_CONTRACT.md](contracts/IMPLEMENTATION_CONTRACT.md);
+- [contracts/IMPLEMENTATION_REPORT.md](contracts/IMPLEMENTATION_REPORT.md);
+- [contracts/ARCHITECT_REVIEW.md](contracts/ARCHITECT_REVIEW.md);
+- [protocols/TASK_PROTOCOL.md](protocols/TASK_PROTOCOL.md).
 
-The complete reusable protocol is [protocols/TASK_PROTOCOL.md](protocols/TASK_PROTOCOL.md).
+Protocol-owned unconditional boilerplate can stay in the protocol instead of being recopied into every task. Safety-significant task-specific scope, authority, capabilities, release decisions, structure policy, acceptance criteria, and verification remain explicit.
 
-## Gap policy
+## Gap and structure policy
 
-`LOCAL`: necessary for current acceptance criteria, fully inside authority, and allowed by task policy. Executor may fix it.
+`LOCAL` is necessary, in-scope work permitted by current authority. `FOLLOW_UP` is real but unnecessary or unauthorized now. `BLOCKING` requires new/conflicting authority before safe continuation. Discovery never grants authority.
 
-`FOLLOW_UP`: real but not needed or not authorized for the current task. Record it; do not fix it.
-
-`BLOCKING`: safe continuation needs missing or conflicting Architect authority. Stop and return evidence.
-
-Discovery never grants authority.
-
-## Scope and structure discipline
-
-Task approval never implies unrelated cleanup, adjacent fixes, speculative features, undocumented scope expansion, architecture/spec/public-contract drift, unauthorized dependencies, structural reorganization, or “while I'm here” refactors.
-
-`structure_authority.status` is `RESOLVED`, `NOT_APPLICABLE`, or `UNRESOLVED`. Architect owns that decision; Executor may not change it to unblock execution. Every new source file needs a real existing or explicitly authorized ownership boundary. No orphan source files and no speculative scale structure are protocol invariants.
-
-## Exact-SHA verification and promotion
-
-For repositories using the two-branch model:
-
-- `dev` is integration and normal mutation;
-- `main` is stable authority;
-- promotion is separate from implementation and review;
-- direct implementation on `main`, force-push, and history rewrite are forbidden by default.
-
-Authoritative verification applies to the exact `promotion_candidate_head`. If `dev` changes afterward, prior evidence is stale: `REVERIFY / REVIEW_REQUIRED`.
-
-A promotion candidate is valid after Architect accepts `reviewed_report.commit = R` only when it is `R` itself or the single-parent direct child of `R`, with only parent `R`, containing only the expected Architect-owned review artifact. No vague “other intended release mutations” are allowed between accepted report lineage and candidate capture.
+No orphan source files. No speculative scale structure. `structure_authority.status` remains `RESOLVED`, `NOT_APPLICABLE`, or `UNRESOLVED`, owned by Architect.
 
 ## Validation and GitHub Actions
 
-The stdlib-only validator checks the curated skill locations and frontmatter, README catalog, constrained YAML structure, canonical templates, protocol semantics, and internal Markdown links. Its YAML parser supports only the structures used by these templates; it is intentionally not a general YAML parser.
+The stdlib-only validator checks the exact 15-skill taxonomy, frontmatter/catalog, constrained YAML, canonical task/handoff/report/review/continuation templates, lifecycle/continuation/capability/release semantics, identity consistency, and internal links.
 
-The repository keeps one bounded validation workflow on relevant pushes to `dev`: one standard Linux job, read-only contents permission, short timeout, concurrency cancellation, immutable action pins, validator execution, and stdlib unittests. There is no manual dispatch, schedule, duplicate PR workflow, matrix, artifact upload, cache, automatic rerun, or paid external service.
+The repository keeps one bounded validation workflow on relevant pushes to `dev`: one standard Linux job, read-only contents permission, short timeout, concurrency cancellation, immutable action pins, validator execution, and stdlib unittests. No extra workflow is required for this protocol hardening.
