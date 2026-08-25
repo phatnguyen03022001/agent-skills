@@ -222,7 +222,7 @@ class ValidatorRegressionTests(unittest.TestCase):
                 "templates/report.yaml",
                 '  - criterion_id: AC-1\n    status: NOT_PROVEN\n    evidence: ""',
                 '  - status: NOT_PROVEN\n    evidence: ""',
-                "acceptance_evidence[0]",
+                "acceptance_criteria[0]",
             ),
         ]
         for relative, before, after, expected in cases:
@@ -278,7 +278,6 @@ class ValidatorRegressionTests(unittest.TestCase):
         path.write_text(text.replace("    classification: FOLLOW_UP", "    classification: LOCAL", 1), encoding="utf-8")
         result = self.run_validator(root)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-
 
     def test_newly_protected_canonical_fields_are_required(self) -> None:
         cases = [
@@ -419,6 +418,158 @@ class ValidatorRegressionTests(unittest.TestCase):
         result = self.run_validator(root)
         self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("unsupported review state", result.stdout + result.stderr)
+
+    def test_exact_fifteen_skill_invariant_is_explicit(self) -> None:
+        self.assertEqual(len(VALIDATOR_MODULE.EXPECTED_SKILLS), 15)
+
+    def test_canonical_continuation_template_is_required_and_closed(self) -> None:
+        _, root = self.fixture()
+        path = root / "templates" / "continuation.yaml"
+        self.assertTrue(path.is_file(), "missing canonical templates/continuation.yaml")
+        text = path.read_text(encoding="utf-8")
+        required = [
+            "handoff_type: CONTINUATION",
+            "phase: PROMOTION",
+            "reviewed_report:",
+            "promotion_candidate_head:",
+            "expected_refs:",
+            "prior_result:",
+            "prior_lifecycle_state:",
+            "next_authorized_action:",
+        ]
+        for token in required:
+            self.assertIn(token, text)
+        result = self.run_validator(root)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        path.unlink()
+        result = self.run_validator(root)
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("missing required protocol template: templates/continuation.yaml", result.stdout + result.stderr)
+
+    def test_continuation_modes_are_closed_and_auto_until_stop_is_legal(self) -> None:
+        _, root = self.fixture()
+        path = root / "templates" / "task.yaml"
+        text = path.read_text(encoding="utf-8")
+        self.assertIn("continuation_policy:\n  mode: MANUAL", text)
+        path.write_text(text.replace("  mode: MANUAL", "  mode: AUTO_UNTIL_STOP", 1), encoding="utf-8")
+        result = self.run_validator(root)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+        _, root = self.fixture()
+        path = root / "templates" / "task.yaml"
+        text = path.read_text(encoding="utf-8")
+        self.assertIn("continuation_policy:\n  mode: MANUAL", text)
+        path.write_text(text.replace("  mode: MANUAL", "  mode: FOREVER", 1), encoding="utf-8")
+        result = self.run_validator(root)
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("unsupported continuation mode", result.stdout + result.stderr)
+
+    def test_malformed_continuation_policy_is_rejected(self) -> None:
+        def mutate(root: Path) -> None:
+            path = root / "templates" / "task.yaml"
+            text = path.read_text(encoding="utf-8")
+            before = "continuation_policy:\n  mode: MANUAL\n  stop_conditions:"
+            self.assertIn(before, text)
+            path.write_text(
+                text.replace(before, "continuation_policy:\n  mode: MANUAL\n  stop_conditions: BLOCKED", 1),
+                encoding="utf-8",
+            )
+        output = self.assert_rejected(mutate)
+        self.assertIn("continuation_policy.stop_conditions", output)
+
+    def test_capability_requirement_structure_is_phase_specific_and_closed(self) -> None:
+        def mutate(root: Path) -> None:
+            path = root / "templates" / "task.yaml"
+            text = path.read_text(encoding="utf-8")
+            before = "capability_requirements:\n  EXECUTION:\n    - repository_content_write"
+            self.assertIn(before, text)
+            path.write_text(
+                text.replace(
+                    before,
+                    "capability_requirements:\n  EXECUTION: repository_content_write",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+        output = self.assert_rejected(mutate)
+        self.assertIn("capability_requirements.EXECUTION", output)
+
+        def mutate_phase(root: Path) -> None:
+            path = root / "templates" / "task.yaml"
+            text = path.read_text(encoding="utf-8")
+            self.assertIn("  EXECUTION:", text)
+            path.write_text(text.replace("  EXECUTION:", "  BANANA:", 1), encoding="utf-8")
+        output = self.assert_rejected(mutate_phase)
+        self.assertIn("unsupported capability phase", output)
+
+    def test_release_authority_is_independent_from_git_promotion_authority(self) -> None:
+        _, root = self.fixture()
+        path = root / "templates" / "task.yaml"
+        text = path.read_text(encoding="utf-8")
+        release_block = (
+            "release_authority:\n"
+            "  create_version_tag: false\n"
+            "  mutate_repository_metadata: false\n"
+            "  publish_release: false"
+        )
+        self.assertIn(release_block, text)
+        self.assertIn("  promote_to_main: false", text)
+        path.write_text(text.replace("  promote_to_main: false", "  promote_to_main: true", 1), encoding="utf-8")
+        result = self.run_validator(root)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+        _, root = self.fixture()
+        path = root / "templates" / "task.yaml"
+        text = path.read_text(encoding="utf-8")
+        self.assertIn("  publish_release: false", text)
+        path.write_text(text.replace("  publish_release: false", "  publish_release: no", 1), encoding="utf-8")
+        result = self.run_validator(root)
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("release_authority.publish_release", result.stdout + result.stderr)
+
+    def test_legacy_expanded_protocol_v3_task_remains_valid(self) -> None:
+        _, root = self.fixture()
+        legacy = root / ".agent" / "tasks" / "TASK-0001" / "task.yaml"
+        self.assertTrue(legacy.is_file())
+        text = legacy.read_text(encoding="utf-8")
+        self.assertNotIn("continuation_policy:", text)
+        self.assertNotIn("release_authority:", text)
+        (root / "templates" / "task.yaml").write_text(text, encoding="utf-8")
+        result = self.run_validator(root)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_canonical_template_identity_consistency_includes_continuation(self) -> None:
+        _, root = self.fixture()
+        original_root = VALIDATOR_MODULE.ROOT
+        try:
+            VALIDATOR_MODULE.ROOT = root
+            docs = {
+                name: VALIDATOR_MODULE.load_protocol_document(f"templates/{name}.yaml")
+                for name in ("task", "handoff", "report", "review", "continuation")
+            }
+        finally:
+            VALIDATOR_MODULE.ROOT = original_root
+        for name, doc in docs.items():
+            self.assertIsNotNone(doc, name)
+        task = docs["task"]
+        handoff = docs["handoff"]
+        report = docs["report"]
+        review = docs["review"]
+        continuation = docs["continuation"]
+        assert task and handoff and report and review and continuation
+        self.assertEqual(task["protocol_version"], 3)
+        self.assertEqual(handoff["protocol_version"], 3)
+        self.assertEqual(report["protocol_version"], 3)
+        self.assertEqual(review["protocol_version"], 3)
+        self.assertEqual(continuation["protocol_version"], 3)
+        self.assertEqual(task["task_id"], handoff["task"]["id"])
+        self.assertEqual(task["task_id"], report["task_id"])
+        self.assertEqual(task["task_id"], review["task_id"])
+        self.assertEqual(task["task_id"], continuation["task"]["id"])
+        self.assertEqual(task["task_revision"], handoff["task"]["revision"])
+        self.assertEqual(task["task_revision"], report["task_revision"])
+        self.assertEqual(task["task_revision"], review["task_revision"])
+        self.assertEqual(task["task_revision"], continuation["task"]["revision"])
 
 
 if __name__ == "__main__":
