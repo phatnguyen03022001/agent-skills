@@ -470,10 +470,14 @@ def validate_continuation_policy(label: str, doc: dict[str, Any]) -> None:
     if any(type(item) is not str for item in stops):
         error(f"{label}: path 'continuation_policy.stop_conditions' must contain strings")
         return
-    unsupported = sorted(set(stops) - CONTINUATION_STOP_CONDITIONS)
+    stop_set = set(stops)
+    unsupported = sorted(stop_set - CONTINUATION_STOP_CONDITIONS)
     if unsupported:
         error(f"{label}: unsupported continuation stop conditions {unsupported}")
-    if len(stops) != len(set(stops)):
+    missing = sorted(CONTINUATION_STOP_CONDITIONS - stop_set)
+    if missing:
+        error(f"{label}: missing non-waivable continuation stop conditions {missing}")
+    if len(stops) != len(stop_set):
         error(f"{label}: continuation_policy.stop_conditions must not contain duplicates")
 
 
@@ -738,6 +742,7 @@ def validate_continuation_template() -> None:
         ("reviewed_report.commit", str), ("reviewed_report.report_revision", int),
         ("promotion_candidate_head", str),
         ("expected_refs.dev", str), ("expected_refs.main", str),
+        ("expected_state.lifecycle", str),
         ("prior_result", str), ("prior_lifecycle_state", str),
         ("next_authorized_action", str),
     ]:
@@ -746,6 +751,9 @@ def validate_continuation_template() -> None:
     phase = get_path(doc, "phase")
     if phase is not _MISSING and phase not in CONTINUATION_PHASES:
         error(f"{label}: unsupported continuation phase {phase!r}")
+    expected_lifecycle = get_path(doc, "expected_state.lifecycle")
+    if expected_lifecycle is not _MISSING and expected_lifecycle not in LIFECYCLE_STATES:
+        error(f"{label}: unsupported expected lifecycle state {expected_lifecycle!r}")
     lifecycle = get_path(doc, "prior_lifecycle_state")
     if lifecycle is not _MISSING and lifecycle not in LIFECYCLE_STATES:
         error(f"{label}: unsupported lifecycle state {lifecycle!r}")
