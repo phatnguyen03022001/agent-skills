@@ -18,12 +18,29 @@ EXPECTED_SKILLS = frozenset({
 })
 FRONTMATTER_KEYS = frozenset({"name", "description"})
 NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+CAPABILITY_RE = re.compile(r"^[a-z][a-z0-9_]*$")
 LINK_RE = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 CATALOG_ROW_RE = re.compile(r"^\| `([a-z0-9-]+)` \|", re.MULTILINE)
 KEY_RE = re.compile(r"^([A-Za-z_][A-Za-z0-9_-]*):(.*)$")
 INT_RE = re.compile(r"^-?(?:0|[1-9][0-9]*)$")
 CATALOG_START = "<!-- SKILL_CATALOG_START -->"
 CATALOG_END = "<!-- SKILL_CATALOG_END -->"
+
+CONTINUATION_MODES = frozenset({"MANUAL", "AUTO_UNTIL_STOP"})
+CONTINUATION_STOP_CONDITIONS = frozenset({
+    "BLOCKED", "STALE_STATE", "AUTHORITY_REQUIRED",
+    "CURRENT_PHASE_CAPABILITY_UNAVAILABLE", "REVIEW_REQUIRED",
+    "REVERIFY_REQUIRED", "USER_STOP",
+})
+CAPABILITY_PHASES = frozenset({"EXECUTION", "REVIEW", "VERIFICATION", "PROMOTION", "RELEASE"})
+CONTINUATION_PHASES = frozenset({"REVIEW", "VERIFICATION", "PROMOTION", "RELEASE"})
+CONTINUATION_ACTIONS = frozenset({
+    "REQUEST_ARCHITECT_REVIEW", "RUN_AUTHORITATIVE_VERIFICATION", "PROMOTE_TO_MAIN",
+    "CREATE_VERSION_TAG", "MUTATE_REPOSITORY_METADATA", "PUBLISH_RELEASE", "FINAL_VERIFY", "STOP",
+})
+LIFECYCLE_STATES = frozenset({
+    "PLANNED", "REPORTED", "ACCEPTED", "VERIFIED", "PROMOTED_NOT_RELEASED", "RELEASED",
+})
 
 errors: list[str] = []
 warnings: list[str] = []
@@ -317,44 +334,27 @@ TASK_SEQUENCE_SCHEMAS: dict[str, dict[str, type]] = {
 }
 REPORT_SEQUENCE_SCHEMAS: dict[str, dict[str, type]] = {
     "changed_files": {
-        "path": str,
-        "summary": str,
-        "new_file": bool,
-        "in_scope": bool,
-        "structure_authorized": bool,
+        "path": str, "summary": str, "new_file": bool,
+        "in_scope": bool, "structure_authorized": bool,
     },
     "commits_created": {"sha": str, "message": str},
     "acceptance_evidence": {"criterion_id": str, "status": str, "evidence": str},
     "executor_checks": {"check_id": str, "result": str, "evidence": str},
     "discovered_gaps": {
-        "gap_id": str,
-        "classification": str,
-        "type": str,
-        "severity": str,
-        "description": str,
-        "evidence": str,
-        "impact": str,
-        "blocks_current_task": bool,
-        "action_taken": str,
-        "suggested_next_step": str,
+        "gap_id": str, "classification": str, "type": str, "severity": str,
+        "description": str, "evidence": str, "impact": str,
+        "blocks_current_task": bool, "action_taken": str, "suggested_next_step": str,
     },
     "structural_observations": {
-        "type": str,
-        "path": str,
-        "evidence": str,
-        "recommendation": str,
-        "action_taken": str,
+        "type": str, "path": str, "evidence": str,
+        "recommendation": str, "action_taken": str,
     },
 }
 REVIEW_SEQUENCE_SCHEMAS: dict[str, dict[str, type]] = {
     "gap_disposition": {"gap_id": str, "decision": str, "rationale": str},
     "follow_up_tasks": {"task_id": str, "origin": dict},
 }
-FOLLOW_UP_ORIGIN_SCHEMA: dict[str, type] = {
-    "type": str,
-    "task_id": str,
-    "gap_id": str,
-}
+FOLLOW_UP_ORIGIN_SCHEMA: dict[str, type] = {"type": str, "task_id": str, "gap_id": str}
 GAP_CLASSIFICATIONS = frozenset({"LOCAL", "FOLLOW_UP", "BLOCKING"})
 REVIEW_STATES = frozenset({"ACCEPTED", "REVISION_REQUIRED", "BLOCKED"})
 
@@ -451,6 +451,70 @@ def validate_version(label: str, document: dict[str, Any]) -> None:
     require_field(label, document, "protocol_version", int, SUPPORTED_PROTOCOL_VERSION)
 
 
+def validate_continuation_policy(label: str, doc: dict[str, Any]) -> None:
+    value = get_path(doc, "continuation_policy")
+    if value is _MISSING:
+        return
+    valid = require_mapping_schema(
+        label,
+        value,
+        "continuation_policy",
+        {"mode": str, "stop_conditions": list},
+    )
+    if not valid:
+        return
+    mode = value["mode"]
+    if mode not in CONTINUATION_MODES:
+        error(f"{label}: unsupported continuation mode {mode!r}")
+    stops = value["stop_conditions"]
+    if any(type(item) is not str for item in stops):
+        error(f"{label}: path 'continuation_policy.stop_conditions' must contain strings")
+        return
+    unsupported = sorted(set(stops) - CONTINUATION_STOP_CONDITIONS)
+    if unsupported:
+        error(f"{label}: unsupported continuation stop conditions {unsupported}")
+    if len(stops) != len(set(stops)):
+        error(f"{label}: continuation_policy.stop_conditions must not contain duplicates")
+
+
+def validate_capability_requirements(label: str, doc: dict[str, Any]) -> None:
+    value = get_path(doc, "capability_requirements")
+    if value is _MISSING:
+        return
+    if type(value) is not dict:
+        error(f"{label}: path 'capability_requirements' must be mapping")
+        return
+    for phase, requirements in value.items():
+        if phase not in CAPABILITY_PHASES:
+            error(f"{label}: unsupported capability phase {phase!r}")
+            continue
+        dotted = f"capability_requirements.{phase}"
+        if type(requirements) is not list:
+            error(f"{label}: path '{dotted}' must be list")
+            continue
+        if len(requirements) != len(set(map(str, requirements))):
+            error(f"{label}: path '{dotted}' must not contain duplicates")
+        for item in requirements:
+            if type(item) is not str or not CAPABILITY_RE.fullmatch(item):
+                error(f"{label}: path '{dotted}' contains invalid semantic capability {item!r}")
+
+
+def validate_release_authority(label: str, doc: dict[str, Any]) -> None:
+    value = get_path(doc, "release_authority")
+    if value is _MISSING:
+        return
+    require_mapping_schema(
+        label,
+        value,
+        "release_authority",
+        {
+            "create_version_tag": bool,
+            "mutate_repository_metadata": bool,
+            "publish_release": bool,
+        },
+    )
+
+
 def validate_task_template() -> None:
     label = "templates/task.yaml"
     doc = load_protocol_document(label)
@@ -502,6 +566,10 @@ def validate_task_template() -> None:
     require_field(label, doc, "execution_base.mode", str, "handoff_snapshot")
     require_field(label, doc, "execution_base.require_exact_match", bool, True)
     require_field(label, doc, "gap_policy.blocking_gap_behavior", str, "BLOCKED")
+
+    validate_continuation_policy(label, doc)
+    validate_capability_requirements(label, doc)
+    validate_release_authority(label, doc)
 
     bound = get_path(doc, "architect_binding.target_repository")
     target = get_path(doc, "target.repository")
@@ -579,13 +647,22 @@ def validate_report_template() -> None:
     ]:
         require_field(label, doc, dotted, expected_type)
     for dotted, schema in REPORT_SEQUENCE_SCHEMAS.items():
-        closed_values = None
-        if dotted == "discovered_gaps":
-            closed_values = {"classification": GAP_CLASSIFICATIONS}
+        closed_values = {"classification": GAP_CLASSIFICATIONS} if dotted == "discovered_gaps" else None
         require_mapping_sequence_schema(label, doc, dotted, schema, closed_values)
     require_field(label, doc, "deviations_from_task", list)
     require_field(label, doc, "blockers", list)
     require_field(label, doc, "state", str, "REPORTED")
+
+    preflight = get_path(doc, "capability_preflight")
+    if preflight is not _MISSING:
+        valid = require_mapping_schema(
+            label,
+            preflight,
+            "capability_preflight",
+            {"phase": str, "required": list, "available": list, "missing": list, "passed": bool},
+        )
+        if valid and preflight["phase"] not in CAPABILITY_PHASES:
+            error(f"{label}: unsupported capability phase {preflight['phase']!r}")
 
 
 def validate_review_template() -> None:
@@ -618,11 +695,26 @@ def validate_review_template() -> None:
         if dotted == "follow_up_tasks":
             for index, item in items:
                 require_mapping_schema(
-                    label,
-                    item["origin"],
-                    f"follow_up_tasks[{index}].origin",
-                    FOLLOW_UP_ORIGIN_SCHEMA,
+                    label, item["origin"], f"follow_up_tasks[{index}].origin", FOLLOW_UP_ORIGIN_SCHEMA
                 )
+
+    independence = get_path(doc, "independence")
+    if independence is not _MISSING:
+        valid = require_mapping_schema(
+            label,
+            independence,
+            "independence",
+            {
+                "reviewer_role": str,
+                "separate_session_from_executor": bool,
+                "exact_report_identity_verified": bool,
+            },
+        )
+        if valid:
+            if independence["reviewer_role"] != "ARCHITECT":
+                error(f"{label}: independence.reviewer_role must equal 'ARCHITECT'")
+            if independence["separate_session_from_executor"] is not True:
+                error(f"{label}: independent review requires separate_session_from_executor=true")
 
     state = get_path(doc, "state")
     eligible = get_path(doc, "promotion_readiness.eligible_for_candidate_capture")
@@ -630,6 +722,60 @@ def validate_review_template() -> None:
         error(f"{label}: unsupported review state {state!r}")
     if eligible is True and state != "ACCEPTED":
         error(f"{label}: only ACCEPTED review may be candidate-eligible")
+
+
+def validate_continuation_template() -> None:
+    label = "templates/continuation.yaml"
+    doc = load_protocol_document(label)
+    if doc is None:
+        return
+    validate_version(label, doc)
+    for dotted, expected_type in [
+        ("handoff_type", str),
+        ("task.id", str), ("task.revision", int), ("task.path", str),
+        ("phase", str),
+        ("reviewed_report.repository", str), ("reviewed_report.path", str),
+        ("reviewed_report.commit", str), ("reviewed_report.report_revision", int),
+        ("promotion_candidate_head", str),
+        ("expected_refs.dev", str), ("expected_refs.main", str),
+        ("prior_result", str), ("prior_lifecycle_state", str),
+        ("next_authorized_action", str),
+    ]:
+        require_field(label, doc, dotted, expected_type)
+    require_field(label, doc, "handoff_type", str, "CONTINUATION")
+    phase = get_path(doc, "phase")
+    if phase is not _MISSING and phase not in CONTINUATION_PHASES:
+        error(f"{label}: unsupported continuation phase {phase!r}")
+    lifecycle = get_path(doc, "prior_lifecycle_state")
+    if lifecycle is not _MISSING and lifecycle not in LIFECYCLE_STATES:
+        error(f"{label}: unsupported lifecycle state {lifecycle!r}")
+    action = get_path(doc, "next_authorized_action")
+    if action is not _MISSING and action not in CONTINUATION_ACTIONS:
+        error(f"{label}: unsupported next authorized action {action!r}")
+
+
+def validate_template_consistency() -> None:
+    docs = {
+        name: load_protocol_document(f"templates/{name}.yaml")
+        for name in ("task", "handoff", "report", "review", "continuation")
+    }
+    if any(doc is None for doc in docs.values()):
+        return
+    task = docs["task"]
+    assert task is not None
+    task_id = task.get("task_id")
+    task_revision = task.get("task_revision")
+    for name in ("handoff", "continuation"):
+        doc = docs[name]
+        assert doc is not None
+        nested = doc.get("task")
+        if not isinstance(nested, dict) or nested.get("id") != task_id or nested.get("revision") != task_revision:
+            error(f"templates/{name}.yaml: task identity must match templates/task.yaml")
+    for name in ("report", "review"):
+        doc = docs[name]
+        assert doc is not None
+        if doc.get("task_id") != task_id or doc.get("task_revision") != task_revision:
+            error(f"templates/{name}.yaml: task identity must match templates/task.yaml")
 
 
 def require_tokens(path: Path, tokens: list[str]) -> None:
@@ -646,19 +792,24 @@ def require_tokens(path: Path, tokens: list[str]) -> None:
 def validate_protocol_docs() -> None:
     require_tokens(ROOT / "protocols" / "TASK_PROTOCOL.md", [
         "Supported protocol version", "NEW_ARCHITECT_SESSION_REQUIRED",
-        "templates/handoff.yaml", "handoff_snapshot", "RESOLVED",
-        "NOT_APPLICABLE", "UNRESOLVED", "promotion_candidate_head",
+        "templates/handoff.yaml", "templates/continuation.yaml", "handoff_snapshot",
+        "RESOLVED", "NOT_APPLICABLE", "UNRESOLVED", "promotion_candidate_head",
         "REVERIFY / REVIEW_REQUIRED", "LOCAL", "FOLLOW_UP",
         "No orphan source files", "No speculative scale structure",
         "reviewed_report.commit", "single-parent direct child",
-        "shared trusted", "create_branch: false",
+        "shared trusted", "create_branch: false", "PROMOTED_NOT_RELEASED",
+        "AUTO_UNTIL_STOP", "CURRENT_PHASE_CAPABILITY_UNAVAILABLE",
+        "capability_requirements", "release_authority", "RELEASED",
     ])
-    for path in [
-        ROOT / "contracts" / "IMPLEMENTATION_CONTRACT.md",
-        ROOT / "contracts" / "IMPLEMENTATION_REPORT.md",
-        ROOT / "contracts" / "ARCHITECT_REVIEW.md",
-    ]:
-        require_tokens(path, ["template"])
+    require_tokens(ROOT / "contracts" / "IMPLEMENTATION_CONTRACT.md", [
+        "template", "continuation_policy", "capability_requirements", "release_authority",
+    ])
+    require_tokens(ROOT / "contracts" / "IMPLEMENTATION_REPORT.md", [
+        "template", "capability_preflight", "PROMOTED_NOT_RELEASED",
+    ])
+    require_tokens(ROOT / "contracts" / "ARCHITECT_REVIEW.md", [
+        "template", "separate agent/session", "PROMOTED_NOT_RELEASED",
+    ])
 
 
 def main() -> int:
@@ -726,6 +877,8 @@ def main() -> int:
     validate_handoff_template()
     validate_report_template()
     validate_review_template()
+    validate_continuation_template()
+    validate_template_consistency()
     validate_protocol_docs()
 
     if warnings:
