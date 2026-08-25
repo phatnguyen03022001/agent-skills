@@ -6,9 +6,29 @@ Supported protocol version: **3**. These additions are backward-compatible. Exis
 
 ## Core bindings
 
-An Architect session binds to one immutable target repository. External repositories and documentation may be read as references but never become implicit targets. Asking the bound Architect to govern a different target produces `NEW_ARCHITECT_SESSION_REQUIRED`.
+Architect remains ChatGPT and GitHub remote truth is canonical. A single Architect conversation may govern multiple repositories sequentially, but it has one active target repository at a time. Repository-specific planning, review, task creation, continuation, or mutation requires an explicit `owner/repo` binding. Facts from another repository never silently become authority.
 
-An Executor session binds to one approved task revision, one repository, one branch, and one exact execution authorization. It does not execute unrelated work, reinterpret architecture, or broaden scope. The approved exact task plus handoff is prior authorization for its bounded Executor actions; a role must not invent extra user approvals for phases already authorized by those artifacts.
+Before Architect switches repositories, it must close the current repository-specific phase cleanly, explicitly identify the next `owner/repo`, refresh canonical GitHub truth for that repository, discard previous repository-specific assumptions, and establish fresh repository-local task/review identity before any mutation. Any simultaneous ambiguous active target is forbidden.
+
+A single Executor chat may also be reused sequentially. While work is active, the active task/repository binding remains immutable: one approved task revision, one repository, one branch, and one exact execution authorization. Rebinding requires the prior execution to reach an explicit terminal handoff/result, previous evidence finalized, no outstanding mutation authority carried forward, an explicit next repository, a fresh repository-local task, a fresh exact handoff, a fresh exact base HEAD and branch identity, refreshed canonical GitHub truth, and a newly verified binding before mutation.
+
+The approved exact task plus handoff is prior authorization for bounded Executor actions inside the active binding; a role must not invent extra user approvals for phases already authorized by those artifacts.
+
+## Organizational roles
+
+There are two organizational roles: Architect and Executor. Architect is ChatGPT. Reviewer, verifier, red-team, debugger, researcher, coder, and similar execution modes are Executor specializations, not additional organizational roles. Other execution agents/sessions, including Codex, operate as Executors when used. Role specialization never changes artifact ownership or authority boundaries.
+
+## Repository-local authority across sequential bindings
+
+The authority for repository A never grants authority for repository B. Every binding independently preserves repository identity, branch identity, task ID/revision, base HEAD, Git authority, capability requirements, verification, report evidence, review evidence, and promotion/release authority. The report/review/verifier/promotion/release lineage remains repository-local.
+
+Never create a shared mutable cross-repository authority object. Sequential reuse changes only which repository is currently bound; it does not merge tasks, evidence, lifecycle, or authority across repositories. A user who never switches repositories observes effectively the same single-repository v3 semantics.
+
+## Cross-repository PROGRAM presentation
+
+`PROGRAM` may present ordered repository-local tasks as one operator-visible sequence, for example repo A → task A → report A, then repo B → task B → report B. PROGRAM is presentation only and is not a universal multi-repository task authority. Canonical authority remains repository-local and execution is sequential by default.
+
+This model creates no orchestrator, no registry, no queue, no database, no workflow engine, no distributed transaction, no cross-repository lock, and no shared mutable cross-repository authority. Program progress never substitutes for exact task/handoff identity.
 
 ## Architect judgment and material user decisions
 
@@ -37,6 +57,8 @@ Content ownership, authority, and capability availability are distinct. Capabili
 
 Before mutation Executor verifies supported protocol, `handoff_type == EXECUTOR`, repository/branch identity, live HEAD equality with `base_head`, exact task identity at that commit, task binding, `execution_ready`, pinned skills, structure authority, current-phase capability availability, and applicable mutation authority. Any mismatch is `BLOCKED`.
 
+A handoff authorizes only its repository. Rebinding to another repository always requires a fresh exact handoff and fresh exact base HEAD; prior handoff, task, Git authority, capability evidence, or lifecycle state cannot be reused as authority.
+
 [templates/continuation.yaml](../templates/continuation.yaml) carries exact identity for a later post-review phase: protocol/task identity, phase, `reviewed_report.commit`, report revision, `promotion_candidate_head`, expected refs, prior result/lifecycle state, and one next authorized action. It does not create authority and does not implement an orchestrator, scheduler, queue, daemon, registry, database, or cross-session messaging runtime.
 
 ## Execution base without self-reference
@@ -53,7 +75,7 @@ No artifact needs to contain the SHA of the commit containing itself.
 
 ## Identity and ownership
 
-Keep these identities distinct:
+Keep these identities distinct within each repository binding:
 
 - `base_head`: Architect handoff identity for the pre-execution task snapshot;
 - `final_execution_head`: Executor implementation HEAD before committing `report.yaml`;
@@ -68,7 +90,7 @@ Keep these identities distinct:
 
 ## Derived workflow lifecycle
 
-Lifecycle is derived, not assigned by a multi-writer state service:
+Lifecycle is derived per repository, not assigned by a multi-writer state service:
 
 - `PLANNED`: approved task and exact handoff exist.
 - `REPORTED`: Executor has produced the exact report evidence.
@@ -77,7 +99,7 @@ Lifecycle is derived, not assigned by a multi-writer state service:
 - `PROMOTED_NOT_RELEASED`: `main` has been explicitly promoted to the exact accepted candidate, but one or more separately authorized release actions are not completed. Missing release capability does not invalidate the completed promotion.
 - `RELEASED`: separately authorized release actions are complete and final identity verification succeeds.
 
-`BLOCKED`, `REVISION_REQUIRED`, and `REVERIFY / REVIEW_REQUIRED` are stop/results, not permission to skip a lifecycle boundary.
+`BLOCKED`, `REVISION_REQUIRED`, and `REVERIFY / REVIEW_REQUIRED` are stop/results, not permission to skip a lifecycle boundary. A terminal result closes the current execution but does not authorize the next repository.
 
 ## Pre-authorized continuation
 
@@ -96,6 +118,8 @@ Independent Architect review may be performed by a separate agent/session. Indep
 
 Model, effort, and execution surfaces are supplied or established by the operator/environment, not guessed by Architect. Choose the least-powerful currently available surface sufficient for the phase. Use bounded escalation only when an authorized requirement cannot be satisfied on the lesser surface. Capability availability and authority remain separate facts.
 
+Keep resource use bounded. GitHub Actions must not become an iterative debugger when cheaper/native verification exists. Avoid repeated identical external/plugin/API calls; prefer bounded, narrow inspection over unnecessary full scans. Tool availability is not permission to consume quota. Paid or quota-limited resources are used only when materially justified. This is execution doctrine, not a billing subsystem.
+
 ## Phase-specific capability preflight
 
 Optional `capability_requirements` maps semantic phases such as `EXECUTION`, `REVIEW`, `VERIFICATION`, `PROMOTION`, and `RELEASE` to required semantic capabilities. Missing declarations grant nothing.
@@ -108,6 +132,8 @@ Examples: repository content write/test execution for `EXECUTION`; exact commit/
 
 Authorized remote Git state is canonical repository truth; local state is an execution copy. A local clean/behind copy may be synchronized when authority permits. Local ahead or local dirty state is divergence or unknown work: never auto-push, reset, delete, or adopt it as authority merely because remote state is canonical. Remote drift from the authorized ref invalidates stale execution authority and fails closed.
 
+On every repository switch/rebind, refresh canonical GitHub truth for the new target before repository-specific authority is used. Previous repository refs or local state are not evidence for the new binding.
+
 ## Local Hygiene Contract
 
 Any local execution surface isolates temporary work under one run-owned root. Cleanup is part of completion when the current execution created local temporary artifacts. Cleanup authority is narrower than ordinary filesystem mutation authority: clean only artifacts created by the current run or explicitly disposable runtime-owned state.
@@ -118,7 +144,9 @@ Missing cleanup proof means retain or return `BLOCKED`; never guess and delete. 
 
 ## TASK LAUNCH presentation
 
-TASK LAUNCH is Architect-only operator UX and presentation only. It is not persisted per task, is not execution authority, and Executor does not own it. It contains only Chat, Role, operator-supplied Model, operator-supplied Effort, Progress, and Giải thích / short explanation. Follow it separately with a self-contained `PROMPT TO COPY`. No reusable launch artifact, launcher subsystem, or second authority source is created.
+TASK LAUNCH is Architect-only operator UX and presentation only. It is not persisted per task, is not execution authority, and Executor does not own it. It contains only Chat, Executor, operator/environment-supplied Model, operator/environment-supplied Effort, Progress, and Giải thích / short explanation. Follow it separately with a self-contained `PROMPT TO COPY`.
+
+For a multi-repository program, Progress may use a concrete denominator such as `Program 2/4 · agent-standards · execution`. Do not invent fake percentages. No reusable launch artifact, launcher subsystem, or second authority source is created.
 
 ## Promotion lineage after review
 
@@ -151,13 +179,13 @@ Executor never changes this status to unblock itself.
 
 No orphan source files. Every new source file belongs to an existing or explicitly authorized responsibility. No speculative scale structure. Do not create layers, factories, registries, plugin systems, services, queues, caches, shared modules, top-level directories, or scaling infrastructure for hypothetical needs.
 
-These unconditional protocol rules need not be recopied as prose into every task. The single canonical v3 task model remains authoritative; there is no task-lite, task-compact, second schema, or second protocol.
+These unconditional protocol rules need not be recopied as prose into every task. The single canonical v3 task model remains authoritative; there is no task-lite, task-compact, second schema, universal program task, or second protocol.
 
 ## Executor flow
 
-`receive exact handoff → verify base/task/rules → preflight EXECUTION capability → execute restrictive scope → resolve LOCAL only → record FOLLOW_UP → stop on BLOCKING → run checks → local hygiene gate → write REPORTED report → commit/publish report only when separately authorized → stop`
+`receive exact handoff → verify base/task/rules → preflight EXECUTION capability → execute restrictive scope → resolve LOCAL only → record FOLLOW_UP → stop on BLOCKING → run checks → local hygiene gate → write REPORTED report → commit/publish report only when separately authorized → terminal handoff/result → stop`
 
-Executor never self-accepts its report.
+Executor never self-accepts its report. Only after that terminal boundary may a reused Executor chat establish another repository binding from fresh authority.
 
 ## Architect review and continuation
 

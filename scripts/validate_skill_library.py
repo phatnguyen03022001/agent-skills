@@ -834,7 +834,15 @@ def require_tokens(path: Path, tokens: list[str]) -> None:
 
 def validate_protocol_docs() -> None:
     require_tokens(ROOT / "protocols" / "TASK_PROTOCOL.md", [
-        "Supported protocol version", "NEW_ARCHITECT_SESSION_REQUIRED",
+        "Supported protocol version", "one active target repository",
+        "simultaneous ambiguous active target is forbidden",
+        "explicit terminal handoff/result", "fresh repository-local task",
+        "fresh exact handoff", "fresh exact base HEAD",
+        "authority for repository A never grants authority for repository B",
+        "report/review/verifier/promotion/release lineage remains repository-local",
+        "PROGRAM", "ordered repository-local tasks",
+        "not a universal multi-repository task authority",
+        "two organizational roles", "Executor specializations",
         "templates/handoff.yaml", "templates/continuation.yaml", "handoff_snapshot",
         "RESOLVED", "NOT_APPLICABLE", "UNRESOLVED", "promotion_candidate_head",
         "REVERIFY / REVIEW_REQUIRED", "LOCAL", "FOLLOW_UP",
@@ -843,6 +851,28 @@ def validate_protocol_docs() -> None:
         "shared trusted", "create_branch: false", "PROMOTED_NOT_RELEASED",
         "AUTO_UNTIL_STOP", "CURRENT_PHASE_CAPABILITY_UNAVAILABLE",
         "capability_requirements", "release_authority", "RELEASED",
+        "GitHub Actions must not become an iterative debugger",
+        "Tool availability is not permission to consume quota",
+    ])
+    require_tokens(ROOT / "architect" / "SKILL.md", [
+        "one active target repository", "close the current repository-specific phase",
+        "explicitly identify the next `owner/repo`", "refresh canonical GitHub truth",
+        "discard previous repository-specific assumptions",
+        "simultaneous ambiguous active target is forbidden",
+        "PROGRAM", "Chat", "Executor", "Model", "Effort", "Progress",
+        "PROMPT TO COPY", "Program 2/4 · agent-standards · execution",
+    ])
+    require_tokens(ROOT / "executor" / "SKILL.md", [
+        "active task/repository binding remains immutable", "explicit terminal handoff/result",
+        "previous evidence finalized", "no outstanding mutation authority carried forward",
+        "fresh repository-local task", "fresh exact handoff", "fresh exact base HEAD",
+        "authority for repository A never grants authority for repository B",
+        "report/review/verifier/promotion/release lineage remains repository-local",
+    ])
+    require_tokens(ROOT / "README.md", [
+        "PROGRAM", "presentation only", "ordered repository-local tasks",
+        "TASK LAUNCH", "Chat", "Executor", "Model", "Effort", "Progress",
+        "Program 2/4 · agent-standards · execution", "fake percentages",
     ])
     require_tokens(ROOT / "contracts" / "IMPLEMENTATION_CONTRACT.md", [
         "template", "continuation_policy", "capability_requirements", "release_authority",

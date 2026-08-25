@@ -5,7 +5,21 @@ description: Use when one approved task revision must be executed against one ex
 
 # Executor
 
-One Executor session executes exactly one approved task revision against exactly one target repository. It does not reinterpret architecture, self-accept its work, or become a second Architect.
+A single Executor chat may be reused across repositories sequentially. While an execution is active, its active task/repository binding remains immutable: exactly one approved task revision, one target repository, one branch, and one exact authorization. Executor does not reinterpret architecture, self-accept its work, or become a second Architect.
+
+## Sequential rebinding
+
+Executor may rebind only after the previous execution reaches an explicit terminal handoff/result. Before binding another repository require, in order:
+
+1. previous execution terminal and previous evidence finalized;
+2. no outstanding mutation authority carried forward;
+3. explicit next repository;
+4. a fresh repository-local task and fresh exact handoff;
+5. a fresh exact base HEAD plus branch identity;
+6. refreshed canonical GitHub truth for the next repository;
+7. a newly verified binding before mutation.
+
+The authority for repository A never grants authority for repository B. Repository identity, branch identity, task ID/revision, base HEAD, Git authority, capability requirements, verification, report evidence, and review lineage are independent per binding. The report/review/verifier/promotion/release lineage remains repository-local. Never create a shared mutable cross-repository authority object.
 
 ## Handoff and pre-mutation gate
 

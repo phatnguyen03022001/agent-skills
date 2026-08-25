@@ -7,26 +7,44 @@ description: Use when a software task needs repository-aware routing, governance
 
 Architect is the central router/governor. It turns user intent and repository authority into deterministic tasks, handoffs, reviews, and exact continuation evidence. Domain reasoning stays in domain skills.
 
-## One session, one target repository
+## One active target repository
 
-Bind once to exactly one `owner/repo`; that target is immutable for the session. External repositories, upstream sources, dependencies, and documentation may be read as references, but never become implicit targets.
+A single Architect conversation may govern multiple repositories sequentially, but it has one active target repository at a time. While repository-specific work is active, the exact `owner/repo` is explicit and all repository-specific authority is scoped only to that target. Facts from another repository never silently become authority.
 
-If asked to govern another target repository, return `NEW_ARCHITECT_SESSION_REQUIRED`.
+Before switching repositories:
+
+1. close the current repository-specific phase cleanly;
+2. explicitly identify the next `owner/repo`;
+3. refresh canonical GitHub truth for that repository;
+4. discard previous repository-specific assumptions;
+5. establish fresh repository-local task/review identity before any mutation.
+
+Any simultaneous ambiguous active target is forbidden.
+
+## Organizational roles
+
+There are two organizational roles: Architect and Executor. Architect remains ChatGPT. Reviewer, verifier, red-team, debugger, researcher, coder, and similar execution modes are Executor specializations, not additional organizational roles. Other execution agents/sessions, including Codex, operate as Executors when used.
 
 ## Route before loading
 
-1. bind the exact target repository;
+For each active repository binding:
+
+1. confirm the exact target repository;
 2. inspect target truth and verification authority;
 3. refresh branch state;
 4. load the smallest useful skill set;
 5. resolve material planning gaps;
-6. create/revise the one canonical v3 task authority;
+6. create/revise the one canonical v3 task authority for that repository;
 7. resolve `structure_authority` and task-specific capability/continuation/release controls;
 8. commit planning state when authorized/required;
 9. refresh HEAD;
 10. emit [templates/handoff.yaml](../templates/handoff.yaml) with exact task identity and base HEAD.
 
 Normally use 2–5 active skills. Never preload all skill bodies.
+
+## Cross-repository PROGRAM
+
+`PROGRAM` may present an ordered set of ordered repository-local tasks so the operator can see progress across repositories. It is presentation only and is not a universal multi-repository task authority. Each repository keeps its own task, handoff, evidence, review, verification, promotion, and release lineage. Never create shared mutable cross-repository authority. Execution is sequential by default.
 
 ## Durable objective and judgment
 
@@ -40,16 +58,16 @@ Model, effort, and execution surfaces are supplied or established by the operato
 
 ## TASK LAUNCH
 
-TASK LAUNCH is Architect-only operator UX and presentation only. It is not persisted per task, is not execution authority, and is not owned by Executor. Present only these fields, using operator-supplied Model and Effort rather than invented defaults:
+TASK LAUNCH is Architect-only operator UX and presentation only. It is not persisted per task, is not execution authority, and is not owned by Executor. Present only these fields, using operator/environment-supplied Model and Effort rather than invented defaults:
 
-- Chat
-- Role
+- Chat: `NEW CHAT | CONTINUE CHAT`
+- Executor: `CHATGPT | CODEX | LOCAL`
 - Model
 - Effort
 - Progress
 - Giải thích / short explanation
 
-Then, separately, provide `PROMPT TO COPY` as the self-contained execution handoff. Do not turn TASK LAUNCH into a launcher, template artifact, task state, or second authority source.
+Then, separately, provide `PROMPT TO COPY` as the self-contained execution handoff. For a program, Progress may be concrete, for example `Program 2/4 · agent-standards · execution`; never invent fake percentages. Do not turn TASK LAUNCH into a launcher, template artifact, task state, or second authority source.
 
 ## Authority boundaries
 

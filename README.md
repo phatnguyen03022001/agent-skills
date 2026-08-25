@@ -4,7 +4,7 @@ A deliberately curated library of **exactly 15** reusable agent skills plus dete
 
 `agent-skills` defines **HOW WE WORK**. A target repository defines **WHAT THE PRODUCT IS** and stores live tasks/evidence.
 
-Supported protocol version is **3**. The lifecycle/continuation and local-hygiene hardening is additive and backward-compatible; existing valid expanded v3 artifacts remain valid.
+Supported protocol version is **3**. Sequential repository binding, lifecycle/continuation, and local-hygiene hardening are additive and backward-compatible; existing valid expanded v3 artifacts remain valid.
 
 ## Main flow
 
@@ -21,6 +21,18 @@ bounded user authorization
 ```
 
 `MANUAL` continuation returns control after a bounded phase. `AUTO_UNTIL_STOP` may let an orchestration environment dispatch the next already-authorized independent role/phase without asking the user again. It never merges roles, creates authority, manufactures review/verifier evidence, or treats the absence of a human as approval. No orchestrator is implemented here.
+
+## Sequential repository binding
+
+Architect and Executor contexts may be reused across repositories sequentially, but only one active target repository is bound at a time. A repository switch closes the current repository-specific phase, explicitly selects the next `owner/repo`, refreshes canonical GitHub truth, discards old repository-specific assumptions, and establishes fresh repository-local task/handoff/base authority before mutation.
+
+Executor rebinding additionally requires the previous execution to be terminal with evidence finalized and no outstanding mutation authority carried forward. Authority, evidence, review, verification, promotion, and release lineage never carry from one repository to another.
+
+There are only two organizational roles: Architect and Executor. Reviewer, verifier, red-team, debugger, researcher, coder, and similar execution modes are Executor specializations.
+
+## Cross-repository PROGRAM
+
+`PROGRAM` is presentation only for ordered repository-local tasks. It may show operator-visible sequencing such as repo A → task A → report A, then repo B → task B → report B, but it is not a universal multi-repository task authority and never creates shared mutable cross-repository authority. Canonical authority remains repository-local and execution is sequential by default. No program template, registry, queue, database, workflow engine, or transaction layer is introduced.
 
 ## Identity / ownership cheat sheet
 
@@ -45,6 +57,10 @@ Use the least-powerful currently available execution surface sufficient for the 
 
 After exact promotion, incomplete or unavailable release work yields the valid derived state `PROMOTED_NOT_RELEASED`. `RELEASED` requires the separately authorized release actions plus final verification.
 
+## Resource discipline
+
+Use bounded inspection and the smallest sufficient execution surface. GitHub Actions should not be used as an iterative debugger when cheaper/native verification exists. Avoid repeated identical external/plugin/API calls. Tool availability is not permission to consume quota; paid or quota-limited resources require material justification. No billing subsystem is introduced.
+
 ## Remote truth and local hygiene
 
 Authorized remote Git state is canonical repository truth; local state is an execution copy. Local ahead or dirty work is divergence, not disposable state or implicit authority. Remote drift invalidates stale execution authority.
@@ -53,7 +69,9 @@ Temporary local execution uses one isolated run-owned root. Recursive cleanup is
 
 ## TASK LAUNCH
 
-TASK LAUNCH is Architect-only operator UX and presentation only. It is not persisted per task and is not execution authority. It contains only Chat, Role, operator-supplied Model, operator-supplied Effort, Progress, and Giải thích / short explanation, followed separately by a self-contained `PROMPT TO COPY`. Executor does not own it and no launcher/template subsystem is introduced.
+TASK LAUNCH is Architect-only operator UX and presentation only. It is not persisted per task and is not execution authority. It contains only Chat, Executor, operator/environment-supplied Model, operator/environment-supplied Effort, Progress, and Giải thích / short explanation, followed separately by a self-contained `PROMPT TO COPY`.
+
+For a program, Progress may be concrete, for example `Program 2/4 · agent-standards · execution`; do not invent fake percentages. Executor does not own TASK LAUNCH and no launcher/template subsystem is introduced.
 
 ## Accepted promotion lineage
 
@@ -112,6 +130,6 @@ No orphan source files. No speculative scale structure. `structure_authority.sta
 
 ## Validation and GitHub Actions
 
-The stdlib-only validator checks the exact 15-skill taxonomy, frontmatter/catalog, constrained YAML, canonical task/handoff/report/review/continuation templates, lifecycle/continuation/capability/release semantics, optional local-hygiene outcomes, identity consistency, and internal links.
+The stdlib-only validator checks the exact 15-skill taxonomy, frontmatter/catalog, constrained YAML, canonical task/handoff/report/review/continuation templates, lifecycle/continuation/capability/release semantics, sequential repository-binding doctrine, optional local-hygiene outcomes, identity consistency, and internal links.
 
 The repository keeps one bounded validation workflow on relevant pushes to `dev`: one standard Linux job, read-only contents permission, short timeout, concurrency cancellation, immutable action pins, validator execution, and stdlib unittests. No extra workflow is required for this protocol hardening.
