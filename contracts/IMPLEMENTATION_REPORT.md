@@ -14,12 +14,20 @@ The report commit is still not automatically `promotion_candidate_head`. After A
 
 ## Capability preflight evidence
 
-The canonical template includes a small `capability_preflight` record for the Executor phase: phase, required semantic capabilities, observed available/missing capabilities, and pass/fail. It proves availability only for that phase at that time. It does not grant authority and does not claim later-phase capabilities are available.
+The canonical template includes a small `capability_preflight` record for the Executor phase: phase, required semantic capabilities, observed available/missing capabilities, and pass/fail. It proves availability only for that phase at that time. A known capability is not proof that the capability is currently available. It does not grant authority and does not claim later-phase capabilities are available.
 
-Current-phase missing required capability blocks before mutation. A later unavailable release capability may leave an earlier accepted and promoted candidate valid as `PROMOTED_NOT_RELEASED`.
+Current-phase missing required capability blocks before mutation. When mandatory native verification is known to be required for the current execution, its current availability is proven before the first mutation rather than discovered at final verification. A later unavailable release capability may leave an earlier accepted and promoted candidate valid as `PROMOTED_NOT_RELEASED`.
+
+## Local hygiene evidence
+
+`local_hygiene` is optional for protocol v3 compatibility. Legacy valid v3 reports without the block remain valid. When present, `result` is closed to `PASS`, `RETAINED_FOR_EVIDENCE`, or `BLOCKED`.
+
+The block records the bounded run root, whether cleanup was performed, retained artifact identity/reason when diagnostic evidence must remain, and concise evidence. `PASS` has no retained artifacts. `RETAINED_FOR_EVIDENCE` requires at least one retained entry with both identity and reason. `BLOCKED` records why safe cleanup proof could not be completed; it never authorizes destructive fallback.
+
+Local hygiene evidence is execution evidence, not cleanup authority. Recursive cleanup still requires current-run or explicitly disposable runtime ownership plus identity, realpath containment, and non-symlink proof under the [Task Protocol](../protocols/TASK_PROTOCOL.md).
 
 ## Evidence
 
-The report records exact base/final execution heads, pinned skill revision, pre-execution gates, changed files, commits/pushes, acceptance evidence, checks, authoritative verifier status when applicable, discovered gaps, structural observations, deviations, blockers, and final Executor result.
+The report records exact base/final execution heads, pinned skill revision, pre-execution gates, changed files, commits/pushes, acceptance evidence, checks, authoritative verifier status when applicable, discovered gaps, structural observations, deviations, blockers, local-hygiene result when present, and final Executor result.
 
 Executor classifies discoveries as `LOCAL`, `FOLLOW_UP`, or `BLOCKING` under the [Task Protocol](../protocols/TASK_PROTOCOL.md). CI or Git success alone is not authoritative project PASS.

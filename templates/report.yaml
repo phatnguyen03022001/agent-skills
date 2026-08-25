@@ -50,6 +50,13 @@ capability_preflight:
     - repository_content_write
   passed: false
 
+local_hygiene:
+  result: PASS
+  run_root: ""
+  cleanup_performed: false
+  retained: []
+  evidence: ""
+
 changed_files:
   - path: ""
     summary: ""

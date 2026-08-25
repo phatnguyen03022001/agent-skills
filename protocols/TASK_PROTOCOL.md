@@ -10,6 +10,12 @@ An Architect session binds to one immutable target repository. External reposito
 
 An Executor session binds to one approved task revision, one repository, one branch, and one exact execution authorization. It does not execute unrelated work, reinterpret architecture, or broaden scope. The approved exact task plus handoff is prior authorization for its bounded Executor actions; a role must not invent extra user approvals for phases already authorized by those artifacts.
 
+## Architect judgment and material user decisions
+
+Architect optimizes for the user's durable user objective and explicit current product/design authority. Canonical authority is governing, not infallible: derived architecture, implementation accident, reviewer preference, or even current canonical text may be challenged only with concrete evidence of staleness, contradiction, incompleteness, or objective regression. This does not authorize ignoring explicit authority. Within non-waivable safety and policy boundaries, an explicit informed override remains valid.
+
+Classify material user decisions by impact. A compatible decision may proceed. A trade-off requires a warning and recommendation. A regression requires a strong warning. A decision that contradicts the durable objective stops for explicit informed override. Ambiguity or casual assent is not informed approval for material architecture, protocol, security, compatibility, destructive, or irreversible change.
+
 ## Artifact ownership and authority
 
 Canonical target-repository artifacts are:
@@ -19,7 +25,7 @@ Canonical target-repository artifacts are:
 - `review.yaml`: Architect-owned judgment when repository policy stores it;
 - [templates/continuation.yaml](../templates/continuation.yaml): a small machine-readable continuation envelope, not shared mutable state.
 
-Content ownership, authority, and capability availability are distinct. Capability availability never grants authority, and authority never proves capability availability. No role manufactures another role's authority or evidence.
+Content ownership, authority, and capability availability are distinct. Capability availability never grants authority, and authority never proves capability availability. A known capability is not a currently available capability. No role manufactures another role's authority or evidence.
 
 `task.git_authority` governs Executor Git mutations. `create_branch`, `commit`, `push`, and `promote_to_main` are independent. `commit: true` does not authorize branch creation, push, `main` mutation, or promotion. `push: true` does not authorize branch creation, force push, `main` mutation, or promotion. `promote_to_main: false` forbids `main` ref mutation and merge into `main`. If `create_branch: false`, Executor MUST NOT invoke branch-creation capability for testing, probing, staging, temporary work, backup, recovery, or cleanup. Negative tests use isolated fixtures or mocks, never the live repository.
 
@@ -86,13 +92,33 @@ If `continuation_policy` is absent, behavior is `MANUAL`.
 
 Independent Architect review may be performed by a separate agent/session. Independence means distinct Architect role/session plus exact-evidence separation from the Executor, not a human-only requirement.
 
+## Execution environment and surface selection
+
+Model, effort, and execution surfaces are supplied or established by the operator/environment, not guessed by Architect. Choose the least-powerful currently available surface sufficient for the phase. Use bounded escalation only when an authorized requirement cannot be satisfied on the lesser surface. Capability availability and authority remain separate facts.
+
 ## Phase-specific capability preflight
 
 Optional `capability_requirements` maps semantic phases such as `EXECUTION`, `REVIEW`, `VERIFICATION`, `PROMOTION`, and `RELEASE` to required semantic capabilities. Missing declarations grant nothing.
 
-Immediately before the first mutation or authoritative action of the current phase, preflight that phase's required capabilities. If a required current-phase capability is unavailable, return `CURRENT_PHASE_CAPABILITY_UNAVAILABLE` and block before mutation. Do not preflight later phases as a prerequisite to completing an earlier authorized phase.
+Immediately before the first mutation or authoritative action of the current phase, preflight that phase's required capabilities. If the approved task already knows that native verification or another mandatory current-execution capability is required to complete the current execution, prove that currently available capability before the first mutation. If a required current-phase capability is unavailable, return `CURRENT_PHASE_CAPABILITY_UNAVAILABLE` and block before mutation. Do not preflight later phases as a prerequisite to completing an earlier authorized phase.
 
 Examples: repository content write/test execution for `EXECUTION`; exact commit/report resolution for `REVIEW`; exact-SHA verifier access for `VERIFICATION`; non-force target-ref update for `PROMOTION`; tag, repository-metadata, and release-publication APIs for `RELEASE`.
+
+## GitHub/local drift
+
+Authorized remote Git state is canonical repository truth; local state is an execution copy. A local clean/behind copy may be synchronized when authority permits. Local ahead or local dirty state is divergence or unknown work: never auto-push, reset, delete, or adopt it as authority merely because remote state is canonical. Remote drift from the authorized ref invalidates stale execution authority and fails closed.
+
+## Local Hygiene Contract
+
+Any local execution surface isolates temporary work under one run-owned root. Cleanup is part of completion when the current execution created local temporary artifacts. Cleanup authority is narrower than ordinary filesystem mutation authority: clean only artifacts created by the current run or explicitly disposable runtime-owned state.
+
+Recursive cleanup is legal only when all safety proof is present. The target must be the exact current-run run-owned root or explicitly disposable runtime-owned root; creation, ownership, and run identity must be proven; canonical realpath must be contained in the authorized temporary/runtime root; and the target must not be a symlink traversal. Reject an empty or unresolved target, filesystem root, home, workspace root, repository root, any ancestor of those roots, pre-existing user state, a sibling project, or arbitrary user-supplied cleanup input. Path names, cache-like appearance, proximity to another project, or task/config input alone never prove disposability.
+
+Missing cleanup proof means retain or return `BLOCKED`; never guess and delete. Evidence still required for diagnosis is retained with bounded artifact identity and reason and reported as `RETAINED_FOR_EVIDENCE`. Later stale cleanup obeys the same ownership, identity, realpath, and containment rules. A safely cleaned/no-artifact execution reports `PASS`.
+
+## TASK LAUNCH presentation
+
+TASK LAUNCH is Architect-only operator UX and presentation only. It is not persisted per task, is not execution authority, and Executor does not own it. It contains only Chat, Role, operator-supplied Model, operator-supplied Effort, Progress, and Giải thích / short explanation. Follow it separately with a self-contained `PROMPT TO COPY`. No reusable launch artifact, launcher subsystem, or second authority source is created.
 
 ## Promotion lineage after review
 
@@ -129,7 +155,7 @@ These unconditional protocol rules need not be recopied as prose into every task
 
 ## Executor flow
 
-`receive exact handoff → verify base/task/rules → preflight EXECUTION capability → execute restrictive scope → resolve LOCAL only → record FOLLOW_UP → stop on BLOCKING → run checks → write REPORTED report → commit/publish report only when separately authorized → stop`
+`receive exact handoff → verify base/task/rules → preflight EXECUTION capability → execute restrictive scope → resolve LOCAL only → record FOLLOW_UP → stop on BLOCKING → run checks → local hygiene gate → write REPORTED report → commit/publish report only when separately authorized → stop`
 
 Executor never self-accepts its report.
 

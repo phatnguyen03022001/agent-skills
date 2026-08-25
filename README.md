@@ -4,7 +4,7 @@ A deliberately curated library of **exactly 15** reusable agent skills plus dete
 
 `agent-skills` defines **HOW WE WORK**. A target repository defines **WHAT THE PRODUCT IS** and stores live tasks/evidence.
 
-Supported protocol version is **3**. The lifecycle/continuation hardening is additive and backward-compatible; existing valid expanded v3 artifacts remain valid.
+Supported protocol version is **3**. The lifecycle/continuation and local-hygiene hardening is additive and backward-compatible; existing valid expanded v3 artifacts remain valid.
 
 ## Main flow
 
@@ -37,11 +37,23 @@ A report may remain `REPORTED` / `NEEDS_REVIEW` after an external Architect acce
 
 ## Authority, capability, and release
 
-Authority never proves capability availability; capability availability never grants authority. Before the first action of a phase, preflight only that phase's required semantic capabilities. Missing current-phase capability blocks before mutation. Missing later-phase capability does not invalidate an earlier completed phase.
+Authority never proves capability availability; capability availability never grants authority. A known capability is not a currently available capability. Before the first action of a phase, preflight that phase's required semantic capabilities; when mandatory native verification is known to be required for the current execution, prove it before the first mutation. Missing current-phase capability blocks before mutation. Missing later-phase capability does not invalidate an earlier completed phase.
+
+Use the least-powerful currently available execution surface sufficient for the phase, with bounded escalation only when an authorized requirement needs it. Operator/environment supplies or establishes model, effort, and execution surfaces rather than reusable governance hard-coding a particular provider or machine.
 
 `create_branch`, `commit`, `push`, and `promote_to_main` are independent Git authorities. Release authority is independent again: version tag creation, repository metadata mutation, and release publication must each be explicitly authorized. None is inferred from commit, push, or promotion.
 
 After exact promotion, incomplete or unavailable release work yields the valid derived state `PROMOTED_NOT_RELEASED`. `RELEASED` requires the separately authorized release actions plus final verification.
+
+## Remote truth and local hygiene
+
+Authorized remote Git state is canonical repository truth; local state is an execution copy. Local ahead or dirty work is divergence, not disposable state or implicit authority. Remote drift invalidates stale execution authority.
+
+Temporary local execution uses one isolated run-owned root. Recursive cleanup is fail-closed and limited to proven current-run or explicitly disposable runtime-owned roots. Missing ownership, identity, realpath, containment, or non-symlink proof retains/blocks instead of deleting. Executor reports optional local-hygiene result `PASS`, `RETAINED_FOR_EVIDENCE`, or `BLOCKED`; legacy v3 reports without that optional evidence remain valid.
+
+## TASK LAUNCH
+
+TASK LAUNCH is Architect-only operator UX and presentation only. It is not persisted per task and is not execution authority. It contains only Chat, Role, operator-supplied Model, operator-supplied Effort, Progress, and Giải thích / short explanation, followed separately by a self-contained `PROMPT TO COPY`. Executor does not own it and no launcher/template subsystem is introduced.
 
 ## Accepted promotion lineage
 
@@ -100,6 +112,6 @@ No orphan source files. No speculative scale structure. `structure_authority.sta
 
 ## Validation and GitHub Actions
 
-The stdlib-only validator checks the exact 15-skill taxonomy, frontmatter/catalog, constrained YAML, canonical task/handoff/report/review/continuation templates, lifecycle/continuation/capability/release semantics, identity consistency, and internal links.
+The stdlib-only validator checks the exact 15-skill taxonomy, frontmatter/catalog, constrained YAML, canonical task/handoff/report/review/continuation templates, lifecycle/continuation/capability/release semantics, optional local-hygiene outcomes, identity consistency, and internal links.
 
 The repository keeps one bounded validation workflow on relevant pushes to `dev`: one standard Linux job, read-only contents permission, short timeout, concurrency cancellation, immutable action pins, validator execution, and stdlib unittests. No extra workflow is required for this protocol hardening.

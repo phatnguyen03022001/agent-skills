@@ -357,6 +357,8 @@ REVIEW_SEQUENCE_SCHEMAS: dict[str, dict[str, type]] = {
 FOLLOW_UP_ORIGIN_SCHEMA: dict[str, type] = {"type": str, "task_id": str, "gap_id": str}
 GAP_CLASSIFICATIONS = frozenset({"LOCAL", "FOLLOW_UP", "BLOCKING"})
 REVIEW_STATES = frozenset({"ACCEPTED", "REVISION_REQUIRED", "BLOCKED"})
+LOCAL_HYGIENE_RESULTS = frozenset({"PASS", "RETAINED_FOR_EVIDENCE", "BLOCKED"})
+LOCAL_HYGIENE_RETAINED_SCHEMA: dict[str, type] = {"identity": str, "reason": str}
 
 
 def get_path(document: dict[str, Any], dotted: str) -> Any:
@@ -667,6 +669,39 @@ def validate_report_template() -> None:
         )
         if valid and preflight["phase"] not in CAPABILITY_PHASES:
             error(f"{label}: unsupported capability phase {preflight['phase']!r}")
+
+    hygiene = get_path(doc, "local_hygiene")
+    if hygiene is not _MISSING:
+        valid = require_mapping_schema(
+            label,
+            hygiene,
+            "local_hygiene",
+            {
+                "result": str,
+                "run_root": str,
+                "cleanup_performed": bool,
+                "retained": list,
+                "evidence": str,
+            },
+        )
+        if valid:
+            result = hygiene["result"]
+            if result not in LOCAL_HYGIENE_RESULTS:
+                error(f"{label}: unsupported local hygiene result {result!r}")
+            retained = hygiene["retained"]
+            for index, item in enumerate(retained):
+                item_valid = require_mapping_schema(
+                    label,
+                    item,
+                    f"local_hygiene.retained[{index}]",
+                    LOCAL_HYGIENE_RETAINED_SCHEMA,
+                )
+                if item_valid and (not item["identity"] or not item["reason"]):
+                    error(f"{label}: retained local hygiene artifact requires non-empty identity and reason")
+            if result == "PASS" and retained:
+                error(f"{label}: PASS local hygiene cannot retain artifacts")
+            if result == "RETAINED_FOR_EVIDENCE" and not retained:
+                error(f"{label}: RETAINED_FOR_EVIDENCE requires retained artifact identity and reason")
 
 
 def validate_review_template() -> None:

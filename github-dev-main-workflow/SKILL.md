@@ -14,7 +14,9 @@ Target-repository governance may be stricter and takes precedence.
 
 ## Before writes
 
-Refresh exact repository, branch, remote HEAD, expected base, write authority, workflow triggers, and the semantic capabilities required for the current phase. If the remote branch moved, fail closed. If a current-phase capability is unavailable, block before mutation. Do not require a later-phase capability to finish an earlier authorized phase.
+Refresh exact repository, branch, remote HEAD, expected base, write authority, workflow triggers, and the semantic capabilities required for the current phase. Authorized remote Git state is canonical repository truth; local state is an execution copy. If the remote branch moved, that remote drift invalidates stale authority and fails closed. If a current-phase capability is unavailable, block before mutation. Do not require a later-phase capability to finish an earlier authorized phase.
+
+A local clean/behind copy may be synchronized when authorized. Local ahead or local dirty state is divergence or unknown work and must not be auto-pushed, reset, deleted, or silently adopted as authority.
 
 `task.git_authority` governs Executor Git mutations. `create_branch`, `commit`, `push`, and `promote_to_main` are independent. When `create_branch: false`, do not invoke branch creation even for tests or temporary work. Commit does not imply push, force push, `main` mutation, or promotion.
 
@@ -22,9 +24,9 @@ Refresh exact repository, branch, remote HEAD, expected base, write authority, w
 
 ## Semantic capability preflight
 
-Use phase-specific semantic requirements rather than equating authority with whichever API happens to exist:
+Use phase-specific semantic requirements rather than equating authority with whichever API happens to exist. A known capability is not proof of a currently available capability. Choose the least-powerful currently available surface sufficient for the phase and use bounded escalation only when required.
 
-- `EXECUTION`: required repository content mutation and test/verification execution surfaces;
+- `EXECUTION`: required repository content mutation and test/verification execution surfaces, including native verification when the task declares it mandatory for the current execution;
 - `REVIEW`: exact commit/report resolution needed by the independent Architect/session;
 - `VERIFICATION`: authoritative exact-SHA verifier access;
 - `PROMOTION`: non-force update of the authorized `main` ref to the exact candidate;
