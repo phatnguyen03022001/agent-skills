@@ -701,6 +701,16 @@ class Task0004GovernanceTests(unittest.TestCase):
         for forbidden in ("architect-profile", "MacBook", "M3"):
             self.assertNotIn(forbidden, combined)
 
+    def test_ac1_architect_role_is_provider_neutral(self) -> None:
+        architect = self.read("architect/SKILL.md")
+        for forbidden in (
+            "Architect remains ChatGPT",
+            "Architect is ChatGPT",
+            "Architect must be ChatGPT",
+            "Architect always uses ChatGPT",
+        ):
+            self.assertNotIn(forbidden, architect)
+
     def test_ac2_prompt_to_copy_is_compact_authority_locator(self) -> None:
         combined = (
             self.read("architect/SKILL.md")
