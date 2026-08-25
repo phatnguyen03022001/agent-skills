@@ -1,0 +1,269 @@
+protocol_version: 3
+
+task_id: TASK-0004
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: ""
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "d506f5caef3808fc2f7356172b5b648be78b628f"
+
+architect_analysis_skills:
+  - architect
+  - simplicity
+  - gap-analysis
+  - design-review
+  - adversarial-audit
+  - verification
+  - github-dev-main-workflow
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+    - github-dev-main-workflow
+  recommended:
+    - gap-analysis
+    - design-review
+    - adversarial-audit
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "Operator request in the current Architect session for one final long-horizon hardening of agent-skills so the reusable public governance remains generic, proportionate, deterministic, low-friction, evidence-driven, and resistant to speculative successor-agent churn."
+    role: user_objective
+    precedence: 1
+  - source: ".agent/tasks/TASK-0003/report.yaml@a91150bbba1f1350711ba2affa42d1549ae86fa7"
+    role: accepted_prior_execution_evidence
+    precedence: 2
+  - source: "protocols/TASK_PROTOCOL.md@d506f5caef3808fc2f7356172b5b648be78b628f"
+    role: pinned_self_hosting_governance
+    precedence: 3
+  - source: "architect/SKILL.md@d506f5caef3808fc2f7356172b5b648be78b628f"
+    role: pinned_architect_contract
+    precedence: 4
+  - source: "executor/SKILL.md@d506f5caef3808fc2f7356172b5b648be78b628f"
+    role: pinned_executor_contract
+    precedence: 5
+
+structure_authority:
+  status: RESOLVED
+  source: "Existing 15-skill library, protocol-v3 task/report/templates, contracts, validator, and focused tests."
+  rationale: "All required changes are bounded evolutions of existing owners. No new skill, role, protocol version, repository, orchestration layer, service, dependency, or workflow is required."
+
+objective: "Perform one final long-horizon governance consolidation so agent-skills remains generic and reusable by many operators while supporting optional operator-specific preferences externally; process becomes proportional to risk, execution handoffs become compact authority locators, lifecycle/review/rebinding semantics become deterministic, Git policy becomes target-aware rather than hard-coded to one branch topology, external normative authority becomes immutable when used, evidence duplication is reduced, and mature governance defaults to preservation unless material evidence admits change."
+
+scope:
+  required_changes:
+    - "Preserve TASK-0003 sequential multi-repository behavior while clarifying that newly edited self-hosting semantics remain non-authoritative during this execution; operate entirely under pinned d506f5caef3808fc2f7356172b5b648be78b628f authority."
+    - "Add generic optional operator-profile support to Architect bootstrap. The profile location/content is supplied by the host/session/operator, never hard-coded into reusable governance. Treat it as durable preference/environment context, not target-repository factual or mutation authority; explicit current user decisions and target-repository canonical facts/task authority must not be silently overridden by a profile."
+    - "Replace ambiguous 'self-contained execution handoff' guidance for PROMPT TO COPY with a compact authority-locator contract. Normal prompt content is target owner/repo, branch, exact task ID/revision/path, exact base HEAD, current phase when needed, and a concise instruction to resolve canonical authority/preflight/execute/report. Do not duplicate scope, invariants, forbidden changes, acceptance criteria, capabilities, Git/release authority, verification detail, or protocol boilerplate already available in canonical artifacts unless access to canonical authority is genuinely unavailable."
+    - "Define Executor-binding terminal semantics separately from whole-task lifecycle. A binding may be released/rebound only after an explicit execution result/handoff ends current mutation authority and required evidence for that execution is finalized. NEEDS_REVIEW/REPORTED, BLOCKED, STALE_STATE, AUTHORITY_REQUIRED, CURRENT_PHASE_CAPABILITY_UNAVAILABLE, failed terminal execution, or completed execution may terminate the Executor binding when no mutation authority remains; none implies whole-task acceptance/promotion/release."
+    - "Remove role contradiction around independent review. Keep exactly two organizational roles: Architect and Executor. The current governing Architect owns final ACCEPT/REJECT/REVISE judgment. Independent reviewer/red-team/verifier sessions are Executor specializations that produce advisory or designated verifier evidence; they do not become a second Architect or independently own product/governance acceptance. Preserve verifier-owned authoritative PASS/FAIL when a project explicitly designates such verification."
+    - "Introduce risk-proportional execution lanes without creating another task schema or role: DIRECT for small reversible low-risk changes with clear authority and cheap verification; BOUNDED as the normal task→Executor→verify→Architect-review path; HIGH_ASSURANCE for materially consequential security/protocol/migration/irreversible/release-critical work requiring stronger independence/evidence as specified by the task. DIRECT must not bypass safety, target truth, explicit write authority, or required verification; HIGH_ASSURANCE must not become default ceremony."
+    - "Generalize the existing Git workflow owner instead of adding a new skill. Support target-authoritative MAIN_ONLY, DEV_MAIN, and optionally activated DEV_STAGING_MAIN topologies. Never infer or create staging merely because it is supported. Repository-specific branch policy and exact live refs outrank generic defaults. Preserve backward compatibility for current dev/main repositories."
+    - "Require any external repository used as normative execution authority to be resolved to an immutable revision before mutation, using existing authority-source/task mechanisms where sufficient. Current documentation, libraries, upstream repos, and examples used only as research/reference evidence need not become normative authority. Do not create a universal dependency registry."
+    - "Reduce task/report context duplication. Keep unconditional protocol boilerplate in protocol, task-specific material authority in task.yaml, and evidence recorded once where practical. If introducing optional evidence IDs/references materially reduces repeated report prose, keep it backward-compatible with legacy inline evidence and do not require a new protocol version. Do not redesign canonical artifacts merely for aesthetics."
+    - "Add a material-design-readiness gate for consequential implementation: Architect identifies applicable target product/design authority and resolves only material missing decisions before large or consequential coding. Trivial, mechanical, reversible, or well-specified work must not be forced through documentation ceremony. agent-documents remains the reusable owner of detailed documentation structure; do not duplicate that taxonomy here."
+    - "Treat operator attention/manual labor as a constrained resource. When an available authorized agent/tool can safely perform an action, do not use the operator as a manual command/RPC bridge. Human input remains appropriate for unavailable capability, physical/local-only action that cannot be automated, unresolved product intent, destructive/irreversible authority, material paid-cost approval, or major informed trade-offs."
+    - "Add stable/maintenance change-admission doctrine for mature governance. Absence of a material reproduced problem means NO CHANGE REQUIRED is valid and preferred. Admit governance modification only for evidence-backed defect, stale rule/external reality, recurring missing capability, security issue, compatibility failure, or material cost/usability/maintainability regression, or an explicit durable maintainer objective change. Preference, novelty, elegance, architectural fashion, and hypothetical future scale are insufficient authority. Corrective maintenance remains permitted and should use the smallest safe correction."
+    - "Freeze the 15-skill taxonomy by default. A new skill is rejected unless repeated real use demonstrates a materially distinct recurring responsibility that cannot fit an existing owner cleanly; urgent security/correctness evidence may justify exceptional escalation. Do not encode an arbitrary numeric occurrence threshold as an absolute rule."
+    - "Add deterministic regression coverage for all new semantics and the real failure modes motivating them: compact non-duplicative handoff, optional profile non-authority/no personal hardcoding, binding-terminal vs task-lifecycle separation, one current Architect acceptance owner, proportional lanes, target-aware branch topologies without implicit staging, immutable external normative authority, design-readiness proportionality, low human-in-loop, maintenance NO_CHANGE admission, and frozen 15-skill default."
+  allowed_existing_files_or_components:
+    - README.md
+    - architect/SKILL.md
+    - executor/SKILL.md
+    - simplicity/SKILL.md
+    - gap-analysis/SKILL.md
+    - design-review/SKILL.md
+    - verification/SKILL.md
+    - github-dev-main-workflow/SKILL.md
+    - protocols/TASK_PROTOCOL.md
+    - templates/task.yaml
+    - templates/report.yaml
+    - templates/handoff.yaml
+    - templates/review.yaml
+    - templates/continuation.yaml
+    - contracts/IMPLEMENTATION_CONTRACT.md
+    - contracts/IMPLEMENTATION_REPORT.md
+    - contracts/ARCHITECT_REVIEW.md
+    - scripts/validate_skill_library.py
+    - scripts/test_validate_skill_library.py
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Operate this entire self-hosting execution under pinned pre-task authority d506f5caef3808fc2f7356172b5b648be78b628f. TASK-0003 implementation on dev is accepted prior content/baseline evidence, not governing self-hosting authority for TASK-0004."
+  - "Target only phatnguyen03022001/agent-skills on dev. main remains read-only during execution."
+  - "Keep protocol_version exactly 3 and preserve existing valid v3 artifacts/workflows unless an additive backward-compatible optional field is strictly necessary."
+  - "Keep exactly 15 top-level skills; create no sixteenth or nested hidden skill."
+  - "Keep the library generic/public-reusable. Do not hard-code phatnguyen03022001/architect-profile, MacBook/M3 details, operator identity, personal model defaults, personal paths, secrets, or personal branch preferences into reusable governance."
+  - "Do not create a universal founder/business operating system. Product marketing, sales, pricing, growth, legal, and personal preferences remain outside agent-skills unless a future independently evidenced engineering boundary requires otherwise."
+  - "Do not create a new organizational role. Architect and Executor remain the only organizational roles."
+  - "Do not create a new protocol version, alternate task-lite/task-compact schema, program authority artifact, state service, orchestrator, scheduler, queue, registry, database, workflow engine, launcher, distributed lock, or transaction framework."
+  - "Preserve one active repository binding at a time and repository-local task/report/review/verifier/promotion/release lineage."
+  - "Maintain GitHub remote truth as canonical Git state; local state remains an execution copy and local divergence is never silently promoted to authority or destroyed."
+  - "Process must be proportional to risk: low-risk work must not inherit high-assurance ceremony, and high-risk work must not silently downgrade required evidence."
+  - "A mature stable governance system may correctly conclude NO CHANGE REQUIRED; maintenance mode prevents speculative churn but never forbids evidence-backed corrective maintenance."
+
+forbidden_changes:
+  - "No mutation of agent-standards, agent-documents, agent-runtime, architect-profile, or any target product repository."
+  - "No main mutation, promotion, tag, release, repository metadata mutation, or branch creation during TASK-0004 execution."
+  - "No dependency additions or package-manager changes."
+  - "No .github/workflow mutation unless an existing workflow is concretely proven unable to verify the authorized change; if so stop BLOCKED for Architect revision rather than broadening scope."
+  - "No new skill, new role, new protocol version, new top-level directory, new orchestration/runtime subsystem, or provider-specific execution policy."
+  - "No hard-coded operator-profile repository/URL, machine specification, secret, model/provider default, or personal operating preference."
+  - "No mandatory staging branch and no implicit branch creation."
+  - "No broad rewrite of all skills merely to normalize prose/style. Unchanged skills remain unchanged unless a required invariant has a concrete owner there."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0004/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_write
+    - exact_remote_ref_read
+    - native_verification_execution
+  REVIEW:
+    - exact_commit_report_resolution
+  VERIFICATION:
+    - exact_sha_verification_resolution
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Optional operator-profile bootstrap is supported generically without hard-coded personal identity/location/defaults, and profile preferences cannot silently replace target-specific factual/task authority."
+    evidence_required: "Architect/protocol wording plus focused positive/negative tests including rejection/absence of personal hardcoding."
+  - id: AC-2
+    requirement: "PROMPT TO COPY is explicitly an authority locator rather than duplicated authority and normal content is bounded to target/task/base/phase plus concise resolve-preflight-execute-report instruction."
+    evidence_required: "Architect/protocol/README wording and tests that require non-duplication guidance for canonical task fields."
+  - id: AC-3
+    requirement: "Executor-binding terminal semantics are distinct from whole-task lifecycle and allow safe sequential rebinding only after mutation authority ends and required execution evidence is finalized."
+    evidence_required: "Executor/protocol wording and focused tests for NEEDS_REVIEW/REPORTED and blocked/stale/authority-required terminal binding outcomes without implying acceptance/promotion/release."
+  - id: AC-4
+    requirement: "Exactly one current governing Architect owns ACCEPT/REJECT/REVISE; independent reviewer/red-team/verifier sessions are Executor specializations/evidence producers and do not create a second Architect role."
+    evidence_required: "Architect/protocol/contracts wording and tests eliminating contradictory independent-Architect acceptance semantics while preserving designated verifier evidence."
+  - id: AC-5
+    requirement: "DIRECT, BOUNDED, and HIGH_ASSURANCE lanes make process proportional to risk without creating another role/schema/framework or letting DIRECT bypass authority/safety."
+    evidence_required: "Architect/protocol wording and positive/negative tests covering low-risk direct eligibility, normal bounded flow, and high-assurance triggers."
+  - id: AC-6
+    requirement: "Existing Git workflow owner supports target-authoritative MAIN_ONLY, DEV_MAIN, and explicitly activated DEV_STAGING_MAIN without implicit staging or branch creation, while existing dev/main behavior remains compatible."
+    evidence_required: "github-dev-main-workflow/protocol wording and focused compatibility/negative tests."
+  - id: AC-7
+    requirement: "External repositories used as normative authority require immutable revision binding before mutation; ordinary research/reference sources remain references and do not acquire authority."
+    evidence_required: "Protocol/Architect wording and tests distinguishing normative immutable authority from non-normative research/reference evidence."
+  - id: AC-8
+    requirement: "Canonical task/report evidence is materially less duplicative where safe, without breaking legacy valid v3 artifacts or creating parallel compact schemas."
+    evidence_required: "Template/protocol changes only if justified, legacy fixture PASS, and tests proving either evidence-reference compatibility or equivalent deduplication semantics."
+  - id: AC-9
+    requirement: "Consequential implementation receives a material-design-readiness check while trivial/reversible/well-specified work is not forced through documentation ceremony."
+    evidence_required: "Architect/gap/design/protocol wording and focused proportionality tests."
+  - id: AC-10
+    requirement: "Operator attention/manual labor is treated as constrained; available authorized agent capability is preferred over manual operator RPC, with explicit bounded exceptions."
+    evidence_required: "Architect/protocol wording and deterministic marker tests."
+  - id: AC-11
+    requirement: "Stable/maintenance governance defaults to preservation and NO CHANGE REQUIRED absent material evidence, while evidence-backed corrective maintenance remains authorized through the normal smallest-safe-correction path."
+    evidence_required: "Architect/simplicity/protocol/README wording and tests for admitted vs non-admitted change rationales."
+  - id: AC-12
+    requirement: "The 15-skill taxonomy is closed by default; new-skill admission requires materially distinct recurring real evidence or exceptional correctness/security justification, with no arbitrary universal numeric threshold."
+    evidence_required: "Architect/simplicity/README/validator tests plus exact count of 15 SKILL.md files."
+  - id: AC-13
+    requirement: "TASK-0003 sequential multi-repository semantics remain intact and existing valid protocol-v3 single-repository workflows remain valid."
+    evidence_required: "Existing TASK-0003 and legacy v3 regression suites remain GREEN."
+  - id: AC-14
+    requirement: "Exact final implementation HEAD passes repository-native verification, exact-SHA verification resolution, py_compile, diff checks, scope inventory, and adversarial inspection with no unauthorized mutation."
+    evidence_required: "Exact commit/tree/diff identities and recorded verification results against the exact final_execution_head."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Before first mutation refresh GitHub truth and require repository exactly phatnguyen03022001/agent-skills, branch dev, live HEAD equal exact handoff base_head, main equal d506f5caef3808fc2f7356172b5b648be78b628f, branch set exactly {dev, main}, pinned authority d506f5caef3808fc2f7356172b5b648be78b628f, and required EXECUTION capabilities currently available."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Use causal TDD for governance/validator behavior: add focused failing tests first for AC-1 through AC-13 before corresponding production-governance changes; preserve a clear RED→GREEN evidence chain. Do not manufacture TDD for pure wording where no deterministic test can meaningfully fail, but every machine-checkable contract change must have causal RED."
+      required: true
+    - id: CHECK-3
+      command_or_check: "python3 scripts/validate_skill_library.py"
+      required: true
+    - id: CHECK-4
+      command_or_check: "python3 -m unittest scripts/test_validate_skill_library.py"
+      required: true
+    - id: CHECK-5
+      command_or_check: "python3 -m py_compile scripts/validate_skill_library.py scripts/test_validate_skill_library.py"
+      required: true
+    - id: CHECK-6
+      command_or_check: "git diff --check"
+      required: true
+    - id: CHECK-7
+      command_or_check: "Run one bounded adversarial audit over the exact final implementation focused on authority duplication, accidental personal hardcoding, role inflation, lane bypass, ambiguous terminal/rebind state, implicit staging, mutable external normative authority, compatibility regression, governance churn incentives, and new-framework creep. Close all material findings or report BLOCKED/NEEDS_REVISION rather than self-accept."
+      required: true
+    - id: CHECK-8
+      command_or_check: "Inspect exact base..final_execution_head diff/tree and prove only authorized paths changed; exactly 15 SKILL.md files remain; no new dependency/workflow/branch/main/tag/release/metadata/other-repository mutation occurred; no hidden nested skill/new top-level directory exists; local hygiene is clean or safely retained with bounded evidence."
+      required: true
+  authoritative_verification:
+    required: true
+    mechanism: "Resolve the repository-native Validate skill library workflow result for the exact final_execution_head after implementation push; require validator and unittest job success on that exact SHA."
+    expected_signal: "Exact final_execution_head has a successful native validation run whose checked-out commit identity equals final_execution_head; no later dev mutation is treated as verified by that run."
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
