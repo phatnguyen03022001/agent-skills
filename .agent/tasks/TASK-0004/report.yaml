@@ -1,0 +1,221 @@
+protocol_version: 3
+
+task_id: TASK-0004
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0004/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "d28ef57400a89e3da813d833813599afd6e587de"
+  pre_execution_head: "d28ef57400a89e3da813d833813599afd6e587de"
+  final_execution_head: "785b90939cc7e8da1beff2616c0dd5f5a9df91ce"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "d506f5caef3808fc2f7356172b5b648be78b628f"
+  observed_revision: "d506f5caef3808fc2f7356172b5b648be78b628f"
+
+execution_skills_used:
+  required:
+    - executor
+    - simplicity
+    - verification
+    - github-dev-main-workflow
+  recommended:
+    - gap-analysis
+    - design-review
+    - adversarial-audit
+  external: []
+
+pre_execution_checks:
+  protocol_version_supported: true
+  handoff_type_confirmed: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  working_tree_clean: true
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - repository_content_write
+    - exact_remote_ref_read
+    - native_verification_execution
+  available:
+    - repository_content_write
+    - exact_remote_ref_read
+    - native_verification_execution
+  missing: []
+  passed: true
+
+authoritative_verification:
+  required: true
+  performed: true
+  result: "PASS"
+  evidence: "GitHub Actions run 32893943907 completed success for exact final_execution_head 785b90939cc7e8da1beff2616c0dd5f5a9df91ce. The job checked out that exact SHA, python3 scripts/validate_skill_library.py returned OK for curated 15-skill taxonomy/protocol v3, and python3 -m unittest scripts/test_validate_skill_library.py ran 55 tests with zero failures."
+
+local_hygiene:
+  result: PASS
+  run_root: "isolated current-run TASK-0004 verification roots under /tmp plus /mnt/data/task0004-verify; no artifacts retained"
+  cleanup_performed: true
+  retained: []
+  evidence: "Before recursive cleanup, each known TASK-0004 directory was proven to resolve to its exact expected path, be a non-symlink directory, and be owned by the current execution user; protected roots were explicitly excluded. Current-run scratch files were also removed. Every enumerated TASK-0004 temporary path was absent after cleanup."
+
+changed_files:
+  - path: README.md
+    summary: "Documented proportional execution lanes, compact authority-locator handoffs, one-Architect review ownership, target-authoritative Git topology, immutable external normative authority, constrained operator attention, maintenance admission, frozen taxonomy, and evidence dedup while preserving protocol v3."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: architect/SKILL.md
+    summary: "Added generic optional profile non-authority semantics, one current governing Architect judgment, material-design-readiness, risk-proportional lanes, immutable external normative authority, constrained operator attention, compact PROMPT TO COPY, maintenance admission, and frozen taxonomy."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: contracts/ARCHITECT_REVIEW.md
+    summary: "Aligned review ownership to one governing Architect while keeping reviewer/red-team/verifier work as separate Executor-specialized evidence and preserving designated verifier PASS/FAIL plus legacy separate-agent/session compatibility wording."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: design-review/SKILL.md
+    summary: "Added proportional material-design-readiness participation for consequential work without forcing trivial, reversible, or well-specified work through ceremony."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: executor/SKILL.md
+    summary: "Separated Executor-binding terminal semantics from whole-task lifecycle and clarified that terminal execution outcomes end mutation authority without implying acceptance, promotion, or release."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: gap-analysis/SKILL.md
+    summary: "Added proportional material-design-readiness gap analysis for consequential work and explicit avoidance of exhaustive low-risk ceremony."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: github-dev-main-workflow/SKILL.md
+    summary: "Generalized the existing Git workflow owner to target-authoritative MAIN_ONLY, DEV_MAIN, and explicitly activated DEV_STAGING_MAIN while forbidding inferred staging/branch creation and preserving independent authorities."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: protocols/TASK_PROTOCOL.md
+    summary: "Consolidated generic profile precedence, one-Architect acceptance, terminal binding semantics, proportional lanes, compact authority locators, immutable external normative authority, target Git topologies, evidence dedup, operator-attention discipline, maintenance admission, and frozen taxonomy without changing protocol version 3."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: scripts/test_validate_skill_library.py
+    summary: "Added causal TASK-0004 regression tests for AC-1 through AC-13 while retaining TASK-0003 and legacy protocol-v3 regression coverage."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: simplicity/SKILL.md
+    summary: "Added mature-governance NO CHANGE REQUIRED admission doctrine and closed-by-default 15-skill taxonomy rules while preserving smallest-safe-correction maintenance."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+
+commits_created:
+  - sha: "54d617e0a79cbcacb0d20b682d48925d1679412a"
+    message: "test: define TASK-0004 governance contracts"
+  - sha: "ed97cb70e45f8f7d3401f555eb3c8042240cfcba"
+    message: "feat: consolidate long-horizon governance"
+  - sha: "7ed3d395bb388d57228d1435a6e67e9a5f941d5d"
+    message: "fix: preserve v3 review compatibility marker"
+  - sha: "785b90939cc7e8da1beff2616c0dd5f5a9df91ce"
+    message: "fix: satisfy TASK-0004 contract literals"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PROVEN
+    evidence: "Architect and protocol define an optional host/session/operator profile as durable preference/environment context only, subordinate to explicit current user decisions, canonical target facts, and exact task authority. Final regression tests reject personal hardcoding markers such as architect-profile, MacBook, and M3."
+  - criterion_id: AC-2
+    status: PROVEN
+    evidence: "Architect, protocol, and README define PROMPT TO COPY as a compact authority locator containing target owner/repo, branch, task ID/revision/path, exact base HEAD, optional current phase, and concise resolve/preflight/execute/report instruction while explicitly forbidding duplication of canonical task/protocol detail."
+  - criterion_id: AC-3
+    status: PROVEN
+    evidence: "Executor and protocol define Executor-binding terminal separately from whole-task lifecycle. NEEDS_REVIEW/REPORTED, BLOCKED, STALE_STATE, AUTHORITY_REQUIRED, CURRENT_PHASE_CAPABILITY_UNAVAILABLE, failed terminal execution, or completed execution can end binding only after evidence is finalized and mutation authority ends, without implying acceptance/promotion/release."
+  - criterion_id: AC-4
+    status: PROVEN
+    evidence: "Architect, protocol, and Architect review contract assign final ACCEPT/REJECT/REVISE to exactly one current governing Architect. Reviewer/red-team/verifier sessions remain Executor specializations producing advisory or explicitly designated verifier evidence, not a second Architect."
+  - criterion_id: AC-5
+    status: PROVEN
+    evidence: "Architect/protocol/README define DIRECT, BOUNDED, and HIGH_ASSURANCE inside the single v3 model. DIRECT cannot bypass target truth, explicit write authority, safety, scope, or required verification; HIGH_ASSURANCE is explicitly non-default. No new role/schema/framework was introduced."
+  - criterion_id: AC-6
+    status: PROVEN
+    evidence: "github-dev-main-workflow and protocol support target-authoritative MAIN_ONLY, DEV_MAIN, and explicitly activated DEV_STAGING_MAIN. Staging and branch creation are explicitly non-inferred; current dev/main behavior remains supported."
+  - criterion_id: AC-7
+    status: PROVEN
+    evidence: "Architect/protocol require any external repository used as normative execution authority to be bound to an immutable revision before mutation through existing authority mechanisms, while ordinary research/reference material does not acquire normative authority."
+  - criterion_id: AC-8
+    status: PROVEN
+    evidence: "Protocol/README keep unconditional boilerplate in protocol, task-specific material authority in task.yaml, and evidence recorded once where practical. Existing legacy inline evidence remains valid v3 input; no compact parallel schema, template redesign, or protocol-version change was introduced."
+  - criterion_id: AC-9
+    status: PROVEN
+    evidence: "Architect, gap-analysis, design-review, and protocol add material-design-readiness only for consequential implementation and explicitly exempt trivial, mechanical, reversible, or well-specified work from documentation ceremony."
+  - criterion_id: AC-10
+    status: PROVEN
+    evidence: "Architect/protocol treat operator attention/manual labor as constrained and prefer safe authorized agent/tool execution, with bounded exceptions for unavailable capability, physical/local-only action, unresolved product intent, destructive/irreversible authority, material paid cost, or major informed trade-off."
+  - criterion_id: AC-11
+    status: PROVEN
+    evidence: "Architect, simplicity, protocol, and README make NO CHANGE REQUIRED preferred absent a material reproduced problem and admit governance change only for evidence-backed defect/staleness/missing capability/security/compatibility/material regression or explicit durable maintainer objective change, with smallest-safe correction for maintenance."
+  - criterion_id: AC-12
+    status: PROVEN
+    evidence: "Architect, simplicity, and README define the 15-skill taxonomy as closed by default; admission requires materially distinct recurring real evidence or exceptional correctness/security justification without arbitrary universal numeric thresholds. Exact final native validator enumerated and validated exactly 15 skills."
+  - criterion_id: AC-13
+    status: PROVEN
+    evidence: "The exact final 55-test suite includes and passes existing TASK-0003 sequential multi-repository tests plus legacy expanded protocol-v3 compatibility tests. Protocol version remains exactly 3 and canonical templates were not changed."
+  - criterion_id: AC-14
+    status: PROVEN
+    evidence: "Exact final_execution_head 785b90939cc7e8da1beff2616c0dd5f5a9df91ce tree 2d1d3e7d1cf31bf8e625f9d8c9d34a79067e8132 passed exact-SHA native run 32893943907, literal py_compile on hash-matched exact Python blobs, literal git diff --check over all ten hash-matched exact changed blobs, bounded adversarial inspection, exact base..final scope inventory, branch/main identity checks, and fail-closed local hygiene."
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: "Before first mutation, canonical GitHub truth matched handoff exactly: dev=d28ef57400a89e3da813d833813599afd6e587de, main=d506f5caef3808fc2f7356172b5b648be78b628f, branches exactly {dev, main}, repository/branch/task/pinned authority/structure authority matched, and required repository_content_write, exact_remote_ref_read, and native_verification_execution capabilities were proven available."
+  - check_id: CHECK-2
+    result: PASS
+    evidence: "Causal RED was committed first at 54d617e0a79cbcacb0d20b682d48925d1679412a. Native run 32893156567 on that exact test-only SHA had validator success and Unit tests failure. Production governance changes followed only after RED. Final GREEN run 32893943907 on 785b90939cc7e8da1beff2616c0dd5f5a9df91ce passed validator and all 55 tests; two bounded compatibility corrections remained inside authorized scope."
+  - check_id: CHECK-3
+    result: PASS
+    evidence: "Exact-SHA native run 32893943907 checked out 785b90939cc7e8da1beff2616c0dd5f5a9df91ce and python3 scripts/validate_skill_library.py returned OK: validated curated 15-skill taxonomy and protocol v3."
+  - check_id: CHECK-4
+    result: PASS
+    evidence: "The same exact-SHA native run executed python3 -m unittest scripts/test_validate_skill_library.py: 55 tests ran in 3.681s, zero failures, OK."
+  - check_id: CHECK-5
+    result: PASS
+    evidence: "Exact final Python blobs were materialized under an isolated run root and hash-matched to GitHub: validate_skill_library.py=99da8db0bc929eb5250680dbef098dee3893a17f and test_validate_skill_library.py=0aa93edc7d615fdab9397e364cc23598812cbb35. Literal python3 -m py_compile scripts/validate_skill_library.py scripts/test_validate_skill_library.py exited 0."
+  - check_id: CHECK-6
+    result: PASS
+    evidence: "Canonical base d28ef57400a89e3da813d833813599afd6e587de to final 785b90939cc7e8da1beff2616c0dd5f5a9df91ce comparison identified exactly ten modified paths. Every exact final changed blob was materialized and git-hash-object matched its GitHub tree identity; literal git diff --check against a synthetic index over those exact paths exited 0."
+  - check_id: CHECK-7
+    result: PASS
+    evidence: "Bounded adversarial audit over the exact hash-matched final governance scope found no material unresolved issue across authority duplication, personal hardcoding, role inflation, DIRECT lane bypass, terminal/rebind ambiguity, implicit staging, mutable external normative authority, compatibility regression, governance-churn incentives, or new-framework creep. Required fail-closed markers were present and personal hardcoding markers were absent."
+  - check_id: CHECK-8
+    result: PASS
+    evidence: "Canonical base..final comparison is ahead by exactly four commits, behind by zero, and changes only README.md, architect/SKILL.md, contracts/ARCHITECT_REVIEW.md, design-review/SKILL.md, executor/SKILL.md, gap-analysis/SKILL.md, github-dev-main-workflow/SKILL.md, protocols/TASK_PROTOCOL.md, scripts/test_validate_skill_library.py, and simplicity/SKILL.md; all are task-authorized existing files and all statuses are modified. Exact final native validation proves exactly 15 top-level skills and rejects hidden/nested skills. Workflow/dependency/template files were not changed. Immediately before report closure dev remained exact final_execution_head, main remained pinned d506f5caef3808fc2f7356172b5b648be78b628f, and branch set remained exactly {dev, main}. No branch/main/tag/release/metadata/other-repository mutation occurred. All current-run temporary roots were safely removed after ownership/realpath/non-symlink proof."
+
+discovered_gaps: []
+structural_observations: []
+deviations_from_task: []
+blockers: []
+
+working_tree_after:
+  clean: true
+  summary: "Exact final_execution_head 785b90939cc7e8da1beff2616c0dd5f5a9df91ce is fully verified and unchanged. Local verification roots are removed. This canonical report is the only authorized new file after final_execution_head and will be committed/pushed as separate Executor evidence; it does not alter implementation identity or authorize review/promotion/release."
+
+result: NEEDS_REVIEW
