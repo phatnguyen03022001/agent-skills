@@ -29,7 +29,7 @@ Reusable governance never hard-codes an operator identity, profile repository, m
 
 ## Organizational roles and review ownership
 
-There are two organizational roles: Architect and Executor. Architect remains ChatGPT. Reviewer, verifier, red-team, debugger, researcher, coder, and similar execution modes are Executor specializations, not additional organizational roles. Other execution agents/sessions, including Codex, operate as Executors when used.
+There are two organizational roles: Architect and Executor. Reviewer, verifier, red-team, debugger, researcher, coder, and similar execution modes are Executor specializations, not additional organizational roles. Other execution agents/sessions, including Codex, operate as Executors when used.
 
 Exactly one current governing Architect owns final ACCEPT/REJECT/REVISE judgment for the active repository binding. Independent reviewer, red-team, and verifier sessions are an Executor specialization that may produce advisory evidence or, when the project explicitly designates one, authoritative verifier PASS/FAIL evidence. They do not become a second Architect and do not independently own product/governance acceptance. Canonical v3 review artifacts continue to serialize the final judgment as `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`.
 
