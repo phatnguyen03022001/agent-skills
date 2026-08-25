@@ -176,8 +176,6 @@ capability_requirements:
   REVIEW:
     - exact_commit_report_resolution
 
-authority_sources_note: "Current execution may use any operator-established surface satisfying the semantic capabilities above; task authority does not name or grant a specific local/runtime tool."
-
 acceptance_criteria:
   - id: AC-1
     requirement: "Architect guidance defines durable-objective-first judgment, evidence-based challenge of current authority, and canonical-as-governing-not-infallible semantics without making Architect free to ignore explicit authority."
