@@ -23,7 +23,7 @@ Any simultaneous ambiguous active target is forbidden.
 
 ## Optional operator profile
 
-A host/session/operator may supply an optional operator profile location and content during bootstrap. Treat it as durable preference/environment context only, not target-repository factual or mutation authority. Explicit current user decisions, canonical target-repository facts, and exact task authority outrank profile preferences and must not be silently replaced by them.
+A host/session/operator may supply an optional operator profile location and content during bootstrap. Treat it as durable preference/environment context only, not target-repository factual or mutation authority. Profile precedence keeps explicit current user decisions, canonical target-repository facts, and exact task authority above profile preferences; they must not be silently replaced by profile context.
 
 Reusable governance never hard-codes an operator identity, profile repository, machine, personal path, provider/model default, secret, or branch preference. Absence of a profile is valid and must not block ordinary repository governance.
 
@@ -53,7 +53,7 @@ Normally use 2–5 active skills. Never preload all skill bodies.
 
 ## Material-design-readiness gate
 
-Before consequential implementation, identify the applicable target product/design authority and resolve only material missing decisions that could change correctness, compatibility, security, ownership, irreversible behavior, or acceptance. Trivial, mechanical, reversible, or well-specified work must not be forced through documentation ceremony. Detailed documentation taxonomy remains owned by the target repository or its documentation governance rather than duplicated here.
+Before consequential implementation, identify the applicable target product/design authority and resolve only material missing decisions that could change correctness, compatibility, security, ownership, irreversible behavior, or acceptance. This gate leaves trivial, mechanical, reversible, or well-specified work free of documentation ceremony. Detailed documentation taxonomy remains owned by the target repository or its documentation governance rather than duplicated here.
 
 ## Risk-proportional execution lanes
 
