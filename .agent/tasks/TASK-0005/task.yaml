@@ -1,0 +1,226 @@
+protocol_version: 3
+
+task_id: TASK-0005
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: ""
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "54aa117612112dcedc62e3dccb95bbc5410c15da"
+
+architect_analysis_skills:
+  - architect
+  - simplicity
+  - design-review
+  - verification
+  - github-dev-main-workflow
+
+execution_skills:
+  required:
+    - executor
+    - verification
+    - github-dev-main-workflow
+  recommended:
+    - simplicity
+
+external_skills:
+  architect_analysis:
+    - superpowers:receiving-code-review
+    - superpowers:writing-plans
+  execution_required:
+    - superpowers:test-driven-development
+    - superpowers:verification-before-completion
+  execution_recommended: []
+
+authority_sources:
+  - source: "User-approved revised design in the governing Architect session: atomically rename the current Git workflow skill to github-workflow, update only actual live stale references, add deferred-observation and structural-routing semantics to their existing owners, consume then delete temporary Superpowers design evidence, keep historical SHA-pinned tasks unchanged, and use observations rather than debt only in the later operator-specific profile task."
+    role: user_objective
+    precedence: 1
+  - source: "docs/superpowers/specs/2026-08-26-architect-deferred-observations-design.md@54aa117612112dcedc62e3dccb95bbc5410c15da, as revised by the higher-precedence current user decisions."
+    role: approved_design_input
+    precedence: 2
+  - source: "simplicity/SKILL.md@54aa117612112dcedc62e3dccb95bbc5410c15da; remains the sole reusable owner of source-depth and language naming defaults."
+    role: structure_governance
+    precedence: 3
+  - source: "protocols/TASK_PROTOCOL.md and current agent-skills governance@54aa117612112dcedc62e3dccb95bbc5410c15da. This is a self-hosting migration: the Executor runs under this pre-rename authority, including the current github-dev-main-workflow identity; future tasks adopt github-workflow only after this task is accepted."
+    role: governance
+    precedence: 4
+
+structure_authority:
+  status: RESOLVED
+  source: "User-approved smallest-sufficient design plus simplicity/SKILL.md@54aa117612112dcedc62e3dccb95bbc5410c15da."
+  rationale: "The only structural changes are the atomic top-level skill rename github-dev-main-workflow -> github-workflow and removal of the temporary docs/superpowers design namespace after its material decisions are consumed. No new durable design/docs taxonomy, compatibility wrapper, alias, migration registry, or additional skill is authorized."
+
+objective: "Perform one atomic current-identity migration from github-dev-main-workflow to github-workflow and integrate the approved Architect deferred-observation/structural-routing semantics into existing canonical owners, while preserving protocol v3, the exact 15-skill taxonomy, historical SHA-pinned authority, and the smallest sufficient repository structure."
+
+scope:
+  required_changes:
+    - "Use causal TDD for the current skill-identity contract: first add or revise a focused regression in scripts/test_validate_skill_library.py that expects current canonical identity github-workflow, rejects the old current identity, and synchronizes folder/frontmatter/catalog/validator expectations; run it and record the RED failure before changing the current identity implementation."
+    - "Atomically replace github-dev-main-workflow/SKILL.md with github-workflow/SKILL.md and set frontmatter name: github-workflow. Preserve the existing GitHub Workflow responsibility and MAIN_ONLY / DEV_MAIN / DEV_STAGING_MAIN semantics; this is an identity correction, not a topology redesign."
+    - "Update only confirmed live stale references needed by the rename: README.md curated catalog, scripts/validate_skill_library.py EXPECTED_SKILLS, and the current-path references in scripts/test_validate_skill_library.py. Before mutation, run an exact nonhistorical grep; if another live stale reference exists outside the authorized files below, stop with NEEDS_REVISION rather than expanding scope."
+    - "Update architect/SKILL.md with one explicit structural-routing trigger: when material planning introduces/moves/splits/nests/renames source directories, modules, or packages, or naming conventions are material to structure_authority, load simplicity before resolving structure_authority unless target authority already fully resolves the question. Do not duplicate source-depth or naming values."
+    - "Update architect/SKILL.md with generic deferred-observation semantics: an optional explicitly configured operator-profile observation store may preserve a minimal cross-repository observation without switching the active target; the observation is non-authoritative, does not grant authority over the observed repository, and unavailable storage does not block current work."
+    - "Update protocols/TASK_PROTOCOL.md only for the narrow binding clarification required by the existing core-binding language: a configured operator-profile observation write is non-authoritative continuity context, does not change the active target or grant target-repository mutation authority, and later action still requires normal explicit binding, fresh GitHub truth, and revalidation. Keep protocol_version 3."
+    - "Consume the material decisions from docs/superpowers/specs/2026-08-26-architect-deferred-observations-design.md into the canonical owners above and this task authority, then delete that temporary file so docs/superpowers/ and docs/ disappear naturally if empty. Do not create a replacement docs/design, .agent/designs, plan, registry, or framework-specific durable namespace."
+    - "Produce and commit/push .agent/tasks/TASK-0005/report.yaml only after all focused and full verification passes on the exact final implementation state."
+  allowed_existing_files_or_components:
+    - github-dev-main-workflow/SKILL.md
+    - README.md
+    - scripts/validate_skill_library.py
+    - scripts/test_validate_skill_library.py
+    - architect/SKILL.md
+    - protocols/TASK_PROTOCOL.md
+    - docs/superpowers/specs/2026-08-26-architect-deferred-observations-design.md
+    - .agent/tasks/TASK-0005/task.yaml
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Current skill taxonomy remains exactly 15 skills."
+  - "After implementation there is exactly one current Git workflow skill identity: github-workflow. The old github-dev-main-workflow directory/current identity is absent; no alias, deprecated wrapper, mapping table, redirect, or compatibility registry exists."
+  - "Historical .agent/tasks/TASK-0001 through TASK-0004 remain byte-for-byte unchanged. Their old skill names are immutable historical truth under their pinned revisions and are not stale current references."
+  - "simplicity/SKILL.md remains unchanged and remains the sole reusable owner of source-depth and language naming defaults; Architect receives only a routing trigger, not copied numeric depth/naming rules."
+  - "templates/ and .github/workflows/ remain unchanged because the audited current files contain no stale skill identity requiring migration."
+  - "protocol_version remains 3; no protocol v4, topology abstraction layer, migration framework, observation schema, observation validator, status machine, index, manifest, issue mirror, automatic capture, or automatic repository switching is introduced."
+  - "Reusable agent-skills governance does not hard-code the operator-specific observations/<owner>__<repo>.md path; that convention belongs to the later architect-profile task."
+  - "Deferred observations remain cheap-to-die continuity notes only: they are not tasks, findings with current validity, execution authority, review evidence, lifecycle state, or a cross-repository queue."
+  - "main remains read-only at 1a9424fbd778472f79c152c0b42dd2bd495fbd8e and long-lived branches remain exactly {dev, main}."
+
+forbidden_changes:
+  - "Do not modify .agent/tasks/TASK-0001, TASK-0002, TASK-0003, or TASK-0004."
+  - "Do not modify simplicity/SKILL.md, templates/, .github/workflows/, contracts/, executor/, or unrelated skills."
+  - "Do not create an alias/deprecated github-dev-main-workflow skill, rename compatibility registry, migration map, redirect mechanism, or extra skill."
+  - "Do not create docs/design/, .agent/designs/, docs/superpowers/plans/, another permanent design artifact, or a generic framework-artifact policy/validator."
+  - "Do not hard-code observations/, debt/, an operator repository, operator identity, local machine path, or personal setting into reusable agent-skills governance."
+  - "Do not change MAIN_ONLY, DEV_MAIN, or DEV_STAGING_MAIN semantics except references required by the skill identity rename."
+  - "Do not modify agent-runtime, architect-profile, agent-documents, or agent-standards under this task."
+  - "Do not create branches, mutate main, force-push, rewrite history, tag, release, or mutate repository metadata."
+
+gap_policy:
+  local_auto_fix: false
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - github-workflow/SKILL.md
+    - .agent/tasks/TASK-0005/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: true
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - isolated_test_execution
+    - repository_content_write
+  REVIEW:
+    - exact_commit_report_resolution
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "The current Git workflow skill identity migration is atomic: final current tree has github-workflow/SKILL.md with matching frontmatter/catalog/validator/tests, no github-dev-main-workflow current directory or alias, and exactly 15 skills."
+    evidence_required: "Focused RED->GREEN regression evidence plus final validator output, exact tree/path inspection, and nonhistorical grep showing no old current identity."
+  - id: AC-2
+    requirement: "Only actual live stale references are migrated; historical TASK-0001..0004 and files without stale identity are not touched."
+    evidence_required: "Base-to-final diff proves TASK-0001..0004, templates/, .github/workflows/, simplicity/, and unrelated files unchanged; changed-file list is restricted to task-authorized owners."
+  - id: AC-3
+    requirement: "Architect has an explicit structural routing trigger to load simplicity before resolving material structure_authority when target authority has not already resolved the structural question, without duplicating reusable depth/naming values."
+    evidence_required: "Exact architect/SKILL.md inspection and unchanged simplicity/SKILL.md proof."
+  - id: AC-4
+    requirement: "Deferred observation semantics are explicitly non-authoritative and non-blocking: recording to an optional configured operator-profile observation store does not switch active target or grant authority; later action requires normal target binding, fresh GitHub truth, and revalidation."
+    evidence_required: "Exact architect/SKILL.md and TASK_PROTOCOL.md inspection demonstrating the narrow semantics and preserving one-active-target/repository-local authority."
+  - id: AC-5
+    requirement: "Temporary Superpowers design evidence is fully consumed by canonical owners before deletion; no framework-specific durable namespace or replacement design taxonomy remains."
+    evidence_required: "Final tree has no docs/superpowers/ and no replacement docs/design, .agent/designs, or Superpowers plan artifact; review maps each material design decision to architect skill, protocol, task authority, or later operator-profile ownership."
+  - id: AC-6
+    requirement: "Protocol remains v3 and no compatibility/migration/observation framework is added."
+    evidence_required: "Protocol and final diff inspection show protocol_version 3 and absence of aliases, registries, schemas, status machines, indexes, manifests, automatic switching/capture, or new skills."
+  - id: AC-7
+    requirement: "The full deterministic skill-library verification passes on the exact final implementation state."
+    evidence_required: "Fresh python3 scripts/validate_skill_library.py and python3 -m unittest scripts.test_validate_skill_library both return zero failures/errors on final_execution_head."
+  - id: AC-8
+    requirement: "Git lineage and repository boundaries remain exact: main unchanged, branches exactly {dev, main}, no unauthorized files, and the committed Executor report is the sole report commit after final_execution_head."
+    evidence_required: "Fresh remote ref/branch inspection, git diff --check, base-to-final changed-file audit, and post-report single-parent/report-only lineage proof."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Before mutation, resolve the exact handoff and TASK-0005 revision 1 under pinned self-hosting authority 54aa117612112dcedc62e3dccb95bbc5410c15da; require live dev == handoff base, main == 1a9424fbd778472f79c152c0b42dd2bd495fbd8e, branches exactly {dev, main}, clean worktree, and required EXECUTION capabilities. Run exact nonhistorical grep for github-dev-main-workflow excluding .agent/tasks/**; require all matches are within the explicitly authorized current files/folder or stop NEEDS_REVISION."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Causal TDD RED: add/revise the focused current-identity regression in scripts/test_validate_skill_library.py first; run only that focused unittest and prove it fails because the repository still has the old current github-dev-main-workflow identity before implementation."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Implement the minimal atomic rename/current-reference migration and run the focused identity regression again; require GREEN before proceeding."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Implement the Architect structural-routing/deferred-observation semantics and the narrow protocol clarification, then perform bounded source inspection proving simplicity values were not duplicated and operator-specific observations/ path was not hard-coded."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Run python3 scripts/validate_skill_library.py, then python3 -m unittest scripts.test_validate_skill_library; both must exit 0 on the exact final implementation HEAD."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Run git diff --check; verify github-workflow/SKILL.md exists with frontmatter name github-workflow; verify github-dev-main-workflow and docs/superpowers are absent; verify nonhistorical git grep for github-dev-main-workflow returns no matches; verify exactly 15 SKILL.md files."
+      required: true
+    - id: CHECK-7
+      command_or_check: "Against the exact handoff base, prove .agent/tasks/TASK-0001..TASK-0004, simplicity/SKILL.md, templates/, .github/workflows/, contracts/, and unrelated skills are unchanged; prove no alias, registry, extra skill, replacement design namespace, protocol bump, or cross-repo mutation occurred."
+      required: true
+    - id: CHECK-8
+      command_or_check: "Immediately before report creation refresh refs and require dev == final_execution_head, main unchanged, branches exactly {dev, main}, clean worktree, and exact authorized implementation diff. After committing/pushing report.yaml, verify the report commit has exactly one parent equal to final_execution_head, changes only .agent/tasks/TASK-0005/report.yaml, and main/branch set remain unchanged."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
