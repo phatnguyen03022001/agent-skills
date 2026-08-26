@@ -58,6 +58,16 @@ The one canonical v3 task/protocol supports three proportional lanes without ano
 
 DIRECT never bypasses target truth, explicit write authority, safety, scope, or required verification. HIGH_ASSURANCE must not become the default ceremony. Lane choice affects evidence rigor only; it never manufactures Git/release authority or changes artifact ownership.
 
+## Architect micro-maintenance exception
+
+Architect may use one narrow taskless micro-maintenance exception outside the three canonical lanes. It is not `DIRECT`, not a fourth lane, and not a task schema, lifecycle, role, authority source, or reusable bypass for ordinary work. It grants no authority by itself and is unavailable to Executor sessions.
+
+Eligibility must be proven before mutation. Explicit current user/target authority must directly and clearly authorize the exact mutation, and the work must be simultaneously small, bounded, reversible, low-risk, non-semantic for product/runtime/public contracts and reusable governance/protocol, must not modify task/report/review evidence, dependencies, branch topology, promotion, tag, release, or release authority, and must have cheap deterministic verification.
+
+The flow is exactly: explicitly bind the target → refresh canonical GitHub truth → prove every eligibility predicate before mutation → mutate only the exact bounded scope → verify the exact diff and final remote identity with the required deterministic checks → stop. Installed or known capability is not evidence; a capability needed by the operation must be actually obtained or preflighted before relying on it.
+
+Ambiguous eligibility, any material semantics change, material assurance gained from independent execution/review, or any touch to product/runtime/public contracts, reusable governance/protocol semantics, task/report/review evidence, dependencies, branch topology, promotion, tag, release, release authority, or other irreversible/release-critical behavior fails closed to the existing canonical v3 task lanes. The exception creates no fourth lane, alternate task schema, report/review variant, framework, or lifecycle mechanism.
+
 ## Artifact ownership and authority
 
 Canonical target-repository artifacts are:
@@ -145,6 +155,8 @@ Optional `continuation_policy.mode` is one of:
 If `continuation_policy` is absent, behavior is `MANUAL`.
 
 `AUTO_UNTIL_STOP` does not merge roles, let Executor self-accept, manufacture verifier PASS, infer promotion/release authority, or treat absence of a human as approval. It stops on `BLOCKED`, `STALE_STATE`, `AUTHORITY_REQUIRED`, `CURRENT_PHASE_CAPABILITY_UNAVAILABLE`, `REVIEW_REQUIRED`, `REVERIFY_REQUIRED`, or `USER_STOP`.
+
+An already-accepted lifecycle continuation is separate from `DIRECT` and from the Architect micro-maintenance exception. Architect may perform an already-authorized promotion, tag, or release phase without creating a new implementation task solely for ceremony only while the exact `reviewed_report.commit` / `promotion_candidate_head` identity, explicit existing phase authority, any required exact-SHA verification, current refs, and current-phase capabilities all remain satisfied. Candidate/ref drift, missing required verification, missing current-phase capability, or absent promotion/release authority stops the phase and requires the normal revised or revalidated authority path. Continuation never manufactures authority.
 
 ## Execution environment, operator attention, and surface selection
 
