@@ -73,6 +73,16 @@ Use one canonical task/protocol model with proportional lanes, not another schem
 
 DIRECT never bypasses exact target truth, explicit write authority, safety, scope, or required verification. HIGH_ASSURANCE must not become the default ceremony for ordinary work. The task records any stronger evidence requirements; lane names do not manufacture authority.
 
+## Architect micro-maintenance exception
+
+Architect may use one narrow taskless micro-maintenance exception outside `DIRECT`, `BOUNDED`, and `HIGH_ASSURANCE`. It is not a fourth lane, task schema, lifecycle, role, or authority source, and it grants no authority by itself. It is Architect-owned only and is unavailable to Executor sessions.
+
+The exception is eligible only when explicit current user/target authority directly and clearly authorizes the exact mutation and the work is simultaneously small, bounded, reversible, low-risk, non-semantic for product/runtime/public contracts and reusable governance/protocol, does not modify task/report/review evidence, dependencies, branch topology, promotion, tag, release, or release authority, and has cheap deterministic verification.
+
+The flow is exactly: explicitly bind the target → refresh canonical GitHub truth → prove every eligibility predicate before mutation → mutate only the exact bounded scope → verify the exact diff and final remote identity with the required deterministic checks → stop. Installed or known capability is not evidence; any capability needed for the operation must be actually obtained or preflighted before relying on it.
+
+If eligibility is ambiguous, material semantics are involved, independent execution/review adds material assurance, or the operation touches product/runtime/public contracts, reusable governance/protocol semantics, task/report/review evidence, dependencies, branch topology, promotion, tag, release, release authority, or other irreversible/release-critical behavior, fail closed and use the existing canonical v3 task lanes. The exception creates no alternate task/report/review machinery and never substitutes for normal authority.
+
 ## Cross-repository PROGRAM
 
 `PROGRAM` may present an ordered set of ordered repository-local tasks so the operator can see progress across repositories. It is presentation only and is not a universal multi-repository task authority. Each repository keeps its own task, handoff, evidence, review, verification, promotion, and release lineage. Never create shared mutable cross-repository authority. Execution is sequential by default.
@@ -133,5 +143,7 @@ Let `R = reviewed_report.commit` after acceptance. A valid `promotion_candidate_
 Authoritative verification applies to the exact candidate SHA. `ACCEPTED` does not manufacture verifier PASS, promotion authority, release authority, or later capability availability.
 
 For post-review continuation use [templates/continuation.yaml](../templates/continuation.yaml) only as an exact identity envelope. Current-phase required capability unavailable blocks that phase before mutation. A later release capability gap does not invalidate an earlier valid promotion; the derived state may be `PROMOTED_NOT_RELEASED`.
+
+An already-accepted lifecycle continuation is separate from `DIRECT` and from the micro-maintenance exception. Architect may perform an already-authorized promotion, tag, or release phase without creating a new implementation task solely for ceremony only while the exact `reviewed_report` / `promotion_candidate_head` identity, explicit existing phase authority, any required exact-SHA verification, current refs, and current-phase capabilities all remain satisfied. Candidate/ref drift, missing required verification, missing current-phase capability, or absent promotion/release authority stops the phase and requires the normal revised or revalidated authority path; continuation never manufactures authority.
 
 See the [Task Protocol](../protocols/TASK_PROTOCOL.md) and [task template](../templates/task.yaml).
