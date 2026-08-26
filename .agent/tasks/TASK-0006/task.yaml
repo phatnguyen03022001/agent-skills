@@ -1,7 +1,7 @@
 protocol_version: 3
 
 task_id: TASK-0006
-task_revision: 1
+task_revision: 2
 state: APPROVED
 
 origin:
@@ -49,12 +49,15 @@ authority_sources:
   - source: "User-approved governance correction in the governing Architect session: preserve DIRECT as the canonical v3 task lane; introduce only a narrow Architect-owned taskless micro-maintenance exception for trivial reversible non-semantic maintenance; keep promotion/tag/release outside DIRECT and permit no-new-task lifecycle continuation only when exact existing accepted-candidate authority already covers the phase."
     role: user_objective
     precedence: 1
+  - source: "Architect review of TASK-0006 revision 1 at report commit 15c5ebab18e73a89f297f559ffeced48b15f1a3c found a material internal contradiction: the new taskless exception was added, but existing Architect routing and Task Protocol core-binding language still required fresh task/review identity and canonical task creation before every repository mutation. Revision 2 must harmonize those general rules without weakening normal task-lane or Executor requirements."
+    role: architect_review_finding
+    precedence: 2
   - source: "architect/SKILL.md and protocols/TASK_PROTOCOL.md@ba9effd83169c1389590d36e7e47b1c100b6d53b. This is a self-hosting governance change executed under the pinned pre-task authority; the new semantics apply only after this task is accepted for future work."
     role: governance
-    precedence: 2
+    precedence: 3
   - source: "github-workflow/SKILL.md@ba9effd83169c1389590d36e7e47b1c100b6d53b for existing independent promotion/release authority, exact-candidate lineage, current-phase capability preflight, and final identity verification semantics."
     role: lifecycle_governance
-    precedence: 3
+    precedence: 4
 
 structure_authority:
   status: RESOLVED
@@ -65,17 +68,20 @@ objective: "Remove unnecessary ceremony for truly trivial Architect-owned mainte
 
 scope:
   required_changes:
-    - "Update architect/SKILL.md with a narrowly named Architect micro-maintenance exception that is explicitly NOT DIRECT and NOT a fourth execution lane. It may omit canonical task/report/review machinery only for Architect-owned mutations that are simultaneously small, bounded, reversible, low-risk, directly and clearly authorized, non-semantic for product/runtime/public contracts and reusable governance/protocol, do not modify task/report/review evidence, do not change branch topology/dependencies, do not perform or create promotion/release authority, and have cheap deterministic verification."
-    - "Define the micro-maintenance flow as: explicitly bind target -> refresh canonical GitHub truth -> prove exception eligibility before mutation -> mutate only the exact bounded scope -> verify exact diff/final remote identity -> stop. Installed/known capability is not evidence; rely only on capabilities/evidence actually obtained when the operation needs them."
-    - "Require fail-closed fallback to the existing canonical v3 task lanes whenever eligibility is ambiguous, any material semantics change is involved, independent execution/review adds material assurance, or the operation touches product/runtime/public contracts, reusable governance/protocol semantics, task/report/review evidence, dependencies, branch topology, promotion, tag, release, or other irreversible/release-critical behavior."
-    - "Update protocols/TASK_PROTOCOL.md with the same narrow exception boundary while preserving the existing three canonical task lanes exactly: DIRECT remains small/reversible/low-risk work inside the canonical v3 task/protocol model; BOUNDED and HIGH_ASSURANCE remain unchanged. The exception is outside those lanes and must not create a fourth lane or alternate task schema."
-    - "Clarify in architect/SKILL.md and TASK_PROTOCOL.md that an already-accepted lifecycle continuation is separate from the micro-maintenance exception and DIRECT. Architect may perform an already-authorized promotion/tag/release phase without creating a new implementation task solely for ceremony only when exact reviewed_report/promotion_candidate identity, explicit existing phase authority, any required exact-SHA verification, current refs, and current-phase capabilities all remain satisfied."
-    - "Clarify fail-closed lifecycle behavior: candidate/ref drift, missing required verification, missing current-phase capability, or absent promotion/release authority stops the phase and requires the normal revised/revalidated authority path; continuation never manufactures authority."
-    - "Produce and commit/push .agent/tasks/TASK-0006/report.yaml only after all required verification passes on the exact final implementation state."
+    - "Preserve the revision-1 Architect micro-maintenance exception as a narrowly named Architect-owned taskless exception that is explicitly NOT DIRECT and NOT a fourth execution lane. It may omit canonical task/report/review machinery only for Architect-owned mutations that are simultaneously small, bounded, reversible, low-risk, directly and clearly authorized, non-semantic for product/runtime/public contracts and reusable governance/protocol, do not modify task/report/review evidence, do not change branch topology/dependencies, do not perform or create promotion/release authority, and have cheap deterministic verification."
+    - "Preserve the micro-maintenance flow as: explicitly bind target -> refresh canonical GitHub truth -> prove exception eligibility before mutation -> mutate only the exact bounded scope -> verify exact diff/final remote identity -> stop. Installed/known capability is not evidence; rely only on capabilities/evidence actually obtained when the operation needs them."
+    - "Preserve fail-closed fallback to the existing canonical v3 task lanes whenever eligibility is ambiguous, any material semantics change is involved, independent execution/review adds material assurance, or the operation touches product/runtime/public contracts, reusable governance/protocol semantics, task/report/review evidence, dependencies, branch topology, promotion, tag, release, or other irreversible/release-critical behavior."
+    - "Harmonize architect/SKILL.md general routing language with the exception: the one-active-target repository switching steps and Route before loading sequence must no longer state or imply that every Architect mutation always requires fresh repository-local task/review identity or canonical task creation. Add only the narrow exception qualification needed so eligible Architect micro-maintenance can proceed tasklessly while all normal canonical task lanes and Executor work retain their existing task/handoff requirements."
+    - "Harmonize protocols/TASK_PROTOCOL.md core-binding and repository-local authority language with the exception: Architect micro-maintenance remains explicitly bound to one target with fresh canonical GitHub truth but does not require a fresh task/review identity solely because it is a repository mutation. Executor rebinding, normal DIRECT/BOUNDED/HIGH_ASSURANCE work, and task-bound lifecycle/evidence retain their existing exact task/handoff identity requirements."
+    - "Preserve the existing three canonical task lanes exactly: DIRECT remains small/reversible/low-risk work inside the canonical v3 task/protocol model; BOUNDED and HIGH_ASSURANCE remain unchanged. The exception is outside those lanes and must not create a fourth lane or alternate task schema."
+    - "Preserve the clarification that an already-accepted lifecycle continuation is separate from the micro-maintenance exception and DIRECT. Architect may perform an already-authorized promotion/tag/release phase without creating a new implementation task solely for ceremony only when exact reviewed_report/promotion_candidate identity, explicit existing phase authority, any required exact-SHA verification, current refs, and current-phase capabilities all remain satisfied."
+    - "Preserve fail-closed lifecycle behavior: candidate/ref drift, missing required verification, missing current-phase capability, or absent promotion/release authority stops the phase and requires the normal revised/revalidated authority path; continuation never manufactures authority."
+    - "Update the existing .agent/tasks/TASK-0006/report.yaml to report_revision 2 only after all revision-2 verification passes on the exact final implementation state. The report must supersede revision-1 evidence without rewriting history or creating a second report file."
   allowed_existing_files_or_components:
     - architect/SKILL.md
     - protocols/TASK_PROTOCOL.md
     - .agent/tasks/TASK-0006/task.yaml
+    - .agent/tasks/TASK-0006/report.yaml
   expected_files_are_restrictive: true
 
 invariants:
@@ -83,6 +89,7 @@ invariants:
   - "DIRECT retains its existing meaning as a lane inside the canonical v3 task/protocol model; it is never used as a synonym for taskless maintenance."
   - "The Architect micro-maintenance exception is not a lane, task schema, lifecycle, role, authority source, or reusable bypass for ordinary work."
   - "The exception grants no authority by itself. Explicit current user/target authority and fresh canonical target truth are still required before mutation."
+  - "General Architect routing and Task Protocol binding language must be internally consistent with the exception: eligible Architect micro-maintenance is not forced to create task/review identity, while Executor and normal task-lane bindings remain unchanged."
   - "No product/runtime/public-contract, reusable governance/protocol semantic, dependency, branch-topology, task/report/review-evidence, promotion, tag, release, or release-authority mutation may use the exception."
   - "Promotion and release remain independent lifecycle phases under existing exact-candidate, verifier, authority, and capability semantics."
   - "No new implementation task is required solely to repeat authority for an already-authorized accepted-candidate continuation, but missing authority must never be inferred or backfilled by continuation."
@@ -94,6 +101,7 @@ forbidden_changes:
   - "Do not redefine DIRECT, BOUNDED, or HIGH_ASSURANCE."
   - "Do not create a fourth lane, alternate task schema, micro-task artifact, new role, framework, registry, state machine, queue, daemon, or automation layer."
   - "Do not make taskless maintenance available to Executor sessions. The exception is Architect-owned only."
+  - "Do not weaken task/handoff identity requirements for Executor sessions or for normal DIRECT, BOUNDED, or HIGH_ASSURANCE work."
   - "Do not allow the exception for code behavior, runtime behavior, public contracts, reusable governance/protocol semantics, dependency changes, migrations, security-sensitive changes, branch topology, task/report/review evidence, promotion, tag, release, or release authority."
   - "Do not weaken explicit write authority, fresh GitHub truth, exact scope, deterministic verification, current-phase capability preflight, exact-candidate verification, or fail-closed drift semantics."
   - "Do not modify github-workflow/SKILL.md, templates/, validators/tests, README.md, other skills, historical tasks, agent-runtime, architect-profile, agent-documents, or agent-standards under this task."
@@ -109,8 +117,7 @@ gap_policy:
   blocking_gap_behavior: BLOCKED
 
 structure_policy:
-  expected_new_files:
-    - .agent/tasks/TASK-0006/report.yaml
+  expected_new_files: []
   unlisted_new_files:
     allowed: false
     max: 0
@@ -144,7 +151,7 @@ acceptance_criteria:
     evidence_required: "Exact architect/SKILL.md and TASK_PROTOCOL.md inspection shows the exception, its required predicates, and its fail-closed flow without naming it DIRECT."
   - id: AC-2
     requirement: "DIRECT remains exactly a canonical v3 task lane and no fourth lane, alternate schema, role, framework, or automation mechanism is introduced."
-    evidence_required: "Final text and repository diff show exactly three lane names/semantics preserved and no new structural artifact beyond TASK-0006 report evidence."
+    evidence_required: "Final text and repository diff show exactly three lane names/semantics preserved and no new structural artifact."
   - id: AC-3
     requirement: "Any material semantic or release-critical work is excluded from micro-maintenance and falls back to normal canonical authority."
     evidence_required: "Exact exclusion text covers product/runtime/public contracts, reusable governance/protocol semantics, dependencies, branch topology, task/report/review evidence, promotion, tag, release, and authority ambiguity."
@@ -155,31 +162,34 @@ acceptance_criteria:
     requirement: "Protocol remains v3 and existing Git/release ownership semantics remain unchanged."
     evidence_required: "Final diff inspection confirms protocol_version 3, no modification to github-workflow/SKILL.md or templates, and no new release/promotion authority field or inferred permission."
   - id: AC-6
-    requirement: "Repository deterministic verification passes on the exact final implementation state and only authorized implementation files changed before report evidence."
-    evidence_required: "python3 scripts/validate_skill_library.py, python3 -m unittest scripts.test_validate_skill_library, git diff --check, and exact base-to-final changed-file inspection all pass."
+    requirement: "Repository deterministic verification passes on the exact final implementation state and only authorized implementation files changed relative to the revision-2 handoff base before report update."
+    evidence_required: "python3 scripts/validate_skill_library.py, python3 -m unittest scripts.test_validate_skill_library, git diff --check, and exact revision-2-base-to-final changed-file inspection all pass."
   - id: AC-7
-    requirement: "Git lineage stays exact: main unchanged, branches exactly {dev, main}, and report commit is the sole report-only child after final_execution_head."
-    evidence_required: "Fresh remote refs plus report-commit parent/diff verification."
+    requirement: "Git lineage stays exact: main unchanged, branches exactly {dev, main}, and the revision-2 report commit is the report-only child after revision-2 final_execution_head."
+    evidence_required: "Fresh remote refs plus updated report-commit parent/diff verification."
+  - id: AC-8
+    requirement: "No canonical statement still unconditionally requires task/review identity or task creation for an eligible Architect micro-maintenance mutation; the exception is usable without weakening Executor or normal task-lane bindings."
+    evidence_required: "Focused inspection of Architect one-active-target/Route before loading language and Task Protocol Core bindings/repository-local authority language shows explicit narrow qualification for the micro-maintenance exception and unchanged task/handoff requirements everywhere else."
 
 verification:
   executor_checks:
     - id: CHECK-1
-      command_or_check: "Before mutation, resolve TASK-0006 revision 1 under pinned self-hosting authority ba9effd83169c1389590d36e7e47b1c100b6d53b; require live dev == handoff base, main == ba9effd83169c1389590d36e7e47b1c100b6d53b, branches exactly {dev, main}, clean worktree, and required EXECUTION capabilities."
+      command_or_check: "Before mutation, resolve TASK-0006 revision 2 under pinned self-hosting authority ba9effd83169c1389590d36e7e47b1c100b6d53b; require live dev == handoff base, main == ba9effd83169c1389590d36e7e47b1c100b6d53b, branches exactly {dev, main}, clean worktree, and required EXECUTION capabilities."
       required: true
     - id: CHECK-2
-      command_or_check: "Read the current architect/SKILL.md, protocols/TASK_PROTOCOL.md, and github-workflow/SKILL.md from the pinned authority. Confirm current DIRECT/task-lane and lifecycle semantics before editing. This is a prose/protocol semantic correction; do not invent a causal-TDD test for unchanged validator behavior."
+      command_or_check: "Read the pinned architect/SKILL.md, protocols/TASK_PROTOCOL.md, and github-workflow/SKILL.md plus the revision-1 implementation/report for context. Confirm the contradiction identified by Architect review before editing: taskless exception exists, but general Architect routing/Core binding text still unconditionally requires task/review identity or canonical task creation before mutation."
       required: true
     - id: CHECK-3
-      command_or_check: "Implement only the minimal authorized changes in architect/SKILL.md and protocols/TASK_PROTOCOL.md. Perform focused source inspection proving micro-maintenance is never called DIRECT, exactly three canonical lanes remain, and lifecycle continuation cannot manufacture authority."
+      command_or_check: "Implement only the minimal harmonization in architect/SKILL.md and protocols/TASK_PROTOCOL.md. Prove micro-maintenance is never called DIRECT, exactly three canonical lanes remain, eligible Architect micro-maintenance is no longer contradicted by general task-required language, Executor/normal task-lane bindings remain exact, and lifecycle continuation cannot manufacture authority."
       required: true
     - id: CHECK-4
-      command_or_check: "Run python3 scripts/validate_skill_library.py and python3 -m unittest scripts.test_validate_skill_library on the exact final implementation HEAD; both must exit 0."
+      command_or_check: "Run python3 scripts/validate_skill_library.py and python3 -m unittest scripts.test_validate_skill_library on the exact revision-2 final implementation HEAD; both must exit 0."
       required: true
     - id: CHECK-5
-      command_or_check: "Run git diff --check and inspect the exact handoff-base-to-final diff. Before report creation, changed implementation files must be exactly architect/SKILL.md and protocols/TASK_PROTOCOL.md; .agent/tasks/TASK-0006/task.yaml is planning authority at the handoff base. Prove github-workflow/SKILL.md, templates/, README.md, validators/tests, other skills, historical tasks, and other repositories are unchanged."
+      command_or_check: "Run git diff --check and inspect the exact revision-2 handoff-base-to-final implementation diff. Before report update, changed implementation files relative to the revision-2 base must be exactly architect/SKILL.md and protocols/TASK_PROTOCOL.md. Prove github-workflow/SKILL.md, templates/, README.md, validators/tests, other skills, historical tasks, and other repositories are unchanged."
       required: true
     - id: CHECK-6
-      command_or_check: "Immediately before report creation refresh refs and require dev == final_execution_head, main unchanged at ba9effd83169c1389590d36e7e47b1c100b6d53b, branches exactly {dev, main}, clean worktree, and exact authorized diff. After committing/pushing report.yaml, verify the report commit has exactly one parent equal to final_execution_head, changes only .agent/tasks/TASK-0006/report.yaml, and main/branch set remain unchanged."
+      command_or_check: "Immediately before report update refresh refs and require dev == revision-2 final_execution_head, main unchanged at ba9effd83169c1389590d36e7e47b1c100b6d53b, branches exactly {dev, main}, clean worktree, and exact authorized diff. Then update .agent/tasks/TASK-0006/report.yaml to report_revision 2, commit/push it as the sole report-only child, and verify its one parent equals the revision-2 final_execution_head and main/branch set remain unchanged."
       required: true
   authoritative_verification:
     required: false
