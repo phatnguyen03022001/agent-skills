@@ -1,5 +1,5 @@
 ---
-name: github-dev-main-workflow
+name: github-workflow
 description: Use when target-authoritative Git/GitHub branch topology, commits, pushes, promotion, or GitHub Actions must be governed without inventing branches.
 ---
 

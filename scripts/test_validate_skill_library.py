@@ -327,6 +327,21 @@ class ValidatorRegressionTests(unittest.TestCase):
     def test_exact_fifteen_skill_invariant_is_explicit(self) -> None:
         self.assertEqual(len(VALIDATOR_MODULE.EXPECTED_SKILLS), 15)
 
+    def test_current_git_workflow_identity_is_github_workflow(self) -> None:
+        current = "github-workflow"
+        legacy = "github-" + "dev-main-workflow"
+        self.assertIn(current, VALIDATOR_MODULE.EXPECTED_SKILLS)
+        self.assertNotIn(legacy, VALIDATOR_MODULE.EXPECTED_SKILLS)
+        path = ROOT / current / "SKILL.md"
+        self.assertTrue(path.is_file())
+        self.assertFalse((ROOT / legacy).exists())
+        metadata, _ = VALIDATOR_MODULE.parse_frontmatter(path)
+        self.assertEqual(metadata.get("name"), current)
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        catalog = readme.split("<!-- SKILL_CATALOG_START -->", 1)[1].split("<!-- SKILL_CATALOG_END -->", 1)[0]
+        self.assertIn(f"| `{current}` | workflow |", catalog)
+        self.assertNotIn(legacy, catalog)
+
     def test_canonical_continuation_template_is_required_and_closed(self) -> None:
         _, root = self.fixture()
         path = root / "templates" / "continuation.yaml"
@@ -501,7 +516,7 @@ class ValidatorRegressionTests(unittest.TestCase):
             self.assertIn(token, combined)
 
     def test_task0002_remote_truth_and_local_divergence_doctrine(self) -> None:
-        workflow = (ROOT / "github-dev-main-workflow" / "SKILL.md").read_text(encoding="utf-8")
+        workflow = (ROOT / "github-workflow" / "SKILL.md").read_text(encoding="utf-8")
         executor = (ROOT / "executor" / "SKILL.md").read_text(encoding="utf-8")
         protocol = (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8")
         combined = workflow + executor + protocol
@@ -773,7 +788,7 @@ class Task0004GovernanceTests(unittest.TestCase):
 
     def test_ac6_git_topologies_are_target_authoritative(self) -> None:
         combined = (
-            self.read("github-dev-main-workflow/SKILL.md")
+            self.read("github-workflow/SKILL.md")
             + self.read("protocols/TASK_PROTOCOL.md")
         )
         for token in (

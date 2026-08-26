@@ -14,7 +14,7 @@ EXPECTED_SKILLS = frozenset({
     "architect", "executor", "research", "reuse-first", "simplicity",
     "design-review", "gap-analysis", "adversarial-audit", "security-review",
     "verification", "debugging", "reliability", "optimization",
-    "github-dev-main-workflow", "cloud-run-basics",
+    "github-workflow", "cloud-run-basics",
 })
 FRONTMATTER_KEYS = frozenset({"name", "description"})
 NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")

@@ -118,7 +118,7 @@ A merge commit, empty child, or any other post-`R` mutation requires a new Execu
 | `debugging` | engineering | reproducible root-cause analysis for bugs, failing tests, CI failures, regressions, and unexpected behavior |
 | `reliability` | engineering | operability through load/failure/retry/recovery, rollout/rollback, observability, and production incidents |
 | `optimization` | engineering | measured performance, resource, developer-loop, automation, or cost constraints |
-| `github-dev-main-workflow` | workflow | target-authoritative Git/GitHub topology, promotion, and Actions risk without inventing branches |
+| `github-workflow` | workflow | target-authoritative Git/GitHub topology, promotion, and Actions risk without inventing branches |
 | `cloud-run-basics` | domain | Google Cloud Run deployment, configuration, security, scaling, troubleshooting, and platform-specific cost behavior |
 <!-- SKILL_CATALOG_END -->
 
