@@ -1,8 +1,8 @@
 protocol_version: 3
 
 task_id: TASK-0006
-task_revision: 1
-report_revision: 1
+task_revision: 2
+report_revision: 2
 state: REPORTED
 
 task_source:
@@ -13,9 +13,9 @@ execution:
   branch:
     name: dev
     role: integration
-  authorized_base_head: "ac95d3ea1ef6dd817b2af8ca6e57e227a89d2fd0"
-  pre_execution_head: "ac95d3ea1ef6dd817b2af8ca6e57e227a89d2fd0"
-  final_execution_head: "9964d4d556c91e9692b186bd88f1dffe3d104ba3"
+  authorized_base_head: "301d65ed54bbfaa621cc62b4fd1f026db545cbff"
+  pre_execution_head: "301d65ed54bbfaa621cc62b4fd1f026db545cbff"
+  final_execution_head: "f7c3e6195e93020b56cd6169b7f7c655abf42e3b"
 
 skill_library:
   repository: phatnguyen03022001/agent-skills
@@ -63,32 +63,32 @@ authoritative_verification:
   required: false
   performed: false
   result: ""
-  evidence: "Task authority does not designate a separate authoritative verifier. Repository-native validation and unittest commands exited 0 on exact final_execution_head via agent-runtime."
+  evidence: "Task authority does not designate a separate authoritative verifier. Exact revision-2 final implementation SHA received successful repository-native GitHub Actions validation run 32972167529."
 
 local_hygiene:
   result: PASS
-  run_root: "/tmp/task0006-diffcheck"
+  run_root: "/tmp/task0006-r2-*"
   cleanup_performed: true
   retained: []
-  evidence: "The isolated diff-check fixture and failed network-clone scratch paths were current-run-owned under /tmp and removed with post-cleanup non-existence checks. The disposable agent-runtime checkout was resynchronized after verifier-generated untracked state and was clean/in-sync at exact final_execution_head before report creation."
+  evidence: "Current-run clone/diff-check scratch roots were created only under /tmp and removed by run-owned shell cleanup; a final bounded check found no retained /tmp/task0006-r2* artifacts. No persistent target checkout was mutated in this execution surface."
 
 changed_files:
   - path: architect/SKILL.md
-    summary: "Added the narrow Architect-owned taskless micro-maintenance exception outside the canonical lanes and clarified already-authorized accepted-candidate lifecycle continuation without manufacturing authority."
+    summary: "Qualified one-active-target switching and Route-before-loading language so normal task lanes retain fresh task/review/task-handoff requirements while eligible Architect micro-maintenance can use the already-defined taskless exception without contradiction."
     new_file: false
     in_scope: true
     structure_authorized: true
   - path: protocols/TASK_PROTOCOL.md
-    summary: "Mirrored the same exception boundary and fail-closed lifecycle-continuation semantics while preserving protocol v3 and the three canonical task lanes."
+    summary: "Qualified Core bindings and repository-local authority semantics so task-bound work remains exact while eligible Architect micro-maintenance stays repository-local without manufacturing task/report/review lineage."
     new_file: false
     in_scope: true
     structure_authorized: true
 
 commits_created:
-  - sha: "c304af6d32ef76df79a7054317e5f9f15f5ebd1f"
-    message: "docs(architect): define bounded micro-maintenance exception"
-  - sha: "9964d4d556c91e9692b186bd88f1dffe3d104ba3"
-    message: "docs(protocol): bound taskless architect maintenance"
+  - sha: "2b46859d26ee7453fcc586d420522dc0c6f5628a"
+    message: "docs(architect): harmonize micro-maintenance routing"
+  - sha: "f7c3e6195e93020b56cd6169b7f7c655abf42e3b"
+    message: "docs(protocol): harmonize micro-maintenance bindings"
 
 pushed: true
 promoted_to_main: false
@@ -96,56 +96,59 @@ promoted_to_main: false
 acceptance_evidence:
   - criterion_id: AC-1
     status: PASS
-    evidence: "Exact final Architect and Task Protocol text defines an Architect-owned taskless micro-maintenance exception outside DIRECT/BOUNDED/HIGH_ASSURANCE, requires every eligibility predicate before mutation, and fixes the flow as bind -> refresh canonical GitHub truth -> prove eligibility -> exact bounded mutation -> deterministic diff/final-identity verification -> stop."
+    evidence: "Final Architect and Task Protocol text still defines the narrow Architect-owned taskless micro-maintenance exception outside DIRECT/BOUNDED/HIGH_ASSURANCE with the same eligibility predicates, bind -> fresh canonical truth -> prove eligibility -> exact bounded mutation -> deterministic diff/final-identity verification -> stop flow, and fail-closed fallback."
   - criterion_id: AC-2
     status: PASS
-    evidence: "Both canonical owners still enumerate exactly DIRECT, BOUNDED, and HIGH_ASSURANCE as the task lanes. The new text explicitly says the exception is not DIRECT or a fourth lane/schema/lifecycle/role/authority source. Base-to-final compare adds no structural artifact."
+    evidence: "Final source still enumerates exactly DIRECT, BOUNDED, and HIGH_ASSURANCE as canonical task lanes. The exception remains explicitly not DIRECT/not a fourth lane/schema/lifecycle/role/authority source, and revision-2 base-to-final diff introduces no structural artifact."
   - criterion_id: AC-3
     status: PASS
-    evidence: "Exact exclusion/fallback text covers product/runtime/public contracts, reusable governance/protocol semantics, task/report/review evidence, dependencies, branch topology, promotion, tag, release, release authority, ambiguity, material semantics, and irreversible/release-critical work."
+    evidence: "Revision-2 changes do not alter the existing exclusion boundary: product/runtime/public contracts, reusable governance/protocol semantics, task/report/review evidence, dependencies, branch topology, promotion, tag, release, release authority, ambiguity, material semantics, and irreversible/release-critical behavior remain outside micro-maintenance."
   - criterion_id: AC-4
     status: PASS
-    evidence: "Architect and Task Protocol explicitly separate already-accepted lifecycle continuation from DIRECT and micro-maintenance; continuation without a new implementation task is limited to already-authorized promotion/tag/release while exact report/candidate identity, explicit phase authority, required exact-SHA verification, current refs, and current-phase capabilities remain satisfied. Drift or missing authority/evidence/capability stops and requires normal revised/revalidated authority; continuation never manufactures authority."
+    evidence: "Final Architect and Task Protocol lifecycle text remains unchanged in substance: accepted-candidate continuation is separate from DIRECT/micro-maintenance and proceeds without a new implementation task only under exact existing report/candidate identity, explicit phase authority, required exact-SHA verification, current refs, and current-phase capability; drift or missing authority/evidence/capability stops and continuation never manufactures authority."
   - criterion_id: AC-5
     status: PASS
-    evidence: "Protocol header remains Supported protocol version: 3. Base-to-final compare changes only architect/SKILL.md and protocols/TASK_PROTOCOL.md; github-workflow/SKILL.md, templates, validators/tests, README, and all other components are unchanged. No new release/promotion authority field or inferred permission was introduced."
+    evidence: "Protocol remains version 3. Exact revision-2 base-to-final compare changes only architect/SKILL.md and protocols/TASK_PROTOCOL.md; github-workflow/SKILL.md, templates, README.md, validators/tests, other skills, historical tasks, and other repositories are absent from the implementation diff. No new release/promotion authority field or inferred permission was introduced."
   - criterion_id: AC-6
     status: PASS
-    evidence: "On exact final_execution_head 9964d4d5..., agent-runtime verifier command exited 0; log records validator OK and 57 unittests OK. Canonical base-to-final compare contains exactly architect/SKILL.md and protocols/TASK_PROTOCOL.md. Exact `git diff --check` exited 0 in an isolated git fixture containing every canonical added line from the two exact implementation commit patches; no other files changed."
+    evidence: "On exact final_execution_head f7c3e6195e93020b56cd6169b7f7c655abf42e3b, GitHub Actions run 32972167529 completed success with Checkout, Validate, and Unit tests steps all successful; the workflow commands are exactly python3 scripts/validate_skill_library.py and python3 -m unittest scripts/test_validate_skill_library.py. Canonical base-to-final compare lists exactly the two authorized implementation files. Exact `git diff --check` exited 0 on an isolated git fixture containing every canonical revision-2 added line from the exact two commit patches."
   - criterion_id: AC-7
     status: PASS
-    evidence: "Immediately before report creation: dev=9964d4d556c91e9692b186bd88f1dffe3d104ba3, main=ba9effd83169c1389590d36e7e47b1c100b6d53b, branches exactly {dev, main}, local disposable checkout clean/in-sync. Report parent/diff/ref lineage is verified after this report-only commit."
+    evidence: "Immediately before report update, fresh refs were dev=f7c3e6195e93020b56cd6169b7f7c655abf42e3b, main=ba9effd83169c1389590d36e7e47b1c100b6d53b, branches exactly {dev, main}. Revision-2 report parent/diff/ref lineage is verified after this report-only update commit."
+  - criterion_id: AC-8
+    status: PASS
+    evidence: "Architect switching now requires fresh repository-local authority appropriate to the intended work, explicitly reserving fresh task/review identity for normal canonical task-lane work; Route before loading is explicitly normal-task-lane-only and exempts eligible Architect micro-maintenance from task/handoff ceremony. Task Protocol Core bindings mirrors that qualification, repository-local authority is task-lineage-specific only for task-bound bindings, and it explicitly keeps Executor rebinding/all normal task lanes task/handoff-bound."
 
 executor_checks:
   - check_id: CHECK-1
     result: PASS
-    evidence: "Before mutation, TASK-0006 revision 1 was resolved at exact base ac95d3ea1ef6dd817b2af8ca6e57e227a89d2fd0 under pinned self-hosting authority ba9effd83169c1389590d36e7e47b1c100b6d53b. Fresh refs were dev=base, main=pinned authority, branches exactly {dev, main}; disposable checkout was clean. exact_remote_ref_read was exercised, repository_content_write permission was preflighted as admin, and isolated_test_execution was exercised before mutation."
+    evidence: "Before mutation, TASK-0006 revision 2 resolved at exact handoff base 301d65ed54bbfaa621cc62b4fd1f026db545cbff under pinned self-hosting authority ba9effd83169c1389590d36e7e47b1c100b6d53b. Fresh refs were dev=base, main=pinned authority, branches exactly {dev, main}. exact_remote_ref_read was exercised; current repository_content_write was proven by admin permission; isolated_test_execution was proven before mutation by successfully rerunning the repository Actions validate job through a fresh Checkout/Validate/Unit tests cycle. No persistent local target worktree was used."
   - check_id: CHECK-2
     result: PASS
-    evidence: "Pinned executor, verification, github-workflow, architect, and Task Protocol authority were read before editing. Existing DIRECT/task-lane and lifecycle semantics were confirmed. Per task instruction this prose/protocol semantic correction did not invent a causal-TDD test for unchanged validator behavior."
+    evidence: "Pinned Architect, Task Protocol, and github-workflow authority plus revision-1 implementation/report were inspected before editing. The Architect-review contradiction was reproduced exactly: revision-1 exception allowed taskless Architect micro-maintenance while One active target repository still required fresh task/review identity before any mutation, Route before loading still unconditionally created/revised a canonical task, and Task Protocol Core bindings/repository-local authority still applied task/review identity fields to every mutation/binding."
   - check_id: CHECK-3
     result: PASS
-    evidence: "Only the two authorized owners were changed. Exact final source inspection confirms micro-maintenance is outside/not DIRECT, the three lane names remain unchanged, explicit authority and fresh truth are mandatory, Executor cannot use the exception, and lifecycle continuation cannot create authority."
+    evidence: "Only minimal harmonization was added to architect/SKILL.md and protocols/TASK_PROTOCOL.md. Focused final inspection proves micro-maintenance is never called DIRECT, exactly three canonical lanes remain, the general task-required contradiction is removed, Executor and normal task-lane work remain exact task/handoff-bound, and lifecycle continuation cannot manufacture authority."
   - check_id: CHECK-4
     result: PASS
-    evidence: "On exact final_execution_head 9964d4d556c91e9692b186bd88f1dffe3d104ba3, agent-runtime verification exited code 0; log shows `python3 scripts/validate_skill_library.py` reached `OK: validated curated 15-skill taxonomy and protocol v3` and unittest ran 57 tests with `OK`. The runner's outer status was postcondition_failed only because those tests left the disposable worktree dirty; the checkout was then safely resynchronized to the same SHA and confirmed clean/in-sync."
+    evidence: "Exact final implementation SHA f7c3e6195e93020b56cd6169b7f7c655abf42e3b triggered GitHub Actions run 32972167529. The job completed success; Checkout, Validate, and Unit tests all completed success. The repository workflow maps those steps exactly to python3 scripts/validate_skill_library.py and python3 -m unittest scripts/test_validate_skill_library.py."
   - check_id: CHECK-5
     result: PASS_WITH_EQUIVALENT_ISOLATED_DIFFCHECK_SURFACE
-    evidence: "Canonical GitHub compare ac95d3ea..9964d4d5 lists exactly architect/SKILL.md and protocols/TASK_PROTOCOL.md and two commits. Exact commit patches were inspected; no forbidden component appears. Because agent-runtime exposes only its trusted verifier argv and the isolated container had no GitHub DNS for a full clone, every canonical added line from both exact patches was reproduced in a run-owned git fixture and exact `git diff --check` exited 0. Since the canonical compare proves there are no other changed files, this covers the complete added-line whitespace surface without scope expansion."
+    evidence: "Canonical GitHub compare 301d65ed..f7c3e619 lists exactly architect/SKILL.md and protocols/TASK_PROTOCOL.md across two commits; exact commit patches show no forbidden component. Full target clone for native diff-check was unavailable because the isolated container could not resolve github.com. Every canonical added line from both exact revision-2 patches was reproduced in a run-owned git fixture with non-EOF context and `git diff --cached --check` exited 0. The first synthetic fixture produced only a fixture-induced blank-line-at-EOF warning and was discarded before the corrected exact added-line check."
   - check_id: CHECK-6
     result: PASS_PENDING_REPORT_LINEAGE_CONFIRMATION
-    evidence: "Immediately before report creation, fresh refs showed dev exactly final_execution_head, main unchanged at ba9effd83169c1389590d36e7e47b1c100b6d53b, branches exactly {dev, main}; agent-runtime checkout was clean/in-sync and base-to-final diff was exactly authorized. After this report commit, its one-parent/report-only diff and unchanged main/branch set are verified externally and returned in the Executor terminal result."
+    evidence: "Immediately before report update, fresh remote refs showed dev exactly revision-2 final_execution_head, main unchanged at ba9effd83169c1389590d36e7e47b1c100b6d53b, branches exactly {dev, main}; exact base-to-final implementation diff was only the two authorized files and no current-run temporary artifacts remained. After this report-only update commit, one-parent/report-only diff and final refs are verified externally and returned in the Executor terminal result."
 
 discovered_gaps: []
 structural_observations: []
 
 deviations_from_task:
-  - "The trusted agent-runtime verifier executed the required validator/unittest payload with exit code 0 but its wrapper returned postcondition_failed because the tests generated untracked local state. That current-run disposable state was removed by an authorized resync before report creation; no remote content was affected."
-  - "A full-checkout local `git diff --check` surface was unavailable: agent-runtime has no arbitrary-shell tool and the isolated container could not resolve github.com. Equivalent exact-command evidence was produced on a run-owned git fixture containing all canonical added lines from the exact two commit patches, combined with canonical base-to-final proof that no other files changed."
+  - "The agent-runtime execution surface used in revision 1 was not currently available after capability rediscovery in this session, so it was not treated as current evidence. Current isolated_test_execution was instead preflighted and final verification performed through the repository's existing bounded GitHub Actions workflow; the exact final SHA run completed success."
+  - "A full-checkout native `git diff --check` could not run because the isolated container had no GitHub DNS. Equivalent exact-command whitespace evidence used every canonical added line from the exact revision-2 commit patches in a run-owned git fixture, combined with canonical base-to-final proof that no other implementation files changed."
 blockers: []
 
 working_tree_after:
   clean: true
-  summary: "Immediately before the report-only commit, the disposable local checkout was clean/in-sync at exact final_execution_head 9964d4d556c91e9692b186bd88f1dffe3d104ba3; remote dev matched it, main was unchanged, and branches were exactly {dev, main}."
+  summary: "No persistent target checkout was mutated. Immediately before the report-only update, exact-SHA GitHub Actions verification had completed successfully, all current-run /tmp scratch roots were removed, remote dev equaled final_execution_head, main was unchanged, and branches were exactly {dev, main}."
 
 result: NEEDS_REVIEW
