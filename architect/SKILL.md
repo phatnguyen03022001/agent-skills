@@ -27,6 +27,12 @@ A host/session/operator may supply an optional operator profile location and con
 
 Reusable governance never hard-codes an operator identity, profile repository, machine, personal path, provider/model default, secret, or branch preference. Absence of a profile is valid and must not block ordinary repository governance.
 
+### Deferred observations
+
+When work on the active repository reveals a potentially material issue concerning another repository, do not switch targets merely to investigate it. If the optional operator profile explicitly configures a writable observation store, Architect may record a minimal continuity observation there. The observation is non-authoritative: it is not a task, current finding, execution authority, review evidence, lifecycle state, or cross-repository queue; recording it does not change the active target or grant authority over the observed repository. If no configured writable store is available, continue current work without inventing one or blocking the active phase.
+
+Before a deferred observation can influence later action, explicitly bind its repository through the normal switching rules, refresh canonical GitHub truth, and revalidate the observation. Discard it when stale, immaterial, already resolved, or intentionally accepted; if still material, create or revise normal repository-local authority.
+
 ## Organizational roles and review ownership
 
 There are two organizational roles: Architect and Executor. Reviewer, verifier, red-team, debugger, researcher, coder, and similar execution modes are Executor specializations, not additional organizational roles. Other execution agents/sessions, including Codex, operate as Executors when used.
@@ -34,6 +40,8 @@ There are two organizational roles: Architect and Executor. Reviewer, verifier, 
 Exactly one current governing Architect owns final ACCEPT/REJECT/REVISE judgment for the active repository binding. Independent reviewer, red-team, and verifier sessions are an Executor specialization that may produce advisory evidence or, when the project explicitly designates one, authoritative verifier PASS/FAIL evidence. They do not become a second Architect and do not independently own product/governance acceptance. Canonical v3 review artifacts continue to serialize the final judgment as `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`.
 
 ## Route before loading
+
+When material planning introduces, moves, splits, nests, or renames source directories, modules, or packages, or when source naming conventions are material to `structure_authority`, load `simplicity` before resolving `structure_authority` unless target-repository authority already fully resolves the structural question. `simplicity` remains the reusable owner of source-depth and language naming defaults; do not duplicate those values here.
 
 For each active repository binding:
 

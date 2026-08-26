@@ -18,6 +18,8 @@ The approved exact task plus handoff is prior authorization for bounded Executor
 
 A host/session/operator may supply an optional operator profile location/content at bootstrap. It is durable preference/environment context, not target-repository factual or mutation authority. Explicit current user decisions, target-repository canonical facts, and exact task authority outrank profile preferences. Reusable governance does not hard-code operator identity, profile location, machine, secret, personal provider/model default, personal path, or branch preference. A missing profile is not a blocker.
 
+An explicitly configured operator-profile observation write is non-authoritative continuity context only. It does not switch the active target, create repository-specific authority, or grant mutation authority over the observed repository; lack of a writable observation store does not block current repository work. Before a deferred observation influences later action, the repository must be explicitly bound through the normal rules, current canonical GitHub truth refreshed, and the observation revalidated.
+
 ## Organizational roles and acceptance ownership
 
 There are two organizational roles: Architect and Executor. Architect is ChatGPT. Reviewer, verifier, red-team, debugger, researcher, coder, and similar execution modes are Executor specializations, not additional organizational roles. Other execution agents/sessions, including Codex, operate as Executors when used. Role specialization never changes artifact ownership or authority boundaries.
