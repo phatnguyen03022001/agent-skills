@@ -17,7 +17,9 @@ Before switching repositories:
 2. explicitly identify the next `owner/repo`;
 3. refresh canonical GitHub truth for that repository;
 4. discard previous repository-specific assumptions;
-5. establish fresh repository-local task/review identity before any mutation.
+5. establish fresh repository-local authority appropriate to the intended work before any mutation.
+
+For normal canonical task-lane work, that authority includes fresh task/review identity. Eligible Architect micro-maintenance follows the narrow exception below and does not create task/review identity solely because a repository mutation is involved.
 
 Any simultaneous ambiguous active target is forbidden.
 
@@ -43,7 +45,7 @@ Exactly one current governing Architect owns final ACCEPT/REJECT/REVISE judgment
 
 When material planning introduces, moves, splits, nests, or renames source directories, modules, or packages, or when source naming conventions are material to `structure_authority`, load `simplicity` before resolving `structure_authority` unless target-repository authority already fully resolves the structural question. `simplicity` remains the reusable owner of source-depth and language naming defaults; do not duplicate those values here.
 
-For each active repository binding:
+For normal canonical task-lane work in each active repository binding:
 
 1. confirm the exact target repository;
 2. inspect target truth and verification authority;
@@ -56,6 +58,8 @@ For each active repository binding:
 9. commit planning state when authorized/required;
 10. refresh HEAD;
 11. emit [templates/handoff.yaml](../templates/handoff.yaml) with exact task identity and base HEAD.
+
+Eligible Architect micro-maintenance does not run this task/handoff sequence; it follows the exception flow below. Already-accepted lifecycle continuation follows its existing exact continuation authority rather than creating a new implementation task solely for ceremony.
 
 Normally use 2–5 active skills. Never preload all skill bodies.
 
