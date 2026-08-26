@@ -8,7 +8,7 @@ Supported protocol version: **3**. These additions are backward-compatible. Exis
 
 Architect remains ChatGPT and GitHub remote truth is canonical. A single Architect conversation may govern multiple repositories sequentially, but it has one active target repository at a time. Repository-specific planning, review, task creation, continuation, or mutation requires an explicit `owner/repo` binding. Facts from another repository never silently become authority.
 
-Before Architect switches repositories, it must close the current repository-specific phase cleanly, explicitly identify the next `owner/repo`, refresh canonical GitHub truth for that repository, discard previous repository-specific assumptions, and establish fresh repository-local task/review identity before any mutation. Any simultaneous ambiguous active target is forbidden.
+Before Architect switches repositories, it must close the current repository-specific phase cleanly, explicitly identify the next `owner/repo`, refresh canonical GitHub truth for that repository, discard previous repository-specific assumptions, and establish fresh repository-local authority appropriate to the intended work before any mutation. For normal `DIRECT`, `BOUNDED`, or `HIGH_ASSURANCE` task-lane work, that authority includes fresh task/review identity; eligible Architect micro-maintenance may instead use the narrow exception below without creating task/review identity solely because a repository mutation is involved. Any simultaneous ambiguous active target is forbidden.
 
 A single Executor chat may also be reused sequentially. While work is active, the active task/repository binding remains immutable: one approved task revision, one repository, one branch, and one exact execution authorization. Rebinding requires the prior execution to reach an explicit terminal handoff/result, previous evidence finalized, no outstanding mutation authority carried forward, an explicit next repository, a fresh repository-local task, a fresh exact handoff, a fresh exact base HEAD and branch identity, refreshed canonical GitHub truth, and a newly verified binding before mutation.
 
@@ -28,7 +28,9 @@ Exactly one current governing Architect owns final ACCEPT/REJECT/REVISE judgment
 
 ## Repository-local authority across sequential bindings
 
-The authority for repository A never grants authority for repository B. Every binding independently preserves repository identity, branch identity, task ID/revision, base HEAD, Git authority, capability requirements, verification, report evidence, review evidence, and promotion/release authority. The report/review/verifier/promotion/release lineage remains repository-local.
+The authority for repository A never grants authority for repository B. Every task-bound binding independently preserves repository identity, branch identity, task ID/revision, base HEAD, Git authority, capability requirements, verification, report evidence, review evidence, and promotion/release authority. The report/review/verifier/promotion/release lineage remains repository-local.
+
+Eligible Architect micro-maintenance is also repository-local but intentionally has no task ID/revision, base HEAD, report, or review lineage solely for the exception. It still requires the explicit target and write authority, fresh canonical GitHub truth, exact bounded scope, required current-operation capability evidence, deterministic verification, and the exception's fail-closed eligibility proof. Executor rebinding and all normal task-lane work remain task/handoff-bound exactly as specified elsewhere in this protocol.
 
 Never create a shared mutable cross-repository authority object. Sequential reuse changes only which repository is currently bound; it does not merge tasks, evidence, lifecycle, or authority across repositories. A user who never switches repositories observes effectively the same single-repository v3 semantics.
 
