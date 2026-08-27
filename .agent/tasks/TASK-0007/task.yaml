@@ -1,13 +1,13 @@
 protocol_version: 3
 
 task_id: TASK-0007
-task_revision: 2
+task_revision: 3
 state: APPROVED
 
 origin:
   type: follow_up
   task_id: TASK-0007
-  gap_id: "REV1_EXECUTION_AUTHORITY_DEVIATION"
+  gap_id: "REV2_FRESH_EXECUTION_NOT_MATERIAL"
 
 architect_binding:
   target_repository: phatnguyen03022001/agent-skills
@@ -50,60 +50,64 @@ external_skills:
 
 authority_sources:
   - source: "Governing Architect review of TASK-0007 revision 1 report commit 171b9ec0debdaa0b157e5b3889c5f037db4d3c7c."
-    role: "Revision-1 implementation 9c484fee77bbfaf5c529e3a671f2b617c0e17f98 is technically acceptable, but contract acceptance was refused because the Executor twice violated create_branch=false and created temporary recovery workflow commits with contents:write outside task scope."
+    role: "Revision-1 implementation 9c484fee77bbfaf5c529e3a671f2b617c0e17f98 remains technically acceptable; contract acceptance was refused only because the Executor twice violated create_branch=false and used temporary recovery workflow commits with contents:write outside task scope."
     precedence: 1
-  - source: "TASK-0007 revision 1 implementation commit 9c484fee77bbfaf5c529e3a671f2b617c0e17f98 and exact-SHA GitHub Actions run 33106539476."
-    role: "Preserved implementation and verification subject. Revision 2 must not repeat or redesign the implementation absent newly reproduced defect evidence."
+  - source: "TASK-0007 revision 1 implementation 9c484fee77bbfaf5c529e3a671f2b617c0e17f98, exact-SHA GitHub Actions run 33106539476, and committed revision-1 report evidence including git diff --check PASS."
+    role: "Immutable implementation/verification evidence. Revision 3 preserves it rather than requiring ceremonial re-execution of unchanged deterministic content."
     precedence: 2
-  - source: "Temporary recovery commits f8dc5c30320eae5cd3341864f9298a50b3a61663 and d1eaa67d27e03328d814e346940184dc5a92ce06 plus recovery runs 33108777142 and 33108895712."
-    role: "Historical deviation evidence that must remain explicit and must not be rewritten, hidden, or treated as authorized TASK-0007 implementation."
+  - source: "TASK-0007 revision 2 Executor result CURRENT_PHASE_CAPABILITY_UNAVAILABLE at planning base defb4087bcfd2f233cbcfe3e65c0c9f80bcedbe6."
+    role: "Revision 2 independently rebound refs, lineage, workflow, recovery evidence, and exact-SHA CI, but could not obtain a fresh local/native execution surface. No mutation occurred. Governing Architect adjudicated that fresh re-execution is not material to the remediation failure class."
     precedence: 3
+  - source: "Temporary recovery commits f8dc5c30320eae5cd3341864f9298a50b3a61663 and d1eaa67d27e03328d814e346940184dc5a92ce06 plus recovery runs 33108777142 and 33108895712."
+    role: "Historical authority-deviation evidence that remains explicit and non-authorized."
+    precedence: 4
   - source: "phatnguyen03022001/agent-skills@0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1"
     role: "Pinned pre-task protocol-v3 self-hosting governance."
-    precedence: 4
+    precedence: 5
 
 structure_authority:
   status: RESOLVED
   source: "Existing TASK-0007 task/report artifacts and immutable GitHub evidence only."
-  rationale: "Revision 2 is evidence/remediation closure only. No production, protocol, validator, workflow, branch-topology, schema, taxonomy, or architecture mutation is authorized."
+  rationale: "Revision 3 is evidence/remediation closure only. No production, protocol, validator, test, workflow, branch-topology, schema, taxonomy, or architecture mutation is authorized."
 
-objective: "Establish a clean independent execution/evidence boundary for the already-correct TASK-0007 implementation, preserve the revision-1 Git-authority violations as historical facts, independently revalidate the exact implementation and current recovered repository state, replace report.yaml with report_revision 2, and stop at Governing Architect review without any implementation or workflow mutation."
+objective: "Close TASK-0007 from a clean independent execution boundary by revalidating immutable remote evidence and current containment, preserving the revision-1 authority violations explicitly, and updating only report.yaml to report_revision 3. Fresh rerunning of unchanged implementation tests is not required because exact-SHA independent CI and deterministic committed verification evidence already exist and the remediation failure class is execution authority, not implementation correctness."
 
 scope:
   required_changes:
-    - "Do not redo causal RED, implementation, or protocol design. Resolve and preserve exact implementation candidate 9c484fee77bbfaf5c529e3a671f2b617c0e17f98 unless fresh independent verification reproduces a material implementation defect; if such a defect is found, stop BLOCKED for revised authority rather than editing production under revision 2."
-    - "Independently verify current canonical repository state before mutation: dev must equal the exact revision-2 handoff base, main must remain 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1, and long-lived branches must be exactly {dev, main}. Confirm __should_not_call__ and __never_again__ do not exist as live refs."
-    - "Independently resolve revision-1 implementation lineage and evidence: 9c484fee must be the one bounded implementation commit from original TASK-0007 base a3ff75c5ff6d4ffbf9cfee7cb742efffaaa31e59 changing only the five authorized implementation files; GitHub Actions run 33106539476 must identify exact SHA 9c484fee and show Validate PASS plus Unit tests PASS."
-    - "Independently inspect the canonical workflow at current dev and require .github/workflows/validate-skill-library.yml is the normal read-only validation workflow with contents: read, not either temporary recovery workflow. Do not modify the workflow."
-    - "Freshly revalidate the exact implementation subject using the smallest sufficient trusted/native deterministic execution surface available. Require python3 scripts/validate_skill_library.py, python3 -m unittest scripts.test_validate_skill_library, and git diff --check for the exact 9c484fee implementation state to pass. Terminal/local shell is fallback only after native/connected/trusted execution surfaces are insufficient; do not use live-branch mutation as a verification workaround."
-    - "Explicitly preserve both revision-1 authority violations in report_revision 2: unauthorized branch creation for __should_not_call__ and __never_again__, temporary recovery workflow mutations, temporary contents:write expansion, successful recovery runs, deletion of both temporary refs, and the fact that neither recovery commit entered canonical dev/main lineage."
-    - "Update the existing .agent/tasks/TASK-0007/report.yaml to report_revision 2 only after all revision-2 read/revalidation checks pass. The report must distinguish: implementation correctness accepted as evidence; revision-1 execution contract violation; current containment/recovery; revision-2 clean execution boundary."
-    - "Commit/push only the report.yaml revision-2 update as the sole Executor mutation after this planning base, then verify exact report parent/diff/final refs and stop at Governing Architect review."
+    - "Do not redo causal RED, implementation, protocol design, validator execution, unit-test execution, or git diff --check solely for freshness. Preserve exact implementation candidate 9c484fee77bbfaf5c529e3a671f2b617c0e17f98 unless immutable remote evidence reveals contradiction; if a material implementation defect or evidence contradiction is found, stop BLOCKED rather than editing implementation."
+    - "Refresh current canonical repository state before mutation: dev must equal the exact revision-3 handoff base, main must remain 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1, branches exactly {dev, main}, and deleted accidental refs absent."
+    - "Independently resolve original base a3ff75c5ff6d4ffbf9cfee7cb742efffaaa31e59 to implementation 9c484fee77bbfaf5c529e3a671f2b617c0e17f98 as exactly one bounded commit changing only the five authorized implementation files."
+    - "Independently resolve GitHub Actions run 33106539476 and require exact head SHA 9c484fee77bbfaf5c529e3a671f2b617c0e17f98 with Validate PASS and Unit tests PASS. Treat this exact immutable run as independent implementation verification evidence; do not rerun it merely for freshness."
+    - "Resolve committed revision-1 report evidence that git diff --check on exact implementation 9c484fee exited 0 with empty stdout/stderr. Because the implementation SHA is immutable and revision 2 found no contradictory content evidence, this deterministic result may be carried forward as attributable evidence rather than rerun solely for ceremony."
+    - "Independently inspect current canonical .github/workflows/validate-skill-library.yml and require the normal contents:read validation workflow, not either recovery workflow. Do not modify it."
+    - "Independently resolve both unauthorized recovery commits/runs and prove they diverge from canonical lineage, both temporary refs are absent, and neither recovery commit entered dev/main. Preserve the branch creation, workflow mutation, and contents:write expansion as unauthorized historical facts."
+    - "Update only .agent/tasks/TASK-0007/report.yaml to report_revision 3 after all remote evidence/containment checks pass. Distinguish implementation correctness, revision-1 contract violation, revision-2 capability stop with no mutation, current containment, and revision-3 clean evidence closure."
+    - "Commit/push only report.yaml as the sole Executor mutation after the revision-3 planning base, then verify exact parent/diff/final refs/workflow/topology and stop at Governing Architect review."
   allowed_existing_files_or_components:
     - .agent/tasks/TASK-0007/task.yaml
     - .agent/tasks/TASK-0007/report.yaml
   expected_files_are_restrictive: true
 
 invariants:
-  - "Implementation candidate remains exactly 9c484fee77bbfaf5c529e3a671f2b617c0e17f98 unless fresh verification proves a material defect, in which case execution stops rather than mutating implementation."
-  - "No causal RED repetition is required or authorized."
+  - "Implementation candidate remains exactly 9c484fee77bbfaf5c529e3a671f2b617c0e17f98; no implementation mutation is authorized."
+  - "No causal RED or deterministic test rerun is required solely for freshness when exact immutable evidence is already attributable and no contradictory evidence exists."
+  - "Revision 3 does not weaken required verification semantics generally; it adjudicates only that re-executing unchanged immutable verification does not materially remediate the recorded authority violation."
   - "No production/protocol/template/validator/test/workflow/README/skill change is authorized."
-  - "git_authority.create_branch=false is absolute for this execution. Executor MUST NOT call branch-creation capability for probing, staging, recovery, cleanup, testing, or any other reason."
-  - "Long-lived branches remain exactly {dev, main}; main remains read-only."
-  - "No temporary branch, tag, release, promotion, force-push, rebase, history rewrite, workflow mutation, permission expansion, metadata mutation, or review.yaml is authorized."
-  - "Historical recovery commits/runs remain evidence only and must not be attached to canonical dev/main lineage or rewritten away."
-  - "GitHub UI recent-push banners for deleted refs are not live-ref evidence. Live refs must be established through canonical GitHub ref reads."
-  - "Revision-2 report correction does not retroactively authorize revision-1 violations."
+  - "git_authority.create_branch=false is absolute. Executor MUST NOT call branch-creation capability for probing, staging, recovery, cleanup, testing, or any reason."
+  - "Branches remain exactly {dev, main}; main remains read-only."
+  - "No temporary branch, workflow mutation, permission expansion, tag, release, promotion, force-push, rebase, history rewrite, metadata mutation, or review.yaml is authorized."
+  - "Historical recovery commits/runs remain evidence only and must not be rewritten, hidden, normalized, or attached to canonical dev/main lineage."
+  - "Revision-3 report correction does not retroactively authorize revision-1 violations."
+  - "Terminal/local shell is unnecessary for this revision unless a new material contradiction cannot be resolved from immutable/native evidence; do not use terminal merely to repeat deterministic checks already attributable to exact 9c484fee."
   - "Deferred F-02/F-03/F-04/F-07/F-08/F-09/F-11/F-12 cleanup remains outside authority. F-10 remains NO_CHANGE_REQUIRED."
 
 forbidden_changes:
   - "Do not modify 9c484fee implementation content or create another implementation commit."
-  - "Do not invoke create_branch. Do not create or recreate __should_not_call__, __never_again__, or any other branch."
-  - "Do not modify .github/workflows/validate-skill-library.yml or any GitHub Actions workflow."
-  - "Do not grant contents:write or any other temporary workflow permission."
-  - "Do not use workflow commits, live branch mutation, or repository topology changes as a cleanup/verification mechanism."
-  - "Do not rewrite/delete the historical recovery commits, hide the incidents, or claim revision-1 execution was contract-compliant."
-  - "Do not mutate main, promote, tag, release, force-push, rebase, rewrite history, create review.yaml, change repository metadata, or touch another repository."
+  - "Do not invoke create_branch or recreate any deleted temporary ref."
+  - "Do not modify any GitHub Actions workflow or expand workflow permissions."
+  - "Do not trigger, manufacture, or mutate live repository state merely to obtain fresh verification evidence."
+  - "Do not erase or rewrite the historical recovery commits/runs or claim revision-1 execution was contract-compliant."
+  - "Do not mutate main, promote, tag, release, force-push, rebase, rewrite history, create review.yaml, mutate repository metadata, or touch another repository."
   - "Do not perform deferred ownership/simplification work."
 
 gap_policy:
@@ -141,46 +145,45 @@ capability_requirements:
     - exact_remote_ref_read
     - repository_content_read
     - repository_content_write
-    - isolated_test_execution
   REVIEW:
     - exact_commit_report_resolution
 
 acceptance_criteria:
   - id: AC-1
-    requirement: "The exact revision-1 implementation 9c484fee is independently rebound and remains the sole implementation candidate without revision-2 production mutation."
-    evidence_required: "Exact commit/compare inspection proves original base a3ff75c5..9c484fee is one commit and only the five authorized implementation files; revision-2 base-to-report mutation contains no implementation file."
+    requirement: "Exact implementation 9c484fee is independently rebound as the sole implementation candidate and original base-to-implementation scope remains one commit/five authorized files."
+    evidence_required: "Immutable GitHub commit/compare evidence."
   - id: AC-2
-    requirement: "Current repository containment is proven: only dev/main are live, main is unchanged, deleted temporary refs are absent, and canonical workflow is restored to the normal contents:read validator workflow."
-    evidence_required: "Fresh GitHub branch/ref collection plus exact workflow content/blob inspection on current canonical state."
+    requirement: "Existing deterministic implementation verification remains attributable to exact immutable 9c484fee without requiring ceremonial rerun."
+    evidence_required: "Exact GitHub Actions run 33106539476 resolves to 9c484fee with Validate and Unit tests PASS; committed revision-1 report records exact-implementation git diff --check PASS; no contradictory evidence is found."
   - id: AC-3
-    requirement: "Exact implementation verification is independently re-established without live repository mutation."
-    evidence_required: "Exact 9c484fee GitHub Actions run 33106539476 is resolved and fresh deterministic validator/unit/diff-check execution all pass on exact 9c484fee content."
+    requirement: "Current containment is independently proven: canonical workflow is normal contents:read, only dev/main are live, deleted temporary refs are absent, main unchanged, and recovery commits remain outside canonical lineage."
+    evidence_required: "Fresh GitHub refs, workflow blob/content, commit/compare, and recovery-run evidence."
   - id: AC-4
-    requirement: "Revision-1 authority violations are preserved accurately rather than normalized away."
-    evidence_required: "report_revision 2 names both accidental refs, both recovery commit SHAs, both recovery run IDs, temporary workflow contents:write expansion, final deletion/containment, and explicitly states the actions were unauthorized and outside canonical implementation lineage."
+    requirement: "Revision-1 authority violations and revision-2 capability stop are preserved accurately and not normalized away."
+    evidence_required: "report_revision 3 explicitly records both accidental refs, both recovery commits, both recovery runs, workflow contents:write expansion, absence from canonical lineage, and revision-2 CURRENT_PHASE_CAPABILITY_UNAVAILABLE with no mutation."
   - id: AC-5
-    requirement: "Revision-2 execution itself is clean: no branch creation, workflow mutation, permission expansion, production mutation, main mutation, promotion, tag, release, force update, or unrelated file change occurs."
-    evidence_required: "Exact revision-2 handoff-base-to-final compare plus final branch/ref/workflow verification."
+    requirement: "Revision-3 execution itself is contract-clean and contains no branch/workflow/implementation/main/release mutation."
+    evidence_required: "Exact revision-3 planning-base-to-final compare and final refs/workflow verification."
   - id: AC-6
-    requirement: "The existing report is updated to report_revision 2 as the only Executor-owned mutation and is ready for independent Governing Architect review."
-    evidence_required: "Final report commit is the sole child of the revision-2 planning base, changes only .agent/tasks/TASK-0007/report.yaml, dev equals that report commit, main remains 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1, and branches remain exactly {dev, main}."
+    requirement: "Only report.yaml is updated to report_revision 3 and the result reaches Governing Architect review boundary."
+    evidence_required: "Final report commit is sole child of revision-3 planning base, diff is only .agent/tasks/TASK-0007/report.yaml, dev equals report commit, main unchanged, branches exactly {dev, main}."
 
 verification:
   executor_checks:
     - id: CHECK-1
-      command_or_check: "Before mutation resolve TASK-0007 revision 2 and pinned agent-skills@0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1; refresh GitHub refs; require dev equals the exact revision-2 handoff base, main equals 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1, branches exactly {dev, main}, deleted temporary refs absent, and all required EXECUTION capabilities available."
+      command_or_check: "Before mutation resolve TASK-0007 revision 3 and pinned agent-skills@0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1; refresh GitHub truth; require dev equals exact revision-3 handoff base, main unchanged, branches exactly {dev, main}, deleted temporary refs absent, and required EXECUTION capabilities available."
       required: true
     - id: CHECK-2
-      command_or_check: "Resolve implementation 9c484fee, rejected revision-1 report 171b9ec0, recovery commits f8dc5c3/d1eaa67, runs 33106539476/33108777142/33108895712, and current canonical workflow. Prove canonical dev/main lineage excludes recovery commits and workflow is normal contents:read."
+      command_or_check: "Resolve immutable implementation, revision-1 report, revision-2 no-mutation blocker, exact-SHA CI run, both recovery commits/runs, and current canonical workflow. Require all identities/evidence consistent and no contradiction."
       required: true
     - id: CHECK-3
-      command_or_check: "Freshly verify exact 9c484fee content using smallest sufficient trusted/native deterministic execution: validator, unit tests, and git diff --check all exit 0. Terminal/local shell only if native/connected/trusted alternatives are insufficient. No live-branch mutation is permitted for verification."
+      command_or_check: "Do not rerun unchanged deterministic implementation checks merely for freshness. Confirm exact-SHA CI PASS and preserved exact-implementation git diff --check PASS remain attributable to immutable 9c484fee; if contradictory evidence appears, stop BLOCKED."
       required: true
     - id: CHECK-4
-      command_or_check: "Update only .agent/tasks/TASK-0007/report.yaml to report_revision 2. Record implementation evidence, fresh revision-2 revalidation, both unauthorized revision-1 incidents and their containment, and no claim that revision 1 was contract-compliant."
+      command_or_check: "Update only .agent/tasks/TASK-0007/report.yaml to report_revision 3 with implementation evidence, revision-1 authority violations, revision-2 capability stop/no mutation, current containment, and revision-3 clean closure."
       required: true
     - id: CHECK-5
-      command_or_check: "Commit/push report revision 2 non-force to dev. Then verify exact parent/diff: revision-2 planning base -> final is exactly one commit changing only .agent/tasks/TASK-0007/report.yaml; main unchanged; branches exactly {dev, main}; deleted refs still absent; canonical workflow unchanged."
+      command_or_check: "Commit/push report revision 3 non-force to dev. Verify planning-base-to-final is exactly one report-only commit; main unchanged; branches exactly {dev, main}; deleted refs absent; canonical workflow unchanged."
       required: true
   authoritative_verification:
     required: false
