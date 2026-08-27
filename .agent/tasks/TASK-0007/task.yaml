@@ -1,0 +1,220 @@
+protocol_version: 3
+
+task_id: TASK-0007
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: follow_up
+  task_id: ""
+  gap_id: "ECOSYSTEM_SKILLS_AUDIT_CORRECTNESS"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1"
+
+architect_analysis_skills:
+  - architect
+  - github-workflow
+  - reliability
+  - verification
+  - simplicity
+
+execution_skills:
+  required:
+    - executor
+    - github-workflow
+    - reliability
+    - verification
+    - simplicity
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "Governing Architect adjudication of the independent agent-skills audit bound to 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1."
+    role: "Architect judgment that F-01, the relational subset of F-05, and the exact-review/continuation subset of F-06 are reproducible protocol correctness defects requiring one bounded correction."
+    precedence: 1
+  - source: "protocols/TASK_PROTOCOL.md, github-workflow/SKILL.md, templates/continuation.yaml, templates/review.yaml, and scripts/validate_skill_library.py at 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1"
+    role: "Exact self-hosting implementation subject reproducing the defects."
+    precedence: 2
+  - source: "phatnguyen03022001/agent-skills@0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1"
+    role: "Pinned pre-task protocol-v3 governance for this self-hosting execution. New semantics do not govern TASK-0007 until Architect acceptance."
+    precedence: 3
+
+structure_authority:
+  status: RESOLVED
+  source: "Existing protocol, github-workflow, continuation/review templates, validator, and validator tests."
+  rationale: "The defects can be corrected inside current owners. No new skill, protocol version, manifest, registry, shared state, orchestrator, schema package, or top-level path is justified."
+
+objective: "Strengthen protocol-v3 correctness without broad simplification: make canonical continuation identities topology-neutral while retaining compatibility with valid expanded v3 dev/main continuations, enforce the material lifecycle/phase/action relationships that are currently structurally accepted despite contradiction, and require exact reviewed-report identity verification before an Architect review can be ACCEPTED."
+
+scope:
+  required_changes:
+    - "Use causal TDD against the exact authorized base. Before production changes, add focused regressions that reproduce: (1) canonical continuation requiring literal expected_refs.dev/main and therefore being unable to express a MAIN_ONLY, staging, differently named, or otherwise target-authoritative topology without fake refs; (2) contradictory continuation lifecycle/phase/action combinations passing current validation; and (3) an ACCEPTED review with independence.exact_report_identity_verified=false passing current validation."
+    - "F-01: introduce one topology-neutral canonical continuation representation for exact expected refs. Canonical new continuations must represent zero or more exact target-authoritative refs without requiring field names dev or main. Use explicit ref identity plus exact commit identity; do not infer branch names, roles, topology, or promotion target from generic governance."
+    - "Keep protocol_version 3 and preserve backward compatibility for existing valid expanded v3 continuation artifacts using expected_refs.dev/main. The legacy shape remains interpretable/accepted compatibility input; the new canonical template should demonstrate the topology-neutral form. Do not silently reinterpret an old field to mean something different."
+    - "Remove the generic assumption that promotion necessarily means a branch literally named main. Canonical new continuation data must identify the exact promotion target ref when promotion is the authorized next action. Preserve legacy PROMOTE_TO_MAIN compatibility for existing v3 artifacts, but canonical new representation/action semantics must be topology-neutral."
+    - "F-05 relational subset: preserve lifecycle state as derived and preserve prior_result only where it can carry a genuinely distinct operation result. When expected_state.lifecycle and prior_lifecycle_state describe the same continuation snapshot, require them to agree rather than allowing contradictory duplicate lifecycle state. Do not collapse prior_result into lifecycle or invent a universal result=lifecycle equation."
+    - "Enforce phase/action relationships for canonical continuation validation. REVIEW may request Architect review or stop; VERIFICATION may run authoritative verification or stop; PROMOTION may perform the topology-neutral promotion action (and legacy PROMOTE_TO_MAIN only as compatibility input) or stop; RELEASE may perform the existing release actions/final verification or stop. Do not let a phase authorize an unrelated action merely because both tokens are independently recognized."
+    - "F-06 exact-review subset: an Architect review with state ACCEPTED must require independence.exact_report_identity_verified=true. REVISION_REQUIRED/BLOCKED remain able to record false when exact identity is not established. Preserve separate_session_from_executor and existing review ownership semantics."
+    - "Prefer semantic validation over new mandatory ceremony. Add only the validation/helpers/tests needed for these relationships. Do not broaden this task into closing every free-form string field, rewriting the parser, or redesigning all protocol artifacts."
+    - "Update TASK_PROTOCOL.md and github-workflow/SKILL.md only as needed to define the topology-neutral continuation semantics, compatibility treatment, exact target-ref promotion semantics, and relational invariants. Update contracts only if a directly affected normative contract otherwise becomes contradictory."
+    - "Run deterministic focused tests plus the repository-owned validator/unit suite and git diff --check on the exact final implementation. Produce TASK-0007 report evidence in a separate report-only commit and stop at Governing Architect review."
+  allowed_existing_files_or_components:
+    - protocols/TASK_PROTOCOL.md
+    - github-workflow/SKILL.md
+    - templates/continuation.yaml
+    - templates/review.yaml
+    - scripts/validate_skill_library.py
+    - scripts/test_validate_skill_library.py
+    - contracts/ARCHITECT_REVIEW.md
+    - contracts/IMPLEMENTATION_REPORT.md
+    - .agent/tasks/TASK-0007/task.yaml
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Protocol version remains 3; existing valid expanded v3 artifacts remain valid and unsupported versions still fail closed."
+  - "Target repositories remain authoritative for branch names, ref roles, and topology. Generic governance must not require dev/main, main-only, staging, or any other fixed topology."
+  - "Exact expected refs remain mandatory stale-state evidence when a continuation relies on them; topology-neutral does not mean approximate or inferred identity."
+  - "Promotion authority remains distinct from continuation serialization and from release authority. Continuation never manufactures promotion/release authority."
+  - "Legacy expected_refs.dev/main and PROMOTE_TO_MAIN compatibility does not make those names canonical for new artifacts."
+  - "expected_state.lifecycle and prior_lifecycle_state cannot contradict when both represent the same bound snapshot. prior_result remains a distinct concept and is not mechanically collapsed into lifecycle."
+  - "An ACCEPTED Architect review cannot exist with exact_report_identity_verified=false. Acceptance still does not manufacture verifier PASS, promotion authority, release authority, or later capability availability."
+  - "Task/handoff/base-SHA binding, authority!=capability, Executor-report/Architect-review separation, exact reviewed_report.commit, promotion_candidate_head, one-active-target, repository-local lineage, and fail-closed stale-state semantics remain unchanged."
+  - "No shared mutable cross-repository authority, registry, queue, database, orchestrator, compatibility service, or new lifecycle engine is introduced."
+  - "F-02/F-03/F-04/F-07/F-08/F-09/F-11/F-12 are not implementation authority in this task. F-10 remains NO_CHANGE_REQUIRED."
+  - "Branches remain exactly {dev, main}; main remains read-only during execution."
+
+forbidden_changes:
+  - "Do not perform the ownership/subtraction wave: no TASK LAUNCH presentation cleanup, no normative-owner deduplication, no task/report sparsification, no architect_binding removal, no confirmation-boolean cleanup, no taxonomy-owner redesign, and no broad prose-size reduction."
+  - "Do not rename protocol version, existing serialized review states, lifecycle states, or legacy fields merely for aesthetics."
+  - "Do not create protocol v4, a migration framework, compatibility registry, shared schema package, generated schema, new parser, new validator subsystem, or new skill."
+  - "Do not weaken exact SHA/ref checks, fail-closed behavior, review independence, promotion/release separation, or repository-local authority."
+  - "Do not modify README.md, architect/SKILL.md, executor/SKILL.md, templates/task.yaml, templates/report.yaml, templates/handoff.yaml, simplicity/SKILL.md, cloud-run-basics, unrelated skills, historical tasks/reports, other repositories, repository metadata, tags, releases, or branch topology."
+  - "Do not create branches, mutate main, force-push, rebase, rewrite history, promote, tag, release, or create review.yaml under this task."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0007/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - isolated_test_execution
+  REVIEW:
+    - exact_commit_report_resolution
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Canonical continuation is topology-neutral and can represent exact refs for MAIN_ONLY, DEV_MAIN, DEV_STAGING_MAIN, and differently named target-authoritative topologies without fake dev/main fields."
+    evidence_required: "Causal regression demonstrates the old literal-key limitation; final template/validator tests demonstrate topology-neutral exact ref identities and at least main-only, two-ref, and three-ref/differently-named cases."
+  - id: AC-2
+    requirement: "Existing valid expanded v3 continuations with expected_refs.dev/main and legacy PROMOTE_TO_MAIN remain accepted as compatibility input without becoming the canonical new representation."
+    evidence_required: "Backward-compatibility tests pass for the legacy shape/action and protocol text states the compatibility boundary explicitly."
+  - id: AC-3
+    requirement: "Promotion continuation no longer assumes a branch literally named main for canonical new artifacts; the exact promotion target ref is explicit and target-authoritative."
+    evidence_required: "Final canonical continuation fixture/template and focused tests prove promotion to a differently named stable ref can be represented and semantically validated without PROMOTE_TO_MAIN."
+  - id: AC-4
+    requirement: "Contradictory lifecycle snapshot fields and invalid phase/action pairings fail deterministic validation while valid review/verification/promotion/release combinations pass."
+    evidence_required: "Focused negative and positive tests exercise expected_state.lifecycle versus prior_lifecycle_state and each continuation phase/action relationship."
+  - id: AC-5
+    requirement: "ACCEPTED review requires exact_report_identity_verified=true; non-accepted review states do not gain false acceptance authority."
+    evidence_required: "Causal regression shows accepted/false passed before fix; final tests reject ACCEPTED+false and accept the corresponding exact-identity-verified case while preserving REVISION_REQUIRED/BLOCKED semantics."
+  - id: AC-6
+    requirement: "The correction remains bounded to protocol correctness and preserves all existing major authority/safety boundaries."
+    evidence_required: "Exact diff shows only authorized files required for F-01/F-05/F-06 subset; no ownership/sparsity/taxonomy/TASK-LAUNCH cleanup or new subsystem appears."
+  - id: AC-7
+    requirement: "Repository deterministic verification passes on the exact final implementation state."
+    evidence_required: "python3 scripts/validate_skill_library.py, python3 -m unittest scripts.test_validate_skill_library, and git diff --check all pass on the exact final implementation HEAD."
+  - id: AC-8
+    requirement: "Publication lineage is exact and main/topology remain untouched."
+    evidence_required: "Implementation commits are non-force descendants of the TASK-0007 handoff base; separate report-only commit changes only .agent/tasks/TASK-0007/report.yaml; final main remains 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1 and branches remain exactly {dev, main}."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "At execution start resolve TASK-0007 revision 1 and pinned self-hosting agent-skills@0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1; refresh refs; require live dev equals the exact TASK-0007 handoff base, main equals 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1, branches exactly {dev, main}; preflight all required EXECUTION capabilities before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Causal RED on the exact base: reproduce literal dev/main continuation limitation, at least one invalid lifecycle/phase/action contradiction currently accepted, and ACCEPTED review with exact_report_identity_verified=false currently accepted. Record exact failing tests before production edits."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Implement the smallest backward-compatible v3 correction inside existing protocol/template/validator owners. No new subsystem or broad cleanup."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Run focused new regression tests proving topology-neutral canonical refs/promotion target, legacy v3 compatibility, lifecycle equality, phase/action relations, and exact accepted-review identity semantics. Require all focused tests PASS."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Run python3 scripts/validate_skill_library.py, python3 -m unittest scripts.test_validate_skill_library, and git diff --check on the exact final implementation HEAD; require exit 0."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Before implementation publication inspect exact base-to-final diff and prove every changed file is authorized and every semantic change maps to F-01/F-05/F-06 subset. Commit/push non-force to dev; main stays untouched."
+      required: true
+    - id: CHECK-7
+      command_or_check: "Create .agent/tasks/TASK-0007/report.yaml only after final verification. Commit/push it separately, then verify its sole parent is the final implementation commit, its diff is report-only, dev equals the report commit, main remains unchanged, and branches remain exactly {dev, main}."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
