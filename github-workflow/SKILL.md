@@ -46,7 +46,9 @@ A valid `promotion_candidate_head` is only:
 
 A merge commit or empty child is not the permitted review-artifact child. Any implementation, unrelated documentation, cleanup, dependency change, other task commit, unrelated commit, or second post-review commit after `R` invalidates accepted lineage and requires a new report plus Architect review.
 
-Before promotion, refresh the candidate and stable refs, require the candidate ref equals the exact accepted candidate, require authoritative verification to identify that exact SHA when required, require explicit promotion authority, and preflight promotion capability. If the candidate changes after verification: `REVERIFY / REVIEW_REQUIRED`.
+Canonical continuation does not derive a promotion branch from topology labels. Its `expected_refs` are zero or more explicit `{ref, commit}` identities, and canonical promotion uses `PROMOTE_TARGET_REF` plus `promotion_target_ref`; that target ref must be one of the expected refs so stale-target evidence is explicit. Existing expanded protocol-v3 `expected_refs.dev/main` plus `PROMOTE_TO_MAIN` remains compatibility input only and must not become the source of canonical branch-name assumptions.
+
+Before promotion, refresh the candidate and the explicit promotion target ref, require the candidate ref equals the exact accepted candidate, require the target ref still equals its expected commit when that ref is part of the continuation snapshot, require authoritative verification to identify that exact SHA when required, require explicit promotion authority, and preflight promotion capability. If the candidate or required target ref changes after verification: `REVERIFY / REVIEW_REQUIRED`.
 
 Do not auto-promote after push, review, CI, or verifier success. `AUTO_UNTIL_STOP` may only let orchestration dispatch an already-authorized promotion phase; it does not create promotion authority.
 

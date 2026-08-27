@@ -35,9 +35,17 @@ CONTINUATION_STOP_CONDITIONS = frozenset({
 CAPABILITY_PHASES = frozenset({"EXECUTION", "REVIEW", "VERIFICATION", "PROMOTION", "RELEASE"})
 CONTINUATION_PHASES = frozenset({"REVIEW", "VERIFICATION", "PROMOTION", "RELEASE"})
 CONTINUATION_ACTIONS = frozenset({
-    "REQUEST_ARCHITECT_REVIEW", "RUN_AUTHORITATIVE_VERIFICATION", "PROMOTE_TO_MAIN",
+    "REQUEST_ARCHITECT_REVIEW", "RUN_AUTHORITATIVE_VERIFICATION", "PROMOTE_TARGET_REF", "PROMOTE_TO_MAIN",
     "CREATE_VERSION_TAG", "MUTATE_REPOSITORY_METADATA", "PUBLISH_RELEASE", "FINAL_VERIFY", "STOP",
 })
+CONTINUATION_PHASE_ACTIONS: dict[str, frozenset[str]] = {
+    "REVIEW": frozenset({"REQUEST_ARCHITECT_REVIEW", "STOP"}),
+    "VERIFICATION": frozenset({"RUN_AUTHORITATIVE_VERIFICATION", "STOP"}),
+    "PROMOTION": frozenset({"PROMOTE_TARGET_REF", "PROMOTE_TO_MAIN", "STOP"}),
+    "RELEASE": frozenset({
+        "CREATE_VERSION_TAG", "MUTATE_REPOSITORY_METADATA", "PUBLISH_RELEASE", "FINAL_VERIFY", "STOP",
+    }),
+}
 LIFECYCLE_STATES = frozenset({
     "PLANNED", "REPORTED", "ACCEPTED", "VERIFIED", "PROMOTED_NOT_RELEASED", "RELEASED",
 })
@@ -359,6 +367,7 @@ GAP_CLASSIFICATIONS = frozenset({"LOCAL", "FOLLOW_UP", "BLOCKING"})
 REVIEW_STATES = frozenset({"ACCEPTED", "REVISION_REQUIRED", "BLOCKED"})
 LOCAL_HYGIENE_RESULTS = frozenset({"PASS", "RETAINED_FOR_EVIDENCE", "BLOCKED"})
 LOCAL_HYGIENE_RETAINED_SCHEMA: dict[str, type] = {"identity": str, "reason": str}
+CONTINUATION_REF_SCHEMA: dict[str, type] = {"ref": str, "commit": str}
 
 
 def get_path(document: dict[str, Any], dotted: str) -> Any:
@@ -759,6 +768,10 @@ def validate_review_template() -> None:
     eligible = get_path(doc, "promotion_readiness.eligible_for_candidate_capture")
     if state is not _MISSING and state not in REVIEW_STATES:
         error(f"{label}: unsupported review state {state!r}")
+    if state == "ACCEPTED":
+        exact_identity = get_path(doc, "independence.exact_report_identity_verified")
+        if exact_identity is not True:
+            error(f"{label}: ACCEPTED review requires independence.exact_report_identity_verified=true")
     if eligible is True and state != "ACCEPTED":
         error(f"{label}: only ACCEPTED review may be candidate-eligible")
 
@@ -776,13 +789,33 @@ def validate_continuation_template() -> None:
         ("reviewed_report.repository", str), ("reviewed_report.path", str),
         ("reviewed_report.commit", str), ("reviewed_report.report_revision", int),
         ("promotion_candidate_head", str),
-        ("expected_refs.dev", str), ("expected_refs.main", str),
         ("expected_state.lifecycle", str),
         ("prior_result", str), ("prior_lifecycle_state", str),
         ("next_authorized_action", str),
     ]:
         require_field(label, doc, dotted, expected_type)
     require_field(label, doc, "handoff_type", str, "CONTINUATION")
+
+    expected_refs = get_path(doc, "expected_refs")
+    canonical_ref_names: set[str] = set()
+    legacy_expected_refs = False
+    if expected_refs is _MISSING:
+        error(f"{label}: missing required path 'expected_refs'")
+    elif type(expected_refs) is list:
+        items = require_mapping_sequence_schema(label, doc, "expected_refs", CONTINUATION_REF_SCHEMA)
+        for index, item in items:
+            ref = item["ref"]
+            commit = item["commit"]
+            if not ref or not commit:
+                error(f"{label}: expected_refs[{index}] requires non-empty ref and commit identity")
+            canonical_ref_names.add(ref)
+    elif type(expected_refs) is dict:
+        legacy_expected_refs = True
+        require_field(label, doc, "expected_refs.dev", str)
+        require_field(label, doc, "expected_refs.main", str)
+    else:
+        error(f"{label}: path 'expected_refs' must be canonical list or legacy dev/main mapping")
+
     phase = get_path(doc, "phase")
     if phase is not _MISSING and phase not in CONTINUATION_PHASES:
         error(f"{label}: unsupported continuation phase {phase!r}")
@@ -792,9 +825,30 @@ def validate_continuation_template() -> None:
     lifecycle = get_path(doc, "prior_lifecycle_state")
     if lifecycle is not _MISSING and lifecycle not in LIFECYCLE_STATES:
         error(f"{label}: unsupported lifecycle state {lifecycle!r}")
+    if (
+        type(expected_lifecycle) is str
+        and type(lifecycle) is str
+        and expected_lifecycle != lifecycle
+    ):
+        error(f"{label}: expected_state.lifecycle must equal prior_lifecycle_state for the bound snapshot")
+
     action = get_path(doc, "next_authorized_action")
     if action is not _MISSING and action not in CONTINUATION_ACTIONS:
         error(f"{label}: unsupported next authorized action {action!r}")
+    if phase in CONTINUATION_PHASE_ACTIONS and action in CONTINUATION_ACTIONS:
+        if action not in CONTINUATION_PHASE_ACTIONS[phase]:
+            error(f"{label}: action {action!r} is not valid for continuation phase {phase!r}")
+
+    if action == "PROMOTE_TO_MAIN" and not legacy_expected_refs:
+        error(f"{label}: PROMOTE_TO_MAIN is legacy compatibility input and requires expected_refs.dev/main")
+    if action == "PROMOTE_TARGET_REF":
+        if type(expected_refs) is not list:
+            error(f"{label}: PROMOTE_TARGET_REF requires canonical topology-neutral expected_refs")
+        target_ref = get_path(doc, "promotion_target_ref")
+        if type(target_ref) is not str or not target_ref:
+            error(f"{label}: PROMOTE_TARGET_REF requires non-empty promotion_target_ref")
+        elif target_ref not in canonical_ref_names:
+            error(f"{label}: promotion_target_ref must identify a ref present in expected_refs")
 
 
 def validate_template_consistency() -> None:

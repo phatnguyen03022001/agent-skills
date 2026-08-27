@@ -17,12 +17,16 @@ reviewed_report:
 promotion_candidate_head: "<exact accepted-lineage candidate SHA>"
 
 expected_refs:
-  dev: "<exact expected dev SHA>"
-  main: "<exact expected main SHA>"
+  - ref: refs/heads/integration
+    commit: "<exact expected integration SHA>"
+  - ref: refs/heads/stable
+    commit: "<exact expected stable SHA>"
+
+promotion_target_ref: refs/heads/stable
 
 expected_state:
   lifecycle: ACCEPTED
 
 prior_result: ACCEPTED
 prior_lifecycle_state: ACCEPTED
-next_authorized_action: PROMOTE_TO_MAIN
+next_authorized_action: PROMOTE_TARGET_REF

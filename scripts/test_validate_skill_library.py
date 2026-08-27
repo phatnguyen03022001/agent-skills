@@ -309,6 +309,11 @@ class ValidatorRegressionTests(unittest.TestCase):
                 path = root / "templates" / "review.yaml"
                 text = path.read_text(encoding="utf-8")
                 text = text.replace("state: REVISION_REQUIRED", "state: ACCEPTED", 1)
+                text = text.replace(
+                    "  exact_report_identity_verified: false",
+                    "  exact_report_identity_verified: true",
+                    1,
+                )
                 if eligible:
                     text = text.replace("  eligible_for_candidate_capture: false", "  eligible_for_candidate_capture: true", 1)
                 path.write_text(text, encoding="utf-8")
@@ -887,6 +892,248 @@ class Task0004GovernanceTests(unittest.TestCase):
             self.assertIn(token, combined)
         self.assertEqual(len(VALIDATOR_MODULE.EXPECTED_SKILLS), 15)
         self.assertEqual(len(list(ROOT.rglob("SKILL.md"))), 15)
+
+
+class Task0007ProtocolCorrectnessTests(unittest.TestCase):
+    def fixture(self) -> tuple[tempfile.TemporaryDirectory[str], Path]:
+        temp = tempfile.TemporaryDirectory()
+        root = Path(temp.name) / "repo"
+        shutil.copytree(ROOT, root)
+        self.addCleanup(temp.cleanup)
+        return temp, root
+
+    def run_validator(self, root: Path) -> subprocess.CompletedProcess[str]:
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+        original_root = VALIDATOR_MODULE.ROOT
+        try:
+            VALIDATOR_MODULE.ROOT = root
+            with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+                returncode = VALIDATOR_MODULE.main()
+        finally:
+            VALIDATOR_MODULE.ROOT = original_root
+        return subprocess.CompletedProcess(
+            args=["python3", str(root / VALIDATOR)],
+            returncode=returncode,
+            stdout=stdout.getvalue(),
+            stderr=stderr.getvalue(),
+        )
+
+    def write_continuation(
+        self,
+        root: Path,
+        *,
+        refs: list[tuple[str, str]] | None = None,
+        legacy: bool = False,
+        phase: str,
+        action: str,
+        target_ref: str | None = None,
+        lifecycle: str = "ACCEPTED",
+        prior_lifecycle: str = "ACCEPTED",
+        prior_result: str = "ACCEPTED",
+    ) -> None:
+        if legacy:
+            refs_yaml = (
+                "expected_refs:\n"
+                "  dev: \"<exact expected dev SHA>\"\n"
+                "  main: \"<exact expected main SHA>\"\n"
+            )
+        elif refs:
+            refs_yaml = "expected_refs:\n" + "".join(
+                f"  - ref: {ref}\n    commit: \"{commit}\"\n" for ref, commit in refs
+            )
+        else:
+            refs_yaml = "expected_refs: []\n"
+        target_yaml = f"promotion_target_ref: {target_ref}\n\n" if target_ref is not None else ""
+        text = (
+            "protocol_version: 3\n"
+            "handoff_type: CONTINUATION\n\n"
+            "task:\n"
+            "  id: TASK-0001\n"
+            "  revision: 1\n"
+            "  path: .agent/tasks/TASK-0001/task.yaml\n\n"
+            f"phase: {phase}\n\n"
+            "reviewed_report:\n"
+            "  repository: owner/repo\n"
+            "  path: .agent/tasks/TASK-0001/report.yaml\n"
+            "  commit: \"<exact commit containing reviewed report>\"\n"
+            "  report_revision: 1\n\n"
+            "promotion_candidate_head: \"<exact accepted-lineage candidate SHA>\"\n\n"
+            f"{refs_yaml}\n"
+            f"{target_yaml}"
+            "expected_state:\n"
+            f"  lifecycle: {lifecycle}\n\n"
+            f"prior_result: {prior_result}\n"
+            f"prior_lifecycle_state: {prior_lifecycle}\n"
+            f"next_authorized_action: {action}\n"
+        )
+        (root / "templates" / "continuation.yaml").write_text(text, encoding="utf-8")
+
+    def assert_passes(self, root: Path) -> None:
+        result = self.run_validator(root)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def assert_rejected(self, root: Path, expected: str) -> None:
+        result = self.run_validator(root)
+        output = result.stdout + result.stderr
+        self.assertNotEqual(result.returncode, 0, output)
+        self.assertIn(expected, output)
+
+    def test_task0007_canonical_topologies_are_topology_neutral(self) -> None:
+        cases = [
+            ([], "REVIEW", "STOP", None),
+            ([("refs/heads/trunk", "trunk-sha")], "PROMOTION", "PROMOTE_TARGET_REF", "refs/heads/trunk"),
+            ([
+                ("refs/heads/integration", "integration-sha"),
+                ("refs/heads/stable", "stable-sha"),
+            ], "PROMOTION", "PROMOTE_TARGET_REF", "refs/heads/stable"),
+            ([
+                ("refs/heads/build", "build-sha"),
+                ("refs/heads/candidate", "candidate-sha"),
+                ("refs/heads/production", "production-sha"),
+            ], "PROMOTION", "PROMOTE_TARGET_REF", "refs/heads/production"),
+        ]
+        for refs, phase, action, target in cases:
+            with self.subTest(refs=refs):
+                _, root = self.fixture()
+                self.write_continuation(
+                    root,
+                    refs=refs,
+                    phase=phase,
+                    action=action,
+                    target_ref=target,
+                )
+                self.assert_passes(root)
+
+    def test_task0007_legacy_expanded_v3_continuation_remains_valid(self) -> None:
+        _, root = self.fixture()
+        self.write_continuation(
+            root,
+            legacy=True,
+            phase="PROMOTION",
+            action="PROMOTE_TO_MAIN",
+        )
+        self.assert_passes(root)
+
+    def test_task0007_canonical_promotion_requires_exact_target_ref(self) -> None:
+        _, root = self.fixture()
+        self.write_continuation(
+            root,
+            refs=[("refs/heads/stable", "stable-sha")],
+            phase="PROMOTION",
+            action="PROMOTE_TARGET_REF",
+            target_ref="refs/heads/other",
+        )
+        self.assert_rejected(root, "promotion_target_ref must identify a ref present in expected_refs")
+
+        _, root = self.fixture()
+        self.write_continuation(
+            root,
+            refs=[("refs/heads/stable", "stable-sha")],
+            phase="PROMOTION",
+            action="PROMOTE_TO_MAIN",
+        )
+        self.assert_rejected(root, "PROMOTE_TO_MAIN is legacy compatibility input")
+
+    def test_task0007_lifecycle_snapshot_mismatch_is_rejected(self) -> None:
+        _, root = self.fixture()
+        self.write_continuation(
+            root,
+            legacy=True,
+            phase="REVIEW",
+            action="REQUEST_ARCHITECT_REVIEW",
+            lifecycle="ACCEPTED",
+            prior_lifecycle="VERIFIED",
+        )
+        self.assert_rejected(root, "expected_state.lifecycle must equal prior_lifecycle_state")
+
+    def test_task0007_prior_result_is_not_forced_to_lifecycle(self) -> None:
+        _, root = self.fixture()
+        self.write_continuation(
+            root,
+            refs=[],
+            phase="REVIEW",
+            action="STOP",
+            prior_result="NEEDS_REVIEW",
+        )
+        self.assert_passes(root)
+
+    def test_task0007_phase_action_pairs_are_relational(self) -> None:
+        _, root = self.fixture()
+        self.write_continuation(
+            root,
+            legacy=True,
+            phase="REVIEW",
+            action="PUBLISH_RELEASE",
+        )
+        self.assert_rejected(root, "is not valid for continuation phase")
+
+        valid_pairs = [
+            ("REVIEW", "REQUEST_ARCHITECT_REVIEW"),
+            ("REVIEW", "STOP"),
+            ("VERIFICATION", "RUN_AUTHORITATIVE_VERIFICATION"),
+            ("VERIFICATION", "STOP"),
+            ("RELEASE", "CREATE_VERSION_TAG"),
+            ("RELEASE", "MUTATE_REPOSITORY_METADATA"),
+            ("RELEASE", "PUBLISH_RELEASE"),
+            ("RELEASE", "FINAL_VERIFY"),
+            ("RELEASE", "STOP"),
+        ]
+        for phase, action in valid_pairs:
+            with self.subTest(phase=phase, action=action):
+                _, root = self.fixture()
+                self.write_continuation(
+                    root,
+                    legacy=True,
+                    phase=phase,
+                    action=action,
+                )
+                self.assert_passes(root)
+
+    def test_task0007_review_acceptance_requires_exact_report_identity(self) -> None:
+        _, root = self.fixture()
+        path = root / "templates" / "review.yaml"
+        text = path.read_text(encoding="utf-8")
+        path.write_text(text.replace("state: REVISION_REQUIRED", "state: ACCEPTED", 1), encoding="utf-8")
+        self.assert_rejected(root, "ACCEPTED review requires independence.exact_report_identity_verified=true")
+
+        _, root = self.fixture()
+        path = root / "templates" / "review.yaml"
+        text = path.read_text(encoding="utf-8")
+        text = text.replace("state: REVISION_REQUIRED", "state: ACCEPTED", 1)
+        text = text.replace(
+            "  exact_report_identity_verified: false",
+            "  exact_report_identity_verified: true",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+        self.assert_passes(root)
+
+        for state in ("REVISION_REQUIRED", "BLOCKED"):
+            with self.subTest(nonaccepted=state):
+                _, root = self.fixture()
+                path = root / "templates" / "review.yaml"
+                text = path.read_text(encoding="utf-8")
+                if state == "BLOCKED":
+                    text = text.replace("state: REVISION_REQUIRED", "state: BLOCKED", 1)
+                path.write_text(text, encoding="utf-8")
+                self.assert_passes(root)
+
+    def test_task0007_canonical_docs_expose_topology_neutral_terms(self) -> None:
+        continuation = (ROOT / "templates" / "continuation.yaml").read_text(encoding="utf-8")
+        protocol = (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8")
+        workflow = (ROOT / "github-workflow" / "SKILL.md").read_text(encoding="utf-8")
+        combined = continuation + protocol + workflow
+        for token in (
+            "PROMOTE_TARGET_REF",
+            "promotion_target_ref",
+            "target-authoritative",
+            "compatibility input",
+        ):
+            self.assertIn(token, combined)
+        self.assertIn("  - ref: refs/heads/integration", continuation)
+        self.assertNotIn("expected_refs:\n  dev:", continuation)
+        self.assertNotIn("next_authorized_action: PROMOTE_TO_MAIN", continuation)
 
 
 if __name__ == "__main__":

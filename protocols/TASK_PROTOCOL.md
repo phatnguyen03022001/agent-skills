@@ -99,7 +99,9 @@ A handoff authorizes only its repository. Rebinding to another repository always
 
 Operator-facing `PROMPT TO COPY` is an authority locator, not another authority artifact. Normal content is target owner/repo, branch, exact task ID/revision/path, exact base HEAD, current phase when needed, and a concise instruction to resolve canonical authority, preflight, execute, verify, report, and stop. Do not duplicate scope, invariants, forbidden changes, acceptance criteria, capabilities, Git/release authority, verification detail, or unconditional protocol boilerplate already available from canonical artifacts unless access to canonical authority is genuinely unavailable.
 
-[templates/continuation.yaml](../templates/continuation.yaml) carries exact identity for a later post-review phase: protocol/task identity, phase, `reviewed_report.commit`, report revision, `promotion_candidate_head`, expected refs, prior result/lifecycle state, and one next authorized action. It does not create authority and does not implement an orchestrator, scheduler, queue, daemon, registry, database, or cross-session messaging runtime.
+[templates/continuation.yaml](../templates/continuation.yaml) carries exact identity for a later post-review phase: protocol/task identity, phase, `reviewed_report.commit`, report revision, `promotion_candidate_head`, exact expected refs, prior result/lifecycle state, and one next authorized action. Canonical new continuations serialize `expected_refs` as zero or more `{ref, commit}` records using target-authoritative ref identities; they do not infer branch names, roles, topology, or a stable branch name from generic governance. Existing expanded v3 continuations using `expected_refs.dev/main` remain accepted compatibility input and are not reinterpreted as the canonical shape.
+
+When canonical continuation authorizes promotion, `next_authorized_action: PROMOTE_TARGET_REF` requires an explicit `promotion_target_ref`, and that exact ref must also appear in canonical `expected_refs` so stale-target identity remains explicit. Existing v3 `PROMOTE_TO_MAIN` remains compatibility input only with the legacy `expected_refs.dev/main` shape. Continuation serialization never creates promotion or release authority and does not implement an orchestrator, scheduler, queue, daemon, registry, database, or cross-session messaging runtime.
 
 ## Execution base without self-reference
 
@@ -158,6 +160,8 @@ If `continuation_policy` is absent, behavior is `MANUAL`.
 
 `AUTO_UNTIL_STOP` does not merge roles, let Executor self-accept, manufacture verifier PASS, infer promotion/release authority, or treat absence of a human as approval. It stops on `BLOCKED`, `STALE_STATE`, `AUTHORITY_REQUIRED`, `CURRENT_PHASE_CAPABILITY_UNAVAILABLE`, `REVIEW_REQUIRED`, `REVERIFY_REQUIRED`, or `USER_STOP`.
 
+For one bound continuation snapshot, `expected_state.lifecycle` and `prior_lifecycle_state` describe the same derived lifecycle identity and therefore must agree. `prior_result` remains a distinct operation result and is not mechanically equated with lifecycle. Phase and action are also relational: `REVIEW` allows `REQUEST_ARCHITECT_REVIEW` or `STOP`; `VERIFICATION` allows `RUN_AUTHORITATIVE_VERIFICATION` or `STOP`; `PROMOTION` allows canonical `PROMOTE_TARGET_REF`, legacy-compatible `PROMOTE_TO_MAIN`, or `STOP`; `RELEASE` allows `CREATE_VERSION_TAG`, `MUTATE_REPOSITORY_METADATA`, `PUBLISH_RELEASE`, `FINAL_VERIFY`, or `STOP`. An independently recognized action token does not become legal in an unrelated phase.
+
 An already-accepted lifecycle continuation is separate from `DIRECT` and from the Architect micro-maintenance exception. Architect may perform an already-authorized promotion, tag, or release phase without creating a new implementation task solely for ceremony only while the exact `reviewed_report.commit` / `promotion_candidate_head` identity, explicit existing phase authority, any required exact-SHA verification, current refs, and current-phase capabilities all remain satisfied. Candidate/ref drift, missing required verification, missing current-phase capability, or absent promotion/release authority stops the phase and requires the normal revised or revalidated authority path. Continuation never manufactures authority.
 
 ## Execution environment, operator attention, and surface selection
@@ -184,7 +188,7 @@ Repository-specific branch policy and exact live refs outrank generic defaults. 
 - `DEV_MAIN`: mutable `dev` integration plus stable `main`, preserving existing dev/main behavior;
 - `DEV_STAGING_MAIN`: `dev` → `staging` → `main` only when explicitly activated by target authority.
 
-Never infer or create staging merely because `DEV_STAGING_MAIN` is supported. Never create any branch without explicit branch-creation authority. Promotion semantics must be interpreted against the target-authoritative topology rather than hard-coded branch names.
+Never infer or create staging merely because `DEV_STAGING_MAIN` is supported. Never create any branch without explicit branch-creation authority. Promotion semantics must be interpreted against the target-authoritative topology rather than hard-coded branch names. Canonical continuation therefore carries the exact promotion target ref explicitly and does not assume that the target ref is literally named `main`; the old `PROMOTE_TO_MAIN` token remains protocol-v3 compatibility input only.
 
 ## GitHub/local drift
 
@@ -259,4 +263,4 @@ Executor never self-accepts its report. Only after that terminal boundary may a 
 
 The current governing Architect resolves the exact committed report identified by `reviewed_report.commit` and reviews protocol, identity, execution base, skills, scope, structure, gaps, Git actions, acceptance evidence, advisory evidence, and designated verifier evidence. Final serialized outcome is `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`.
 
-`ACCEPTED` is contract acceptance. It is not authoritative verifier PASS, promotion authority, release authority, or proof that those later capabilities are available. When continuation is authorized, emit/use only exact evidence and refs; stale identity fails closed.
+`ACCEPTED` requires `independence.exact_report_identity_verified=true`: the exact report commit being judged must have been resolved, not merely named. `REVISION_REQUIRED` and `BLOCKED` may record false when exact identity has not been established. `ACCEPTED` is contract acceptance. It is not authoritative verifier PASS, promotion authority, release authority, or proof that those later capabilities are available. When continuation is authorized, emit/use only exact evidence and refs; stale identity fails closed.
