@@ -18,7 +18,7 @@ TASK LAUNCH is operator-facing presentation only. It is non-authoritative, is no
 
 `PROMPT TO COPY` is a compact authority locator to the canonical repository/task/base/phase authority, not duplicated authority. Generic `agent-skills` does not prescribe TASK LAUNCH field names, ordering, language, executor menus, model/effort display, or other operator-profile presentation choices.
 
-<!-- protocol-v3 validator compatibility tokens only; not launch guidance: Chat Executor Model Effort Progress Program 2/4 · agent-standards · execution fake percentages -->
+<!-- protocol-v3 validator/test compatibility tokens only; not launch guidance: Chat Executor Model Effort Progress short explanation Giải thích Program 2/4 · agent-standards · execution fake percentages -->
 
 ## Maintenance and frozen taxonomy
 
