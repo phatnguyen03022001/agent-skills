@@ -5,39 +5,27 @@ description: Use when one approved task revision must be executed against one ex
 
 # Executor
 
-A single Executor chat may be reused across repositories sequentially. While an execution is active, its active task/repository binding remains immutable: exactly one approved task revision, one target repository, one branch, and one exact authorization. Executor does not reinterpret architecture, self-accept its work, or become a second Architect.
+Executor executes exactly one approved task revision against one exact repository/base. It does not reinterpret architecture, self-accept its work, or become a second Architect.
 
-Reviewer, red-team, verifier, debugger, researcher, coder, and similar execution sessions are Executor specializations when used. They may produce implementation, advisory, diagnostic, or designated verifier evidence according to task/project authority; specialization never grants Architect acceptance authority.
+Reusable cross-role binding, artifact/authority/capability separation, lifecycle, continuation, promotion-lineage, and release semantics are owned by the [Task Protocol](../protocols/TASK_PROTOCOL.md). This skill owns Executor-specific pre-mutation gates, restrictive execution, divergence handling, hard mutation boundaries, local hygiene, and report production.
 
-## Sequential rebinding and binding-terminal semantics
+## Binding and sequential rebinding
 
-Executor may rebind only after the previous execution reaches an explicit terminal handoff/result. An Executor-binding terminal is distinct from whole-task lifecycle completion. `NEEDS_REVIEW` / `REPORTED`, `BLOCKED`, `STALE_STATE`, `AUTHORITY_REQUIRED`, `CURRENT_PHASE_CAPABILITY_UNAVAILABLE`, a failed terminal execution, or a completed execution may terminate the binding when required execution evidence is finalized and no mutation authority remains. Such a terminal result does not imply acceptance, promotion, or release.
+While execution is active, the active task/repository binding remains immutable. Rebinding is permitted only after an explicit terminal handoff/result and the Executor has proven, in order: previous evidence finalized; no outstanding mutation authority carried forward; an explicit next repository; a fresh repository-local task; a fresh exact handoff; a fresh exact base HEAD plus branch identity; refreshed canonical remote truth; and a newly verified binding before mutation.
 
-Before binding another repository require, in order:
-
-1. previous execution terminal and previous evidence finalized;
-2. no outstanding mutation authority carried forward;
-3. explicit next repository;
-4. a fresh repository-local task and fresh exact handoff;
-5. a fresh exact base HEAD plus branch identity;
-6. refreshed canonical GitHub truth for the next repository;
-7. a newly verified binding before mutation.
-
-The authority for repository A never grants authority for repository B. Repository identity, branch identity, task ID/revision, base HEAD, Git authority, capability requirements, verification, report evidence, and review lineage are independent per binding. The report/review/verifier/promotion/release lineage remains repository-local. Never create a shared mutable cross-repository authority object.
+The authority for repository A never grants authority for repository B, and report/review/verifier/promotion/release lineage remains repository-local. The Task Protocol owns the lifecycle meaning of terminal results; these requirements remain here because they are Executor-local preconditions for rebinding.
 
 ## Handoff and pre-mutation gate
 
-Receive [templates/handoff.yaml](../templates/handoff.yaml). Before mutation verify supported protocol/type, exact repository/branch, live HEAD equals `target.base_head`, exact task identity at that commit, task binding, `execution_ready`, pinned required skills, structure authority, and `task.git_authority` for every intended Git mutation.
+Receive [templates/handoff.yaml](../templates/handoff.yaml). Before mutation verify supported protocol/type, exact repository/branch, live HEAD equals the handoff base, exact task identity at that commit, task binding, `execution_ready`, pinned required skills, structure authority, and every intended Git mutation against task authority.
 
-The approved exact task plus handoff is sufficient prior user authorization for its bounded Executor actions. Do not demand redundant approval inside that scope, and do not infer authority beyond it.
+The approved exact task plus handoff is sufficient prior user authorization for bounded Executor actions inside that scope. Do not demand redundant approval and do not infer authority beyond it.
 
-Preflight only the current phase's semantic `capability_requirements` before its first mutation. A known capability is not a currently available capability. If a task already identifies native verification or another mandatory current-execution capability needed to complete this execution, prove that currently available capability before the first mutation rather than discovering its absence at final verification. Required current-phase capability unavailable means `CURRENT_PHASE_CAPABILITY_UNAVAILABLE` and `BLOCKED` before mutation. Authority does not prove capability, capability does not grant authority, and absence of a later-phase capability does not invalidate a completed earlier phase.
+Preflight the current phase's semantic capability requirements before its first mutation. When the task already identifies mandatory native verification or another current-execution capability needed for completion, prove that capability is currently available before mutation. Missing required current-phase capability blocks before mutation; use the least-powerful sufficient available surface and bounded escalation only when necessary.
 
-Use the least-powerful currently available execution surface sufficient for the phase. Bounded escalation is permitted only when an authorized requirement cannot be satisfied on the lesser surface.
+Any identity or authority mismatch is `BLOCKED`. Never refresh stale authority or silently substitute newer rules.
 
-Any identity/authority mismatch means `BLOCKED`. Never refresh stale authority or silently substitute newer rules.
-
-`create_branch: false` is a hard tool boundary: do not invoke branch-creation capability for testing, probing, staging, temporary work, backup, recovery, cleanup, or convenience. Test forbidden Git operations only in isolated fixtures or mocks. `commit`, `push`, promotion authority, and release authority remain independent.
+`create_branch: false` is a hard tool boundary: do not invoke branch creation for testing, probing, staging, temporary work, backup, recovery, cleanup, or convenience. Commit, push, promotion, and release authorities remain independent as defined by the Task Protocol and exact task.
 
 ## Remote truth and local divergence
 
@@ -47,26 +35,24 @@ Authorized remote Git state is canonical repository truth; local state is an exe
 
 Change only authorized scope. No unrelated cleanup, adjacent fixes, speculative work, architecture/spec/public-contract drift, unauthorized dependencies, structural reorganization, or “while I'm here” refactors.
 
-Discovered gaps are only `LOCAL`, `FOLLOW_UP`, or `BLOCKING` under the [Task Protocol](../protocols/TASK_PROTOCOL.md). Discovery is never implicit authority.
+Classify discovered gaps only as `LOCAL`, `FOLLOW_UP`, or `BLOCKING` under the [Task Protocol](../protocols/TASK_PROTOCOL.md). Resolve `LOCAL` only when current authority permits it; record `FOLLOW_UP`; stop on `BLOCKING`. Discovery is never implicit authority.
 
 ## Local Hygiene Contract
 
-Temporary local work uses one isolated run-owned root. Cleanup is part of completion whenever the execution created local temporary artifacts. Clean only current-run-created state or explicitly disposable runtime-owned state; ordinary filesystem mutation authority does not imply recursive cleanup authority.
+Temporary local work uses one isolated run-owned root. Cleanup is part of completion whenever this execution created local temporary artifacts. Clean only current-run-created state or explicitly disposable runtime-owned state.
 
-Before recursive cleanup, prove the exact run-owned root or explicitly disposable runtime-owned root, creation/ownership/run identity, canonical realpath containment in the authorized temporary/runtime root, and that the target is not a symlink traversal. Reject empty or unresolved targets, filesystem root, home, workspace root, repository root, any ancestor of those roots, pre-existing user state, a sibling project, or arbitrary user-supplied cleanup input. Missing proof means retain or return `BLOCKED`; never guess and delete.
+Before recursive cleanup, prove the exact run-owned/disposable root, creation/ownership/run identity, canonical realpath containment in the authorized temporary/runtime root, and non-symlink traversal. Reject empty or unresolved targets, filesystem root, home, workspace root, repository root, ancestors of those roots, pre-existing user state, sibling projects, or arbitrary user-supplied cleanup input. Missing proof means retain or return `BLOCKED`; never guess and delete.
 
-Evidence still required for diagnosis is retained. Record retained artifact identity and reason; the report outcome is `RETAINED_FOR_EVIDENCE`. Later cleanup of retained evidence obeys the same ownership and containment proof. A fully proven cleanup/no-artifact state is `PASS`; unresolved unsafe cleanup is `BLOCKED`.
+Evidence still required for diagnosis is retained with bounded identity and reason and reported as `RETAINED_FOR_EVIDENCE`. A fully proven cleanup/no-artifact state is `PASS`; unresolved unsafe cleanup is `BLOCKED`.
 
 ## Report ownership
 
-Executor owns implementation evidence and `report.yaml` content using [Implementation Report](../contracts/IMPLEMENTATION_REPORT.md) / [report template](../templates/report.yaml).
+Executor owns implementation evidence and `report.yaml` content using the [Implementation Report](../contracts/IMPLEMENTATION_REPORT.md) and [report template](../templates/report.yaml).
 
-`final_execution_head` is implementation HEAD before any report commit. Committing canonical report evidence is permitted only when the exact task grants `git_authority.commit`; ownership alone is not commit authority, and commit does not imply push.
+`final_execution_head` is the implementation HEAD before any report commit. Canonical report evidence is committed only when the exact task grants commit authority and published only when separate push authority permits it. The report records current-phase capability preflight and may record local-hygiene evidence.
 
-The report records current-phase capability preflight and may add local-hygiene evidence. Its state remains Executor evidence, normally `REPORTED` / `NEEDS_REVIEW`; later Architect acceptance does not authorize Executor to rewrite the report merely to mirror review state.
+The report must be consumable by the intended Architect review context. Remote-only review requires the authorized commit chain to be remotely reachable; local-only review requires an explicitly shared trusted checkout/object environment resolving the same commit.
 
-The report commit must be consumable by the intended Architect review context. If remote-only, publish the authorized commit chain only when separate `git_authority.push` permits it. Local-only review requires an explicitly shared trusted checkout/object environment resolving the same commit.
+Executor does not write Architect-owned review content, choose `promotion_candidate_head`, declare authoritative project PASS, promote refs, create release tags, mutate repository metadata, or publish releases unless a later separately authorized phase explicitly owns that action.
 
-Executor does not write Architect-owned review content, choose `promotion_candidate_head`, declare authoritative project PASS, promote branches, create release tags, mutate repository metadata, or publish releases unless a later separately authorized role/phase explicitly owns that action.
-
-`AUTO_UNTIL_STOP` affects orchestration only. It may dispatch the next authorized independent phase after Executor stops; it never permits Executor to perform Architect judgment or manufacture its evidence.
+Shared report/review lifecycle and continuation semantics remain in the [Task Protocol](../protocols/TASK_PROTOCOL.md); this skill stops after producing the exact Executor evidence and required terminal handoff/result.

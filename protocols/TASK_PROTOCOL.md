@@ -2,6 +2,8 @@
 
 This protocol defines reusable Architect-to-Executor governance across repositories. `agent-skills` owns how work is governed; each target repository owns what its product is and stores its live tasks.
 
+This file is the semantic owner for reusable cross-role task-governance semantics, including repository/task binding, organizational-role and acceptance boundaries, artifact/authority/capability separation, handoff/base identity, lifecycle and continuation, promotion lineage, and release separation. Role skills own role-local procedure and safety boundaries; contracts own artifact-specific obligations; templates are example/default shapes; README is discovery/overview; the validator mechanically enforces supported structure and compatibility. If a summary conflicts with this protocol, this protocol governs.
+
 Supported protocol version: **3**. These additions are backward-compatible. Existing valid expanded v3 artifacts remain valid; optional controls that are absent default to manual, fail-closed, and non-permissive behavior. Unsupported versions fail closed and are never silently upgraded.
 
 ## Core bindings
@@ -210,9 +212,7 @@ Keep unconditional protocol boilerplate here, task-specific material authority i
 
 ## TASK LAUNCH presentation
 
-TASK LAUNCH is Architect-only operator UX and presentation only. It is not persisted per task, is not execution authority, and Executor does not own it. It contains only Chat, Executor, operator/environment-supplied Model, operator/environment-supplied Effort, Progress, and Giải thích / short explanation. Follow it separately with the compact `PROMPT TO COPY` authority locator defined above.
-
-For a multi-repository program, Progress may use a concrete denominator such as `Program 2/4 · agent-standards · execution`. Do not invent fake percentages. No reusable launch artifact, launcher subsystem, or second authority source is created.
+TASK LAUNCH is operator-facing presentation only. It is non-authoritative, is not persisted per task, and remains separate from the compact `PROMPT TO COPY` authority locator. Generic governance does not prescribe launch field names, ordering, language, executor choices, model/effort presentation, progress formatting, or other operator-profile presentation details. No reusable launch artifact, launcher subsystem, or second authority source is created.
 
 ## Promotion lineage after review
 
