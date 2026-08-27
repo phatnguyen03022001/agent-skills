@@ -1,0 +1,205 @@
+protocol_version: 3
+
+task_id: TASK-0008
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: follow_up
+  task_id: ""
+  gap_id: "ECOSYSTEM_SKILLS_AUDIT_OWNERSHIP_SUBTRACTION"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "022bd084087e10ec6fb6ab46753868acc957ec55"
+
+architect_analysis_skills:
+  - architect
+  - simplicity
+  - verification
+  - github-workflow
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+    - github-workflow
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "Governing Architect adjudication of the independent agent-skills audit and post-TASK-0007 re-evaluation."
+    role: "F-07 remains a material maintainability/ownership defect and F-08 remains an ownership defect. Only directly resulting F-12 prose subtraction is authorized. F-02/F-03/F-04/F-09 are NO_CHANGE_REQUIRED in this wave; F-10 remains NO_CHANGE_REQUIRED; F-11 remains compatibility-only."
+    precedence: 1
+  - source: "phatnguyen03022001/agent-skills@022bd084087e10ec6fb6ab46753868acc957ec55"
+    role: "Exact accepted post-TASK-0007 self-hosting subject for ownership/subtraction correction."
+    precedence: 2
+
+structure_authority:
+  status: RESOLVED
+  source: "Existing README, protocol, role skills, and artifact contracts."
+  rationale: "The correction is subtraction/ownership clarification inside current files. No new schema, manifest, registry, skill, protocol version, generated documentation system, or ownership database is justified."
+
+objective: "Reduce semantic drift risk and operator-specific leakage by establishing one clear owner for reusable cross-role protocol semantics, keeping role skills and contracts narrowly responsible for their local procedures/artifacts, removing duplicated normative prose where a stable link/local rule is sufficient, and making TASK LAUNCH generic governance presentation-only without prescribing operator-specific labels, ordering, language, executor choices, model, or effort presentation."
+
+scope:
+  required_changes:
+    - "F-07: make protocols/TASK_PROTOCOL.md the semantic owner for reusable cross-role task-governance semantics that apply across Architect and Executor, including shared binding/lifecycle/authority/capability/continuation/promotion-release invariants. Do not create a new semantic-owner artifact."
+    - "Keep architect/SKILL.md responsible for Architect-specific routing, planning, authority creation, review judgment, micro-maintenance eligibility, and role-local operating procedure. Keep executor/SKILL.md responsible for Executor-specific pre-mutation gates, restrictive execution, divergence handling, hard mutation boundaries, hygiene, and report ownership. Where either file merely restates shared protocol semantics without adding role-local behavior, replace the duplicate with the smallest sufficient local statement/link rather than another full copy."
+    - "Keep contracts responsible for artifact-specific obligations and templates as example/default shapes. Remove only cross-role protocol prose duplicated in contracts when the contract can instead reference TASK_PROTOCOL.md without losing a field-specific obligation. Do not hollow contracts into meaningless link stubs."
+    - "Keep README.md as discovery/overview rather than a second normative protocol. Preserve the skill catalog and useful navigation, but shorten duplicated governance sections where protocol/role owners already carry the rule. README summaries must not become alternate wording that can independently drift."
+    - "F-08: generic agent-skills may state only that launch presentation is operator-facing, non-authoritative, and separate from the compact authority locator. Remove concrete operator-profile presentation requirements such as exact field labels, ordering, language-specific labels, fixed Executor option lists, or model/effort presentation from generic README/Architect guidance. Concrete presentation belongs to the operator/profile layer, not this reusable repository."
+    - "Preserve the generic PROMPT TO COPY invariant: it is an authority locator, not duplicated authority, and should remain compact. Do not move target-specific task authority into presentation text."
+    - "F-12 subset: achieve real subtraction as a consequence of F-07/F-08. Prefer deletion and links over paraphrasing duplicated semantics. Do not chase a numeric line-count target, but the final implementation must not increase duplicated governance prose or introduce a parallel summary schema."
+    - "Preserve all TASK-0007 protocol-correctness semantics, including topology-neutral continuation, legacy v3 compatibility, phase/action relations, lifecycle consistency, and exact accepted-report identity requirements."
+    - "Run repository-owned deterministic validation and unit tests plus git diff --check. Produce TASK-0008 report evidence in a separate report-only commit and stop at Governing Architect review."
+  allowed_existing_files_or_components:
+    - README.md
+    - protocols/TASK_PROTOCOL.md
+    - architect/SKILL.md
+    - executor/SKILL.md
+    - contracts/IMPLEMENTATION_CONTRACT.md
+    - contracts/IMPLEMENTATION_REPORT.md
+    - contracts/ARCHITECT_REVIEW.md
+    - .agent/tasks/TASK-0008/task.yaml
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Protocol version remains 3; existing valid expanded v3 artifacts remain valid."
+  - "TASK_PROTOCOL.md owns reusable cross-role protocol semantics; role skills own role-local behavior; contracts own artifact-specific obligations; templates remain example/default shapes; README remains discovery/overview; validator remains mechanical enforcement rather than prose authority."
+  - "No user/operator profile is made mandatory. Generic governance must not hard-code concrete TASK LAUNCH field names, order, language, executor menu, model, effort, or machine/provider defaults."
+  - "PROMPT TO COPY remains generic, compact, and non-authoritative except as a locator to canonical repository authority."
+  - "Architect/Executor organizational roles, exact task/handoff binding, authority != capability, report/review separation, fail-closed stale state, explicit Git/release authority, current continuation semantics, and repository-local lineage remain unchanged."
+  - "Role skills must retain locally actionable safety boundaries; subtraction must not force an Executor or Architect to infer a hard local prohibition from an unrelated document when the role-specific action boundary is material."
+  - "F-02 architect_binding duplication remains unchanged; F-03 report confirmation booleans remain unchanged; F-04 explicit safe defaults remain unchanged; F-09 taxonomy ownership remains unchanged; F-10 remains NO_CHANGE_REQUIRED; F-11 serialized naming remains unchanged."
+  - "The exact 15-skill taxonomy and README catalog remain unchanged."
+  - "No historical task/report/review artifact is rewritten."
+  - "Branches remain exactly {dev, main}; main remains read-only."
+
+forbidden_changes:
+  - "Do not change task/report/review/continuation schemas, template field sets, validator parsing/validation semantics, protocol version, lifecycle tokens, review states, continuation action tokens, Git/release authority fields, or compatibility behavior."
+  - "Do not remove architect_binding.target_repository, report confirmation booleans, explicit template safe defaults, EXPECTED_SKILLS, the README skill catalog, or introduce a taxonomy manifest."
+  - "Do not add a semantic registry, ownership manifest, generated-doc system, synchronization script, prose linter, new validator rule, new skill, new protocol artifact, or another top-level directory."
+  - "Do not redesign execution lanes, micro-maintenance, continuation, promotion/release, local hygiene, deferred observations, or cross-repository PROGRAM semantics."
+  - "Do not modify templates/*.yaml, scripts/*.py, .github/workflows/*, simplicity/SKILL.md, github-workflow/SKILL.md, unrelated skills, other repositories, repository metadata, tags, releases, or branch topology."
+  - "Do not create branches, mutate main, force-push, rebase, rewrite history, promote, tag, release, or create review.yaml under this task."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0008/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+  REVIEW:
+    - exact_commit_report_resolution
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Reusable cross-role governance has one clear semantic owner rather than independent normative copies."
+    evidence_required: "Final diff shows TASK_PROTOCOL.md explicitly owns shared protocol semantics and README/role skills/contracts contain only discovery, role-local, or artifact-local statements where duplication was removed."
+  - id: AC-2
+    requirement: "TASK LAUNCH generic governance no longer prescribes operator-specific presentation."
+    evidence_required: "README/Architect generic guidance contains no required exact launch field list/order/language/fixed executor choices/model-effort presentation; generic non-authority/presentation and compact PROMPT TO COPY invariants remain."
+  - id: AC-3
+    requirement: "Subtraction is real and does not erase material local safety or artifact obligations."
+    evidence_required: "Before/after review identifies deleted duplicate clusters, retained role-local hard boundaries, and retained artifact-specific contract obligations; no replacement registry/linter/generated synchronization mechanism is added."
+  - id: AC-4
+    requirement: "Deferred cleanup candidates are not silently expanded into schema/taxonomy work."
+    evidence_required: "Exact diff confirms no templates/scripts/schema/taxonomy/catalog/manifest changes and explicitly records F-02/F-03/F-04/F-09 as NO_CHANGE_REQUIRED for this task."
+  - id: AC-5
+    requirement: "TASK-0007 correctness and protocol-v3 compatibility remain intact."
+    evidence_required: "Repository validator and unit tests PASS on exact implementation SHA; review confirms no change to continuation/review machine semantics."
+  - id: AC-6
+    requirement: "Publication lineage and repository topology remain exact."
+    evidence_required: "Implementation is a non-force descendant of TASK-0008 handoff base; separate report-only commit changes only .agent/tasks/TASK-0008/report.yaml; main unchanged and branches exactly {dev, main}."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "At execution start resolve TASK-0008 revision 1 and pinned self-hosting agent-skills@022bd084087e10ec6fb6ab46753868acc957ec55; refresh refs; require live dev equals exact TASK-0008 handoff base, main equals 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1, branches exactly {dev, main}; preflight required EXECUTION capabilities before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Before editing, build a bounded duplication/ownership matrix for only README.md, TASK_PROTOCOL.md, architect/SKILL.md, executor/SKILL.md, and the three contracts. Identify each removed cluster's semantic owner and prove retained role/artifact-local wording adds material local behavior rather than being an independent restatement."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Implement only F-07/F-08 and directly resulting F-12 subtraction. No schema, validator, taxonomy, template, workflow, or unrelated skill changes."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Inspect exact implementation diff for semantic preservation: TASK-0007 correctness untouched; role-local hard safety boundaries retained; concrete TASK LAUNCH presentation removed from generic governance; no new synchronization machinery."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Run python3 scripts/validate_skill_library.py, python3 -m unittest scripts.test_validate_skill_library, and git diff --check on exact final implementation state using the smallest sufficient trusted execution surface. Require PASS; Terminal/local shell is fallback only if native/connected/trusted alternatives are insufficient."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Commit/push implementation non-force to dev only after bounded diff review. Main remains untouched and no branch is created."
+      required: true
+    - id: CHECK-7
+      command_or_check: "Create .agent/tasks/TASK-0008/report.yaml only after implementation verification. Commit/push it separately, then verify its sole parent is final implementation commit, diff is report-only, dev equals report commit, main unchanged, and branches exactly {dev, main}."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
