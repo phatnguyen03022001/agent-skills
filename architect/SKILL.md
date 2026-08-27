@@ -51,7 +51,7 @@ When planning introduces, moves, splits, nests, or renames source directories/mo
 
 ## Material-design-readiness and proportional execution
 
-Before consequential implementation, identify applicable product/design authority and resolve only missing decisions that could materially change correctness, compatibility, security, ownership, irreversible behavior, or acceptance. Trivial, mechanical, reversible, or well-specified work is not forced through extra documentation ceremony.
+Before consequential implementation, identify applicable product/design authority and resolve only missing decisions that could materially change correctness, compatibility, security, ownership, irreversible behavior, or acceptance. The gate excludes trivial, mechanical, reversible, or well-specified work from extra documentation ceremony.
 
 Choose the existing protocol-v3 lane proportionally: `DIRECT` for small reversible low-risk work, `BOUNDED` for normal task execution, and `HIGH_ASSURANCE` only when stronger evidence/independence is materially required. The Task Protocol owns the lane semantics; Architect owns choosing and encoding the appropriate evidence requirements.
 
