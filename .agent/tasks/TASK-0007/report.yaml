@@ -1,0 +1,175 @@
+protocol_version: 3
+
+task_id: TASK-0007
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0007/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "a3ff75c5ff6d4ffbf9cfee7cb742efffaaa31e59"
+  pre_execution_head: "a3ff75c5ff6d4ffbf9cfee7cb742efffaaa31e59"
+  final_execution_head: "9c484fee77bbfaf5c529e3a671f2b617c0e17f98"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1"
+  observed_revision: "0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1"
+
+execution_skills_used:
+  required:
+    - executor
+    - github-workflow
+    - reliability
+    - verification
+    - simplicity
+  recommended: []
+  external: []
+
+pre_execution_checks:
+  protocol_version_supported: true
+  handoff_type_confirmed: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  working_tree_clean: true
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - isolated_test_execution
+  available:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - isolated_test_execution
+  missing: []
+  passed: true
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: "NOT_REQUIRED"
+  evidence: "TASK-0007 declares authoritative verification not required."
+
+local_hygiene:
+  result: PASS
+  run_root: "/tmp TASK-0007 run-owned verification roots"
+  cleanup_performed: true
+  retained: []
+  evidence: "All run-owned temporary roots used for exact-base RED and continuation diff-check reconstruction were removed; no temporary repository or test artifact was retained."
+
+changed_files:
+  - path: github-workflow/SKILL.md
+    summary: "Documents topology-neutral canonical continuation and explicit promotion target-ref semantics while retaining legacy dev/main compatibility input."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: protocols/TASK_PROTOCOL.md
+    summary: "Defines topology-neutral expected refs, explicit promotion target identity, lifecycle equality, phase/action relations, and exact reviewed-report identity acceptance."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: scripts/test_validate_skill_library.py
+    summary: "Adds bounded TASK-0007 regressions for zero/one/two/three arbitrary refs, legacy compatibility, promotion target identity, relational lifecycle/action checks, and accepted-review identity."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: scripts/validate_skill_library.py
+    summary: "Adds the minimal semantic validation for canonical refs, compatibility input, promotion target, lifecycle/phase/action relations, and accepted-review exact identity."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: templates/continuation.yaml
+    summary: "Moves the canonical continuation example from literal dev/main fields to explicit ref/commit records and PROMOTE_TARGET_REF."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+
+commits_created:
+  - sha: "9c484fee77bbfaf5c529e3a671f2b617c0e17f98"
+    message: "fix(agent): enforce continuation protocol correctness"
+  - sha: "f8dc5c30320eae5cd3341864f9298a50b3a61663"
+    message: "chore(recovery): remove accidental temporary branch"
+  - sha: "d1eaa67d27e03328d814e346940184dc5a92ce06"
+    message: "chore(recovery): remove second accidental temporary branch"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: "Causal RED on exact base a3ff75c5 showed the canonical continuation could not express topology-neutral refs because expected_refs.dev/main were mandatory and PROMOTE_TARGET_REF was unsupported. Final exact-SHA tests cover zero, one, two, and three arbitrary ref identities."
+  - criterion_id: AC-2
+    status: PASS
+    evidence: "Final regression suite retains valid expanded protocol-v3 expected_refs.dev/main plus PROMOTE_TO_MAIN as compatibility input; GitHub Actions exact-SHA Unit tests PASS."
+  - criterion_id: AC-3
+    status: PASS
+    evidence: "Canonical template uses explicit promotion_target_ref and PROMOTE_TARGET_REF; focused tests accept a differently named stable ref and reject a target absent from expected_refs."
+  - criterion_id: AC-4
+    status: PASS
+    evidence: "Focused tests reject lifecycle snapshot mismatch and invalid phase/action pairing, preserve prior_result as distinct, and accept the valid REVIEW, VERIFICATION, PROMOTION, and RELEASE relations."
+  - criterion_id: AC-5
+    status: PASS
+    evidence: "Causal RED showed ACCEPTED with exact_report_identity_verified=false passed before correction. Final tests reject that state, accept ACCEPTED with exact identity true, and preserve REVISION_REQUIRED/BLOCKED with false."
+  - criterion_id: AC-6
+    status: DEVIATION_REQUIRES_REVIEW
+    evidence: "The implementation itself remains exactly bounded to one commit and five authorized files with 320 additions and 9 deletions, with no deferred ownership or simplification cleanup. During report closure the Executor twice accidentally invoked branch creation despite create_branch:false; neither accidental ref altered dev/main content and both were removed before report publication. These authority deviations are explicitly surfaced for Governing Architect adjudication."
+  - criterion_id: AC-7
+    status: PASS
+    evidence: "Exact implementation SHA 9c484fee77bbfaf5c529e3a671f2b617c0e17f98 has GitHub Actions run 33106539476 success with Validate and Unit tests PASS. Required git diff --check also exited 0 with no output using an immutable-SHA local Git projection covering every changed/addition region."
+  - criterion_id: AC-8
+    status: PASS
+    evidence: "Implementation SHA is exactly one non-force descendant of authorized base. Main remained 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1 and branches remained exactly dev/main before report publication; the report is published as the sole report-only child and terminal ref/parent/diff checks are performed immediately after publication."
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: "Initial exact binding was established at base a3ff75c5 with pinned self-hosting revision 0a57fbfd, branches dev/main, and all four EXECUTION capabilities preflighted before implementation mutation. Continuation refresh reconfirmed dev at 9c484fee, main unchanged, and exactly dev/main."
+  - check_id: CHECK-2
+    result: PASS
+    evidence: "Preserved causal RED from the original execution: literal dev/main canonical continuation limitation, relational lifecycle/phase-action contradiction acceptance, and ACCEPTED review with exact_report_identity_verified=false were each reproduced on the exact base before production edits. RED was not rerun during continuation."
+  - check_id: CHECK-3
+    result: PASS
+    evidence: "Implementation commit 9c484fee is bounded to the existing protocol/template/validator owners and introduces no subsystem or unrelated cleanup."
+  - check_id: CHECK-4
+    result: PASS
+    evidence: "Focused TASK-0007 regressions are included in scripts/test_validate_skill_library.py and passed in the exact-SHA Unit tests job, covering topology-neutral refs/promotion, legacy compatibility, lifecycle equality, phase/action relations, and accepted-review identity."
+  - check_id: CHECK-5
+    result: PASS
+    evidence: "GitHub Actions run 33106539476 on exact SHA 9c484fee completed success; Validate and Unit tests both PASS. git diff --check returned exit 0 with empty stdout/stderr on the immutable-SHA reconstruction. The prior Executor result was INCOMPLETE_EXECUTION solely because this diff-check/report closure had not yet been completed, not because an implementation defect was found."
+  - check_id: CHECK-6
+    result: PASS
+    evidence: "Base a3ff75c5 to implementation 9c484fee is ahead by exactly one commit and changes only github-workflow/SKILL.md, protocols/TASK_PROTOCOL.md, scripts/test_validate_skill_library.py, scripts/validate_skill_library.py, and templates/continuation.yaml. Dev was updated non-force and main was untouched. A later accidental temporary branch action is separately recorded as a deviation and did not enter this implementation lineage."
+  - check_id: CHECK-7
+    result: PASS
+    evidence: "report.yaml is created only after all implementation verification passed, committed as a separate sole-parent child of 9c484fee, pushed non-force to dev, and then checked for report-only diff, exact parent, unchanged main, and exact dev/main branch set."
+
+discovered_gaps: []
+structural_observations: []
+deviations_from_task:
+  - "During report closure, the Executor accidentally called branch creation for __should_not_call__, violating git_authority.create_branch=false and the exact-branch invariant. The error was detected immediately. Recovery-only commit f8dc5c30320eae5cd3341864f9298a50b3a61663 ran GitHub Actions recovery run 33108777142 and deleted the accidental ref without changing dev/main."
+  - "A second tool-selection error then created __never_again__, repeating the same create_branch=false violation. Recovery-only commit d1eaa67d27e03328d814e346940184dc5a92ce06 ran GitHub Actions recovery run 33108895712 and deleted that ref. Final topology was reverified as exactly dev/main before report publication. Both recovery commits are dangling from canonical branches and are surfaced for Governing Architect adjudication."
+blockers: []
+
+working_tree_after:
+  clean: true
+  summary: "No retained local verification artifacts. The accidental recovery ref was removed before report publication. Canonical dev/main lineage contains only the authorized TASK-0007 implementation and separate report commit; main is unchanged."
+
+result: NEEDS_REVIEW
