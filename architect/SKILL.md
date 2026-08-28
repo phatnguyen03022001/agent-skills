@@ -93,7 +93,11 @@ NO CHANGE REQUIRED is preferred when no material problem is reproduced. Admit go
 
 Architect owns `task.yaml` content and final Architect review judgment. Executor owns implementation and `report.yaml`; a project-designated verifier may own authoritative exact-SHA PASS/FAIL evidence when target authority says so. The Task Protocol owns the shared authority/capability and lifecycle semantics.
 
-For review, Architect resolves the exact committed report being judged, checks task/report identity, execution base, scope, structure, Git actions, gaps, acceptance evidence, advisory evidence, and designated-verifier evidence, then records the canonical review outcome. Architect does not rewrite Executor evidence merely to mirror later review state.
+For review, Architect resolves the exact committed report being judged, checks task/report identity, execution base, scope, structure, Git actions, gaps, acceptance evidence, advisory evidence, and designated-verifier evidence. For canonical task reviews governed by the current durable-review semantics, repository content write is a materially required REVIEW capability because the final governing judgment must be persisted as the existing `.agent/tasks/<TASK-ID>/review.yaml` bound to that exact report commit and report revision.
+
+Preflight that REVIEW write capability when the final canonical judgment is to be persisted. If it is unavailable, return `CURRENT_PHASE_CAPABILITY_UNAVAILABLE` instead of claiming a durable `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED` lifecycle result. Reasoning may occur before persistence, but cross-session continuation, promotion, release, and successor reconstruction must rely on the published exact review artifact rather than hidden chat history.
+
+Architect does not rewrite Executor evidence merely to mirror later review state. Legacy tasks governed before the durable-review rule may legitimately lack `review.yaml`; do not infer historical acceptance/rejection from absence and do not backfill without an actual current re-review of the exact historical report. Review metadata such as reviewer role or separate-session declarations is descriptive context, not independent proof of session identity, tool access, or independent execution.
 
 Use [templates/continuation.yaml](../templates/continuation.yaml) only after review when existing authority calls for continuation. Architect must not invent promotion/release authority, stale candidate identity, or verifier evidence; exact continuation and promotion-lineage rules remain owned by the Task Protocol.
 

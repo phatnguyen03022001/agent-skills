@@ -78,8 +78,16 @@ Canonical target-repository artifacts are:
 
 - `task.yaml`: Architect-owned material authority;
 - `report.yaml`: Executor-owned evidence;
-- `review.yaml`: Architect-owned judgment when repository policy stores it;
+- `review.yaml`: Architect-owned judgment; for canonical task reviews governed by the current forward-looking durable-review semantics, the final governing Architect judgment is persisted in this existing artifact;
 - [templates/continuation.yaml](../templates/continuation.yaml): a small machine-readable continuation envelope, not shared mutable state.
+
+For canonical tasks governed by the durable-review semantics introduced by TASK-0010, final `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED` Architect judgment becomes durable repository-reconstructible lifecycle evidence only after `.agent/tasks/<TASK-ID>/review.yaml` is published in the target repository and binds the exact `reviewed_report.commit` plus report revision being judged. The active Architect may reason to a tentative/final judgment before persistence, but later continuation, promotion, release, successor reconstruction, or other cross-session reliance must resolve the published review artifact rather than hidden chat history.
+
+When the REVIEW phase materially requires repository write capability to persist that canonical judgment, preflight the capability for REVIEW. If it is unavailable, return `CURRENT_PHASE_CAPABILITY_UNAVAILABLE` rather than claiming a durable final Architect lifecycle result. This does not retroactively block an earlier Executor phase whose own required capabilities were available.
+
+This rule is forward-looking and protocol-v3 compatible. Tasks governed before the accepted TASK-0010 semantics may legitimately contain only `task.yaml`/`report.yaml` or historical external Architect review. Missing `review.yaml` in such legacy history is ambiguous and MUST NOT be interpreted as proof of historical acceptance, rejection, or lack of review; no bulk backfill is required. A historical report may receive a persisted review later only after the current Architect actually re-resolves and reviews that exact report, in which case the new artifact is current re-review evidence rather than a fabricated claim of historical persistence.
+
+Review metadata or attestation such as reviewer role or separate-session declarations is descriptive context, not independent security proof of session identity, tool access, or independent execution. Evidence strength comes from exact report/commit/ref binding and independently resolvable evidence where required; this protocol creates no reviewer authentication, signature, proof-of-agent, or session registry.
 
 Authority, capability availability, and execution consequence are distinct: authority answers whether an action is permitted, capability answers whether the environment can perform it, and consequence determines the fresh state, identity, or evidence guard appropriate before an authorized operation. Capability availability never grants authority, authority never proves capability availability, and consequence does not create authority. A known capability is not a currently available capability. No role manufactures another role's authority or evidence.
 
@@ -148,7 +156,7 @@ Lifecycle is derived per repository, not assigned by a multi-writer state servic
 
 - `PLANNED`: approved task and exact handoff exist.
 - `REPORTED`: Executor has produced the exact report evidence.
-- `ACCEPTED`: the current governing Architect accepted the exact `reviewed_report.commit`.
+- `ACCEPTED`: for canonical tasks governed by the current durable-review semantics, the target repository contains the published `review.yaml` whose `state: ACCEPTED` binds the exact `reviewed_report.commit`; legacy historical acceptance may be evidenced under the older governing semantics without implying that missing `review.yaml` has any particular meaning.
 - `VERIFIED`: the designated authoritative verifier produced the required result for the exact `promotion_candidate_head`.
 - `PROMOTED_NOT_RELEASED`: the stable target ref has been explicitly promoted to the exact accepted candidate, but one or more separately authorized release actions are not completed.
 - `RELEASED`: separately authorized release actions are complete and final identity verification succeeds.
@@ -186,7 +194,7 @@ Optional `capability_requirements` maps semantic phases such as `EXECUTION`, `RE
 
 Immediately before the first mutation or authoritative action of the current phase, preflight that phase's materially required semantic capabilities. If the approved task already knows that native verification or another mandatory current-execution capability is required to complete the current execution, prove that currently available capability before the first mutation. An already established generic execution capability can satisfy its ordinary subcommands without making each executable or subcommand a separately declared or separately preflighted privileged capability, unless exact task or target authority requires one independently. If a required current-phase capability is unavailable, return `CURRENT_PHASE_CAPABILITY_UNAVAILABLE` and block before mutation. Do not preflight later phases as a prerequisite to completing an earlier authorized phase.
 
-Examples: repository content write/test execution for `EXECUTION`; exact commit/report resolution for `REVIEW`; exact-SHA verifier access for `VERIFICATION`; non-force target-ref update for `PROMOTION`; tag, repository-metadata, and release-publication APIs for `RELEASE`.
+Examples: repository content write/test execution for `EXECUTION`; exact commit/report resolution and, when canonical review persistence is materially required, repository content write for `REVIEW`; exact-SHA verifier access for `VERIFICATION`; non-force target-ref update for `PROMOTION`; tag, repository-metadata, and release-publication APIs for `RELEASE`.
 
 ## Consequence-based execution guards
 
@@ -273,6 +281,8 @@ Executor never self-accepts its report. Only after that terminal boundary may a 
 
 ## Architect review and continuation
 
-The current governing Architect resolves the exact committed report identified by `reviewed_report.commit` and reviews protocol, identity, execution base, skills, scope, structure, gaps, Git actions, acceptance evidence, advisory evidence, and designated verifier evidence. Final serialized outcome is `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`.
+The current governing Architect resolves the exact committed report identified by `reviewed_report.commit` and reviews protocol, identity, execution base, skills, scope, structure, gaps, Git actions, acceptance evidence, advisory evidence, and designated verifier evidence. Final serialized outcome remains `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`.
 
-`ACCEPTED` requires `independence.exact_report_identity_verified=true`: the exact report commit being judged must have been resolved, not merely named. `REVISION_REQUIRED` and `BLOCKED` may record false when exact identity has not been established. `ACCEPTED` is contract acceptance. It is not authoritative verifier PASS, promotion authority, release authority, or proof that those later capabilities are available. When continuation is authorized, emit/use only exact evidence and refs; stale identity fails closed.
+For canonical tasks governed by the durable-review semantics introduced by TASK-0010, the governing Architect publishes the existing `.agent/tasks/<TASK-ID>/review.yaml` bound to that exact report commit and report revision before treating the final outcome as durable canonical lifecycle evidence. If the required REVIEW repository-write capability is unavailable, return `CURRENT_PHASE_CAPABILITY_UNAVAILABLE`; do not claim durable `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED` from chat/session state alone. Legacy missing review artifacts remain ambiguous historical evidence and require no backfill.
+
+`ACCEPTED` requires `independence.exact_report_identity_verified=true`: the exact report commit being judged must have been resolved, not merely named. `REVISION_REQUIRED` and `BLOCKED` may record false when exact identity has not been established. Reviewer/session metadata does not itself prove identity, tool access, or independent execution. `ACCEPTED` is contract acceptance. It is not authoritative verifier PASS, promotion authority, release authority, or proof that those later capabilities are available. When continuation is authorized, emit/use only exact persisted review evidence and refs; stale identity fails closed.
