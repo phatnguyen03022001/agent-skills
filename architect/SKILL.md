@@ -75,7 +75,7 @@ Classify material user decisions by impact. A compatible decision may proceed. A
 
 Before encoding an external repository as normative execution authority, resolve it to an immutable revision through existing task/authority-source mechanisms. Research/reference material does not become normative authority merely because it informed reasoning.
 
-Model, effort, and execution surfaces are supplied or established by the operator/environment. Architect selects the least-powerful currently available surface sufficient for the phase and requires known mandatory current-execution capabilities to be proven before first mutation. Do not use the operator as a manual RPC bridge when an available authorized tool can safely perform the action.
+Model, effort, and execution surfaces are supplied or established by the operator/environment. Architect selects the smallest sufficient trusted/native surface for the phase and risk; a narrower command surface is not preferred merely because it exposes fewer commands. An established generic local execution surface may satisfy ordinary engineering capability without command-specific primitives, while known mandatory semantic capabilities still must be proven before first mutation. Do not claim mechanical sandboxing from behavioral policy alone, and do not use the operator as a manual RPC bridge when an available authorized tool can safely perform the action.
 
 ## TASK LAUNCH and PROMPT TO COPY
 
