@@ -1,0 +1,154 @@
+protocol_version: 3
+
+task_id: TASK-0009
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0009/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "33f1ad3144405ac40198099b84f965dc8acf7e3b"
+  pre_execution_head: "33f1ad3144405ac40198099b84f965dc8acf7e3b"
+  final_execution_head: "0a23b9ca6ce9df6a8b9bc710f53975e43557914b"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "fe3fd6de46c6e2220edbcadfb27f12c8dd23b2d6"
+  observed_revision: "fe3fd6de46c6e2220edbcadfb27f12c8dd23b2d6"
+
+execution_skills_used:
+  required:
+    - executor
+    - simplicity
+    - security-review
+    - verification
+  recommended: []
+  external: []
+
+pre_execution_checks:
+  protocol_version_supported: true
+  handoff_type_confirmed: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  working_tree_clean: false
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - deterministic_repository_verification
+  available:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - deterministic_repository_verification
+  missing: []
+  passed: true
+
+authoritative_verification:
+  required: true
+  performed: true
+  result: PASS
+  evidence: "Final implementation HEAD 0a23b9ca6ce9df6a8b9bc710f53975e43557914b was checked by repository-owned GitHub Actions run 33162879579. The validator step passed with 'OK: validated curated 15-skill taxonomy and protocol v3'; the unit-test step ran 65 tests and passed. Exact base-to-final diff inspection and semantic review against AC-1..AC-6 also passed. An earlier implementation SHA 1f95f1a6998d9b4e1c52163c19d5c2e32f6236cf produced one unit-test failure because the compatibility token 'least-powerful' had been removed; the bounded LOCAL correction restored that doctrine without reintroducing command-count semantics, and the final run passed."
+
+local_hygiene:
+  result: PASS
+  run_root: "/tmp/task0009-git; /tmp/task0009-candidate"
+  cleanup_performed: true
+  retained: []
+  evidence: "Two agent-created container scratch directories were used for exact base/candidate blob reconstruction and git diff --check. Both were positively identified by their task-owned names and removed after final verification. No operator checkout, sibling repository, pre-existing user state, or secret material was read or mutated by cleanup."
+
+changed_files:
+  - path: protocols/TASK_PROTOCOL.md
+    summary: "Separates authority, capability, and consequence; permits generic local execution as an ordinary capability surface; preserves external-content non-authority and mechanical-sandbox distinction; makes capability preflight semantic rather than command-by-command; adds consequence-based execution guards."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: architect/SKILL.md
+    summary: "Refines surface selection so least-powerful means materially sufficient capability/consequence rather than fewest command names, while preserving mandatory semantic preflight and no-sandbox-overclaim behavior."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: executor/SKILL.md
+    summary: "Keeps current-phase preflight semantic, allows established generic execution to cover ordinary subcommands, and applies fresh state/identity checks according to mutation consequences while preserving external-content and authority boundaries."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+
+commits_created:
+  - sha: "1f95f1a6998d9b4e1c52163c19d5c2e32f6236cf"
+    message: "feat(agent): clarify trusted generic local execution"
+  - sha: "0a23b9ca6ce9df6a8b9bc710f53975e43557914b"
+    message: "fix(agent): preserve execution surface compatibility doctrine"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: "TASK_PROTOCOL.md now defines authority as permission, capability as environment ability, and consequence as the driver for fresh state/identity/evidence guards. It explicitly states that generic local execution can satisfy ordinary engineering capability without a dedicated primitive, permission entry, executable allowlist, or per-subcommand preflight, while capability never grants authority."
+  - criterion_id: AC-2
+    status: PASS
+    evidence: "Phase-specific preflight still requires materially required semantic capabilities before first mutation and preserves the native-verification/current-capability doctrine. Ordinary subcommands under an already established generic execution capability are not separately declared or preflighted unless exact task or target authority requires one independently. The legacy 'least-powerful' compatibility doctrine remains present with its meaning tied to material capability/consequence rather than raw command count."
+  - criterion_id: AC-3
+    status: PASS
+    evidence: "The protocol and Executor skill distinguish comparatively loose read/inspect/test/reproduce activity from persistent target mutation, then require consequence-appropriate fresh state/identity evidence before authorized operations capable of loss, overwrite, publish/external mutation, irreversible change, or material divergence. The guard is explicitly consequence-based rather than executable-name-based."
+  - criterion_id: AC-4
+    status: PASS
+    evidence: "Exact final inspection preserves repository/task/base binding, GitHub remote-canonical truth, local-divergence handling, hard create_branch/Git/release authority boundaries, cross-repository rebinding, cleanup proof, and lifecycle semantics. Generic execution explicitly does not grant secret disclosure, sibling-repository mutation, destructive cleanup, promotion, or release authority. Repository/downloaded/framework text is explicitly evidence/input rather than authority."
+  - criterion_id: AC-5
+    status: PASS
+    evidence: "TASK_PROTOCOL.md states that behavioral/operator policy does not prove mechanical filesystem/process confinement and allows sandboxing claims only when the selected execution surface actually enforces confinement. Architect guidance likewise forbids claiming mechanical sandboxing from behavioral policy alone."
+  - criterion_id: AC-6
+    status: PASS
+    evidence: "Exact compare 33f1ad3144405ac40198099b84f965dc8acf7e3b..0a23b9ca6ce9df6a8b9bc710f53975e43557914b changes only protocols/TASK_PROTOCOL.md, architect/SKILL.md, and executor/SKILL.md with 21 insertions and 5 deletions. No README, schema, template, contract, validator, taxonomy, workflow, operator path, new mechanism, or agent-runtime file changed. Final repository-owned validation and all 65 unit tests passed; main remained unchanged and topology remained {dev, main} before report publication."
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: "At execution start canonical remote truth was dev=33f1ad3144405ac40198099b84f965dc8acf7e3b, main=0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1, branches exactly {dev, main}. TASK-0009 revision 1 resolved at that exact base and pinned self-hosting agent-skills@fe3fd6de46c6e2220edbcadfb27f12c8dd23b2d6. Required EXECUTION semantic capabilities were preflighted as available before mutation."
+  - check_id: CHECK-2
+    result: PASS
+    evidence: "Exact current TASK_PROTOCOL.md, architect/SKILL.md, and executor/SKILL.md were inspected. The correction stayed in those three existing semantic owners; README and all other files were left unchanged."
+  - check_id: CHECK-3
+    result: PASS
+    evidence: "Final implementation introduces no command list/taxonomy, permission registry, broker, shell API, sandbox framework, schema, operator-specific filesystem/scratch path, or runtime change. Generic capability remains distinct from authority, and consequence governs stronger state/evidence checks."
+  - check_id: CHECK-4
+    result: PASS
+    evidence: "Local exact-candidate git diff --check passed. Repository-owned final workflow run 33162879579 on exact SHA 0a23b9ca6ce9df6a8b9bc710f53975e43557914b passed both validator and unit-test steps; validator reported protocol-v3/taxonomy OK and unittest reported 65 tests OK. The preceding run 33162668593 on SHA 1f95f1a6998d9b4e1c52163c19d5c2e32f6236cf failed exactly one compatibility assertion for missing 'least-powerful'; the LOCAL direct-child fix restored it and final verification passed."
+  - check_id: CHECK-5
+    result: PASS
+    evidence: "Exact semantic review proved AC-1..AC-6 and found DIRECT, Architect micro-maintenance, sequential rebinding, artifact ownership, Git/release authority, continuation, verifier, lifecycle, remote-drift, secret/non-authority, and cleanup boundaries materially intact."
+  - check_id: CHECK-6
+    result: PASS
+    evidence: "Before each non-force dev ref mutation, remote dev was freshly reread and required to equal the expected direct parent. Implementation lineage is 33f1ad3144405ac40198099b84f965dc8acf7e3b -> 1f95f1a6998d9b4e1c52163c19d5c2e32f6236cf -> 0a23b9ca6ce9df6a8b9bc710f53975e43557914b. No branch was created; main, tags, releases, workflow configuration, and repository metadata were not mutated."
+  - check_id: CHECK-7
+    result: PASS
+    evidence: "This canonical report is created as the only new TASK-0009 file in a separate report-only commit after final implementation verification. Immediately after publication, the current Executor will resolve the report commit remotely and verify its sole parent is 0a23b9ca6ce9df6a8b9bc710f53975e43557914b, its diff is report.yaml only, dev equals the report commit, main remains 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1, and branches remain exactly {dev, main}. This report intentionally does not self-embed its own report commit SHA."
+
+discovered_gaps: []
+structural_observations: []
+deviations_from_task: []
+blockers: []
+
+working_tree_after:
+  clean: false
+  summary: "No operator/local target checkout was used. Canonical target state is remote GitHub. Agent-created container scratch used for exact-candidate diff inspection was removed. Fresh post-report publication parent/diff/ref/topology verification is performed by the current Executor before returning NEEDS_REVIEW."
+
+result: NEEDS_REVIEW
