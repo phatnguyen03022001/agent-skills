@@ -1,0 +1,209 @@
+protocol_version: 3
+
+task_id: TASK-0010
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: maintainer_objective_change
+  task_id: ""
+  gap_id: "DURABLE_ARCHITECT_REVIEW"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "0f2060cb027b5cc7e5abe29252c87b822e08a2f2"
+
+architect_analysis_skills:
+  - architect
+  - executor
+  - simplicity
+  - verification
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "Current informed operator decision that canonical Architect review outcomes should survive chat/session loss and be reconstructible from GitHub, while historical tasks without persisted review remain legacy-compatible."
+    role: "Durable maintainer-objective change: GitHub should preserve canonical final Architect judgment for future tasks without retroactively fabricating historical review evidence."
+    precedence: 1
+  - source: "phatnguyen03022001/agent-skills@0f2060cb027b5cc7e5abe29252c87b822e08a2f2"
+    role: "Current protocol v3, Architect Review contract, review template, Architect skill, validator/tests, and lifecycle semantics to evolve compatibly."
+    precedence: 2
+  - source: "phatnguyen03022001/architect-profile TASK-0002 persisted Architect review at d80e30401c44dc256b01b69c1911a9797e53af3c."
+    role: "Concrete current example of exact report-bound durable Architect acceptance without rewriting Executor report evidence."
+    precedence: 3
+
+structure_authority:
+  status: RESOLVED
+  source: "Existing protocols/TASK_PROTOCOL.md, contracts/ARCHITECT_REVIEW.md, architect/SKILL.md, templates/review.yaml, and current validator/tests only where directly necessary."
+  rationale: "This is a bounded lifecycle-evidence persistence correction inside existing review ownership. No new role, lifecycle, authority source, database, reviewer identity system, signature mechanism, or protocol version is justified."
+
+objective: "Make canonical Architect final review judgment durable in GitHub for future protocol-v3 tasks: after reviewing an exact Executor report, the governing Architect persists the existing review.yaml artifact before treating ACCEPTED, REVISION_REQUIRED, or BLOCKED as durable canonical lifecycle evidence. Preserve legacy tasks without review.yaml as valid historical input and never infer their historical acceptance/rejection from absence alone."
+
+scope:
+  required_changes:
+    - "Preserve existing ownership: task.yaml is Architect authority, report.yaml is Executor evidence, review.yaml is Architect judgment. Never rewrite report.yaml merely because Architect later accepts or rejects it."
+    - "Change the forward-looking canonical review rule so a final governing Architect judgment for a canonical task is persisted as .agent/tasks/<TASK-ID>/review.yaml in the target repository. The persisted review must bind the exact reviewed report commit and report revision and serialize one existing state: ACCEPTED, REVISION_REQUIRED, or BLOCKED."
+    - "A review judgment may be reasoned about in the active Architect context before persistence, but it is not durable repository-reconstructible lifecycle evidence until the review artifact is published. Any later promotion, release, continuation, successor reconstruction, or other cross-session use that relies on Architect acceptance must resolve the persisted exact review evidence rather than hidden chat history."
+    - "If the current REVIEW phase materially requires repository write capability to persist the canonical review and that capability is unavailable, fail closed with CURRENT_PHASE_CAPABILITY_UNAVAILABLE rather than claiming a durable ACCEPTED/REVISION_REQUIRED/BLOCKED lifecycle result. Do not use the operator as a manual RPC bridge when an authorized write surface is available."
+    - "Keep protocol v3 backward compatible. Tasks governed before the accepted TASK-0010 semantics may legitimately contain only task.yaml/report.yaml or external historical Architect review. Missing review.yaml in such legacy history MUST NOT be interpreted as proof of unreviewed, rejected, or accepted state. Do not require bulk backfill or rewrite historical tasks."
+    - "A historical task may receive a new persisted review later only when the current Architect actually re-resolves and reviews the exact historical report now; such an artifact is current re-review evidence, not a fabricated claim that the artifact existed historically. No blanket migration is created."
+    - "Clarify that review metadata/attestation such as reviewer role or separate-session declarations does not by itself prove session identity, tool access, or independent execution. Durable judgment strength comes from exact report/commit/ref/evidence binding and independently resolvable evidence where required. Do not create cryptographic reviewer identity, session signatures, proof-of-agent, authentication machinery, or reviewer registries."
+    - "Preserve fail-closed review template defaults and exact accepted-lineage semantics. The review artifact remains Architect-owned and may be the permitted direct child of the reviewed report commit where the target workflow uses that lineage."
+    - "Preserve DIRECT, BOUNDED, HIGH_ASSURANCE, micro-maintenance, sequential rebinding, capability/authority/consequence separation, Git/release authority, verifier evidence, continuation, promotion, and release semantics except for the minimum wording needed to make final review persistence canonical going forward."
+    - "Run repository-owned validator/unit verification and exact semantic/diff review. Produce TASK-0010 Executor report in a separate report-only commit and stop at Governing Architect review."
+  allowed_existing_files_or_components:
+    - protocols/TASK_PROTOCOL.md
+    - contracts/ARCHITECT_REVIEW.md
+    - architect/SKILL.md
+    - templates/review.yaml
+    - scripts/validate_agent_artifacts.py
+    - tests/test_validate_agent_artifacts.py
+    - .agent/tasks/TASK-0010/task.yaml
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Protocol remains version 3; existing review states remain exactly ACCEPTED, REVISION_REQUIRED, BLOCKED."
+  - "No new review artifact type, lifecycle state, role, reviewer service, identity provider, signature, session registry, database, queue, daemon, workflow engine, or cross-repository authority object."
+  - "GitHub remote remains canonical repository truth for persisted task/report/review evidence."
+  - "Executor report state remains Executor-owned and may remain REPORTED/NEEDS_REVIEW after accepted review."
+  - "Final Architect judgment never manufactures verifier evidence, promotion authority, release authority, or capability availability."
+  - "Legacy absence of review.yaml is ambiguous historical evidence, not an automatic negative or positive lifecycle judgment."
+  - "No mandatory historical backfill."
+  - "Review persistence requirement is forward-looking from the accepted TASK-0010 governance revision; do not silently reinterpret older pinned protocol revisions."
+  - "Branches remain exactly {dev, main}; main remains unchanged."
+
+forbidden_changes:
+  - "Do not backfill review.yaml into TASK-0001..TASK-0009 or any other repository/history."
+  - "Do not modify architect-profile, agent-runtime, agent-documents, or agent-standards."
+  - "Do not add cryptographic signatures, reviewer/session IDs as security proof, OAuth/authentication requirements, proof-of-agent, reviewer registries, audit databases, append-only logs, or external services."
+  - "Do not make report.yaml Architect-owned or add ACCEPTED status to Executor report semantics."
+  - "Do not create a new protocol version, task/review lifecycle, execution lane, role, continuation mechanism, promotion mechanism, or orchestration system."
+  - "Do not weaken exact report identity, review-state fail-closed defaults, Git/release authority, exact lineage, verifier evidence, or capability preflight."
+  - "Do not perform unrelated cleanup or stylistic rewrite."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0010/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - deterministic_repository_verification
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_write
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Canonical final Architect review is durable going forward."
+    evidence_required: "Protocol/contract/Architect semantics require publishing existing review.yaml bound to the exact report before the final review judgment is relied on as durable canonical lifecycle evidence."
+  - id: AC-2
+    requirement: "Legacy history remains truthful and compatible."
+    evidence_required: "Final semantics explicitly state that pre-cutoff missing review.yaml is not evidence of historical ACCEPT/REJECT/non-review and does not require bulk backfill."
+  - id: AC-3
+    requirement: "Review persistence does not merge artifact ownership."
+    evidence_required: "report.yaml remains Executor evidence; review.yaml remains Architect judgment; accepted review does not rewrite report state."
+  - id: AC-4
+    requirement: "Review evidence strength is not overstated."
+    evidence_required: "Session/reviewer metadata is not treated as independent proof; exact report/commit/ref/evidence binding remains the meaningful durable evidence without new identity machinery."
+  - id: AC-5
+    requirement: "Missing review-write capability fails closed only at the relevant review consequence."
+    evidence_required: "Current REVIEW persistence capability is preflighted when needed; unavailable capability yields CURRENT_PHASE_CAPABILITY_UNAVAILABLE instead of a false durable final judgment, without blocking unrelated earlier execution."
+  - id: AC-6
+    requirement: "Correction is minimal and protocol-v3 compatible."
+    evidence_required: "No new role/schema/lifecycle/subsystem/backfill; repository validator and all unit tests pass; exact diff touches only directly necessary existing review semantic owners and compatibility code/tests if genuinely required."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Refresh refs and require dev equals the exact TASK-0010 handoff base, main equals 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1, branches exactly {dev, main}; resolve TASK-0010 revision 1 and pinned self-hosting agent-skills@0f2060cb027b5cc7e5abe29252c87b822e08a2f2; preflight required EXECUTION capabilities."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Inspect exact current TASK_PROTOCOL.md, ARCHITECT_REVIEW.md, architect/SKILL.md, review template, validator/tests. Identify the smallest semantic owner set needed; do not mutate template/validator/tests merely because they exist in allowed scope."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Implement forward-only durable review semantics and legacy compatibility. Review specifically for accidental historical reinterpretation, report/review ownership merge, authentication machinery, new lifecycle state, or persistence ceremony beyond final canonical review."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Run repository-owned validator, all unit tests, and git diff --check on the exact implementation. Require all deterministic checks PASS."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Perform exact semantic acceptance review against AC-1..AC-6, including compatibility with existing exact accepted-lineage and continuation rules."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Commit/push implementation non-force to dev after fresh remote-dev parent check; create no branch and do not mutate main."
+      required: true
+    - id: CHECK-7
+      command_or_check: "Create TASK-0010/report.yaml as a separate report-only commit, push non-force, then verify exact report parent/diff, final dev identity, unchanged main, and exact {dev, main} topology before returning NEEDS_REVIEW."
+      required: true
+  authoritative_verification:
+    required: true
+    mechanism: "repository-owned deterministic validator/unit tests + exact semantic/diff inspection"
+    expected_signal: "All checks PASS; forward durable review semantics are proven without historical backfill or protocol-v3 expansion"
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
