@@ -25,7 +25,9 @@ A local clean/behind copy may be synchronized when authorized; local ahead or lo
 
 ## Semantic capability preflight
 
-Use phase-specific semantic requirements rather than equating authority with whichever API happens to exist. A known capability is not proof of a currently available capability. Choose the least-powerful currently available surface sufficient for the phase and use bounded escalation only when required.
+Use phase-specific semantic requirements rather than equating authority with whichever API happens to exist. Route from required capability and evidence: resolve currently available candidates, reject candidates lacking current authority or sufficient evidence, then choose the lowest sufficient expected cost/resource burden. When materially equivalent, prefer fewer context transfers and lower consequence. Cheaper/free never permits weaker correctness, exact identity, acceptance evidence, safety, or required native/remote verification.
+
+Availability, quota, rate limits, and paid capacity are runtime evidence. Installation, provider identity, historical availability, or an earlier preflight does not prove current availability after material environment/quota change. If the selected surface becomes unavailable or quota-limited, fallback may use only another currently available candidate that is already authorized and still sufficient for the same required capability/evidence; otherwise use an explicitly permitted degraded mode or fail closed with the existing capability/blocking semantics. Do not create provider/account rotation, quota-evasion, credential-broker, or persistent availability registries.
 
 - `EXECUTION`: required repository content mutation and test/verification execution surfaces, including native verification when the task declares it mandatory for the current execution;
 - `REVIEW`: exact commit/report resolution needed by the current governing Architect;
@@ -61,5 +63,7 @@ After exact promotion, derive `PROMOTED_NOT_RELEASED` until all separately autho
 ## GitHub Actions
 
 For repositories that use `DEV_MAIN`, prefer one bounded push-to-integration validation workflow with relevant paths, one standard Linux job, read-only contents, immutable action pins, concurrency cancellation, short timeout, validator/tests, and no unnecessary dispatch, schedule, duplicate PR workflow, matrix, artifacts, cache, automatic rerun, larger runner, or paid external service. Other topologies use their target-authoritative integration/working branch rather than assuming `dev`.
+
+Prefer one repository-owned deterministic verifier reused through whichever authorized surface is currently cheapest and sufficient. Local shell, Codex, Agent Runtime, and GitHub Actions should invoke the same verifier when feasible instead of carrying divergent verification logic. GitHub Actions is the bounded remote evidence boundary when exact task/target authority requires remote proof, not the default iterative debugger or mandatory development loop. ChatGPT+GitHub-only execution remains valid when no native-only capability is materially required.
 
 Git success, CI success, Architect acceptance, authoritative project PASS, promotion authorization, actual promotion, release authorization, and actual release remain separate signals.
