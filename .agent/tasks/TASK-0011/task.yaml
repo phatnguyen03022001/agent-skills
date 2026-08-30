@@ -1,0 +1,216 @@
+protocol_version: 3
+
+task_id: TASK-0011
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: maintainer_objective_change
+  task_id: ""
+  gap_id: "REPRODUCIBLE_PROGRAM_SYNTHESIS"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "33f138c56dee6a2a1e8b8a6dc52b1399452ef177"
+
+architect_analysis_skills:
+  - architect
+  - simplicity
+  - verification
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "Current informed operator decision to make closed target design plus applicable standards produce a reproducible, coverage-complete, validated implementation program without pretending that task decomposition has one mathematically unique answer."
+    role: "Durable maintainer objective: preserve Architect planning judgment while making program synthesis reconstructible, traceable, stale-detectable, and non-authoritative."
+    precedence: 1
+  - source: "phatnguyen03022001/agent-skills@33f138c56dee6a2a1e8b8a6dc52b1399452ef177"
+    role: "Current protocol-v3 authority, including PROGRAM-as-presentation, exact task authority, one active Executor binding, lifecycle, capability, and promotion semantics to evolve compatibly."
+    precedence: 2
+
+structure_authority:
+  status: RESOLVED
+  source: "Existing protocols/TASK_PROTOCOL.md, architect/SKILL.md, README.md, templates/, and repository validator/tests only where directly necessary."
+  rationale: "This is a bounded governance correction inside existing planning/program ownership. Add at most one small generated-program template; do not create a planner service, workflow engine, database, registry, queue, new role, new lifecycle, or new protocol version."
+
+objective: "Define a protocol-v3-compatible generated program snapshot for reproducible validated planning from closed target authority, applicable pinned obligations, explicit synthesis policy, and Architect planning judgment. The snapshot must remain derived/non-authoritative, support full stale invalidation and regeneration, preserve just-in-time canonical task materialization, and never weaken exact one-task Executor binding."
+
+scope:
+  required_changes:
+    - "Replace any implication that PROGRAM is merely ad-hoc ordered prose with an optional machine-readable generated planning snapshot that remains presentation/derivation only and never becomes implementation, mutation, lifecycle, promotion, or release authority."
+    - "Use a non-authoritative artifact name that does not imply locking or concurrency control; prefer program.generated.json unless current inspection proves another existing canonical name is better."
+    - "Define reproducible synthesis inputs at minimum as exact target source revision, applicable immutable external authority revisions when adopted by the target, explicit synthesis-policy identity, and Architect planning judgment captured in the generated item decomposition. Do not claim that decomposition is mathematically unique."
+    - "Define each generated item with the smallest fields needed to reconstruct and validate planning coverage: stable item identity, traceability references, dependency constraints, applicable obligations, acceptance references, required evidence, and required semantic capabilities. Do not add mutable execution status, assignee, retry, queue, scheduling, provider availability, or runtime lifecycle state."
+    - "Define validation properties: every in-scope implementation-driving authority/obligation selected for the program is covered or explicitly excluded with bounded rationale; dependencies reference existing generated items; the graph is acyclic; item identities are unique; immutable source identities are present; and generated content cannot grant authority."
+    - "For V1 invalidation, any material change to a synthesis input makes the whole generated program stale and requires full regeneration plus validation. Do not implement affected-region incremental recomputation, dependency caching, or a build-system-style invalidation engine."
+    - "Define just-in-time task materialization: a selected generated item may inform creation/revision of a canonical task.yaml by the governing Architect, but the generated item itself cannot authorize execution. Multiple canonical task artifacts may coexist; one Executor still has exactly one active exact task/repository/base binding at a time."
+    - "Preserve existing PROGRAM operator-facing presentation and allow it to be rendered from generated planning information without making presentation another authority source."
+    - "Keep protocol version 3 and existing task/report/review/handoff/continuation ownership unchanged."
+    - "Update only the minimum discovery/Architect wording needed so successor agents understand the generated program boundary without duplicating Task Protocol semantics."
+    - "Extend repository mechanical validation/tests only as needed to validate the new template/shape and doctrine invariants."
+    - "Use the existing bounded GitHub Actions validation workflow as the remote deterministic verification boundary after the implementation is pushed; do not add another workflow or use Actions as an iterative debugger."
+    - "Produce TASK-0011 Executor report in a separate report-only commit and stop at Governing Architect review."
+  allowed_existing_files_or_components:
+    - protocols/TASK_PROTOCOL.md
+    - architect/SKILL.md
+    - README.md
+    - templates/
+    - scripts/validate_skill_library.py
+    - scripts/test_validate_skill_library.py
+    - .agent/tasks/TASK-0011/task.yaml
+    - .github/workflows/validate-skill-library.yml
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Protocol remains version 3."
+  - "GitHub remote remains canonical repository truth."
+  - "PROGRAM/generated program remains non-authoritative and creates no mutation, execution, review, verification, promotion, or release authority."
+  - "Task decomposition remains Architect judgment constrained by traceability and validation; no claim of one uniquely correct DAG."
+  - "Multiple canonical task artifacts may coexist, while one active Executor binding remains one exact task, repository, branch, and base."
+  - "Material synthesis-input drift invalidates the whole generated program in V1; no partial recomputation."
+  - "No database, queue, scheduler, daemon, workflow engine, planner service, provider registry, capability registry, central orchestrator, cross-repository mutable authority, or sixth governance repository."
+  - "No new permanent organizational role or execution lane."
+  - "Branches remain exactly {dev, main}; main remains unchanged."
+
+forbidden_changes:
+  - "Do not modify agent-documents, agent-standards, agent-runtime, architect-profile, or any target product repository."
+  - "Do not add cost/quota/provider fallback semantics in this task; that is a separate concern."
+  - "Do not add prompt/transcript archival semantics in this task."
+  - "Do not add scale-trigger semantics in this task."
+  - "Do not add CUE, a new external dependency, a database, a graph store, Temporal/Airflow/Dagster/Prefect, Linear/Jira/Notion integration, or any orchestration runtime."
+  - "Do not create JSON Schema merely for uniformity if the existing stdlib validator can enforce the bounded generated shape adequately; add a new schema technology only if current repository constraints make it materially necessary and return BLOCKED for revised authority first."
+  - "Do not persist provider availability, account identity, quotas, mutable task progress, or execution state in the generated program."
+  - "Do not implement partial/incremental program regeneration."
+  - "Do not change GitHub Actions workflow behavior unless current inspection proves the existing workflow cannot validate the authorized files; any workflow mutation requires revised authority."
+  - "Do not perform unrelated cleanup or taxonomy expansion."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - templates/program.generated.json
+    - .agent/tasks/TASK-0011/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - github_actions_run_read
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_write
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Program synthesis is reproducible without pretending task decomposition is uniquely deterministic."
+    evidence_required: "Canonical semantics bind synthesis to immutable source identities, explicit policy, traceability/coverage constraints, and Architect judgment; no text claims one mathematically unique DAG."
+  - id: AC-2
+    requirement: "Generated program cannot become a second authority source."
+    evidence_required: "Protocol/template explicitly exclude execution/lifecycle/mutation/promotion/release authority and contain no mutable execution state."
+  - id: AC-3
+    requirement: "Program coverage and graph integrity are mechanically bounded."
+    evidence_required: "Validator/tests reject duplicate identities, broken dependencies, cycles, missing immutable synthesis identities, malformed required fields, and authority-like mutable state where applicable to the template contract."
+  - id: AC-4
+    requirement: "V1 stale handling is simple and safe."
+    evidence_required: "Any material synthesis-input change invalidates the entire generated program and requires full regeneration; no incremental recomputation mechanism is introduced."
+  - id: AC-5
+    requirement: "Canonical task authority remains just-in-time and exact."
+    evidence_required: "Generated items only inform Architect task materialization; multiple task artifacts may coexist; Executor remains bound to one exact canonical task/repository/base at a time."
+  - id: AC-6
+    requirement: "The correction is minimal and keeps the ecosystem target-first."
+    evidence_required: "No cross-repo mutation, external dependency, orchestration subsystem, registry, new role/lane/protocol version, cost-routing expansion, archival expansion, or scale framework."
+  - id: AC-7
+    requirement: "GitHub-only execution remains sufficient for this task."
+    evidence_required: "Implementation is performed through authorized GitHub content operations, then the existing single bounded validation workflow provides remote deterministic verification; no Mac/local capability is required."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Refresh canonical GitHub truth before mutation. Require dev equals the exact handoff base, main equals 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1, branches exactly {dev, main}, TASK-0011 revision 1 exists at that base, and required GitHub-only EXECUTION capabilities are currently available."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Inspect current PROGRAM semantics, Architect skill, templates, validator/tests, and the existing validation workflow. Identify the minimum owner set; do not mutate every allowed file merely because it is listed."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Implement the smallest protocol/template/validator change satisfying AC-1..AC-6. Prefer full-regeneration semantics and direct validation over incremental machinery or new dependencies."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Before each GitHub write, refresh dev and require the expected parent identity. Keep main unchanged and create no branch."
+      required: true
+    - id: CHECK-5
+      command_or_check: "After the implementation push, inspect the resulting exact diff and read the GitHub Actions run created by the existing validate-skill-library workflow for that implementation commit. Require its validation job PASS; do not create rerun/debug loops."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Perform exact semantic acceptance review against AC-1..AC-7, including explicit search for accidental authority duplication, mutable program state, unique-DAG claims, partial invalidation machinery, or cross-repository coupling."
+      required: true
+    - id: CHECK-7
+      command_or_check: "Create TASK-0011/report.yaml as a separate report-only commit, then verify exact report parent/diff, final dev identity, unchanged main, and exact {dev, main} topology before returning NEEDS_REVIEW."
+      required: true
+  authoritative_verification:
+    required: true
+    mechanism: "existing repository GitHub Actions validator/unit-test workflow + exact semantic/diff inspection"
+    expected_signal: "Single bounded validation run PASS on the implementation commit and all AC-1..AC-7 satisfied without new orchestration machinery"
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
