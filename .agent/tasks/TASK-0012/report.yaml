@@ -1,0 +1,167 @@
+protocol_version: 3
+
+task_id: TASK-0012
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0012/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "abb0441b5c7f7184064ba9e784fc1342a15f2b10"
+  pre_execution_head: "abb0441b5c7f7184064ba9e784fc1342a15f2b10"
+  final_execution_head: "581a215b7eba38519838245a6d16ebcca04eabcf"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "1361908ae49d9bdf067e61530d080111cc0ae55b"
+  observed_revision: "1361908ae49d9bdf067e61530d080111cc0ae55b"
+
+execution_skills_used:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended:
+    - github-workflow
+  external: []
+
+pre_execution_checks:
+  protocol_version_supported: true
+  handoff_type_confirmed: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  working_tree_clean: true
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - github_actions_run_read
+  available:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - github_actions_run_read
+  missing: []
+  passed: true
+
+authoritative_verification:
+  required: true
+  performed: true
+  result: PASS
+  evidence: "GitHub Actions run 33314679349, attempt 1, on exact final implementation SHA 581a215b7eba38519838245a6d16ebcca04eabcf completed success; job validate and steps Validate and Unit tests all completed success. Intermediate SHA a29e78d5071700abde2ac6ea5eacf81a10659d87 had attempt-1 run 33314386841 fail on the existing required protocol compatibility token; intermediate SHA 6383983aad8478e8cd1dd8dd66f11a358f34af7a had attempt-1 run 33314595089 with Validate PASS and one legacy regression-token unit-test failure. Neither failed run was rerun; both were resolved by authorized LOCAL corrections on new SHAs before the final exact-SHA boundary passed."
+
+local_hygiene:
+  result: PASS
+  run_root: ""
+  cleanup_performed: false
+  retained: []
+  evidence: "GitHub-only execution used no Mac, local checkout, Agent Runtime, Codex, local shell, or local temporary artifacts."
+
+changed_files:
+  - path: protocols/TASK_PROTOCOL.md
+    summary: "Own provider-neutral capability/evidence-first routing, lowest-sufficient-cost selection, runtime availability/quota semantics, bounded fallback/degraded/fail-closed behavior, federated budget ownership, verifier reuse, and mobile GitHub-only sufficiency."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: architect/SKILL.md
+    summary: "Apply Architect-side cost/resource-aware surface routing, fallback, ownership boundaries, and rejection of provider/account orchestration while preserving optional local/runtime surfaces."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: executor/SKILL.md
+    summary: "Apply Executor-side semantic-capability/evidence routing, bounded fallback, compatibility with least-powerful/bounded-escalation safety intent, and no quota/account machinery."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: github-workflow/SKILL.md
+    summary: "Apply cost-aware semantic capability preflight and fallback to GitHub workflow use while preserving one repository-owned verifier and bounded Actions remote evidence."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+
+commits_created:
+  - sha: "a29e78d5071700abde2ac6ea5eacf81a10659d87"
+    message: "protocol: route capabilities by cost and evidence"
+  - sha: "6383983aad8478e8cd1dd8dd66f11a358f34af7a"
+    message: "protocol: preserve validator compatibility token"
+  - sha: "581a215b7eba38519838245a6d16ebcca04eabcf"
+    message: "executor: preserve capability routing compatibility"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PROVEN
+    evidence: "Task Protocol, Architect, Executor, and GitHub Workflow now route from required semantic capability/evidence to current candidates, reject unauthorized/insufficient surfaces, then choose lowest sufficient expected cost/resource burden; provider identity is explicitly not the routing start."
+  - criterion_id: AC-2
+    status: PROVEN
+    evidence: "Canonical wording explicitly makes cost subordinate to correctness/evidence and forbids cheaper/free or less quota-constrained surfaces from weakening safety, exact identity, acceptance evidence, correctness, or required native/remote verification."
+  - criterion_id: AC-3
+    status: PROVEN
+    evidence: "Availability/quota is runtime evidence; fallback is limited to currently available already-authorized sufficient candidates, with degraded mode only when current acceptance permits it and otherwise existing CURRENT_PHASE_CAPABILITY_UNAVAILABLE/BLOCKED fail-closed results."
+  - criterion_id: AC-4
+    status: PROVEN
+    evidence: "Protocol and role guidance reject provider/account pools, rotation, credential brokers, quota databases, limit-evasion machinery, identity registries, and generic multi-account scaling; legitimate identities remain authority/provider-rule constrained."
+  - criterion_id: AC-5
+    status: PROVEN
+    evidence: "agent-skills owns only generic routing; targets retain budgets, allowed paid services, provider constraints, SLO/cost envelopes, and deployment economics; operator profile remains preference/environment context and Agent Runtime remains optional capability."
+  - criterion_id: AC-6
+    status: PROVEN
+    evidence: "Guidance prefers one repository-owned deterministic verifier reused through sufficient authorized surfaces; GitHub Actions remains bounded remote evidence and not the iterative debugger; ChatGPT+GitHub/mobile remains first-class when no native-only capability is materially required."
+  - criterion_id: AC-7
+    status: PROVEN
+    evidence: "Protocol remains v3; cumulative base-to-final diff modifies exactly protocols/TASK_PROTOCOL.md, architect/SKILL.md, executor/SKILL.md, and github-workflow/SKILL.md; no schema, skill, dependency, service, registry, orchestrator, workflow, test, PROGRAM shape, or cross-repository mutation was introduced; final validator and all 69 unit tests pass."
+  - criterion_id: AC-8
+    status: PROVEN
+    evidence: "Execution used only authorized GitHub read/write and Actions-read capabilities. Existing validate-skill-library workflow was unchanged and final exact implementation SHA 581a215b7eba38519838245a6d16ebcca04eabcf received exactly one attempt-1 run, 33314679349, with Validate and Unit tests PASS; no Mac, Agent Runtime, Codex, or local shell was used."
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: "Initial canonical truth matched dev=abb0441b5c7f7184064ba9e784fc1342a15f2b10, main=0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1, topology exactly {dev, main}; TASK-0012 revision 1 was APPROVED/execution_ready at the exact base and all four required GitHub-only EXECUTION capabilities were available."
+  - check_id: CHECK-2
+    result: PASS
+    evidence: "Inspected Task Protocol, Architect/Executor guidance, GitHub Workflow guidance, README discovery role, validator/regression doctrine, and existing workflow coverage; selected only four semantic owner files and left README/tests/validator/workflow untouched because current coverage was sufficient."
+  - check_id: CHECK-3
+    result: PASS
+    evidence: "Implemented doctrine-only provider-neutral cost/quota/fallback routing with no new schema/runtime machinery. Existing compatibility assertions exposed two LOCAL vocabulary regressions; both were corrected in authorized semantic owners without changing tests or widening scope."
+  - check_id: CHECK-4
+    result: PASS
+    evidence: "Exact semantic review found no evidence downgrade, provider/account registry or quota-evasion semantics, mandatory Mac/Codex/runtime/local assumption, duplicated verifier implementation, or leakage of target-owned budgets into reusable governance."
+  - check_id: CHECK-5
+    result: PASS
+    evidence: "dev was refreshed immediately before every GitHub write and matched each expected parent; all dev updates were linear/non-force, no branch was created, and main remained unchanged."
+  - check_id: CHECK-6
+    result: PASS
+    evidence: "Final implementation SHA 581a215b7eba38519838245a6d16ebcca04eabcf has exactly one existing-workflow push run, 33314679349 attempt 1, completed success with Validate and Unit tests PASS. No workflow rerun was invoked. Earlier failed attempt-1 runs belong to superseded LOCAL-correction SHAs and are recorded in authoritative_verification rather than hidden."
+  - check_id: CHECK-7
+    result: PASS
+    evidence: "AC-1 through AC-8 are proven against the final exact implementation and cumulative diff. This report is the only authorized new file after the verified implementation SHA; exact report commit parent/diff and final refs are verified immediately after publication because the report cannot self-contain its own commit SHA."
+
+discovered_gaps: []
+structural_observations: []
+deviations_from_task: []
+blockers: []
+
+working_tree_after:
+  clean: true
+  summary: "No local working tree exists in this GitHub-only execution; canonical dev matched verified final implementation SHA 581a215b7eba38519838245a6d16ebcca04eabcf immediately before report publication."
+
+result: NEEDS_REVIEW
