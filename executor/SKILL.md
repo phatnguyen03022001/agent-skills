@@ -25,6 +25,8 @@ Preflight the current phase's materially required semantic capabilities before i
 
 For surface selection, start from the required semantic capability and evidence, resolve currently available candidates, reject candidates without current authority or sufficient evidence, then choose the lowest sufficient expected cost/resource burden. Cheaper/free never justifies weaker correctness, safety, exact identity, acceptance evidence, or required native/remote verification. Availability/quota is runtime evidence; after a material environment/quota change, do not rely on installation, provider identity, historical availability, or an earlier preflight as current proof.
 
+The prior `least-powerful` and `bounded escalation` wording remains a safety constraint inside this routing order: among otherwise sufficient choices, do not broaden consequence or escalate capability without material need. It is not a provider-first rule and never overrides required evidence or the lowest-sufficient-cost selection.
+
 If the selected surface becomes unavailable or quota-limited, fall back only to another currently available, already-authorized candidate that still satisfies the required capability/evidence. Use degraded mode only when current task/target acceptance explicitly permits it; otherwise fail closed with `CURRENT_PHASE_CAPABILITY_UNAVAILABLE` or the applicable blocking result. Do not create provider/account rotation, quota-evasion, credential-broker, or persistent availability machinery to keep execution moving.
 
 Any identity or authority mismatch is `BLOCKED`. Never refresh stale authority or silently substitute newer rules.
