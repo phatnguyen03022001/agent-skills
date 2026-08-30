@@ -6,6 +6,7 @@ from __future__ import annotations
 import contextlib
 import importlib.util
 import io
+import json
 import shutil
 import subprocess
 import tempfile
@@ -665,7 +666,9 @@ class ValidatorRegressionTests(unittest.TestCase):
             "shared mutable cross-repository authority",
         ):
             self.assertIn(token, combined)
-        self.assertFalse(any("program" in path.name.lower() for path in (ROOT / "templates").iterdir()))
+        program = ROOT / "templates" / "program.generated.json"
+        self.assertTrue(program.is_file())
+        self.assertEqual(json.loads(program.read_text(encoding="utf-8"))["authority"], "NONE")
 
     def test_task0003_task_launch_fields_and_concrete_program_progress(self) -> None:
         architect = (ROOT / "architect" / "SKILL.md").read_text(encoding="utf-8")
@@ -1134,6 +1137,136 @@ class Task0007ProtocolCorrectnessTests(unittest.TestCase):
         self.assertIn("  - ref: refs/heads/integration", continuation)
         self.assertNotIn("expected_refs:\n  dev:", continuation)
         self.assertNotIn("next_authorized_action: PROMOTE_TO_MAIN", continuation)
+
+
+class Task0011GeneratedProgramTests(unittest.TestCase):
+    def fixture(self) -> tuple[tempfile.TemporaryDirectory[str], Path]:
+        temp = tempfile.TemporaryDirectory()
+        root = Path(temp.name) / "repo"
+        shutil.copytree(ROOT, root)
+        self.addCleanup(temp.cleanup)
+        return temp, root
+
+    def run_validator(self, root: Path) -> subprocess.CompletedProcess[str]:
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+        original_root = VALIDATOR_MODULE.ROOT
+        try:
+            VALIDATOR_MODULE.ROOT = root
+            with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+                returncode = VALIDATOR_MODULE.main()
+        finally:
+            VALIDATOR_MODULE.ROOT = original_root
+        return subprocess.CompletedProcess(
+            args=["python3", str(root / VALIDATOR)],
+            returncode=returncode,
+            stdout=stdout.getvalue(),
+            stderr=stderr.getvalue(),
+        )
+
+    def mutate_program(self, root: Path, mutate) -> None:
+        path = root / "templates" / "program.generated.json"
+        document = json.loads(path.read_text(encoding="utf-8"))
+        mutate(document)
+        path.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
+
+    def assert_program_rejected(self, mutate, expected: str) -> None:
+        _, root = self.fixture()
+        self.mutate_program(root, mutate)
+        result = self.run_validator(root)
+        output = result.stdout + result.stderr
+        self.assertNotEqual(result.returncode, 0, output)
+        self.assertIn(expected, output)
+
+    def test_task0011_canonical_generated_program_is_non_authoritative_and_valid(self) -> None:
+        _, root = self.fixture()
+        path = root / "templates" / "program.generated.json"
+        document = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(document["protocol_version"], 3)
+        self.assertEqual(document["artifact_type"], "GENERATED_PROGRAM")
+        self.assertEqual(document["authority"], "NONE")
+        self.assertEqual(document["invalidation"], "FULL_REGENERATION_ON_MATERIAL_INPUT_CHANGE")
+        result = self.run_validator(root)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_task0011_generated_program_rejects_invalid_graph_coverage_and_authority_shape(self) -> None:
+        def duplicate_id(document) -> None:
+            document["items"].append(json.loads(json.dumps(document["items"][0])))
+
+        def broken_dependency(document) -> None:
+            document["items"][0]["depends_on"] = ["ITEM-999"]
+
+        def cycle(document) -> None:
+            second = json.loads(json.dumps(document["items"][0]))
+            second["id"] = "ITEM-002"
+            second["depends_on"] = ["ITEM-001"]
+            document["items"][0]["depends_on"] = ["ITEM-002"]
+            document["items"].append(second)
+
+        def missing_source_revision(document) -> None:
+            document["synthesis"]["target"].pop("source_revision")
+
+        def malformed_evidence(document) -> None:
+            document["items"][0]["required_evidence"] = "not-a-list"
+
+        def mutable_state(document) -> None:
+            document["items"][0]["status"] = "READY"
+
+        def uncovered_ref(document) -> None:
+            document["coverage"]["required_refs"].append("TARGET:design#uncovered")
+
+        def authority_escalation(document) -> None:
+            document["authority"] = "TASK"
+
+        cases = [
+            (duplicate_id, "duplicate generated item id"),
+            (broken_dependency, "depends on unknown item"),
+            (cycle, "dependency graph must be acyclic"),
+            (missing_source_revision, "synthesis.target"),
+            (malformed_evidence, "required_evidence"),
+            (mutable_state, "unexpected fields ['status']"),
+            (uncovered_ref, "neither covered nor excluded"),
+            (authority_escalation, "path 'authority' must equal 'NONE'"),
+        ]
+        for mutate, expected in cases:
+            with self.subTest(expected=expected):
+                self.assert_program_rejected(mutate, expected)
+
+    def test_task0011_bounded_coverage_exclusion_is_valid(self) -> None:
+        _, root = self.fixture()
+
+        def mutate(document) -> None:
+            ref = "TARGET:design#excluded"
+            document["coverage"]["required_refs"].append(ref)
+            document["coverage"]["exclusions"].append({
+                "ref": ref,
+                "rationale": "Explicitly outside this generated implementation program slice.",
+            })
+
+        self.mutate_program(root, mutate)
+        result = self.run_validator(root)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_task0011_doctrine_preserves_judgment_full_regeneration_and_jit_task_authority(self) -> None:
+        protocol = (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8")
+        architect = (ROOT / "architect" / "SKILL.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        combined = protocol + architect + readme
+        for token in (
+            "authority: NONE",
+            "mathematically unique DAG",
+            "whole generated program stale",
+            "full regeneration",
+            "just in time",
+            "one active Executor binding",
+        ):
+            self.assertIn(token, combined)
+        for forbidden in (
+            "affected-region recomputation",
+            "dependency cache",
+            "planner service",
+        ):
+            self.assertIn(forbidden, protocol)
 
 
 if __name__ == "__main__":

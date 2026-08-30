@@ -1,0 +1,50 @@
+{
+  "protocol_version": 3,
+  "artifact_type": "GENERATED_PROGRAM",
+  "authority": "NONE",
+  "invalidation": "FULL_REGENERATION_ON_MATERIAL_INPUT_CHANGE",
+  "synthesis": {
+    "target": {
+      "repository": "owner/repo",
+      "source_revision": "<immutable target source revision>"
+    },
+    "external_authorities": [
+      {
+        "source": "owner/standards-or-authority",
+        "revision": "<immutable adopted authority revision>"
+      }
+    ],
+    "synthesis_policy": {
+      "id": "default-program-synthesis",
+      "revision": "<immutable synthesis policy revision>"
+    }
+  },
+  "coverage": {
+    "required_refs": [
+      "TARGET:design#feature-a",
+      "STANDARD:obligation-a"
+    ],
+    "exclusions": []
+  },
+  "items": [
+    {
+      "id": "ITEM-001",
+      "traceability": [
+        "TARGET:design#feature-a"
+      ],
+      "depends_on": [],
+      "obligations": [
+        "STANDARD:obligation-a"
+      ],
+      "acceptance_refs": [
+        "TARGET:acceptance#feature-a"
+      ],
+      "required_evidence": [
+        "Proof that feature A satisfies its acceptance reference and adopted obligation."
+      ],
+      "required_capabilities": [
+        "repository_content_read"
+      ]
+    }
+  ]
+}

@@ -10,7 +10,7 @@ A deliberately curated library of **exactly 15** reusable agent skills plus dete
 
 The normal flow is planning and exact handoff → restrictive execution and Executor report → Architect review → exact-SHA verification when required → explicit promotion → separately authorized release. Binding, lifecycle, authority/capability separation, continuation, promotion lineage, and release semantics are defined only by the Task Protocol.
 
-`PROGRAM` is presentation only for ordered repository-local tasks. It does not replace repository-local authority; see the Task Protocol for the governing semantics.
+`PROGRAM` remains presentation only for ordered repository-local tasks. It may be rendered from the optional machine-readable [generated program template](templates/program.generated.json), which is derived planning data with authority `NONE`: it records immutable synthesis identities, validated coverage/dependencies, and Architect judgment, but never replaces repository-local task authority or authorizes execution, lifecycle mutation, review, verification, promotion, or release. See the Task Protocol for the governing semantics.
 
 ## Operator-facing presentation
 
@@ -57,6 +57,7 @@ There is one task model, not task-lite/task-compact variants. Navigation:
 - [templates/report.yaml](templates/report.yaml): Executor-owned evidence shape;
 - [templates/review.yaml](templates/review.yaml): Architect-owned judgment shape;
 - [templates/continuation.yaml](templates/continuation.yaml): post-review exact-identity continuation shape;
+- [templates/program.generated.json](templates/program.generated.json): optional derived generated-planning snapshot with authority `NONE`, never task/lifecycle authority;
 - [contracts/IMPLEMENTATION_CONTRACT.md](contracts/IMPLEMENTATION_CONTRACT.md): task artifact obligations;
 - [contracts/IMPLEMENTATION_REPORT.md](contracts/IMPLEMENTATION_REPORT.md): report artifact obligations;
 - [contracts/ARCHITECT_REVIEW.md](contracts/ARCHITECT_REVIEW.md): review artifact obligations;
@@ -64,4 +65,4 @@ There is one task model, not task-lite/task-compact variants. Navigation:
 
 ## Validation
 
-The stdlib-only validator checks the exact taxonomy, frontmatter/catalog, constrained YAML, canonical templates, protocol-v3 compatibility, required doctrine tokens, and internal links. The repository keeps one bounded validation workflow on relevant pushes to `dev`; workflow policy is owned by [github-workflow](github-workflow/SKILL.md).
+The stdlib-only validator checks the exact taxonomy, frontmatter/catalog, constrained YAML, canonical templates, generated-program JSON shape/graph/coverage invariants, protocol-v3 compatibility, required doctrine tokens, and internal links. The repository keeps one bounded validation workflow on relevant pushes to `dev`; workflow policy is owned by [github-workflow](github-workflow/SKILL.md).

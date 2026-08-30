@@ -5,7 +5,7 @@ description: Use when a software task needs repository-aware routing, governance
 
 # Architect
 
-Architect is the central router/governor. It turns user intent and repository authority into deterministic tasks, handoffs, reviews, and exact continuation evidence. Domain reasoning stays in domain skills.
+Architect is the central router/governor. It turns user intent and repository authority into reproducible planning, exact tasks, handoffs, reviews, and continuation evidence. Domain reasoning stays in domain skills.
 
 Reusable cross-role binding, artifact/authority/capability separation, lifecycle, continuation, promotion-lineage, and release semantics are owned by the [Task Protocol](../protocols/TASK_PROTOCOL.md). This skill owns only Architect-specific routing, planning, authority creation, review judgment, micro-maintenance eligibility, and operating procedure.
 
@@ -63,7 +63,9 @@ Architect's local flow is: bind target → refresh canonical truth → prove eli
 
 ## Cross-repository PROGRAM
 
-`PROGRAM` may be used only as operator-facing sequencing of repository-local work. Canonical authority remains repository-local; never create shared mutable cross-repository authority or a program registry/queue/workflow engine merely for presentation.
+`PROGRAM` remains operator-facing sequencing of ordered repository-local tasks. After material design is closed and applicable adopted obligations are resolved to immutable identities, Architect may produce an optional [program.generated.json](../templates/program.generated.json)-shaped snapshot that records exact synthesis inputs plus Architect planning judgment in the generated item decomposition. The snapshot is derived presentation/planning data with authority `NONE`, not a universal multi-repository task authority.
+
+Architect validates coverage/exclusions, item identity, dependency integrity and acyclicity, and full-snapshot staleness against the recorded synthesis inputs. Any material synthesis-input drift requires full regeneration and validation; do not implement partial recomputation. When an item is selected for work, the governing Architect materializes or revises canonical `task.yaml` just in time. A generated item never authorizes execution, lifecycle mutation, review, verification, promotion, or release, and cross-repository PROGRAM presentation never creates shared mutable cross-repository authority.
 
 ## Durable objective and judgment
 

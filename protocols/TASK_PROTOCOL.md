@@ -36,11 +36,21 @@ Eligible Architect micro-maintenance is also repository-local but intentionally 
 
 Never create a shared mutable cross-repository authority object. Sequential reuse changes only which repository is currently bound; it does not merge tasks, evidence, lifecycle, or authority across repositories. A user who never switches repositories observes effectively the same single-repository v3 semantics.
 
-## Cross-repository PROGRAM presentation
+## Generated PROGRAM planning and presentation
 
-`PROGRAM` may present ordered repository-local tasks as one operator-visible sequence, for example repo A → task A → report A, then repo B → task B → report B. PROGRAM is presentation only and is not a universal multi-repository task authority. Canonical authority remains repository-local and execution is sequential by default.
+`PROGRAM` remains presentation only for ordered repository-local tasks and is not a universal multi-repository task authority. It may be rendered from optional `program.generated.json` snapshots, but neither the rendering nor the generated snapshot creates authority. A generated snapshot is derived planning data with `authority: NONE`, bound to one target repository and exact target source revision. A cross-repository PROGRAM may sequence repository-local snapshots without merging their authority or lifecycle.
 
-This model creates no orchestrator, no registry, no queue, no database, no workflow engine, no distributed transaction, no cross-repository lock, and no shared mutable cross-repository authority. Program progress never substitutes for exact task/handoff identity.
+Reproducible program synthesis records the exact target source revision, every applicable immutable external authority revision adopted by that target, an explicit synthesis-policy identity/revision, and Architect planning judgment captured in the generated item decomposition. Reproducible means reconstructible, coverage-complete, stale-detectable, and validated from those recorded inputs and judgment; it does not mean task decomposition has one mathematically unique DAG.
+
+Each generated item carries only stable item identity, traceability references, dependency constraints, applicable obligations, acceptance references, required evidence, and required semantic capabilities. The generated artifact carries no mutable execution status, assignee, retry, queue, schedule, provider/account availability, quota, lifecycle, review, promotion, or release state.
+
+Validation must prove that every selected in-scope implementation-driving authority/obligation is covered by at least one generated item or explicitly excluded with bounded rationale; item identities are unique; dependencies reference existing generated items; the dependency graph is acyclic; required immutable synthesis identities are present; and generated content cannot grant authority. Generated items may be Architect judgment constrained by these checks; another valid Architect decomposition can differ while satisfying the same authority and coverage obligations.
+
+V1 invalidation is deliberately coarse: any material change to a synthesis input makes the whole generated program stale. The governing Architect must fully regenerate and validate the snapshot before relying on it again. There is no affected-region recomputation, dependency cache, or build-system-style invalidation engine.
+
+Task authority remains just in time. When a generated item is selected for implementation, the governing Architect may use it to create or revise canonical `task.yaml`; the generated item itself never authorizes execution, mutation, review, verification, promotion, or release. Multiple canonical task artifacts may coexist, while one active Executor binding still means exactly one task revision, repository, branch, and base at a time. Program progress never substitutes for exact task/handoff identity.
+
+This model creates no orchestrator, no registry, no queue, no database, no workflow engine, no planner service, no distributed transaction, no cross-repository lock, and no shared mutable cross-repository authority.
 
 ## Architect judgment and material user decisions
 
@@ -80,6 +90,8 @@ Canonical target-repository artifacts are:
 - `report.yaml`: Executor-owned evidence;
 - `review.yaml`: Architect-owned judgment; for canonical task reviews governed by the current forward-looking durable-review semantics, the final governing Architect judgment is persisted in this existing artifact;
 - [templates/continuation.yaml](../templates/continuation.yaml): a small machine-readable continuation envelope, not shared mutable state.
+
+`program.generated.json` is deliberately absent from that authority list. It is optional derived planning/presentation data with authority `NONE` and cannot replace or amend task/report/review/continuation authority.
 
 For canonical tasks governed by the durable-review semantics introduced by TASK-0010, final `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED` Architect judgment becomes durable repository-reconstructible lifecycle evidence only after `.agent/tasks/<TASK-ID>/review.yaml` is published in the target repository and binds the exact `reviewed_report.commit` plus report revision being judged. The active Architect may reason to a tentative/final judgment before persistence, but later continuation, promotion, release, successor reconstruction, or other cross-session reliance must resolve the published review artifact rather than hidden chat history.
 

@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -49,6 +50,9 @@ CONTINUATION_PHASE_ACTIONS: dict[str, frozenset[str]] = {
 LIFECYCLE_STATES = frozenset({
     "PLANNED", "REPORTED", "ACCEPTED", "VERIFIED", "PROMOTED_NOT_RELEASED", "RELEASED",
 })
+PROGRAM_ARTIFACT_TYPE = "GENERATED_PROGRAM"
+PROGRAM_AUTHORITY = "NONE"
+PROGRAM_INVALIDATION = "FULL_REGENERATION_ON_MATERIAL_INPUT_CHANGE"
 
 errors: list[str] = []
 warnings: list[str] = []
@@ -333,6 +337,22 @@ def load_protocol_document(relative_path: str) -> dict[str, Any] | None:
     return document
 
 
+def load_json_document(relative_path: str) -> dict[str, Any] | None:
+    path = ROOT / relative_path
+    if not path.is_file():
+        error(f"missing required generated program template: {relative_path}")
+        return None
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        error(f"{relative_path}: invalid JSON: {exc}")
+        return None
+    if type(document) is not dict:
+        error(f"{relative_path}: top-level JSON document must be mapping")
+        return None
+    return document
+
+
 _MISSING = object()
 
 TASK_SEQUENCE_SCHEMAS: dict[str, dict[str, type]] = {
@@ -368,6 +388,17 @@ REVIEW_STATES = frozenset({"ACCEPTED", "REVISION_REQUIRED", "BLOCKED"})
 LOCAL_HYGIENE_RESULTS = frozenset({"PASS", "RETAINED_FOR_EVIDENCE", "BLOCKED"})
 LOCAL_HYGIENE_RETAINED_SCHEMA: dict[str, type] = {"identity": str, "reason": str}
 CONTINUATION_REF_SCHEMA: dict[str, type] = {"ref": str, "commit": str}
+PROGRAM_ITEM_SCHEMA: dict[str, type] = {
+    "id": str,
+    "traceability": list,
+    "depends_on": list,
+    "obligations": list,
+    "acceptance_refs": list,
+    "required_evidence": list,
+    "required_capabilities": list,
+}
+PROGRAM_EXCLUSION_SCHEMA: dict[str, type] = {"ref": str, "rationale": str}
+PROGRAM_EXTERNAL_AUTHORITY_SCHEMA: dict[str, type] = {"source": str, "revision": str}
 
 
 def get_path(document: dict[str, Any], dotted: str) -> Any:
@@ -458,6 +489,29 @@ def require_mapping_sequence_schema(
     return valid_items
 
 
+def validate_string_list(
+    label: str,
+    value: Any,
+    item_path: str,
+    *,
+    require_non_empty: bool = False,
+) -> list[str]:
+    if type(value) is not list:
+        error(f"{label}: path '{item_path}' must be list")
+        return []
+    if require_non_empty and not value:
+        error(f"{label}: path '{item_path}' must not be empty")
+    valid: list[str] = []
+    for index, item in enumerate(value):
+        if type(item) is not str or not item.strip():
+            error(f"{label}: path '{item_path}[{index}]' must be non-empty string")
+            continue
+        valid.append(item)
+    if len(valid) == len(value) and len(valid) != len(set(valid)):
+        error(f"{label}: path '{item_path}' must not contain duplicates")
+    return valid
+
+
 def validate_version(label: str, document: dict[str, Any]) -> None:
     require_field(label, document, "protocol_version", int, SUPPORTED_PROTOCOL_VERSION)
 
@@ -528,6 +582,187 @@ def validate_release_authority(label: str, doc: dict[str, Any]) -> None:
             "publish_release": bool,
         },
     )
+
+
+def validate_generated_program_template() -> None:
+    label = "templates/program.generated.json"
+    doc = load_json_document(label)
+    if doc is None:
+        return
+
+    top_valid = require_mapping_schema(
+        label,
+        doc,
+        "program",
+        {
+            "protocol_version": int,
+            "artifact_type": str,
+            "authority": str,
+            "invalidation": str,
+            "synthesis": dict,
+            "coverage": dict,
+            "items": list,
+        },
+    )
+    require_field(label, doc, "protocol_version", int, SUPPORTED_PROTOCOL_VERSION)
+    require_field(label, doc, "artifact_type", str, PROGRAM_ARTIFACT_TYPE)
+    require_field(label, doc, "authority", str, PROGRAM_AUTHORITY)
+    require_field(label, doc, "invalidation", str, PROGRAM_INVALIDATION)
+    if not top_valid:
+        return
+
+    synthesis = doc["synthesis"]
+    synthesis_valid = require_mapping_schema(
+        label,
+        synthesis,
+        "synthesis",
+        {"target": dict, "external_authorities": list, "synthesis_policy": dict},
+    )
+    if synthesis_valid:
+        target = synthesis["target"]
+        if require_mapping_schema(
+            label,
+            target,
+            "synthesis.target",
+            {"repository": str, "source_revision": str},
+        ):
+            for key in ("repository", "source_revision"):
+                if not target[key].strip():
+                    error(f"{label}: path 'synthesis.target.{key}' must be non-empty")
+
+        policy = synthesis["synthesis_policy"]
+        if require_mapping_schema(
+            label,
+            policy,
+            "synthesis.synthesis_policy",
+            {"id": str, "revision": str},
+        ):
+            for key in ("id", "revision"):
+                if not policy[key].strip():
+                    error(f"{label}: path 'synthesis.synthesis_policy.{key}' must be non-empty")
+
+        external_seen: set[tuple[str, str]] = set()
+        for index, authority in enumerate(synthesis["external_authorities"]):
+            item_path = f"synthesis.external_authorities[{index}]"
+            if not require_mapping_schema(
+                label,
+                authority,
+                item_path,
+                PROGRAM_EXTERNAL_AUTHORITY_SCHEMA,
+            ):
+                continue
+            if not authority["source"].strip() or not authority["revision"].strip():
+                error(f"{label}: path '{item_path}' requires non-empty immutable source and revision")
+                continue
+            identity = (authority["source"], authority["revision"])
+            if identity in external_seen:
+                error(f"{label}: duplicate external authority identity {identity!r}")
+            external_seen.add(identity)
+
+    coverage = doc["coverage"]
+    required_refs: list[str] = []
+    exclusion_refs: set[str] = set()
+    if require_mapping_schema(
+        label,
+        coverage,
+        "coverage",
+        {"required_refs": list, "exclusions": list},
+    ):
+        required_refs = validate_string_list(label, coverage["required_refs"], "coverage.required_refs")
+        required_ref_set = set(required_refs)
+        for index, exclusion in enumerate(coverage["exclusions"]):
+            item_path = f"coverage.exclusions[{index}]"
+            if not require_mapping_schema(label, exclusion, item_path, PROGRAM_EXCLUSION_SCHEMA):
+                continue
+            ref = exclusion["ref"]
+            rationale = exclusion["rationale"]
+            if not ref.strip() or not rationale.strip():
+                error(f"{label}: path '{item_path}' requires non-empty ref and bounded rationale")
+                continue
+            if ref in exclusion_refs:
+                error(f"{label}: duplicate exclusion ref {ref!r}")
+            exclusion_refs.add(ref)
+            if ref not in required_ref_set:
+                error(f"{label}: exclusion ref {ref!r} is not present in coverage.required_refs")
+
+    item_ids: set[str] = set()
+    item_dependencies: dict[str, list[str]] = {}
+    covered_refs: set[str] = set()
+    required_ref_set = set(required_refs)
+    for index, item in enumerate(doc["items"]):
+        item_path = f"items[{index}]"
+        if not require_mapping_schema(label, item, item_path, PROGRAM_ITEM_SCHEMA):
+            continue
+        item_id = item["id"]
+        if not item_id.strip():
+            error(f"{label}: path '{item_path}.id' must be non-empty")
+            continue
+        if item_id in item_ids:
+            error(f"{label}: duplicate generated item id {item_id!r}")
+        item_ids.add(item_id)
+
+        traceability = validate_string_list(
+            label, item["traceability"], f"{item_path}.traceability", require_non_empty=True
+        )
+        dependencies = validate_string_list(label, item["depends_on"], f"{item_path}.depends_on")
+        obligations = validate_string_list(label, item["obligations"], f"{item_path}.obligations")
+        validate_string_list(
+            label, item["acceptance_refs"], f"{item_path}.acceptance_refs", require_non_empty=True
+        )
+        validate_string_list(
+            label, item["required_evidence"], f"{item_path}.required_evidence", require_non_empty=True
+        )
+        capabilities = validate_string_list(
+            label, item["required_capabilities"], f"{item_path}.required_capabilities"
+        )
+        for capability in capabilities:
+            if not CAPABILITY_RE.fullmatch(capability):
+                error(f"{label}: path '{item_path}.required_capabilities' contains invalid semantic capability {capability!r}")
+
+        item_dependencies[item_id] = dependencies
+        covered_refs.update(traceability)
+        covered_refs.update(obligations)
+        for ref in traceability + obligations:
+            if ref not in required_ref_set:
+                error(f"{label}: item {item_id!r} references unselected coverage ref {ref!r}")
+
+    for item_id, dependencies in item_dependencies.items():
+        for dependency in dependencies:
+            if dependency not in item_ids:
+                error(f"{label}: item {item_id!r} depends on unknown item {dependency!r}")
+            if dependency == item_id:
+                error(f"{label}: item {item_id!r} cannot depend on itself")
+
+    graph = {
+        item_id: [dependency for dependency in dependencies if dependency in item_ids]
+        for item_id, dependencies in item_dependencies.items()
+    }
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(item_id: str) -> bool:
+        if item_id in visiting:
+            return True
+        if item_id in visited:
+            return False
+        visiting.add(item_id)
+        for dependency in graph.get(item_id, []):
+            if visit(dependency):
+                return True
+        visiting.remove(item_id)
+        visited.add(item_id)
+        return False
+
+    if any(visit(item_id) for item_id in graph):
+        error(f"{label}: dependency graph must be acyclic")
+
+    for ref in required_refs:
+        covered = ref in covered_refs
+        excluded = ref in exclusion_refs
+        if not covered and not excluded:
+            error(f"{label}: required coverage ref {ref!r} is neither covered nor excluded")
+        if covered and excluded:
+            error(f"{label}: coverage ref {ref!r} cannot be both covered and excluded")
 
 
 def validate_task_template() -> None:
@@ -896,6 +1131,8 @@ def validate_protocol_docs() -> None:
         "report/review/verifier/promotion/release lineage remains repository-local",
         "PROGRAM", "ordered repository-local tasks",
         "not a universal multi-repository task authority",
+        "program.generated.json", "authority: NONE", "mathematically unique DAG",
+        "whole generated program stale", "fully regenerate", "Task authority remains just in time",
         "two organizational roles", "Executor specializations",
         "templates/handoff.yaml", "templates/continuation.yaml", "handoff_snapshot",
         "RESOLVED", "NOT_APPLICABLE", "UNRESOLVED", "promotion_candidate_head",
@@ -913,7 +1150,8 @@ def validate_protocol_docs() -> None:
         "explicitly identify the next `owner/repo`", "refresh canonical GitHub truth",
         "discard previous repository-specific assumptions",
         "simultaneous ambiguous active target is forbidden",
-        "PROGRAM", "Chat", "Executor", "Model", "Effort", "Progress",
+        "PROGRAM", "program.generated.json", "full regeneration", "just in time",
+        "Chat", "Executor", "Model", "Effort", "Progress",
         "PROMPT TO COPY", "Program 2/4 · agent-standards · execution",
     ])
     require_tokens(ROOT / "executor" / "SKILL.md", [
@@ -925,6 +1163,7 @@ def validate_protocol_docs() -> None:
     ])
     require_tokens(ROOT / "README.md", [
         "PROGRAM", "presentation only", "ordered repository-local tasks",
+        "program.generated.json", "authority `NONE`",
         "TASK LAUNCH", "Chat", "Executor", "Model", "Effort", "Progress",
         "Program 2/4 · agent-standards · execution", "fake percentages",
     ])
@@ -1000,6 +1239,7 @@ def main() -> int:
         error("frontmatter names do not match curated skill set")
 
     validate_readme_catalog()
+    validate_generated_program_template()
     validate_task_template()
     validate_handoff_template()
     validate_report_template()
