@@ -1,0 +1,225 @@
+protocol_version: 3
+
+task_id: TASK-0012
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: maintainer_objective_change
+  task_id: ""
+  gap_id: "COST_AWARE_CAPABILITY_ROUTING"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "1361908ae49d9bdf067e61530d080111cc0ae55b"
+
+architect_analysis_skills:
+  - architect
+  - executor
+  - simplicity
+  - verification
+  - github-workflow
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended:
+    - github-workflow
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "Current informed operator objective that all target work use the cheapest sufficient authorized capability/evidence path, degrade or fall back cleanly when quota/tool availability changes, avoid paid/limited plugins when unnecessary, and work well both with ChatGPT+GitHub only and with optional Mac/local/Codex capability."
+    role: "Durable maintainer objective: make reusable execution routing cost-aware and environment-adaptive without creating provider/account orchestration or weakening required evidence."
+    precedence: 1
+  - source: "phatnguyen03022001/agent-skills@1361908ae49d9bdf067e61530d080111cc0ae55b"
+    role: "Current protocol-v3 authority, including authority/capability/consequence separation, current-phase preflight, least-powerful sufficient surface, GitHub workflow discipline, and generated PROGRAM non-authority semantics to evolve compatibly."
+    precedence: 2
+
+structure_authority:
+  status: RESOLVED
+  source: "Existing protocols/TASK_PROTOCOL.md plus role-local architect/executor and github-workflow guidance, with repository tests only where needed to pin the semantic boundary."
+  rationale: "This is a bounded reusable routing correction. No new task schema, provider registry, account registry, billing service, quota database, plugin manager, workflow engine, or new skill is justified."
+
+objective: "Define protocol-v3-compatible capability routing that starts from required semantic capability and required evidence, filters candidate execution surfaces by current authority and sufficiency, then selects the lowest sufficient expected cost/resource burden. Define bounded fallback, degraded-mode, and blocking behavior when tools, quota, rate limits, or paid capacity are unavailable, while keeping provider/account availability runtime evidence rather than persistent authority and keeping target-specific budgets in target-owned documentation/configuration."
+
+scope:
+  required_changes:
+    - "Define provider-neutral routing order: identify the semantic capability and evidence requirement first; resolve currently available candidate surfaces at the relevant phase; reject surfaces lacking authority or sufficient evidence; among remaining candidates choose the lowest sufficient expected cost/resource burden, with fewer context transfers and lower consequence preferred when materially equivalent."
+    - "Clarify that cheapest/free is never allowed to weaken correctness, acceptance evidence, safety, exact identity, or required native/remote verification. A more expensive/limited surface is justified only when cheaper eligible surfaces are materially insufficient."
+    - "Define availability and quota as runtime evidence, not durable authority. Known installation, historical availability, configured provider identity, or a previous preflight does not prove current availability after material environment/quota change."
+    - "Define fallback semantics: when the selected surface becomes unavailable or quota-limited, attempt only an already-authorized candidate that still satisfies required capability/evidence; otherwise use an explicitly permitted degraded mode if current task/target acceptance allows it, or fail closed with the existing capability-unavailable/blocking semantics. Fallback never manufactures authority or silently lowers required evidence."
+    - "Explicitly reject provider/account rotation as a generic quota-evasion or scaling primitive. Multiple legitimate accounts/environments may be selected only when current authority and provider rules permit that identity for the work; reusable governance must not create account pools, rotation logic, credential brokers, quota evasion, or identity registries."
+    - "Keep actual project budgets, allowed paid services, provider constraints, SLO/cost envelopes, and deployment economics target-owned. agent-skills owns only generic routing semantics; architect-profile may own operator preferences/environment context; agent-runtime remains only an optional capability surface."
+    - "Preserve the existing task capability_requirements shape as semantic requirements. Do not persist volatile provider availability, account identity, remaining quota, pricing snapshots, or mutable routing state in task.yaml or program.generated.json merely to implement this correction."
+    - "Clarify verification reuse: prefer one repository-owned deterministic verifier invoked through the cheapest sufficient surface; local shell, Codex, Agent Runtime, and GitHub Actions should call the same verifier when feasible rather than create divergent verification logic. GitHub Actions remains a remote evidence boundary when required, not the default iterative debugger."
+    - "Keep mobile/ChatGPT+GitHub-only operation first-class: no rule may make Mac, Agent Runtime, Codex, or local shell mandatory unless the exact task/target materially requires a native capability unavailable from GitHub/ChatGPT."
+    - "Keep protocol version 3 and existing PROGRAM/task/report/review/continuation/Git/release authority semantics unchanged except for the minimum routing wording needed."
+    - "Add or update repository tests only as needed to mechanically pin the new doctrine and prevent accidental provider registries, account rotation semantics, evidence downgrades, or mandatory-local assumptions."
+    - "Use the existing bounded GitHub Actions workflow as the single remote deterministic verification boundary after implementation is pushed; do not modify the workflow unless current inspection proves the authorized semantic files are not already covered."
+    - "Produce TASK-0012 Executor report in a separate report-only commit and stop at Governing Architect review."
+
+  allowed_existing_files_or_components:
+    - protocols/TASK_PROTOCOL.md
+    - architect/SKILL.md
+    - executor/SKILL.md
+    - github-workflow/SKILL.md
+    - README.md
+    - scripts/test_validate_skill_library.py
+    - scripts/validate_skill_library.py
+    - .agent/tasks/TASK-0012/task.yaml
+    - .github/workflows/validate-skill-library.yml
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Protocol remains version 3."
+  - "GitHub remote remains canonical repository truth."
+  - "Authority, capability availability, consequence, evidence sufficiency, and cost/resource preference remain distinct concepts."
+  - "Required evidence and safety outrank cost minimization; FREE/QUOTA/PAID status never creates or removes authority by itself."
+  - "Provider/account availability remains runtime evidence; no provider registry, account registry, quota database, billing service, credential broker, account rotation system, scheduler, queue, daemon, workflow engine, or central orchestrator is introduced."
+  - "Target repositories own actual budgets and provider-specific product/deployment constraints."
+  - "Mac, Agent Runtime, Codex, and local shell remain optional unless exact target/task authority materially requires their capability."
+  - "GitHub Actions is not made a mandatory dev loop or iterative debugger."
+  - "program.generated.json remains authority NONE and contains no mutable provider/quota/account state."
+  - "Branches remain exactly {dev, main}; main remains unchanged."
+
+forbidden_changes:
+  - "Do not modify agent-documents, agent-standards, agent-runtime, architect-profile, or any target product repository."
+  - "Do not add prompt/transcript archival semantics or tooling in this task."
+  - "Do not add scale-trigger semantics in this task."
+  - "Do not add actual pricing tables, provider-specific quota numbers, billing APIs, paid-service accounts, secret handling machinery, account pools, account rotation, credential brokers, or provider failover services."
+  - "Do not use multiple accounts to bypass provider rate limits, quotas, restrictions, billing controls, or terms."
+  - "Do not add a persistent capability/provider registry, availability database, quota cache, scheduler, retry engine, workflow orchestrator, or cross-repository mutable state."
+  - "Do not add a new task field/schema merely for cost-class uniformity unless current inspection proves the existing semantic requirements cannot express the bounded routing rule; if a schema change becomes materially necessary, return BLOCKED for revised authority."
+  - "Do not modify program.generated.json shape merely to add cost metadata in this task."
+  - "Do not add a new skill or expand the closed 15-skill taxonomy."
+  - "Do not change GitHub Actions behavior unless current inspection proves the existing workflow cannot verify authorized files; workflow mutation requires revised authority."
+  - "Do not perform unrelated cleanup or style-only rewrites."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0012/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - github_actions_run_read
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_write
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Routing begins from semantic capability and evidence, not provider identity."
+    evidence_required: "Canonical semantics resolve required capability/evidence first, then current candidate surfaces, authority/sufficiency filtering, and finally lowest sufficient cost/resource selection."
+  - id: AC-2
+    requirement: "Cost optimization cannot downgrade required engineering proof."
+    evidence_required: "Canonical wording states that cheaper/free surfaces cannot weaken correctness, safety, exact identity, acceptance evidence, or required native/remote verification."
+  - id: AC-3
+    requirement: "Quota/tool failure has bounded fallback semantics."
+    evidence_required: "Unavailable or quota-limited surfaces fall back only to currently available authorized sufficient candidates; otherwise explicitly permitted degraded mode or existing fail-closed capability/blocking result is required."
+  - id: AC-4
+    requirement: "Provider/account limits do not create account-orchestration machinery."
+    evidence_required: "No account/provider registry, rotation, credential broker, quota DB, or limit-evasion semantics; multiple legitimate identities never become a generic scaling primitive."
+  - id: AC-5
+    requirement: "Ownership remains federated and target-first."
+    evidence_required: "agent-skills owns generic routing only; target owns actual budgets/provider constraints; profile may supply preferences/environment context; runtime remains optional capability."
+  - id: AC-6
+    requirement: "Verification stays single-source and environment-adaptive."
+    evidence_required: "Guidance prefers one repository-owned verifier reused by available surfaces; Actions remains bounded remote evidence rather than mandatory iterative development; mobile ChatGPT+GitHub remains sufficient when native capability is not required."
+  - id: AC-7
+    requirement: "Correction remains minimal and protocol-v3 compatible."
+    evidence_required: "No new schema/skill/dependency/service/registry/orchestrator/cross-repo mutation; repository validator/tests pass and exact diff touches only necessary authorized owners."
+  - id: AC-8
+    requirement: "GitHub-only execution is sufficient for TASK-0012."
+    evidence_required: "Implementation uses authorized GitHub content operations and exactly the existing bounded validation workflow for remote deterministic verification; no Mac/Agent Runtime/Codex is required."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Refresh canonical GitHub truth. Require dev equals the exact TASK-0012 handoff base, main equals 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1, topology exactly {dev, main}, TASK-0012 revision 1 exists at base, and all required GitHub-only EXECUTION capabilities are currently available."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Inspect current Task Protocol capability semantics, Architect/Executor surface selection, github-workflow verification guidance, relevant README/test doctrine, and workflow trigger coverage. Select the minimum semantic owner set; allowed scope is not a requirement to touch every file."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Implement the smallest provider-neutral cost/quota/fallback routing correction satisfying AC-1..AC-7. Prefer doctrine plus narrow regression tests over new schema or runtime machinery."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Review explicitly for accidental evidence downgrade, provider/account registry semantics, quota-evasion logic, mandatory-local/Codex/runtime assumptions, duplicated verifier logic, or target-budget ownership leakage."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Before each GitHub write, refresh dev and require expected parent identity. Keep main unchanged and create no branch."
+      required: true
+    - id: CHECK-6
+      command_or_check: "After implementation push, inspect exact implementation diff and the single GitHub Actions run created by the existing validate-skill-library workflow for that exact implementation SHA. Require Validate and Unit tests PASS, attempt 1 unless GitHub itself proves an infrastructure-only retry is unavoidable; do not use rerun/debug loops."
+      required: true
+    - id: CHECK-7
+      command_or_check: "Perform exact semantic acceptance review against AC-1..AC-8, then create TASK-0012/report.yaml as a separate report-only commit. Verify report parent/diff, final dev identity, unchanged main, and exact {dev, main} topology before returning NEEDS_REVIEW."
+      required: true
+  authoritative_verification:
+    required: true
+    mechanism: "existing repository GitHub Actions validator/unit-test workflow + exact semantic/diff inspection"
+    expected_signal: "Single bounded implementation validation run PASS and AC-1..AC-8 satisfied without provider/account orchestration or evidence downgrade"
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
