@@ -1,0 +1,244 @@
+protocol_version: 3
+
+task_id: TASK-0015
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: "TERMINAL_IDENTITY_AND_TIMING_EVIDENCE"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "1fcf5a2ebeeec7f3e1498d207148a9cd81a95456"
+
+architect_analysis_skills:
+  - simplicity
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "Explicit operator decision in the current Architect session"
+    role: "operator authority for terminal identity and lightweight timing evidence"
+    precedence: 1
+  - source: "protocols/TASK_PROTOCOL.md@1fcf5a2ebeeec7f3e1498d207148a9cd81a95456"
+    role: "current reusable task-governance semantic owner"
+    precedence: 2
+  - source: "contracts/IMPLEMENTATION_REPORT.md@1fcf5a2ebeeec7f3e1498d207148a9cd81a95456"
+    role: "current Executor report-artifact obligation owner"
+    precedence: 3
+
+structure_authority:
+  status: RESOLVED
+  source: "Existing agent-skills ownership boundaries and current file layout"
+  rationale: >-
+    Reusable terminal-response identity belongs to TASK_PROTOCOL plus role-local skills.
+    Executor processing-time evidence belongs to the existing implementation-report contract
+    and report template. Exact operator-specific visual punctuation belongs outside this task.
+
+objective: >-
+  Add minimal, backward-compatible protocol-v3 operability evidence for two concrete gaps:
+  terminal task identity in Architect/Executor user-facing terminal responses, and optional
+  Executor processing timestamps suitable for later workflow audit. Preserve existing roles,
+  lifecycle, authority, capability, continuation, promotion, release, and prompt-locator semantics.
+
+scope:
+  required_changes:
+    - >-
+      In protocols/TASK_PROTOCOL.md, define reusable terminal-response identity semantics:
+      a task-bound Architect or Executor terminal response identifies organizational role,
+      active target repository, canonical task ID, and canonical task revision; an Architect
+      terminal response with an active target but no canonical task explicitly identifies that
+      no task is bound. The identity line is presentation/continuity context only and creates no
+      authority, lifecycle state, evidence, or repository binding by itself.
+    - >-
+      State that terminal identity remains outside PROMPT TO COPY and other copied handoff/prompt
+      content. Exact punctuation, separators, short-name rendering, or other operator-specific
+      visual styling are profile/presentation concerns rather than reusable agent-skills semantics.
+    - >-
+      Update architect/SKILL.md and executor/SKILL.md with the smallest role-local procedure needed
+      to render truthful terminal identity and avoid inventing a task ID/revision when none is bound.
+    - >-
+      In contracts/IMPLEMENTATION_REPORT.md, define optional non-authoritative operational timing
+      evidence with exactly started_at_utc and terminal_decision_at_utc timestamps. Define both as
+      RFC 3339 UTC timestamps when a trustworthy current clock is available; omit the optional block
+      rather than invent time when it is unavailable.
+    - >-
+      Define started_at_utc as the beginning of the current task-bound Executor execution attempt,
+      before its binding/preflight work, and terminal_decision_at_utc as the time the Executor reaches
+      its terminal task result before report publication. The elapsed processing duration is derived
+      from these timestamps and MUST NOT be stored as a second canonical duration field.
+    - >-
+      Make timing explicitly operational telemetry only: it cannot prove quality, PASS, acceptance,
+      independence, identity, authority, capability, or performance compliance; absence of timing
+      does not invalidate an otherwise valid protocol-v3 report.
+    - >-
+      Update templates/report.yaml with the optional timing shape while preserving protocol-v3
+      backward compatibility. Do not backfill or rewrite historical reports.
+    - >-
+      Perform exact diff/static consistency verification and publish the canonical report-only child,
+      then stop at NEEDS_REVIEW.
+  allowed_existing_files_or_components:
+    - protocols/TASK_PROTOCOL.md
+    - architect/SKILL.md
+    - executor/SKILL.md
+    - contracts/IMPLEMENTATION_REPORT.md
+    - templates/report.yaml
+    - .agent/tasks/TASK-0015/task.yaml
+  expected_files_are_restrictive: true
+
+invariants:
+  - "protocol_version remains 3; no protocol-version bump"
+  - "Exactly two organizational roles remain Architect and Executor"
+  - "No new lifecycle state, execution lane, task artifact, continuation type, authority source type, or role is introduced"
+  - "Terminal identity is presentation/continuity context only and never substitutes for exact task/handoff/review authority"
+  - "PROMPT TO COPY remains an authority locator and does not absorb the terminal identity footer"
+  - "Exact operator-specific punctuation/rendering is not hard-coded in agent-skills"
+  - "Timing is optional and non-authoritative; missing timing cannot block or invalidate an otherwise valid v3 report"
+  - "Timing stores only started_at_utc and terminal_decision_at_utc; no elapsed_seconds or duplicate canonical duration field"
+  - "No historical task/report/review artifact is backfilled or rewritten"
+  - "No telemetry service, database, registry, dashboard, collector, agent runtime feature, or workflow engine is introduced"
+  - "Current continuation, promotion, release, review, capability, and Git-authority semantics remain unchanged"
+
+forbidden_changes:
+  - "Any mutation to architect-profile, agent-standards, agent-documents, agent-runtime, or a target product repository"
+  - "Hard-code the operator-specific middle-dot footer or any other exact visual separator into reusable agent-skills semantics"
+  - "Add elapsed_seconds, token counts, model latency, tool-call counts, cost accounting, or provider telemetry"
+  - "Create a metrics framework, telemetry backend, database, registry, dashboard, cron, workflow, or orchestration mechanism"
+  - "Modify templates/task.yaml, templates/handoff.yaml, templates/continuation.yaml, templates/review.yaml, release semantics, or promotion semantics"
+  - "Modify dependencies, package manifests, GitHub Actions, CI workflows, branch topology, tags, releases, or repository metadata"
+  - "Modify TASK-0001 through TASK-0014 artifacts"
+  - "Create a branch, PR, issue, tag, release, or mutate main"
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0015/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: >-
+      Reusable task-bound terminal-response identity is unambiguous for Architect and Executor,
+      includes role + active target repository + canonical task ID/revision, supports truthful
+      Architect NO TASK state, stays outside PROMPT TO COPY, and creates no authority.
+    evidence_required: "Exact protocol/role-skill diff and consistency audit"
+  - id: AC-2
+    requirement: >-
+      Report timing is optional protocol-v3 operational evidence with exactly started_at_utc and
+      terminal_decision_at_utc, RFC 3339 UTC semantics, truthful omission when a current clock is
+      unavailable, and no stored derived-duration field.
+    evidence_required: "Exact report-contract/template diff and field-semantics audit"
+  - id: AC-3
+    requirement: >-
+      Timing cannot influence PASS, acceptance, authority, capability, identity, independence, or
+      performance compliance; historical reports remain untouched and valid.
+    evidence_required: "Backward-compatibility and non-authority semantic audit"
+  - id: AC-4
+    requirement: >-
+      Implementation changes exactly the five authorized semantic/template files and introduces no
+      new framework, telemetry infrastructure, role, lifecycle, dependency, workflow, or operator-specific rendering.
+    evidence_required: "Base-to-candidate changed-file and prohibited-scope audit"
+  - id: AC-5
+    requirement: >-
+      Executor publishes a canonical report-only direct child after exact candidate verification and
+      stops at NEEDS_REVIEW without promotion or release.
+    evidence_required: "Exact candidate/report parentage and final ref evidence"
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Confirm base-to-candidate changed files are exactly protocols/TASK_PROTOCOL.md, architect/SKILL.md, executor/SKILL.md, contracts/IMPLEMENTATION_REPORT.md, templates/report.yaml"
+      required: true
+    - id: CHECK-2
+      command_or_check: "Confirm protocol and both role skills express the same terminal identity fields and do not hard-code operator-specific visual punctuation"
+      required: true
+    - id: CHECK-3
+      command_or_check: "Confirm report contract and template expose only optional started_at_utc and terminal_decision_at_utc timing fields with RFC 3339 UTC and truthful-omission semantics"
+      required: true
+    - id: CHECK-4
+      command_or_check: "Confirm no elapsed_seconds, token/cost/tool-call/model-latency telemetry, telemetry framework, database, workflow, dependency, or new lifecycle/role was introduced"
+      required: true
+    - id: CHECK-5
+      command_or_check: "Confirm protocol_version remains 3 and existing task/handoff/continuation/review/promotion/release authority semantics are unchanged"
+      required: true
+    - id: CHECK-6
+      command_or_check: "Confirm historical TASK-0001..TASK-0014 artifacts are byte-unchanged"
+      required: true
+    - id: CHECK-7
+      command_or_check: "Confirm report commit is a report-only direct child of the verified implementation candidate and final topology remains exactly {dev, main} with main unchanged"
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
