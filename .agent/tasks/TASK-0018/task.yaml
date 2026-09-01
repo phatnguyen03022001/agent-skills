@@ -1,0 +1,221 @@
+protocol_version: 3
+
+task_id: TASK-0018
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: "FIRST_STABLE_RELEASE_PREPARATION"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "560cdf8a76c9866de17e2b5783d651bc8a941157"
+
+structure_authority:
+  status: RESOLVED
+  source: "Accepted TASK-0016 release-lineage readiness audit plus accepted TASK-0017 review-operational-timing correction and current exact repository state."
+  rationale: >-
+    TASK-0016 established RELEASE_PREPARATION_READY for the semantic lineage through
+    8258c93725af4e073add2659bf1d5e88d64304ff. TASK-0017 then introduced one bounded
+    accepted governance correction with exact-candidate Actions proof. The remaining release-preparation
+    work is to prove that the exact current dev lineage remains release-ready, bind the first stable
+    release identity, and preserve explicit review -> promotion -> release separation without creating
+    semantic churn or a release framework.
+
+objective: >-
+  Prepare the exact current agent-skills lineage for its first stable release without changing reusable
+  governance semantics: reuse accepted release-readiness evidence where identities remain valid, verify
+  the bounded post-audit delta including TASK-0017, confirm exact branch/tag/release state, establish
+  v1.0.0 as the intended first stable release identity, publish the canonical report-only child, and stop
+  at NEEDS_REVIEW. Promotion and release remain separately continuation-gated after ACCEPTED review.
+
+scope:
+  required_changes:
+    - "Do not modify any existing semantic repository file during EXECUTION."
+    - >-
+      Treat 560cdf8a76c9866de17e2b5783d651bc8a941157 as the exact pre-task release candidate snapshot.
+      Treat 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1 as the pinned stable main base.
+    - >-
+      Reuse TASK-0016 ACCEPTED release-readiness evidence for the lineage it already audited instead of
+      repeating a full 56-commit semantic audit. Revalidate only predicates that are mutable or changed
+      after that audit, especially TASK-0017 exact candidate/report/review lineage and its exact-candidate
+      GitHub Actions proof.
+    - >-
+      Confirm current main-to-candidate history is linear with no divergence, topology is exactly {dev, main},
+      and no unreviewed semantic mutation exists after TASK-0017 ACCEPTED review.
+    - >-
+      Confirm GitHub tag namespace and GitHub Releases are empty at execution start. If either is not empty,
+      fail closed and report the exact existing release identity rather than inventing another version.
+    - >-
+      Establish v1.0.0 as the intended first stable release identity only if the repository still has no tags
+      and no releases and no canonical evidence requires another version. This task does not create the tag.
+    - >-
+      Confirm README.md contains no stale unreleased-candidate claim requiring a release-preparation semantic
+      correction. Do not edit README merely to add version marketing or release ceremony.
+    - >-
+      Confirm exact candidate semantics remain protocol version 3, exactly fifteen curated top-level skills,
+      and current deterministic validator/test contracts remain intact. Reuse exact accepted evidence where
+      immutable identity is unchanged; do not rerun remote CI merely for ceremony.
+    - >-
+      Publish only .agent/tasks/TASK-0018/report.yaml as a report-only direct child of the exact execution base
+      and stop at NEEDS_REVIEW.
+    - >-
+      Post-review path is continuation-gated: after persisted ACCEPTED review, a later exact PROMOTION
+      continuation may non-force fast-forward main to the exact accepted TASK-0018 lineage. Only after that
+      promotion is independently confirmed may a later exact RELEASE continuation create v1.0.0 at the
+      promoted main commit and publish the GitHub Release.
+    - >-
+      At PROMOTION or RELEASE continuation, fail closed on ref drift, unexpected tag/release presence,
+      unavailable required capability, non-fast-forward topology, or any mismatch in exact accepted lineage.
+
+  allowed_existing_files_or_components:
+    - .agent/tasks/TASK-0018/task.yaml
+    - .agent/tasks/TASK-0016/task.yaml
+    - .agent/tasks/TASK-0016/report.yaml
+    - .agent/tasks/TASK-0016/review.yaml
+    - .agent/tasks/TASK-0017/task.yaml
+    - .agent/tasks/TASK-0017/report.yaml
+    - .agent/tasks/TASK-0017/review.yaml
+    - README.md
+    - protocols/TASK_PROTOCOL.md
+    - architect/SKILL.md
+    - executor/SKILL.md
+    - contracts/ARCHITECT_REVIEW.md
+    - contracts/IMPLEMENTATION_REPORT.md
+    - templates/review.yaml
+    - scripts/validate_skill_library.py
+    - scripts/test_validate_skill_library.py
+  expected_files_are_restrictive: true
+
+invariants:
+  - "No reusable governance, protocol, contract, skill, template, validator, test, README, workflow, dependency, or repository metadata semantics change during EXECUTION."
+  - "Protocol version remains 3 and backward-compatible semantics remain unchanged."
+  - "The curated taxonomy remains exactly 15 top-level skills."
+  - "Branches remain exactly {dev, main}."
+  - "main remains 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1 during EXECUTION."
+  - "No tag or GitHub Release is created before persisted ACCEPTED TASK-0018 review and exact later continuations."
+  - "Intended first stable release identity is v1.0.0 only while tag/release namespace remains empty."
+  - "Accepted exact evidence is reused when immutable identity is unchanged; no broad duplicate audit or CI rerun is required for ceremony."
+
+forbidden_changes:
+  - "Do not modify any existing semantic file during EXECUTION."
+  - "Do not mutate main, create tags, publish releases, create PRs/issues/branches, or change branch topology during EXECUTION."
+  - "Do not add release automation, changelog framework, package publishing, generated release machinery, registry, dashboard, database, queue, workflow, or another release system."
+  - "Do not backfill historical reviews or rewrite historical task/report/review artifacts."
+  - "Do not expand the taxonomy, change protocol version, or redesign promotion/release semantics."
+  - "Do not rerun GitHub Actions solely to restate already accepted immutable evidence."
+  - "Do not use or probe Agent Runtime."
+  - "Do not use Codex."
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0018/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_write
+  PROMOTION:
+    - exact_remote_ref_read
+    - repository_ref_write
+  RELEASE:
+    - exact_remote_ref_read
+    - create_version_tag
+    - publish_release
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Current release candidate remains linearly promotable and exact."
+    evidence_required: "main-to-560cdf8a76c9866de17e2b5783d651bc8a941157 is ahead-only with no divergence and topology is exactly {dev, main}."
+  - id: AC-2
+    requirement: "Previously accepted release-readiness evidence is reused without leaving the post-audit delta unchecked."
+    evidence_required: "Report binds TASK-0016 ACCEPTED release-readiness evidence and independently resolves TASK-0017 accepted candidate/report/review plus exact-candidate Actions PASS."
+  - id: AC-3
+    requirement: "First stable release identity is conflict-free."
+    evidence_required: "Tag namespace and GitHub Releases are empty and v1.0.0 is recorded only as intended future release identity, not created during EXECUTION."
+  - id: AC-4
+    requirement: "No semantic preparation churn is introduced."
+    evidence_required: "README has no stale release claim requiring correction, execution changes no existing semantic file, and report publication is the only execution mutation."
+  - id: AC-5
+    requirement: "Release-critical invariants remain intact."
+    evidence_required: "Protocol v3, exactly 15 curated skills, validator/test authority, terminal identity, Executor/report timing, Architect-review timing, and current release-separation semantics remain unchanged."
+  - id: AC-6
+    requirement: "Promotion and release remain exact, separate, and fail-closed."
+    evidence_required: "Task/report explicitly require persisted ACCEPTED review before PROMOTION and independently confirmed promotion before v1.0.0 tag/release publication."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Resolve TASK-0018 revision 1 at exact handoff base; require topology {dev, main}; require main at pinned stable base; require tag namespace and GitHub Releases empty; preflight EXECUTION capabilities."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Resolve TASK-0016 review and verify its RELEASE_PREPARATION_READY lineage evidence remains immutably addressable."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Resolve TASK-0017 task/report/review, verify exact candidate e0daf425bd874d2c2c63841eac36b554bf5b61cf, report a8091c30cf08a7bd6cfe113df1faac35d2881769, accepted review 560cdf8a76c9866de17e2b5783d651bc8a941157, and exact Actions run 33552081778 PASS evidence."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Compare pinned main to exact pre-task candidate; prove ahead-only/no divergence; inspect changed semantic-file set only as needed to confirm no semantic mutation after accepted TASK-0017 review."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Inspect README release wording and release-critical invariants; confirm no semantic edit or new CI run is required."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Publish exactly one report-only child of the exact execution base; verify final refs/topology and continued absence of tag/release; return NEEDS_REVIEW."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: true
+
+release_authority:
+  create_version_tag: true
+  mutate_repository_metadata: false
+  publish_release: true
+
+blocking_decisions: []
+execution_ready: true
