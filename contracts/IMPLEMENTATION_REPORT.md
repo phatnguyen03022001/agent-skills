@@ -18,6 +18,14 @@ The canonical template includes `capability_preflight` for the Executor phase: p
 
 `local_hygiene` is optional for protocol-v3 compatibility. When present, its result is `PASS`, `RETAINED_FOR_EVIDENCE`, or `BLOCKED`, with retained identity/reason when evidence must remain. Cleanup safety semantics are defined by the Task Protocol and Executor skill rather than recopied here.
 
+## Optional operational timing evidence
+
+A protocol-v3 report may include optional non-authoritative `operational_timing` evidence. When present, that block contains exactly `started_at_utc` and `terminal_decision_at_utc`; both values are RFC 3339 UTC timestamps from a trustworthy current clock. If a trustworthy current clock is unavailable, omit the entire optional block rather than inventing or approximating time.
+
+`started_at_utc` is the beginning of the current task-bound Executor execution attempt, before binding/preflight work. `terminal_decision_at_utc` is when the Executor reaches its terminal task result, before report publication. Elapsed processing duration is derived from those two timestamps and MUST NOT be stored as another canonical duration field.
+
+This timing is operational telemetry only. It cannot prove or affect quality, check PASS, acceptance, independence, identity, authority, capability, or performance compliance. Absence of `operational_timing` does not invalidate an otherwise valid protocol-v3 report.
+
 The existing report shape also represents truthful terminal failure. A report may record authoritative verifier FAIL, blockers, and an existing terminal/blocking `result` while remaining Executor-owned evidence; successful verification is not required for report validity or publication when the exact task grants report commit/push authority. Persisting such a report never converts FAIL to PASS and never creates Architect review, continuation, promotion, or release authority.
 
 If report commit/push authority or required publication capability is unavailable, the Executor returns the exact non-durable terminal result and must not claim that canonical report evidence exists.

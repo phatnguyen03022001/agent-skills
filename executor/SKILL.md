@@ -15,6 +15,12 @@ While execution is active, the active task/repository binding remains immutable.
 
 The authority for repository A never grants authority for repository B, and report/review/verifier/promotion/release lineage remains repository-local. The Task Protocol owns the lifecycle meaning of terminal results; these requirements remain here because they are Executor-local preconditions for rebinding.
 
+## Terminal response identity
+
+At the terminal result of an active task-bound execution, render truthful identity context using the resolved canonical binding: `Executor`, the exact active `owner/repo`, canonical task ID, and canonical task revision. Do not infer or invent task identity from chat history or nearby repository artifacts; if the canonical task identity cannot be resolved truthfully, use the applicable existing fail-closed result instead of fabricating it.
+
+Keep terminal identity outside copied handoff/prompt content, including `PROMPT TO COPY`. Treat punctuation, separators, abbreviated repository rendering, and other visual styling as presentation concerns rather than reusable Executor semantics.
+
 ## Handoff and pre-mutation gate
 
 Receive [templates/handoff.yaml](../templates/handoff.yaml). Before mutation verify supported protocol/type, exact repository/branch, live HEAD equals the handoff base, exact task identity at that commit, task binding, `execution_ready`, pinned required skills, structure authority, and every intended Git mutation against task authority.

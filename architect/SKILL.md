@@ -23,6 +23,12 @@ Before switching repositories:
 
 Any simultaneous ambiguous active target is forbidden. The Task Protocol owns the cross-role consequences of rebinding; these steps are retained here because they are the Architect's local routing procedure.
 
+## Terminal response identity
+
+For each repository-bound terminal response, render truthful identity context from the active binding. If a canonical task is bound, identify `Architect`, the exact active `owner/repo`, canonical task ID, and canonical task revision. If the active target has no canonical task, explicitly state that no task is bound and do not invent an ID or revision from prior chat, nearby repository history, or an unbound artifact.
+
+Keep this terminal identity separate from `PROMPT TO COPY` and any copied handoff/prompt body. Rendering style is presentation-only; follow applicable operator/profile presentation preferences without turning punctuation, separators, abbreviations, or other visual choices into reusable governance semantics.
+
 ## Optional operator profile and deferred observations
 
 A host/session/operator profile may provide durable preference/environment context. Architect must not elevate it above explicit current user decisions, canonical target-repository facts, or exact task authority, and absence of a profile must not block ordinary governance.

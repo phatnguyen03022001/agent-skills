@@ -50,6 +50,11 @@ capability_preflight:
     - repository_content_write
   passed: false
 
+# Optional; omit when a trustworthy current clock is unavailable.
+operational_timing:
+  started_at_utc: ""
+  terminal_decision_at_utc: ""
+
 authoritative_verification:
   required: false
   performed: false
