@@ -1,8 +1,8 @@
 protocol_version: 3
 
 task_id: TASK-0015
-task_revision: 1
-report_revision: 1
+task_revision: 3
+report_revision: 2
 state: REPORTED
 
 task_source:
@@ -13,9 +13,9 @@ execution:
   branch:
     name: dev
     role: integration
-  authorized_base_head: "28d51ce042de06ff65d202bb0f99ff26264c8242"
-  pre_execution_head: "28d51ce042de06ff65d202bb0f99ff26264c8242"
-  final_execution_head: "15e051695a0b12588b4af60b9b97e241199318d7"
+  authorized_base_head: "837a9fcc77b34efd29b0d0952989cd4d771f7600"
+  pre_execution_head: "837a9fcc77b34efd29b0d0952989cd4d771f7600"
+  final_execution_head: "a9be7b8e08ae2a83f6d01d38d811f6a0698f0d64"
 
 skill_library:
   repository: phatnguyen03022001/agent-skills
@@ -60,7 +60,7 @@ authoritative_verification:
   required: false
   performed: false
   result: NOT_REQUIRED
-  evidence: "TASK-0015 requires exact diff/static consistency verification; no separate authoritative verifier is required."
+  evidence: "TASK-0015 revision 3 requires exact immutable diff and static consistency checks; no separate authoritative verifier is required."
 
 local_hygiene:
   result: PASS
@@ -70,35 +70,25 @@ local_hygiene:
   evidence: "Execution used ChatGPT + GitHub only; no local execution surface or temporary repository artifacts were created."
 
 changed_files:
-  - path: protocols/TASK_PROTOCOL.md
-    summary: "Added reusable terminal-response identity semantics without creating authority or prescribing operator-specific visual styling."
-    new_file: false
-    in_scope: true
-    structure_authorized: true
-  - path: architect/SKILL.md
-    summary: "Added the smallest Architect-local terminal identity procedure, including truthful active-target/no-task handling."
-    new_file: false
-    in_scope: true
-    structure_authorized: true
   - path: executor/SKILL.md
-    summary: "Added the smallest Executor-local terminal identity procedure for canonical task-bound terminal results."
+    summary: "Added deterministic forward timing capture at the post-binding/pre-preflight start boundary and terminal-decision boundary, with whole-block omission when trustworthy timing is unavailable."
     new_file: false
     in_scope: true
     structure_authorized: true
   - path: contracts/IMPLEMENTATION_REPORT.md
-    summary: "Defined optional non-authoritative operational timing evidence with exactly started_at_utc and terminal_decision_at_utc."
+    summary: "Separated protocol-v3 schema compatibility from forward collection and clarified boundary, omission, non-authority, no-backfill, and queue-latency semantics."
     new_file: false
     in_scope: true
     structure_authorized: true
   - path: templates/report.yaml
-    summary: "Added the optional operational_timing shape with only the two authorized timestamp fields."
+    summary: "Updated timing guidance only; retained exactly the two authorized timing fields and added no schema fields."
     new_file: false
     in_scope: true
     structure_authorized: true
 
 commits_created:
-  - sha: "15e051695a0b12588b4af60b9b97e241199318d7"
-    message: "protocol: add terminal identity and timing evidence"
+  - sha: "a9be7b8e08ae2a83f6d01d38d811f6a0698f0d64"
+    message: "executor: require forward timing capture"
 
 pushed: true
 promoted_to_main: false
@@ -107,56 +97,59 @@ acceptance_evidence:
   - criterion_id: AC-1
     status: PROVEN
     evidence: >-
-      Exact candidate reads show Task Protocol plus Architect/Executor skills consistently identify organizational role,
-      active owner/repo, canonical task ID and revision for task-bound terminal responses; Architect explicitly handles
-      an active target with no bound task; terminal identity is presentation/continuity context only and remains outside PROMPT TO COPY.
+      Exact candidate diff adds Executor procedure that captures started_at_utc only after exact task/repository/base binding
+      is resolved and immediately before capability preflight, and captures terminal_decision_at_utc when the terminal task
+      result is reached before report publication, whenever the current surface provides a trustworthy current UTC clock.
   - criterion_id: AC-2
     status: PROVEN
     evidence: >-
-      IMPLEMENTATION_REPORT and templates/report.yaml define optional operational_timing with exactly started_at_utc
-      and terminal_decision_at_utc. The contract requires RFC 3339 UTC from a trustworthy current clock, defines the
-      execution-start and terminal-decision boundaries, requires truthful omission when unavailable, and forbids a stored derived duration.
+      Executor, Implementation Report, and report template consistently require new reports to include operational_timing
+      when both boundary timestamps were truthfully captured; if trustworthy timing is unavailable at either boundary the
+      whole block is omitted, and partial, invented, approximate, reconstructed, or Git-commit-derived timing is forbidden.
   - criterion_id: AC-3
     status: PROVEN
     evidence: >-
-      The timing contract explicitly states operational telemetry cannot prove or affect quality, PASS, acceptance,
-      independence, identity, authority, capability, or performance compliance, and that omission does not invalidate
-      a protocol-v3 report. The base-to-candidate diff contains no historical task/report/review artifact changes.
+      The corrected contract preserves historical/existing protocol-v3 reports without operational_timing and requires no
+      backfill; timing retains exactly started_at_utc and terminal_decision_at_utc as RFC 3339 UTC, stores no derived duration,
+      remains non-authoritative operational telemetry, and keeps approval-to-start/queue latency separate from Executor
+      processing time. This report intentionally omits operational_timing because this ChatGPT + GitHub attempt did not
+      capture a trustworthy current UTC clock at the required start boundary; no timestamp was reconstructed from commit time.
   - criterion_id: AC-4
     status: PROVEN
     evidence: >-
-      Exact compare 28d51ce042de06ff65d202bb0f99ff26264c8242..15e051695a0b12588b4af60b9b97e241199318d7
-      is one commit ahead and changes exactly the five authorized semantic/template files; no framework, dependency,
-      workflow, lifecycle, role, branch-topology, telemetry-backend, or operator-specific rendering change was introduced.
+      Exact compare 837a9fcc77b34efd29b0d0952989cd4d771f7600..a9be7b8e08ae2a83f6d01d38d811f6a0698f0d64
+      is one commit ahead and changes exactly executor/SKILL.md, contracts/IMPLEMENTATION_REPORT.md, and templates/report.yaml.
+      protocols/TASK_PROTOCOL.md remains blob 275330c0bd857b918be4b726b7dd78cfa982915f and architect/SKILL.md remains blob
+      9ae379b673c9868b373bf87f03faaacf8d7cb4e7, preserving revision-1 terminal identity semantics and unrelated governance.
   - criterion_id: AC-5
     status: PROVEN
     evidence: >-
-      The implementation candidate was exactly verified before report construction. This canonical report is constructed
-      as a report-only single-parent direct child of final_execution_head and is published only after parent/delta verification;
-      final remote topology and unchanged main are re-read immediately after publication.
+      The immutable implementation candidate was verified before report construction and published to dev. This report is
+      constructed as the report-only direct child of final_execution_head; branch topology and unchanged main are re-read
+      immediately after report publication before the Executor stops at NEEDS_REVIEW.
 
 executor_checks:
   - check_id: CHECK-1
     result: PASS
-    evidence: "Base-to-candidate compare lists exactly protocols/TASK_PROTOCOL.md, architect/SKILL.md, executor/SKILL.md, contracts/IMPLEMENTATION_REPORT.md, and templates/report.yaml."
+    evidence: "Base-to-candidate compare lists exactly executor/SKILL.md, contracts/IMPLEMENTATION_REPORT.md, and templates/report.yaml."
   - check_id: CHECK-2
     result: PASS
-    evidence: "Exact candidate reads show the same role + owner/repo + canonical task ID/revision identity semantics; no exact separator or operator-specific punctuation is prescribed."
+    evidence: "Exact candidate diff places start capture after exact binding and immediately before capability preflight, and terminal capture at terminal result before report publication, conditional only on trustworthy current UTC availability."
   - check_id: CHECK-3
     result: PASS
-    evidence: "The report contract/template expose only optional started_at_utc and terminal_decision_at_utc timing fields; the contract requires RFC 3339 UTC and omission when a trustworthy current clock is unavailable."
+    evidence: "Executor, report contract, and template require forward inclusion when both timestamps are truthfully captured and whole-block omission only for unavailable timing; partial/invented/reconstructed/commit-derived timing is forbidden."
   - check_id: CHECK-4
     result: PASS
-    evidence: "Exact implementation diff introduces no elapsed_seconds, token/cost/tool-call/model-latency field, telemetry backend/framework, database, workflow, dependency, lifecycle state, or organizational role."
+    evidence: "The template timing block still contains exactly started_at_utc and terminal_decision_at_utc; the contract requires RFC 3339 UTC, derived duration only, and the candidate adds no timing or telemetry field."
   - check_id: CHECK-5
     result: PASS
-    evidence: "Task Protocol still declares supported protocol version 3; its implementation diff is limited to additive terminal identity semantics near PROMPT TO COPY, leaving task/handoff/continuation/review/promotion/release authority semantics unchanged."
+    evidence: "The contract and Executor text keep timing non-authoritative, preserve historical/existing v3 reports without timing and no backfill, and explicitly separate queue/approval latency from Executor processing time."
   - check_id: CHECK-6
     result: PASS
-    evidence: "Base-to-candidate changed-file set excludes .agent/tasks/** entirely, proving TASK-0001 through TASK-0014 artifacts are unchanged by the implementation candidate."
+    evidence: "Candidate blob SHAs for protocols/TASK_PROTOCOL.md and architect/SKILL.md exactly equal their revision-3 base blob SHAs; the Executor terminal-identity section is outside the candidate diff."
   - check_id: CHECK-7
     result: PASS
-    evidence: "Report publication is constrained to a report-only single-parent direct child of final_execution_head; final branch topology must remain exactly dev/main with main unchanged at 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1 and is rechecked after publication."
+    evidence: "Report publication is constrained to a single-parent direct child of final_execution_head changing only .agent/tasks/TASK-0015/report.yaml; topology is dev/main and main remains pinned at 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1 pending the required immediate post-publication re-read."
 
 discovered_gaps: []
 structural_observations: []
