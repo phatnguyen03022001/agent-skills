@@ -1,0 +1,184 @@
+protocol_version: 3
+
+task_id: TASK-0017
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0017/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "33ebc0aa8fab193f2e51ff68dbb69bc46becf5af"
+  pre_execution_head: "33ebc0aa8fab193f2e51ff68dbb69bc46becf5af"
+  final_execution_head: "e0daf425bd874d2c2c63841eac36b554bf5b61cf"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "f96e6141215d7636d570dd44c141f5a942c446dd"
+  observed_revision: "f96e6141215d7636d570dd44c141f5a942c446dd"
+
+execution_skills_used:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+  external: []
+
+pre_execution_checks:
+  protocol_version_supported: true
+  handoff_type_confirmed: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  working_tree_clean: true
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - workflow_run_read
+  available:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - workflow_run_read
+  missing: []
+  passed: true
+
+operational_timing:
+  started_at_utc: "2026-09-01T19:50:27Z"
+  terminal_decision_at_utc: "2026-09-01T19:53:45Z"
+
+authoritative_verification:
+  required: true
+  performed: true
+  result: PASS
+  evidence: >-
+    GitHub Actions run 33552081778 was triggered automatically by the dev push for exact candidate
+    e0daf425bd874d2c2c63841eac36b554bf5b61cf and completed successfully. The Validate and Unit tests steps both completed with success.
+
+local_hygiene:
+  result: PASS
+  run_root: ""
+  cleanup_performed: false
+  retained: []
+  evidence: "Execution used ChatGPT + GitHub only. No local checkout, Agent Runtime, Codex, temporary repository, or run-owned local artifact was created."
+
+changed_files:
+  - path: architect/SKILL.md
+    summary: "Add trustworthy forward-only Architect review processing start and terminal decision timing boundaries with omission-safe, non-authoritative semantics."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: contracts/ARCHITECT_REVIEW.md
+    summary: "Define optional review operational_timing with exactly two RFC 3339 UTC boundary timestamps, whole-block omission, and no acceptance or performance authority."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: templates/review.yaml
+    summary: "Add a fully commented omission-safe operational_timing example with no real timestamp."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: .agent/tasks/TASK-0017/report.yaml
+    summary: "Canonical report-only execution evidence published after exact-candidate verification PASS."
+    new_file: true
+    in_scope: true
+    structure_authorized: true
+
+commits_created:
+  - sha: "e0daf425bd874d2c2c63841eac36b554bf5b61cf"
+    message: "fix(TASK-0017): add architect review operational timing"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: >-
+      architect/SKILL.md now requires started_at_utc capture after exact repository/task/report binding and immediately before the first
+      review-specific capability preflight or acceptance-evidence inspection, whichever occurs first, and requires terminal_decision_at_utc
+      capture when final canonical judgment is reached before review.yaml publication. Queue/task-completion latency is explicitly separate.
+  - criterion_id: AC-2
+    status: PASS
+    evidence: >-
+      contracts/ARCHITECT_REVIEW.md defines optional operational_timing with exactly started_at_utc and terminal_decision_at_utc as captured
+      RFC 3339 UTC timestamps. If trustworthy current UTC is unavailable at either required boundary, the whole block is omitted. The review
+      template uses a fully commented optional example containing placeholders only, so timing remains syntactically optional and no backfill is required.
+  - criterion_id: AC-3
+    status: PASS
+    evidence: >-
+      Architect skill and review contract explicitly make timing non-authoritative operational telemetry that cannot affect review judgment,
+      PASS/FAIL, authority, capability, identity, independence, acceptance evidence, promotion readiness, release readiness, or performance compliance.
+  - criterion_id: AC-4
+    status: PASS
+    evidence: >-
+      Exact base-to-candidate compare is one commit ahead and changes only architect/SKILL.md, contracts/ARCHITECT_REVIEW.md, and
+      templates/review.yaml. No protocol, validator, unit-test, workflow, Executor timing, report-template, terminal-footer, historical artifact,
+      telemetry framework, dependency, branch, issue, PR, tag, release, or main mutation was introduced.
+  - criterion_id: AC-5
+    status: PASS
+    evidence: >-
+      Existing Validate skill library workflow run 33552081778 executed on exact candidate e0daf425bd874d2c2c63841eac36b554bf5b61cf
+      from the automatic dev push and completed successfully; both Validate and Unit tests steps passed without workflow mutation or rerun.
+  - criterion_id: AC-6
+    status: PASS
+    evidence: >-
+      Publication is constrained to this report as the only report child after the verified candidate. Immediately before publication dev was
+      exactly e0daf425bd874d2c2c63841eac36b554bf5b61cf, main remained 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1,
+      topology was exactly {dev, main}, and the report path did not exist. Post-publication exact parent/diff/ref verification is required before
+      returning NEEDS_REVIEW; the resulting report commit SHA is intentionally not self-embedded.
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: >-
+      Fresh GitHub truth proved dev equaled exact base 33ebc0aa8fab193f2e51ff68dbb69bc46becf5af before mutation, main was
+      0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1, branch topology was exactly {dev, main}, and TASK-0017 revision 1 resolved as APPROVED and execution-ready.
+  - check_id: CHECK-2
+    result: PASS
+    evidence: >-
+      Immutable candidate e0daf425bd874d2c2c63841eac36b554bf5b61cf is exactly one commit ahead of the authorized base and its diff is restricted to
+      architect/SKILL.md, contracts/ARCHITECT_REVIEW.md, and templates/review.yaml with no unrelated semantic change.
+  - check_id: CHECK-3
+    result: PASS
+    evidence: >-
+      Review timing contains exactly two boundary fields when present; both require trustworthy current RFC 3339 UTC capture. Whole-block omission
+      applies when either boundary lacks trustworthy time. Git-time reconstruction, approximation, partial timing, stored elapsed duration, historical
+      backfill, acceptance effects, release effects, and performance-compliance effects are explicitly forbidden.
+  - check_id: CHECK-4
+    result: PASS
+    evidence: >-
+      Automatic dev-push workflow run 33552081778 is bound to exact candidate e0daf425bd874d2c2c63841eac36b554bf5b61cf and completed with conclusion success.
+      Validate and Unit tests both passed; the workflow was neither modified nor manually rerun.
+  - check_id: CHECK-5
+    result: PASS
+    evidence: >-
+      Before report publication dev still equaled the verified candidate, main remained unchanged, topology remained exactly {dev, main}, and the report
+      path was absent. This report is published as the only authorized child mutation; post-publication lineage/ref verification is performed before stop.
+
+discovered_gaps: []
+structural_observations: []
+deviations_from_task: []
+blockers: []
+
+working_tree_after:
+  clean: true
+  summary: "No local working tree was used. Canonical state is GitHub remote truth; report lineage and final refs are verified after publication."
+
+result: NEEDS_REVIEW
