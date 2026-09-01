@@ -1,0 +1,241 @@
+protocol_version: 3
+
+task_id: TASK-0013
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: maintainer_objective_change
+  task_id: ""
+  gap_id: "OPERABILITY_WASTE_AND_FAILURE_DURABILITY"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "533eaef0dbed13c5bbfdad1195218d8382a38e5c"
+
+architect_analysis_skills:
+  - architect
+  - executor
+  - simplicity
+  - verification
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "Current informed maintainer objective: reduce avoidable Architect/Executor latency, duplicate evidence gathering, unnecessary paid/quota consumption, and chat-only failure state while preserving exact authority and verification strength."
+    role: "Durable maintainer objective for low-human-loop, low-waste, fail-closed operation."
+    precedence: 1
+  - source: "phatnguyen03022001/agent-skills@533eaef0dbed13c5bbfdad1195218d8382a38e5c"
+    role: "Current protocol-v3 authority, including risk-proportional lanes, cost-aware capability routing, report ownership, durable review, and verification semantics."
+    precedence: 2
+  - source: "Observed target-pilot failure class: an authorized implementation reached deterministic verification failure, but task wording allowed report publication only after PASS, leaving the blocking evidence non-durable and chat-bound."
+    role: "Reproduced evidence that successful-result-only reporting can break successor reconstruction and fail-closed continuity."
+    precedence: 3
+
+structure_authority:
+  status: RESOLVED
+  source: "Existing Task Protocol plus Architect/Executor/Implementation Report owners; templates/tests only where required to pin compatibility."
+  rationale: "This is a bounded semantic subtraction/hardening pass. No new lane, lifecycle, artifact class, registry, cache, service, schema version, or orchestration system is justified."
+
+objective: >-
+  Make protocol-v3 operation stop when sufficient evidence already exists, reuse already-resolved immutable evidence within the same exact binding, preserve truthful durable Executor terminal evidence on failure when publication capability/authority exists, and prevent unauthorized new paid consumption. Audit the DIRECT lane only for reproduced ceremony waste; change it only if current semantics demonstrably force redundant work beyond its stated low-risk purpose.
+
+scope:
+  required_changes:
+    - >-
+      Define an evidence-sufficiency stop rule: for the current decision or execution gate, gather the minimum authoritative evidence needed to prove every material predicate; once those predicates are proven, stop gathering unrelated or duplicative evidence. Expand only for stale mutable state, contradiction, missing required proof, explicit audit scope, or a newly triggered risk boundary.
+    - >-
+      Define exact immutable-evidence reuse within one active context/binding: when an immutable commit/blob/task/report/authority revision has already been resolved and its identity has not changed, reuse that evidence instead of rereading it merely for ceremony. This creates no persistent cache or cross-session authority. Mutable refs/state must still be refreshed at consequence-appropriate mutation/review/promotion/release boundaries.
+    - >-
+      Define truthful terminal Executor reporting: when execution stops with BLOCKED, STALE_STATE, AUTHORITY_REQUIRED, CURRENT_PHASE_CAPABILITY_UNAVAILABLE, REVERIFY_REQUIRED, or another existing terminal/blocking result, the Executor must publish the bounded report evidence when the exact task grants report commit/push authority and the current capability can safely do so. A task must not make report publication contingent on successful verification in a way that causes material failed execution evidence to exist only in chat. If report publication itself is unavailable or unauthorized, return the exact non-durable terminal result without falsely claiming canonical persistence.
+    - >-
+      Reuse the existing report/result vocabulary and artifact ownership if sufficient. Do not add a new lifecycle state or report type merely for failed verification. Update template/contract/validator only if current mechanics cannot represent truthful terminal failure without ambiguity.
+    - >-
+      Define generic paid-consumption authority: lowest-sufficient-cost routing does not authorize new paid consumption by itself. Do not activate a new paid service, exceed a target-owned budget/envelope, or incur material paid usage without existing target/task/operator authority covering that bounded consumption. Where such authority already exists, do not ask the operator again merely to be safe. If no sufficient authorized zero/covered-cost path exists and paid authority is missing, fail closed with the existing authority-required/blocking semantics rather than spending speculatively.
+    - >-
+      Keep quota/included-capacity evidence distinct from billing authority. Included/free quota may still be scarce; avoid repeated remote runs when narrower sufficient evidence exists. Do not invent pricing tables, billing state, account pools, quota registries, or spend databases.
+    - >-
+      Audit current DIRECT and Architect micro-maintenance semantics against the stated low-risk purpose. If existing semantics already permit appropriately small/reversible work without redundant evidence, record NO CHANGE for this subpoint. If a concrete redundant obligation is proven, make only the smallest compatible subtraction; do not create a new lane or weaken durable authority/review for normal BOUNDED/HIGH_ASSURANCE work.
+    - >-
+      Preserve exact-state correctness: do not remove required fresh-ref checks before consequential writes, exact report/review lineage, required native/remote evidence, or target-owned verification. The goal is to remove duplicate reads and unnecessary execution, not correctness gates.
+    - >-
+      Add or update narrow tests only where needed to mechanically pin terminal-report durability or prevent contradictory semantics. Prefer doctrine-only correction when current schemas already express the intended states.
+    - >-
+      Use the existing repository validation workflow as the bounded remote proof after implementation if current workflow coverage already includes the modified semantic owners; do not turn Actions into an iterative debugger.
+    - >-
+      Produce TASK-0013 Executor report in a separate report-only commit for both success and any terminal blocking result when publication authority/capability remains available, then stop for Governing Architect review or exact terminal handling.
+
+  allowed_existing_files_or_components:
+    - protocols/TASK_PROTOCOL.md
+    - architect/SKILL.md
+    - executor/SKILL.md
+    - contracts/IMPLEMENTATION_REPORT.md
+    - templates/report.yaml
+    - templates/task.yaml
+    - verification/SKILL.md
+    - github-workflow/SKILL.md
+    - README.md
+    - scripts/test_validate_skill_library.py
+    - scripts/validate_skill_library.py
+    - .agent/tasks/TASK-0013/task.yaml
+    - .github/workflows/validate-skill-library.yml
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Protocol remains version 3."
+  - "GitHub remote remains canonical repository truth."
+  - "No evidence-sufficiency rule may suppress a required fresh mutable-state check at a consequential boundary."
+  - "Immutable-evidence reuse is context/binding-local convenience only; no persistent cache, registry, hidden authority, or cross-session memory is introduced."
+  - "Executor failure evidence remains Executor-owned; Architect review remains Architect-owned."
+  - "A failed verifier never becomes PASS and terminal-report durability never weakens fail-closed execution."
+  - "Paid-cost preference never manufactures spend authority; existing bounded spend authority does not require redundant operator reapproval."
+  - "Target repositories own budgets, provider constraints, pricing/economic assumptions, and exact verification requirements."
+  - "GitHub Actions remains bounded proof, not a default iterative debugger."
+  - "No new task lane, lifecycle state, artifact class, skill, schema version, service, orchestrator, registry, cache, queue, daemon, billing system, or quota database."
+  - "Branches remain exactly {dev, main}; main remains unchanged."
+
+forbidden_changes:
+  - "Do not modify architect-profile, agent-documents, agent-standards, agent-runtime, or any target product repository."
+  - "Do not create a capability/evidence cache, persistent immutable-artifact cache, provider registry, pricing registry, spend ledger, quota database, billing service, account pool, credential broker, scheduler, queue, daemon, or workflow engine."
+  - "Do not introduce new paid-service activation, provider configuration, secrets, accounts, pricing numbers, or billing APIs."
+  - "Do not weaken exact-ref refresh where mutable state can invalidate authority or consequence safety."
+  - "Do not weaken required report/review lineage or authoritative verification merely to reduce tool calls."
+  - "Do not create another task/report/review artifact shape or lifecycle result unless current inspection proves protocol v3 cannot express the required terminal evidence; if so, return BLOCKED for revised authority instead."
+  - "Do not change DIRECT simply because it looks verbose; require a reproduced redundant obligation first."
+  - "Do not perform unrelated cleanup, taxonomy expansion, style-only rewrite, or broad framework redesign."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0013/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - github_actions_run_read
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_write
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Sufficient evidence causes a stop, not an open-ended search loop."
+    evidence_required: "Canonical semantics require minimum authoritative evidence for current predicates and prohibit unrelated/duplicative gathering after sufficiency except explicit stale/contradiction/missing-proof/audit/risk triggers."
+  - id: AC-2
+    requirement: "Already-resolved immutable evidence is reusable without becoming hidden authority."
+    evidence_required: "Canonical semantics permit same-binding reuse of exact immutable evidence while preserving mandatory refresh of mutable state at consequence boundaries and rejecting persistent caches/registries."
+  - id: AC-3
+    requirement: "Terminal Executor failure evidence is durable whenever authorized publication remains possible."
+    evidence_required: "BLOCKED/capability/stale/reverify-class outcomes can and should produce the existing canonical report artifact when commit/push authority and capability exist; successful verification is not a prerequisite for truthful terminal reporting."
+  - id: AC-4
+    requirement: "Failure reporting does not manufacture success, review, or publication authority."
+    evidence_required: "Verifier FAIL remains FAIL; Executor owns report only; missing report-write capability yields a truthful non-durable terminal result rather than a false canonical claim."
+  - id: AC-5
+    requirement: "New material paid consumption requires bounded authority."
+    evidence_required: "Generic semantics distinguish cost-aware routing from spend authority, prohibit speculative new paid consumption, reuse existing authorized budget/envelope without redundant operator approval, and fail closed when paid authority is missing and no sufficient authorized alternative exists."
+  - id: AC-6
+    requirement: "DIRECT/micro-maintenance ceremony is changed only from reproduced evidence."
+    evidence_required: "Executor documents whether current low-risk paths already avoid redundant ceremony; any mutation is the smallest compatible subtraction and no new lane/lifecycle is created."
+  - id: AC-7
+    requirement: "Correctness gates remain stronger than latency optimization."
+    evidence_required: "Fresh mutable-state checks, exact lineage, required verification, safety, and target authority remain intact; only duplicate reads/execution and unauthorized spend are removed."
+  - id: AC-8
+    requirement: "Correction remains minimal and protocol-v3 compatible."
+    evidence_required: "No new schema version/skill/service/registry/cache/orchestrator/cross-repo mutation; repository validation and tests PASS with exact diff limited to necessary authorized owners."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Refresh canonical GitHub truth. Require dev equals exact TASK-0013 handoff base, main equals 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1, topology exactly {dev, main}, TASK-0013 revision 1 exists at base, and required GitHub-only EXECUTION capabilities are currently available."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Inspect only the current semantic owners needed for AC-1..AC-8: Task Protocol, Architect/Executor guidance, Implementation Report contract/template, and relevant validator/tests/workflow coverage. Reuse immutable evidence already resolved in the same binding instead of rereading it without trigger."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Reproduce the terminal-report semantic defect against current authority: prove whether successful-verification-only task wording can suppress canonical failed execution evidence despite available report publication authority."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Implement the smallest compatible corrections for evidence-sufficiency stop, same-binding immutable reuse, truthful terminal reporting, and bounded paid-consumption authority. Audit DIRECT/micro-maintenance and change only if a concrete redundant obligation is proven."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Review explicitly for accidental stale-state reuse, hidden caches, evidence downgrade, false PASS, report ownership drift, redundant operator approval, speculative paid spend, or new framework machinery."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Before each GitHub write, refresh dev and require expected parent identity. Keep main unchanged and create no branch."
+      required: true
+    - id: CHECK-7
+      command_or_check: "After implementation publication, inspect exact implementation diff and use the existing repository validation workflow once as bounded remote proof if its current trigger/coverage supports the modified files. Require authoritative validation PASS for NEEDS_REVIEW; on validation FAIL, publish a truthful BLOCKED report if report publication remains authorized/capable, then stop."
+      required: true
+    - id: CHECK-8
+      command_or_check: "Create TASK-0013/report.yaml as a separate report-only commit for NEEDS_REVIEW or any terminal blocking result when authorized/capable. Verify report parent/diff, final dev identity, unchanged main, and exact {dev, main} topology before return."
+      required: true
+  authoritative_verification:
+    required: true
+    mechanism: "existing repository validation workflow + exact semantic/diff inspection"
+    expected_signal: "Protocol-v3-compatible operability correction PASS; terminal failure remains durably reportable and no latency/cost optimization weakens authority or evidence"
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
