@@ -16,6 +16,10 @@ A single Executor chat may also be reused sequentially. While work is active, th
 
 The approved exact task plus handoff is prior authorization for bounded Executor actions inside the active binding; a role must not invent extra user approvals for phases already authorized by those artifacts.
 
+Evidence gathering is gate-scoped. For the current decision or execution gate, resolve the minimum authoritative evidence needed to prove every material predicate; once those predicates are proven, stop gathering unrelated or duplicative evidence. Expand only when mutable evidence is stale, evidence contradicts, required proof is missing, the task explicitly requires a broader audit, or a newly triggered risk boundary requires more proof.
+
+Within one active context and exact binding, an already-resolved immutable commit, blob, task revision, report revision, or authority revision may be reused when its identity is unchanged instead of rereading it for ceremony. This is context-local reuse only: it creates no persistent cache, cross-session authority, hidden registry, or permission to reuse mutable refs/state without the fresh checks required at consequential mutation, review, promotion, or release boundaries.
+
 ## Optional operator profile
 
 A host/session/operator may supply an optional operator profile location/content at bootstrap. It is durable preference/environment context, not target-repository factual or mutation authority. Explicit current user decisions, target-repository canonical facts, and exact task authority outrank profile preferences. Reusable governance does not hard-code operator identity, profile location, machine, secret, personal provider/model default, personal path, or branch preference. A missing profile is not a blocker.
@@ -160,6 +164,10 @@ Keep these identities distinct within each repository binding:
 
 An Executor-binding terminal ends current mutation authority when required execution evidence is finalized. `NEEDS_REVIEW` / `REPORTED`, `BLOCKED`, `STALE_STATE`, `AUTHORITY_REQUIRED`, `CURRENT_PHASE_CAPABILITY_UNAVAILABLE`, failed terminal execution, or completed execution may all close an Executor binding when no mutation authority remains. This does not imply acceptance, promotion, or release and does not skip later lifecycle boundaries.
 
+When execution terminates as `BLOCKED`, `STALE_STATE`, `AUTHORITY_REQUIRED`, `CURRENT_PHASE_CAPABILITY_UNAVAILABLE`, `REVERIFY_REQUIRED`, or another existing failed/blocking result, the Executor must still produce and publish the bounded existing report artifact when the exact task grants report commit/push authority and the current capability can safely do so. Successful verification is never a prerequisite for truthful terminal reporting when that would leave material failed execution evidence only in chat. A failed verifier remains FAIL; terminal report persistence does not manufacture project PASS, Architect review, continuation, promotion, or release authority.
+
+If report publication itself is unavailable or unauthorized, return the exact truthful non-durable terminal result and do not claim canonical persistence. Use the existing protocol-v3 report/result vocabulary when it can represent the outcome; do not introduce a new lifecycle state or report type merely because execution failed.
+
 Only after that explicit terminal boundary may a reused Executor context establish another repository binding from fresh repository-local authority.
 
 ## Derived workflow lifecycle
@@ -195,6 +203,10 @@ An already-accepted lifecycle continuation is separate from `DIRECT` and from th
 Model, effort, and execution surfaces are supplied or established by the operator/environment, not guessed by Architect. Routing starts from the current phase's required semantic capability and required evidence, never from a preferred provider identity. Resolve currently available candidate surfaces, reject any surface that lacks current authority or cannot produce the required evidence, then choose the lowest sufficient expected cost/resource burden among the remaining candidates. When candidates are materially equivalent, prefer fewer context transfers and lower execution consequence. A narrower command surface is not inherently preferable merely because it exposes fewer commands, and generic local execution is never mandatory when a smaller native surface is sufficient.
 
 Cost optimization is subordinate to correctness and evidence. Free, cheaper, or less quota-constrained surfaces must not weaken safety, exact identity, acceptance evidence, or required native/remote verification. A more expensive or limited surface is justified when cheaper eligible surfaces are materially insufficient, not merely because it is installed, familiar, or powerful.
+
+Lowest-sufficient-cost routing is a selection policy, not spend authority. Activating a new paid service, exceeding a target-owned budget or cost envelope, or incurring material paid usage requires existing bounded target/task/operator authority covering that consumption. Where that authority already exists, do not request redundant operator approval merely to be safe. When no sufficient authorized zero/covered-cost path exists and paid authority is missing, fail closed with `AUTHORITY_REQUIRED` or the applicable blocking result instead of spending speculatively.
+
+Included/free quota and runtime capacity are distinct from billing authority and may still be scarce. Avoid repeated remote runs or quota consumption when narrower authoritative evidence is sufficient. Reusable governance must not create pricing tables, spend ledgers, billing state, account pools, quota registries/databases, or other machinery to make this decision.
 
 Availability, quota, rate-limit state, and paid capacity are runtime evidence rather than durable authority. Known installation, configured provider identity, historical success, or a previous preflight does not prove current availability after a material environment or quota change. Re-resolve candidate availability and repeat the relevant preflight when such evidence materially changes. Do not persist volatile provider availability, account identity, remaining quota, pricing snapshots, or mutable routing state in `task.yaml` or `program.generated.json` merely to route execution.
 
@@ -297,13 +309,13 @@ These unconditional protocol rules need not be recopied as prose into every task
 
 ## Executor flow
 
-`receive exact handoff → verify base/task/rules → preflight EXECUTION capability → execute restrictive scope → resolve LOCAL only → record FOLLOW_UP → stop on BLOCKING → run checks → local hygiene gate → write REPORTED report → commit/publish report only when separately authorized → terminal handoff/result → stop`
+`receive exact handoff → verify base/task/rules → preflight EXECUTION capability → execute restrictive scope → resolve LOCAL only → record FOLLOW_UP → stop on BLOCKING → run checks → local hygiene gate → write truthful REPORTED report for NEEDS_REVIEW or any terminal blocking result when authorized/capable → commit/publish report only when separately authorized → terminal handoff/result → stop`
 
 Executor never self-accepts its report. Only after that terminal boundary may a reused Executor chat establish another repository binding from fresh authority.
 
 ## Architect review and continuation
 
-The current governing Architect resolves the exact committed report identified by `reviewed_report.commit` and reviews protocol, identity, execution base, skills, scope, structure, gaps, Git actions, acceptance evidence, advisory evidence, and designated verifier evidence. Final serialized outcome remains `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`.
+The current governing Architect resolves the exact committed report identified by `reviewed_report.commit` and reviews protocol, identity, execution base, skills, scope, structure, gaps, Git actions, acceptance evidence, advisory evidence, and designated-verifier evidence. Final serialized outcome remains `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`.
 
 For canonical tasks governed by the durable-review semantics introduced by TASK-0010, the governing Architect publishes the existing `.agent/tasks/<TASK-ID>/review.yaml` bound to that exact report commit and report revision before treating the final outcome as durable canonical lifecycle evidence. If the required REVIEW repository-write capability is unavailable, return `CURRENT_PHASE_CAPABILITY_UNAVAILABLE`; do not claim durable `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED` from chat/session state alone. Legacy missing review artifacts remain ambiguous historical evidence and require no backfill.
 

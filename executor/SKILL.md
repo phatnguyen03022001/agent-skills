@@ -21,9 +21,13 @@ Receive [templates/handoff.yaml](../templates/handoff.yaml). Before mutation ver
 
 The approved exact task plus handoff is sufficient prior user authorization for bounded Executor actions inside that scope. Do not demand redundant approval and do not infer authority beyond it.
 
+For each current execution gate, gather only the minimum authoritative evidence needed to prove its material predicates and stop once they are proven. Reuse exact immutable evidence already resolved in the same active binding when identity is unchanged. This never permits stale mutable-ref reuse: refresh mutable state again whenever the Task Protocol requires a consequence-appropriate boundary check, or when contradiction, missing proof, explicit audit scope, or a newly triggered risk boundary requires more evidence.
+
 Preflight the current phase's materially required semantic capabilities before its first mutation. When the task already identifies mandatory native verification or another current-execution capability needed for completion, prove that capability is currently available before mutation. An established generic local execution surface can satisfy ordinary engineering subcommands without separate command-by-command capability declarations or preflight unless the exact task or target requires one independently. Missing required current-phase capability blocks before mutation.
 
 For surface selection, start from the required semantic capability and evidence, resolve currently available candidates, reject candidates without current authority or sufficient evidence, then choose the lowest sufficient expected cost/resource burden. Cheaper/free never justifies weaker correctness, safety, exact identity, acceptance evidence, or required native/remote verification. Availability/quota is runtime evidence; after a material environment/quota change, do not rely on installation, provider identity, historical availability, or an earlier preflight as current proof.
+
+Lowest-sufficient-cost routing does not grant spend authority. New material paid consumption requires existing bounded target/task/operator authority; existing bounded authority is reused without redundant approval. When no sufficient authorized zero/covered-cost path exists and paid authority is missing, fail closed with `AUTHORITY_REQUIRED` or the applicable blocking result rather than spending speculatively. Included/free quota remains runtime capacity, not billing authority.
 
 The prior `least-powerful` and `bounded escalation` wording remains a safety constraint inside this routing order: among otherwise sufficient choices, do not broaden consequence or escalate capability without material need. It is not a provider-first rule and never overrides required evidence or the lowest-sufficient-cost selection.
 
@@ -60,6 +64,10 @@ Evidence still required for diagnosis is retained with bounded identity and reas
 Executor owns implementation evidence and `report.yaml` content using the [Implementation Report](../contracts/IMPLEMENTATION_REPORT.md) and [report template](../templates/report.yaml).
 
 `final_execution_head` is the implementation HEAD before any report commit. Canonical report evidence is committed only when the exact task grants commit authority and published only when separate push authority permits it. The report records current-phase capability preflight and may record local-hygiene evidence.
+
+A failed or blocking execution does not suppress report production. When the exact task grants report commit/push authority and the current capability can safely use it, publish the bounded truthful report for `BLOCKED`, `STALE_STATE`, `AUTHORITY_REQUIRED`, `CURRENT_PHASE_CAPABILITY_UNAVAILABLE`, `REVERIFY_REQUIRED`, verifier FAIL, or another existing terminal/blocking result before stopping. Record the failed verification as FAIL; never convert it to PASS or invent review/continuation authority merely to make the report publishable.
+
+If report publication itself is unavailable or unauthorized, return the exact non-durable terminal result without claiming canonical persistence. Do not create a new report type or lifecycle state merely for failure when the existing report/result fields can express it.
 
 The report must be consumable by the intended Architect review context. Remote-only review requires the authorized commit chain to be remotely reachable; local-only review requires an explicitly shared trusted checkout/object environment resolving the same commit.
 
