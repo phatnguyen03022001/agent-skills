@@ -1,0 +1,49 @@
+protocol_version: 3
+
+task_id: TASK-0015
+task_revision: 1
+review_revision: 1
+state: REVISION_REQUIRED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0015/report.yaml
+  commit: "501d4a707371af7a92a7d3455e5846da3056ec44"
+  report_revision: 1
+
+independence:
+  reviewer_role: ARCHITECT
+  separate_session_from_executor: true
+  exact_report_identity_verified: true
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: FAIL
+  verifier_evidence: PASS
+
+gap_disposition:
+  - id: TIMING_CAPTURE_NOT_OPERATIONALLY_TRIGGERED
+    disposition: REVISE_CURRENT_TASK
+    rationale: >-
+      The implementation correctly adds a backward-compatible optional timing shape, but it does not establish the forward operational behavior required to build a useful audit dataset. The Implementation Report says a report may include operational_timing, while executor/SKILL.md contains no procedure to capture started_at_utc before binding/preflight when a trustworthy clock is available and no obligation to include terminal_decision_at_utc at terminal decision. Therefore future reports can remain fully valid while omitting timing indefinitely. Schema optionality is required for protocol-v3 backward compatibility and unavailable-clock cases; forward capture for newly produced reports must be required whenever a trustworthy current UTC clock is available, with omission reserved for unavailable/untrustworthy clock evidence.
+
+follow_up_tasks: []
+
+promotion_readiness:
+  eligible_for_candidate_capture: false
+  reason: >-
+    Terminal identity semantics are acceptable, but the timing change is not yet operationally sufficient for the operator's workflow-audit objective. Revise TASK-0015 rather than creating a separate follow-up task.
+
+notes:
+  - "Architect independently confirmed candidate 15e051695a0b12588b4af60b9b97e241199318d7 is the sole child of planning base 28d51ce042de06ff65d202bb0f99ff26264c8242 and changes exactly the five authorized files."
+  - "Architect independently confirmed report commit 501d4a707371af7a92a7d3455e5846da3056ec44 is the sole report-only child of the candidate; main remains unchanged."
+  - "Terminal identity semantics PASS: role + exact owner/repo + canonical task ID/revision, truthful Architect no-task state, outside PROMPT TO COPY, and no operator-specific punctuation in agent-skills."
+  - "Timing field semantics PASS as a compatible shape: exactly started_at_utc and terminal_decision_at_utc, RFC 3339 UTC, derived duration not stored, and telemetry non-authoritative."
+  - "Revision is required because compatible optional schema was conflated with optional forward collection. New Executor reports need deterministic capture behavior when a trustworthy clock exists; historical reports remain untouched and unavailable-clock omission remains valid."
+  - "No new telemetry backend, duration field, role, lifecycle state, workflow, dependency, branch, promotion, or release behavior is authorized by this review."
