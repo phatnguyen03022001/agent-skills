@@ -315,7 +315,7 @@ Executor never self-accepts its report. Only after that terminal boundary may a 
 
 ## Architect review and continuation
 
-The current governing Architect resolves the exact committed report identified by `reviewed_report.commit` and reviews protocol, identity, execution base, skills, scope, structure, gaps, Git actions, acceptance evidence, advisory evidence, and designated-verifier evidence. Final serialized outcome remains `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`.
+The current governing Architect resolves the exact committed report identified by `reviewed_report.commit` and reviews protocol, identity, execution base, skills, scope, structure, gaps, Git actions, acceptance evidence, advisory evidence, and designated verifier evidence. Final serialized outcome remains `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`.
 
 For canonical tasks governed by the durable-review semantics introduced by TASK-0010, the governing Architect publishes the existing `.agent/tasks/<TASK-ID>/review.yaml` bound to that exact report commit and report revision before treating the final outcome as durable canonical lifecycle evidence. If the required REVIEW repository-write capability is unavailable, return `CURRENT_PHASE_CAPABILITY_UNAVAILABLE`; do not claim durable `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED` from chat/session state alone. Legacy missing review artifacts remain ambiguous historical evidence and require no backfill.
 
