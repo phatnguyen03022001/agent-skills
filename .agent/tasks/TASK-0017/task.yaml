@@ -1,0 +1,241 @@
+protocol_version: 3
+
+task_id: TASK-0017
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: maintainer_objective_change
+  task_id: ""
+  gap_id: "ARCHITECT_REVIEW_OPERATIONAL_TIMING"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "f96e6141215d7636d570dd44c141f5a942c446dd"
+
+architect_analysis_skills:
+  - simplicity
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "Explicit operator instruction in the current Architect session: create the next task for review timing before release preparation"
+    role: "operator authority for bounded TASK-0017 planning"
+    precedence: 1
+  - source: ".agent/tasks/TASK-0016/review.yaml@f96e6141215d7636d570dd44c141f5a942c446dd"
+    role: "latest ACCEPTED agent-skills lineage and release-preparation-ready state"
+    precedence: 2
+  - source: ".agent/tasks/TASK-0015/review.yaml@8258c93725af4e073add2659bf1d5e88d64304ff"
+    role: "accepted precedent for lightweight non-authoritative operational timing semantics"
+    precedence: 3
+  - source: "contracts/ARCHITECT_REVIEW.md@f96e6141215d7636d570dd44c141f5a942c446dd"
+    role: "current Architect review artifact authority"
+    precedence: 4
+
+structure_authority:
+  status: RESOLVED
+  source: "Current ACCEPTED review contract plus TASK-0015 timing precedent and the operator's evidence-based workflow-optimization objective"
+  rationale: >-
+    Executor processing timing now has a lightweight forward-only evidence boundary, but Architect review processing does not.
+    The smallest sufficient correction is to add symmetric optional review timing to the existing Architect skill, review contract,
+    and review template only. No protocol, validator, telemetry backend, metrics framework, or historical backfill is required.
+
+objective: >-
+  Add minimal forward-only Architect review operational timing so future workflow audits can distinguish review processing time from
+  report-to-review lifecycle latency without weakening protocol-v3 compatibility, review independence, acceptance semantics, or
+  release readiness. Preserve the current lightweight two-timestamp model and keep timing non-authoritative.
+
+scope:
+  required_changes:
+    - >-
+      Modify architect/SKILL.md so a Governing Architect, after resolving the exact repository/task/report binding and immediately
+      before the first review-specific capability preflight or acceptance-evidence inspection (whichever occurs first), captures
+      started_at_utc from a trustworthy current UTC clock when the current review surface provides one. This is the review processing
+      start boundary; task completion-to-review-start or queue latency remains separate lifecycle evidence and must not be represented
+      as Architect review processing time.
+    - >-
+      In architect/SKILL.md, when the Architect reaches a final canonical review judgment (ACCEPTED, REVISION_REQUIRED, or BLOCKED),
+      capture terminal_decision_at_utc from a trustworthy current UTC clock before review.yaml publication. If trustworthy current UTC
+      was unavailable at either required boundary, timing is unavailable for that review attempt and the entire timing block must be
+      omitted. Do not invent, approximate, reconstruct, partially populate, or derive timestamps from Git commit metadata.
+    - >-
+      Modify contracts/ARCHITECT_REVIEW.md to define optional review operational_timing with exactly started_at_utc and
+      terminal_decision_at_utc, both RFC 3339 UTC timestamps captured at the required boundaries. Elapsed review duration is derived and
+      must not be stored as elapsed_seconds or another canonical duration field.
+    - >-
+      Make review timing explicitly non-authoritative operational telemetry. It must not affect ACCEPTED/REVISION_REQUIRED/BLOCKED,
+      PASS/FAIL, authority, capability, identity, independence, acceptance evidence, promotion readiness, release readiness, or any
+      performance-compliance claim.
+    - >-
+      Update templates/review.yaml with an omission-safe optional example for operational_timing. Prefer a clearly commented optional
+      block so reviews without trustworthy timing remain valid and historical/current protocol-v3 review artifacts require no backfill.
+      The example must contain no real timestamp and must not make timing syntactically required.
+    - >-
+      Keep Executor report timing semantics unchanged. Do not modify executor/SKILL.md, contracts/IMPLEMENTATION_REPORT.md, or
+      templates/report.yaml except to stop with BLOCKED if the task unexpectedly cannot be completed without changing those owners.
+    - >-
+      Keep protocols/TASK_PROTOCOL.md unchanged. This task adds no lifecycle state, role, authority type, performance gate, telemetry
+      framework, token/cost counter, tool-call counter, model-latency field, queue service, registry, dashboard, database, or automation.
+    - >-
+      Preserve terminal-identity footer semantics: elapsed time or timestamps must not be added to Architect or Executor terminal footers.
+    - >-
+      Verify the immutable semantic candidate changes exactly architect/SKILL.md, contracts/ARCHITECT_REVIEW.md, and
+      templates/review.yaml. Push the candidate to dev once it is internally coherent, then require the existing
+      .github/workflows/validate-skill-library.yml automatic dev-push workflow to execute against that exact candidate and reach PASS.
+      Do not modify or manually broaden the workflow to obtain a pass.
+    - >-
+      After exact-candidate remote verification PASS, publish .agent/tasks/TASK-0017/report.yaml as the report-only direct child of the
+      candidate and stop at NEEDS_REVIEW.
+  allowed_existing_files_or_components:
+    - architect/SKILL.md
+    - contracts/ARCHITECT_REVIEW.md
+    - templates/review.yaml
+    - .github/workflows/validate-skill-library.yml
+    - scripts/validate_skill_library.py
+    - scripts/test_validate_skill_library.py
+    - .agent/tasks/TASK-0015/review.yaml
+    - .agent/tasks/TASK-0016/review.yaml
+    - .agent/tasks/TASK-0017/task.yaml
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Protocol version remains 3."
+  - "The semantic candidate changes exactly architect/SKILL.md, contracts/ARCHITECT_REVIEW.md, and templates/review.yaml."
+  - "Review operational_timing, when present, contains exactly started_at_utc and terminal_decision_at_utc."
+  - "Both review timestamps are trustworthy current RFC 3339 UTC captures at their defined boundaries or the whole block is omitted."
+  - "No Git commit timestamp, approximation, reconstruction, partial timing block, or stored elapsed duration is permitted."
+  - "Timing remains non-authoritative and cannot change review judgment, quality, evidence, authority, capability, independence, promotion, release, or performance compliance."
+  - "Historical task/report/review artifacts are not backfilled."
+  - "Executor timing semantics and terminal footer semantics remain unchanged."
+  - "Existing validator/test/workflow code remains unchanged unless the task fails closed because an unexpected incompatibility makes that impossible."
+  - "No telemetry infrastructure, metrics framework, database, registry, dashboard, token/cost/tool-call accounting, or new lifecycle/role model is introduced."
+  - "main remains unchanged during this task."
+
+forbidden_changes:
+  - "Do not modify protocols/TASK_PROTOCOL.md."
+  - "Do not modify executor/SKILL.md, contracts/IMPLEMENTATION_REPORT.md, or templates/report.yaml."
+  - "Do not modify scripts/validate_skill_library.py, scripts/test_validate_skill_library.py, or .github/workflows/validate-skill-library.yml merely to accommodate this task."
+  - "Do not modify README.md, github-workflow/SKILL.md, continuation templates, generated program templates, or unrelated skills/contracts/templates."
+  - "Do not backfill timing into historical report.yaml or review.yaml artifacts."
+  - "Do not store elapsed_seconds or another canonical duration field."
+  - "Do not add timestamps, duration, cost, token, tool-call, model, branch, SHA, lifecycle, PASS/FAIL, or status fields to terminal identity footers."
+  - "Do not create telemetry infrastructure, scheduled aggregation, dashboards, databases, registries, queues, analytics services, or new framework layers."
+  - "Do not promote dev to main, create tags/releases, mutate repository metadata, create branches, issues, or PRs."
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0017/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: BLOCKED
+  architecture_change: BLOCKED
+  spec_change: BLOCKED
+  dependency_change: BLOCKED
+  public_contract_change: BLOCKED
+  blocking_gap_behavior: BLOCKED
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - workflow_run_read
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Architect review processing start and terminal decision boundaries are explicit and operationally usable."
+    evidence_required: "Exact architect/SKILL.md wording for trustworthy UTC capture after exact binding and before first review-specific preflight/evidence inspection, plus terminal capture before review publication"
+  - id: AC-2
+    requirement: "Review operational timing is minimal, omission-safe, and protocol-v3 backward-compatible."
+    evidence_required: "ARCHITECT_REVIEW.md plus omission-safe templates/review.yaml example defining exactly two RFC 3339 UTC timestamps when available and whole-block omission otherwise"
+  - id: AC-3
+    requirement: "Timing cannot contaminate review quality, authority, acceptance, or release semantics."
+    evidence_required: "Explicit non-authoritative clauses and unchanged current review state/independence/promotion semantics"
+  - id: AC-4
+    requirement: "No broader telemetry or duplicate timing framework is introduced."
+    evidence_required: "Exact candidate diff limited to the three authorized owners; no protocol/validator/test/workflow/report-timing/footer/backfill/framework changes"
+  - id: AC-5
+    requirement: "Existing repository validation proves the exact immutable candidate."
+    evidence_required: "Observed successful Validate skill library workflow run bound to the exact candidate SHA, including validator and unit-test steps"
+  - id: AC-6
+    requirement: "Execution publishes canonical evidence and stops at review."
+    evidence_required: "TASK-0017/report.yaml is the only report child after the verified candidate; main remains unchanged; terminal result NEEDS_REVIEW"
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Refresh refs and prove dev equals the exact TASK-0017 execution base, main is unchanged, topology is exactly {dev, main}, and TASK-0017 revision 1 resolves at that base"
+      required: true
+    - id: CHECK-2
+      command_or_check: "Implement only architect/SKILL.md, contracts/ARCHITECT_REVIEW.md, and templates/review.yaml with the exact bounded timing semantics and inspect the final semantic diff for zero unrelated change"
+      required: true
+    - id: CHECK-3
+      command_or_check: "Confirm review timing has exactly two RFC 3339 UTC fields when present, whole-block omission when either boundary lacks trustworthy clock evidence, no elapsed duration, no Git-time reconstruction, no acceptance/performance effect, and no historical backfill"
+      required: true
+    - id: CHECK-4
+      command_or_check: "Push the immutable semantic candidate to dev and observe the existing Validate skill library GitHub Actions workflow execute against that exact candidate SHA; require validator and unit-test PASS without workflow mutation or unrelated rerun"
+      required: true
+    - id: CHECK-5
+      command_or_check: "After exact-candidate PASS, publish only TASK-0017/report.yaml as the direct child of the verified candidate, verify main unchanged, and stop at NEEDS_REVIEW"
+      required: true
+  authoritative_verification:
+    required: true
+    mechanism: ".github/workflows/validate-skill-library.yml automatic dev push workflow bound to the exact immutable candidate SHA"
+    expected_signal: "Validate skill library workflow completes successfully for the exact candidate; Validate and Unit tests steps both pass"
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
