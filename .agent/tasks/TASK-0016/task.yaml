@@ -1,0 +1,261 @@
+protocol_version: 3
+
+task_id: TASK-0016
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: maintainer_objective_change
+  task_id: ""
+  gap_id: "DEV_RELEASE_LINEAGE_READINESS"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "8258c93725af4e073add2659bf1d5e88d64304ff"
+
+architect_analysis_skills:
+  - simplicity
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "Explicit operator continuation in the current Architect session"
+    role: "operator authority to continue release-readiness work"
+    precedence: 1
+  - source: ".agent/tasks/TASK-0015/review.yaml@8258c93725af4e073add2659bf1d5e88d64304ff"
+    role: "latest ACCEPTED agent-skills task lineage"
+    precedence: 2
+  - source: "protocols/TASK_PROTOCOL.md@8258c93725af4e073add2659bf1d5e88d64304ff"
+    role: "current task/review/promotion governance"
+    precedence: 3
+
+structure_authority:
+  status: RESOLVED
+  source: "Current dev/main topology plus accepted task lineage and explicit operator objective"
+  rationale: >-
+    dev is a linear descendant of main but carries a large accumulated semantic delta. Technical fast-forwardability is not
+    sufficient evidence for promotion or stable release preparation. A bounded report-only audit is the smallest correct next
+    action: determine whether every material current-state semantic change is durably closed by accepted evidence, or identify
+    exact remaining blockers without modifying implementation or governance semantics.
+
+release_candidate_snapshot:
+  dev_head: "8258c93725af4e073add2659bf1d5e88d64304ff"
+  main_head: "0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1"
+  expected_relation:
+    dev_ahead_by: 49
+    dev_behind_by: 0
+    merge_base: "0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1"
+  expected_topology:
+    - dev
+    - main
+  expected_github_releases: 0
+
+objective: >-
+  Determine whether the exact agent-skills dev snapshot 8258c93725af4e073add2659bf1d5e88d64304ff is ready to enter
+  first-stable-release preparation without semantic hardening work. Audit the complete main-to-dev semantic delta, durable
+  task/report/review closure, validator/test evidence, protocol-v3 consistency, and any known unresolved release blocker.
+  Do not promote, release, redesign, or repair anything in this task.
+
+scope:
+  required_changes:
+    - "Do not modify any semantic repository file. This is a read-only audit whose only persisted output is TASK-0016 report.yaml."
+    - >-
+      Refresh exact refs and prove the pinned candidate snapshot is still on the current dev lineage, main remains the pinned
+      stable base, topology is exactly {dev, main}, and no GitHub release has appeared. Fail closed on material drift.
+    - >-
+      Compare pinned main 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1 to pinned candidate
+      8258c93725af4e073add2659bf1d5e88d64304ff and enumerate every material non-task semantic file changed by the 49-commit delta.
+    - >-
+      Map each material current-state semantic change to durable closure evidence. Prefer exact ACCEPTED review lineage. A historical
+      task/report lacking review.yaml is not automatically a blocker if a later ACCEPTED task or comprehensive accepted current-state
+      audit demonstrably subsumes and revalidates that exact surviving semantic state. Conversely, do not waive a material surviving
+      change merely because it is old or because a later task exists nearby.
+    - >-
+      Inspect TASK-0007 through TASK-0015 only as needed to establish closure of surviving semantics. Distinguish historical task
+      artifact completeness from current release-blocking semantic evidence; do not require retroactive review artifacts solely for symmetry.
+    - >-
+      Establish validator/test assurance for the exact current candidate without inventing execution. Identify the last commits/tasks
+      that materially changed scripts/validate_skill_library.py and scripts/test_validate_skill_library.py, then determine whether exact
+      persisted verification evidence plus later accepted non-code changes are sufficient for the current snapshot. If a required
+      current-state executable predicate cannot be proven with available exact evidence, classify it as a blocker rather than guessing.
+    - >-
+      Check current protocol-v3, Architect/Executor, task/report/review, continuation, capability, terminal-identity, operational-timing,
+      program.generated.json, and promotion/release semantics only to the extent they are part of the current main-to-dev delta or known
+      accepted closure. Do not reopen accepted design questions without contradictory evidence.
+    - >-
+      Check repository release identity/readiness surfaces such as README and existing release/tag state only for concrete ambiguity that
+      would block a subsequent bounded release-preparation task. Do not choose or create a version tag in this audit.
+    - >-
+      In structural_observations, state exactly one terminal audit classification: RELEASE_PREPARATION_READY or BLOCKERS_FOUND. If
+      BLOCKERS_FOUND, every blocker must be concrete, current, evidence-linked, and minimal; do not create follow-up tasks.
+    - >-
+      Publish .agent/tasks/TASK-0016/report.yaml as the only child commit after the planning base and stop at NEEDS_REVIEW.
+  allowed_existing_files_or_components:
+    - .agent/tasks/TASK-0007/task.yaml
+    - .agent/tasks/TASK-0007/report.yaml
+    - .agent/tasks/TASK-0008/task.yaml
+    - .agent/tasks/TASK-0008/report.yaml
+    - .agent/tasks/TASK-0009/task.yaml
+    - .agent/tasks/TASK-0009/report.yaml
+    - .agent/tasks/TASK-0010/task.yaml
+    - .agent/tasks/TASK-0010/report.yaml
+    - .agent/tasks/TASK-0010/review.yaml
+    - .agent/tasks/TASK-0011/task.yaml
+    - .agent/tasks/TASK-0011/report.yaml
+    - .agent/tasks/TASK-0011/review.yaml
+    - .agent/tasks/TASK-0012/task.yaml
+    - .agent/tasks/TASK-0012/report.yaml
+    - .agent/tasks/TASK-0012/review.yaml
+    - .agent/tasks/TASK-0013/task.yaml
+    - .agent/tasks/TASK-0013/report.yaml
+    - .agent/tasks/TASK-0013/review.yaml
+    - .agent/tasks/TASK-0014/task.yaml
+    - .agent/tasks/TASK-0014/report.yaml
+    - .agent/tasks/TASK-0014/review.yaml
+    - .agent/tasks/TASK-0015/task.yaml
+    - .agent/tasks/TASK-0015/report.yaml
+    - .agent/tasks/TASK-0015/review.yaml
+    - README.md
+    - architect/SKILL.md
+    - executor/SKILL.md
+    - github-workflow/SKILL.md
+    - protocols/TASK_PROTOCOL.md
+    - contracts/ARCHITECT_REVIEW.md
+    - contracts/IMPLEMENTATION_CONTRACT.md
+    - contracts/IMPLEMENTATION_REPORT.md
+    - templates/continuation.yaml
+    - templates/program.generated.json
+    - templates/report.yaml
+    - scripts/validate_skill_library.py
+    - scripts/test_validate_skill_library.py
+    - .agent/tasks/TASK-0016/task.yaml
+  expected_files_are_restrictive: false
+
+invariants:
+  - "The audited semantic candidate remains exactly 8258c93725af4e073add2659bf1d5e88d64304ff."
+  - "main remains unchanged at 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1 during this task."
+  - "No semantic implementation, protocol, contract, skill, template, validator, test, README, workflow, or release metadata mutation occurs."
+  - "Missing historical review.yaml alone is not treated as a release blocker without a surviving unclosed semantic claim."
+  - "Surviving material semantics require durable closure evidence; age, adjacency, or convenience are not evidence."
+  - "Accepted tasks are not reopened without concrete contradictory current-state evidence."
+  - "No release version is selected, no tag/release is created, and no promotion occurs."
+  - "No Agent Runtime, central orchestrator, registry, telemetry backend, framework expansion, or new role/lifecycle model is introduced."
+
+forbidden_changes:
+  - "Do not modify README.md, any skill, protocol, contract, template, script, test, workflow, existing task/report/review artifact, main, branch topology, tags, releases, issues, or PRs."
+  - "Do not create or revise follow-up tasks."
+  - "Do not promote dev to main."
+  - "Do not create version tags or GitHub releases."
+  - "Do not retrofit review.yaml into TASK-0007 through TASK-0009 merely for artifact symmetry."
+  - "Do not claim executable verification that was not actually performed or durably evidenced."
+  - "Do not turn external frameworks, OSS feature sets, benchmark suites, or broader productization conventions into authority."
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0016/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Pinned release-candidate ancestry and topology are proven without mutation."
+    evidence_required: "Exact current refs, main-to-candidate compare metadata, release count, and topology evidence"
+  - id: AC-2
+    requirement: "Every material surviving main-to-dev semantic change has a release-closure disposition."
+    evidence_required: "Changed-file/current-state mapping to ACCEPTED review or exact later subsuming evidence, with concrete blockers for any uncovered semantics"
+  - id: AC-3
+    requirement: "Historical artifact incompleteness is separated from current semantic release risk."
+    evidence_required: "TASK-0007..TASK-0009 review absence is evaluated by surviving semantic coverage rather than retroactive symmetry"
+  - id: AC-4
+    requirement: "Validator/test assurance for the current candidate is truthful and sufficient or explicitly blocked."
+    evidence_required: "Last validator/test mutation lineage plus exact persisted verification evidence and later-change impact analysis"
+  - id: AC-5
+    requirement: "Current protocol/release surfaces contain no unclassified material ambiguity."
+    evidence_required: "Bounded consistency audit covering only current changed semantics, accepted closure, README/release identity, and known blockers"
+  - id: AC-6
+    requirement: "Audit ends with one deterministic release-preparation classification and report-only lineage."
+    evidence_required: "Exactly one structural_observations classification RELEASE_PREPARATION_READY or BLOCKERS_FOUND; report-only child; main unchanged"
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Refresh refs and confirm current dev contains pinned candidate 8258c93725af4e073add2659bf1d5e88d64304ff, main remains 0a57fbfd39b96494f22fea1f7847aab1d5c8bbf1, topology is exactly {dev, main}, and GitHub releases remain empty"
+      required: true
+    - id: CHECK-2
+      command_or_check: "Compare pinned main to pinned candidate and account for every material non-task semantic file in the 49-commit delta"
+      required: true
+    - id: CHECK-3
+      command_or_check: "Resolve exact closure evidence for surviving semantics, treating historical missing reviews as blockers only when surviving material semantics remain unclosed"
+      required: true
+    - id: CHECK-4
+      command_or_check: "Trace the last validator/test mutations and prove current executable assurance from exact persisted evidence or classify the missing predicate as a blocker"
+      required: true
+    - id: CHECK-5
+      command_or_check: "Inspect current protocol-v3/release identity surfaces for concrete unresolved contradictions without reopening accepted questions by preference"
+      required: true
+    - id: CHECK-6
+      command_or_check: "Publish only TASK-0016/report.yaml as the direct child of the exact planning base, verify main unchanged, and stop at NEEDS_REVIEW"
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
