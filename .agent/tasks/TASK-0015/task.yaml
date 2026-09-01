@@ -1,7 +1,7 @@
 protocol_version: 3
 
 task_id: TASK-0015
-task_revision: 2
+task_revision: 3
 state: APPROVED
 
 origin:
@@ -62,30 +62,38 @@ structure_authority:
   rationale: >-
     Revision 1 already established acceptable terminal identity semantics and the compatible timing field shape.
     This revision changes only forward timing-capture behavior in Executor procedure/report semantics so new reports
-    actually produce audit evidence when a trustworthy current clock is available.
+    actually produce audit evidence when a trustworthy current clock is available. The start boundary is after exact
+    task binding is resolved and immediately before capability preflight, avoiding a circular requirement to know the
+    task timing rule before canonical task resolution.
 
 objective: >-
   Correct TASK-0015 revision 1 so optional protocol-v3 timing schema remains backward-compatible while forward
-  collection is deterministic: newly produced Executor reports capture started_at_utc and terminal_decision_at_utc
-  whenever a trustworthy current UTC clock is available at the required boundaries, and omit the entire timing block
-  only when trustworthy timing cannot be obtained. Preserve the already-acceptable terminal identity semantics.
+  collection is deterministic: newly produced Executor reports capture started_at_utc after exact task binding is
+  resolved and immediately before capability preflight, and capture terminal_decision_at_utc when the terminal task
+  result is reached before report publication, whenever a trustworthy current UTC clock is available at those boundaries.
+  Omit the entire timing block only when trustworthy timing cannot be obtained. Preserve the already-acceptable terminal
+  identity semantics.
 
 scope:
   required_changes:
     - >-
-      In executor/SKILL.md, add the smallest forward timing-capture procedure: at the beginning of a task-bound
-      execution attempt, before binding/preflight work, capture started_at_utc from a trustworthy current UTC clock
-      when the current surface provides one; when the Executor reaches its terminal task result, before report
+      In executor/SKILL.md, add the smallest forward timing-capture procedure: after the exact task/repository/base binding
+      has been resolved and immediately before capability preflight, capture started_at_utc from a trustworthy current UTC
+      clock when the current surface provides one; when the Executor reaches its terminal task result, before report
       publication, capture terminal_decision_at_utc from a trustworthy current UTC clock.
     - >-
       In executor/SKILL.md, require a newly produced report to include operational_timing when both timestamps were
       truthfully captured. If a trustworthy current clock is unavailable at either required boundary, omit the entire
-      operational_timing block rather than inventing, approximating, partially populating, or reconstructing timestamps.
+      operational_timing block rather than inventing, approximating, partially populating, reconstructing, or deriving
+      either timestamp from Git commit times.
     - >-
       In contracts/IMPLEMENTATION_REPORT.md, distinguish schema compatibility from forward collection: historical and
       existing protocol-v3 reports without operational_timing remain valid, but new reports governed by this accepted
       semantics include the two-field block whenever trustworthy timestamps were captured at both boundaries; omission
       is valid only when trustworthy timing was unavailable for the attempt.
+    - >-
+      Define started_at_utc as the post-binding/pre-preflight operational start boundary. Approval-to-start or queue latency
+      remains separately derivable from repository lifecycle evidence and MUST NOT be conflated with Executor processing time.
     - >-
       Keep operational_timing non-authoritative operational telemetry. It cannot affect PASS, quality, acceptance,
       authority, capability, identity, independence, lifecycle, promotion, release, or performance compliance.
@@ -117,14 +125,15 @@ invariants:
   - "Exact operator-specific footer punctuation remains outside agent-skills"
   - "Historical/existing protocol-v3 reports without timing remain valid; no backfill"
   - "New reports include timing when both trustworthy boundary timestamps are available"
-  - "Clock unavailability permits omission of the entire timing block; partial or invented timing is forbidden"
+  - "started_at_utc is post-binding and immediately pre-capability-preflight; it is not queue/approval latency"
+  - "Clock unavailability permits omission of the entire timing block; partial, invented, reconstructed, or commit-derived timing is forbidden"
   - "Timing contains exactly started_at_utc and terminal_decision_at_utc; no stored derived duration"
   - "Timing remains non-authoritative operational telemetry"
   - "No telemetry service, database, registry, dashboard, collector, workflow engine, runtime feature, or orchestration mechanism"
   - "Continuation, promotion, release, review, capability, Git-authority, and lifecycle semantics remain unchanged"
 
 forbidden_changes:
-  - "Modify protocols/TASK_PROTOCOL.md or architect/SKILL.md semantically in revision 2"
+  - "Modify protocols/TASK_PROTOCOL.md or architect/SKILL.md semantically in revision 3"
   - "Change revision-1 terminal identity semantics"
   - "Modify architect-profile, agent-standards, agent-documents, agent-runtime, or any target product repository"
   - "Hard-code the operator-specific middle-dot footer or other exact visual rendering into agent-skills"
@@ -173,22 +182,25 @@ capability_requirements:
 acceptance_criteria:
   - id: AC-1
     requirement: >-
-      Executor procedure captures started_at_utc before binding/preflight and terminal_decision_at_utc at terminal decision
-      before report publication whenever a trustworthy current UTC clock is available at those boundaries.
+      Executor procedure captures started_at_utc after exact binding resolution and immediately before capability preflight,
+      and captures terminal_decision_at_utc at terminal decision before report publication, whenever a trustworthy current UTC
+      clock is available at those boundaries.
     evidence_required: "Exact executor/SKILL.md diff and boundary-semantics audit"
   - id: AC-2
     requirement: >-
       New reports governed by the corrected semantics include operational_timing when both trustworthy boundary timestamps
-      were captured; omission is allowed only for unavailable/untrustworthy timing and partial/invented/reconstructed timing is forbidden.
+      were captured; omission is allowed only for unavailable/untrustworthy timing and partial/invented/reconstructed or
+      commit-derived timing is forbidden.
     evidence_required: "Exact Executor/report-contract/template consistency audit"
   - id: AC-3
     requirement: >-
       Backward compatibility is preserved: historical and existing protocol-v3 reports without timing remain valid, timing
-      has exactly two RFC 3339 UTC fields, no duration field is stored, and timing remains non-authoritative.
-    evidence_required: "Backward-compatibility and field/non-authority audit"
+      has exactly two RFC 3339 UTC fields, no duration field is stored, timing remains non-authoritative, and queue/approval
+      latency remains distinct from Executor processing time.
+    evidence_required: "Backward-compatibility, field/non-authority, and latency-boundary audit"
   - id: AC-4
     requirement: >-
-      Revision-2 implementation changes only executor/SKILL.md, contracts/IMPLEMENTATION_REPORT.md, and templates/report.yaml;
+      Revision-3 implementation changes only executor/SKILL.md, contracts/IMPLEMENTATION_REPORT.md, and templates/report.yaml;
       accepted terminal identity semantics and all unrelated governance remain unchanged.
     evidence_required: "Exact base-to-candidate changed-file and semantic-scope audit"
   - id: AC-5
@@ -203,19 +215,19 @@ verification:
       command_or_check: "Confirm base-to-candidate changed files are exactly executor/SKILL.md, contracts/IMPLEMENTATION_REPORT.md, templates/report.yaml"
       required: true
     - id: CHECK-2
-      command_or_check: "Confirm Executor captures start before binding/preflight and terminal timestamp before report publication when trustworthy current UTC is available"
+      command_or_check: "Confirm Executor captures start after exact binding and immediately before capability preflight, then terminal timestamp before report publication, when trustworthy current UTC is available"
       required: true
     - id: CHECK-3
-      command_or_check: "Confirm new-report inclusion is required when both timestamps are truthfully captured, while omission is permitted only for unavailable timing and partial/invented/reconstructed timing is forbidden"
+      command_or_check: "Confirm new-report inclusion is required when both timestamps are truthfully captured, while omission is permitted only for unavailable timing and partial/invented/reconstructed/commit-derived timing is forbidden"
       required: true
     - id: CHECK-4
       command_or_check: "Confirm operational_timing still contains exactly started_at_utc and terminal_decision_at_utc as RFC 3339 UTC and no elapsed/duration or additional telemetry fields exist"
       required: true
     - id: CHECK-5
-      command_or_check: "Confirm timing remains non-authoritative and historical/existing v3 reports without timing remain valid with no backfill"
+      command_or_check: "Confirm timing remains non-authoritative, historical/existing v3 reports without timing remain valid with no backfill, and queue/approval latency is not represented as Executor processing time"
       required: true
     - id: CHECK-6
-      command_or_check: "Confirm protocols/TASK_PROTOCOL.md and architect/SKILL.md are byte-unchanged from the revision-2 execution base and revision-1 terminal identity semantics remain intact"
+      command_or_check: "Confirm protocols/TASK_PROTOCOL.md and architect/SKILL.md are byte-unchanged from the revision-3 execution base and revision-1 terminal identity semantics remain intact"
       required: true
     - id: CHECK-7
       command_or_check: "Confirm report_revision 2 commit changes only .agent/tasks/TASK-0015/report.yaml, is a direct child of the verified candidate, topology remains exactly {dev, main}, and main is unchanged"
