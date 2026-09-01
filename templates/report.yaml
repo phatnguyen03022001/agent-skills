@@ -50,7 +50,9 @@ capability_preflight:
     - repository_content_write
   passed: false
 
-# Optional; omit when a trustworthy current clock is unavailable.
+# Backward-compatible optional schema. For new reports, include this block only when both trustworthy
+# boundary timestamps were truthfully captured; otherwise omit the entire block. Never partially
+# populate, invent, approximate, reconstruct, or derive timing from Git commit times.
 operational_timing:
   started_at_utc: ""
   terminal_decision_at_utc: ""

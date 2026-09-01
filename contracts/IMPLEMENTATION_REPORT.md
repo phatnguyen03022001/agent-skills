@@ -18,13 +18,13 @@ The canonical template includes `capability_preflight` for the Executor phase: p
 
 `local_hygiene` is optional for protocol-v3 compatibility. When present, its result is `PASS`, `RETAINED_FOR_EVIDENCE`, or `BLOCKED`, with retained identity/reason when evidence must remain. Cleanup safety semantics are defined by the Task Protocol and Executor skill rather than recopied here.
 
-## Optional operational timing evidence
+## Backward-compatible operational timing evidence
 
-A protocol-v3 report may include optional non-authoritative `operational_timing` evidence. When present, that block contains exactly `started_at_utc` and `terminal_decision_at_utc`; both values are RFC 3339 UTC timestamps from a trustworthy current clock. If a trustworthy current clock is unavailable, omit the entire optional block rather than inventing or approximating time.
+Protocol-v3 timing schema is backward-compatible: historical and existing reports without `operational_timing` remain valid and require no backfill. For newly produced reports governed by the forward collection semantics, include `operational_timing` whenever both required boundary timestamps were truthfully captured from a trustworthy current UTC clock. Omission is valid only when trustworthy current timing was unavailable at either required boundary. Never partially populate the block or invent, approximate, reconstruct, or derive either timestamp from Git commit times.
 
-`started_at_utc` is the beginning of the current task-bound Executor execution attempt, before binding/preflight work. `terminal_decision_at_utc` is when the Executor reaches its terminal task result, before report publication. Elapsed processing duration is derived from those two timestamps and MUST NOT be stored as another canonical duration field.
+When present, `operational_timing` contains exactly `started_at_utc` and `terminal_decision_at_utc`, both as RFC 3339 UTC timestamps. `started_at_utc` is captured after the exact task/repository/base binding is resolved and immediately before capability preflight. Approval-to-start or queue latency remains separate repository lifecycle evidence and MUST NOT be represented as Executor processing time. `terminal_decision_at_utc` is captured when the Executor reaches its terminal task result, before report publication. Elapsed processing duration is derived from those two timestamps and MUST NOT be stored as another canonical duration field.
 
-This timing is operational telemetry only. It cannot prove or affect quality, check PASS, acceptance, independence, identity, authority, capability, or performance compliance. Absence of `operational_timing` does not invalidate an otherwise valid protocol-v3 report.
+This timing is non-authoritative operational telemetry only. It cannot prove or affect PASS, quality, acceptance, authority, capability, identity, independence, lifecycle, promotion, release, or performance compliance.
 
 The existing report shape also represents truthful terminal failure. A report may record authoritative verifier FAIL, blockers, and an existing terminal/blocking `result` while remaining Executor-owned evidence; successful verification is not required for report validity or publication when the exact task grants report commit/push authority. Persisting such a report never converts FAIL to PASS and never creates Architect review, continuation, promotion, or release authority.
 
