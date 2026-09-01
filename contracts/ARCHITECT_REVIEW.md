@@ -22,6 +22,16 @@ The canonical v3 serialized judgment remains `ACCEPTED`, `REVISION_REQUIRED`, or
 
 When repository write capability is materially required to persist that final review, preflight it for the REVIEW phase. If unavailable, fail closed with `CURRENT_PHASE_CAPABILITY_UNAVAILABLE` rather than claiming a durable final review state. This requirement does not retroactively block earlier Executor phases whose required capabilities were available.
 
+## Optional review operational timing
+
+After resolving the exact repository/task/report binding, Architect captures `started_at_utc` from a trustworthy current UTC clock immediately before the first review-specific capability preflight or acceptance-evidence inspection, whichever occurs first, when the current review surface provides such a clock. This boundary measures Architect review processing only; task completion-to-review-start or queue latency is separate lifecycle evidence and must not be represented as review processing time.
+
+When Architect reaches a final canonical judgment (`ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`), it captures `terminal_decision_at_utc` from a trustworthy current UTC clock before publishing `review.yaml`. If trustworthy current UTC was unavailable at either required boundary, timing is unavailable for that review attempt and the entire `operational_timing` block is omitted. Timestamps must not be invented, approximated, reconstructed, partially populated, or derived from Git commit metadata.
+
+When present, `operational_timing` contains exactly `started_at_utc` and `terminal_decision_at_utc`, both captured RFC 3339 UTC timestamps. Elapsed review duration is derived and must not be stored as `elapsed_seconds` or another canonical duration field.
+
+Review timing is non-authoritative operational telemetry. It cannot affect `ACCEPTED`/`REVISION_REQUIRED`/`BLOCKED`, PASS/FAIL, authority, capability, identity, independence, acceptance evidence, promotion readiness, release readiness, or any performance-compliance claim. Reviews without trustworthy timing remain valid, and historical/current protocol-v3 review artifacts require no backfill.
+
 Acceptance does not rewrite Executor report state or itself manufacture verifier evidence, promotion/release authority, or later capability availability.
 
 Tasks governed before the durable-review rule may have only `task.yaml`/`report.yaml` or historical external Architect review. Do not infer a historical judgment from missing `review.yaml` and do not require bulk backfill. A historical report may receive a persisted review later only after the current Architect actually re-resolves and reviews that exact report; the new artifact records current re-review evidence rather than fabricating historical persistence.
