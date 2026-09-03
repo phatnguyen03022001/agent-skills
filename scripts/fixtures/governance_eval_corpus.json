@@ -1,0 +1,132 @@
+{
+  "cases": [
+    {
+      "case_id": "route-local",
+      "pair_id": "route-contract",
+      "scenario": "A change implements a handler behind an already agreed local route while request and response semantics remain unchanged.",
+      "evaluation_kind": "over_governance",
+      "expected_outcome": "ALLOW_LOCAL",
+      "rationale": "The material consequence stays within the assigned implementation surface; prescribing exact local HOW would be over-governance."
+    },
+    {
+      "case_id": "route-public-contract",
+      "pair_id": "route-contract",
+      "scenario": "A change alters a published route's request, response, or compatibility behavior.",
+      "evaluation_kind": "under_governance",
+      "expected_outcome": "ESCALATE_TO_ARCHITECT",
+      "rationale": "The change affects an externally meaningful contract, so Executor must escalate for Architect authority or revision."
+    },
+    {
+      "case_id": "sql-mechanical",
+      "pair_id": "persistence-semantics",
+      "scenario": "A change reorganizes SQL statements or local query helpers without changing stored data, transaction, or consistency semantics.",
+      "evaluation_kind": "over_governance",
+      "expected_outcome": "ALLOW_LOCAL",
+      "rationale": "The change is mechanical within the existing persistence behavior; imposing Architect control over local organization would be over-governance."
+    },
+    {
+      "case_id": "persistence-semantics",
+      "pair_id": "persistence-semantics",
+      "scenario": "A change alters stored data shape, transaction boundaries, retention, or consistency behavior.",
+      "evaluation_kind": "under_governance",
+      "expected_outcome": "ESCALATE_TO_ARCHITECT",
+      "rationale": "Persistence semantics have material data and recovery consequences that require Architect authority or revision."
+    },
+    {
+      "case_id": "module-local",
+      "pair_id": "ownership-boundary",
+      "scenario": "A new internal helper or module stays owned and consumed within one existing component.",
+      "evaluation_kind": "over_governance",
+      "expected_outcome": "ALLOW_LOCAL",
+      "rationale": "Ownership remains inside the existing component, so choosing the local implementation shape is Executor judgment."
+    },
+    {
+      "case_id": "shared-ownership",
+      "pair_id": "ownership-boundary",
+      "scenario": "A new reusable helper crosses component boundaries and creates a shared ownership contract.",
+      "evaluation_kind": "under_governance",
+      "expected_outcome": "ESCALATE_TO_ARCHITECT",
+      "rationale": "Cross-component reuse creates a new ownership boundary and contract, which requires Architect authority or revision."
+    },
+    {
+      "case_id": "approved-dependency",
+      "pair_id": "dependency-topology",
+      "scenario": "An implementation uses a dependency already approved by the task without changing its runtime or cost assumptions.",
+      "evaluation_kind": "over_governance",
+      "expected_outcome": "ALLOW_LOCAL",
+      "rationale": "The dependency consequence is already authorized and unchanged; re-prescribing the local use would be over-governance."
+    },
+    {
+      "case_id": "new-dependency",
+      "pair_id": "dependency-topology",
+      "scenario": "An implementation introduces a dependency whose footprint, runtime, license, cost, or deployment topology changes project consequences.",
+      "evaluation_kind": "under_governance",
+      "expected_outcome": "ESCALATE_TO_ARCHITECT",
+      "rationale": "A materially new dependency changes project cost or topology, so Executor must escalate for authority or a revised contract."
+    },
+    {
+      "case_id": "generated-local",
+      "pair_id": "generated-contract",
+      "scenario": "A generated or companion file is updated as local mechanics while its externally observed contract stays unchanged.",
+      "evaluation_kind": "over_governance",
+      "expected_outcome": "ALLOW_LOCAL",
+      "rationale": "The generated change remains local mechanics with no external contract consequence; prescribing its exact form would be over-governance."
+    },
+    {
+      "case_id": "generated-public",
+      "pair_id": "generated-contract",
+      "scenario": "A generated artifact or companion file changes an externally consumed schema, API, or compatibility contract.",
+      "evaluation_kind": "under_governance",
+      "expected_outcome": "ESCALATE_TO_ARCHITECT",
+      "rationale": "The generated output changes an externally meaningful contract and therefore requires Architect authority or revision."
+    },
+    {
+      "case_id": "frozen-auth",
+      "pair_id": "auth-trust",
+      "scenario": "An implementation follows already frozen authentication or authorization behavior without changing who is trusted or what is reachable.",
+      "evaluation_kind": "over_governance",
+      "expected_outcome": "ALLOW_LOCAL",
+      "rationale": "The implementation preserves the frozen trust boundary, so local execution judgment remains sufficient."
+    },
+    {
+      "case_id": "trust-boundary",
+      "pair_id": "auth-trust",
+      "scenario": "An implementation changes credential interpretation, trust relationships, authorization reachability, or the security boundary.",
+      "evaluation_kind": "under_governance",
+      "expected_outcome": "ESCALATE_TO_ARCHITECT",
+      "rationale": "Changing the trust boundary is a material security and authority consequence that requires Architect authority or revision."
+    },
+    {
+      "case_id": "preference-how",
+      "pair_id": "local-how",
+      "scenario": "Two local implementations satisfy the same authorized behavior and preserve all material consequences; choosing between them is a preference-only HOW decision.",
+      "evaluation_kind": "over_governance",
+      "expected_outcome": "ALLOW_LOCAL",
+      "rationale": "No material consequence changes, so an Architect prescription or revision based only on preferred wording or local HOW would be over-governance."
+    },
+    {
+      "case_id": "material-how",
+      "pair_id": "local-how",
+      "scenario": "A proposed local HOW changes reliability, data exposure, public behavior, ownership, cost, or reversibility even though the requested feature sounds similar.",
+      "evaluation_kind": "under_governance",
+      "expected_outcome": "ESCALATE_TO_ARCHITECT",
+      "rationale": "The apparently local HOW carries a material consequence, so proceeding without Architect authority or revision would be under-governance."
+    },
+    {
+      "case_id": "local-companion",
+      "pair_id": "companion-ownership",
+      "scenario": "Unexpected companion work remains local to the same component and preserves its external behavior and ownership.",
+      "evaluation_kind": "over_governance",
+      "expected_outcome": "ALLOW_LOCAL",
+      "rationale": "The companion work preserves the existing boundary and consequence, so local Executor judgment remains appropriate."
+    },
+    {
+      "case_id": "cross-component-move",
+      "pair_id": "companion-ownership",
+      "scenario": "Unexpected companion work moves behavior or ownership across components and creates a new cross-component contract.",
+      "evaluation_kind": "under_governance",
+      "expected_outcome": "ESCALATE_TO_ARCHITECT",
+      "rationale": "Moving ownership across components creates a material contract and architecture consequence that requires Architect authority or revision."
+    }
+  ]
+}

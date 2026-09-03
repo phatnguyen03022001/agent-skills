@@ -7,6 +7,7 @@ import contextlib
 import importlib.util
 import io
 import json
+import re
 import shutil
 import subprocess
 import tempfile
@@ -1545,6 +1546,179 @@ class Task0021EvidenceLifecycleTests(unittest.TestCase):
             "explicitly requests",
         ):
             self.assertIn(token, combined)
+
+
+EVAL_CORPUS = Path("scripts/fixtures/governance_eval_corpus.json")
+EVAL_CASE_FIELDS = frozenset({
+    "case_id",
+    "pair_id",
+    "scenario",
+    "evaluation_kind",
+    "expected_outcome",
+    "rationale",
+})
+EVAL_KINDS = frozenset({"over_governance", "under_governance"})
+EVAL_OUTCOMES = frozenset({"ALLOW_LOCAL", "ESCALATE_TO_ARCHITECT"})
+EVAL_PAIR_MIN = 6
+EVAL_PAIR_MAX = 8
+TARGET_RULE_LEAKAGE = re.compile(r"\b(?:ielts|sf|salesforce)\b", re.IGNORECASE)
+
+
+def eval_corpus_errors(document: object) -> list[str]:
+    errors: list[str] = []
+    if type(document) is not dict:
+        return ["corpus must be an object"]
+    if set(document) != {"cases"}:
+        errors.append("corpus must contain only the cases field")
+    cases = document.get("cases")
+    if type(cases) is not list:
+        return errors + ["cases must be a list"]
+
+    case_ids: set[str] = set()
+    pairs: dict[str, list[dict[str, object]]] = {}
+    for index, case in enumerate(cases):
+        label = f"cases[{index}]"
+        if type(case) is not dict:
+            errors.append(f"{label} must be an object")
+            continue
+        missing = sorted(EVAL_CASE_FIELDS - set(case))
+        unexpected = sorted(set(case) - EVAL_CASE_FIELDS)
+        if missing:
+            errors.append(f"{label} missing fields {missing}")
+        if unexpected:
+            errors.append(f"{label} has unexpected fields {unexpected}")
+        if missing or unexpected:
+            continue
+        for field in EVAL_CASE_FIELDS:
+            value = case[field]
+            if type(value) is not str or not value.strip():
+                errors.append(f"{label}.{field} must be a non-empty string")
+        case_id = case["case_id"]
+        pair_id = case["pair_id"]
+        kind = case["evaluation_kind"]
+        outcome = case["expected_outcome"]
+        if type(case_id) is str:
+            if case_id in case_ids:
+                errors.append(f"duplicate case_id {case_id!r}")
+            case_ids.add(case_id)
+        if type(pair_id) is str:
+            pairs.setdefault(pair_id, []).append(case)
+        if type(kind) is str and kind not in EVAL_KINDS:
+            errors.append(f"{label}.evaluation_kind has unsupported value {kind!r}")
+        if type(outcome) is str and outcome not in EVAL_OUTCOMES:
+            errors.append(f"{label}.expected_outcome has unsupported value {outcome!r}")
+
+    pair_count = len(pairs)
+    if not EVAL_PAIR_MIN <= pair_count <= EVAL_PAIR_MAX:
+        errors.append(f"pair count must be between {EVAL_PAIR_MIN} and {EVAL_PAIR_MAX}")
+    for pair_id, pair_cases in pairs.items():
+        if len(pair_cases) != 2:
+            errors.append(f"pair {pair_id!r} must contain exactly two cases")
+            continue
+        kinds = {case["evaluation_kind"] for case in pair_cases}
+        if kinds != EVAL_KINDS:
+            errors.append(f"pair {pair_id!r} must contain one case of each evaluation kind")
+
+    serialized = json.dumps(document, ensure_ascii=False)
+    leaked = sorted({match.group(0).lower() for match in TARGET_RULE_LEAKAGE.finditer(serialized)})
+    if leaked:
+        errors.append(f"target-specific rule leakage: {leaked}")
+    return errors
+
+
+class Task0022GovernanceEvaluationTests(unittest.TestCase):
+    def load_corpus(self, root: Path = ROOT) -> object:
+        path = root / EVAL_CORPUS
+        self.assertTrue(path.is_file(), f"missing evaluation corpus: {path}")
+        return json.loads(path.read_text(encoding="utf-8"))
+
+    def assert_corpus_rejected(self, mutate, expected: str) -> None:
+        document = json.loads(json.dumps(self.load_corpus()))
+        mutate(document)
+        errors = eval_corpus_errors(document)
+        self.assertTrue(any(expected in error for error in errors), errors)
+
+    def test_canonical_corpus_is_small_generic_and_integrity_valid(self) -> None:
+        document = self.load_corpus()
+        errors = eval_corpus_errors(document)
+        self.assertEqual(errors, [])
+        assert isinstance(document, dict)
+        cases = document["cases"]
+        assert isinstance(cases, list)
+        self.assertEqual(len(cases), len({case["case_id"] for case in cases}))
+        self.assertEqual({case["evaluation_kind"] for case in cases}, EVAL_KINDS)
+        self.assertEqual({case["expected_outcome"] for case in cases}, EVAL_OUTCOMES)
+
+    def test_integrity_rejects_duplicate_case_ids(self) -> None:
+        self.assert_corpus_rejected(
+            lambda document: document["cases"].__setitem__(1, document["cases"][0]),
+            "duplicate case_id",
+        )
+
+    def test_integrity_rejects_incomplete_pairs(self) -> None:
+        self.assert_corpus_rejected(
+            lambda document: document["cases"].pop(),
+            "must contain exactly two cases",
+        )
+
+    def test_integrity_rejects_unsupported_kind_and_outcome(self) -> None:
+        def mutate(document: dict[str, object]) -> None:
+            case = document["cases"][0]
+            case["evaluation_kind"] = "materiality_classifier"
+            case["expected_outcome"] = "PRESCRIBE_WORDING"
+
+        self.assert_corpus_rejected(mutate, "unsupported value")
+
+    def test_integrity_rejects_missing_required_fields(self) -> None:
+        def mutate(document: dict[str, object]) -> None:
+            document["cases"][0].pop("rationale")
+
+        self.assert_corpus_rejected(mutate, "missing fields")
+
+    def test_integrity_rejects_malformed_required_fields(self) -> None:
+        def mutate(document: dict[str, object]) -> None:
+            document["cases"][0]["scenario"] = "   "
+
+        self.assert_corpus_rejected(mutate, "must be a non-empty string")
+
+    def test_integrity_rejects_pair_count_drift(self) -> None:
+        def mutate(document: dict[str, object]) -> None:
+            document["cases"].extend(
+                [
+                    {
+                        **document["cases"][0],
+                        "case_id": "extra-local",
+                        "pair_id": "extra-pair",
+                        "evaluation_kind": "over_governance",
+                    },
+                    {
+                        **document["cases"][1],
+                        "case_id": "extra-material",
+                        "pair_id": "extra-pair",
+                        "evaluation_kind": "under_governance",
+                    },
+                    {
+                        **document["cases"][0],
+                        "case_id": "overflow-local",
+                        "pair_id": "overflow-pair",
+                        "evaluation_kind": "over_governance",
+                    },
+                    {
+                        **document["cases"][1],
+                        "case_id": "overflow-material",
+                        "pair_id": "overflow-pair",
+                        "evaluation_kind": "under_governance",
+                    },
+                ]
+            )
+
+        self.assert_corpus_rejected(mutate, "pair count")
+
+    def test_integrity_rejects_target_specific_rule_leakage(self) -> None:
+        def mutate(document: dict[str, object]) -> None:
+            document["cases"][0]["scenario"] = "Use IELTS-specific product semantics."
+
+        self.assert_corpus_rejected(mutate, "target-specific rule leakage")
 
 
 if __name__ == "__main__":
