@@ -16,9 +16,10 @@ independence:
   separate_session_from_executor: true
   exact_report_identity_verified: false
 
-# Optional. Omit this entire block unless both timestamps were captured from a
-# trustworthy current UTC clock at the required review boundaries. Do not
-# reconstruct timing from Git metadata or store an elapsed duration.
+# Optional. Reviews omit this entire block by default. Include it only when an
+# operator, task, or performance audit explicitly requests timing and both
+# trustworthy current UTC timestamps were captured at the required boundaries.
+# Do not reconstruct timing from Git metadata or store an elapsed duration.
 # operational_timing:
 #   started_at_utc: "<captured RFC 3339 UTC timestamp>"
 #   terminal_decision_at_utc: "<captured RFC 3339 UTC timestamp>"

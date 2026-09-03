@@ -198,7 +198,7 @@ class ValidatorRegressionTests(unittest.TestCase):
         cases = [
             ("templates/task.yaml", '  - id: AC-1\n    requirement: ""\n    evidence_required: ""', "  - banana: potato", "acceptance_criteria[0]"),
             ("templates/task.yaml", "    precedence: 1", '    precedence: "wrong"', "authority_sources[0].precedence"),
-            ("templates/report.yaml", '  - path: ""\n    summary: ""\n    new_file: false\n    in_scope: false\n    structure_authorized: false', '  - summary: ""\n    new_file: false\n    in_scope: false\n    structure_authorized: false', "changed_files[0]"),
+            ("templates/report.yaml", '  - type: file_growth\n    path: ""\n    evidence: ""\n    recommendation: split_candidate\n    action_taken: none', '  - path: ""\n    evidence: ""\n    recommendation: split_candidate\n    action_taken: none', "structural_observations[0]"),
             ("templates/report.yaml", '  - criterion_id: AC-1\n    status: NOT_PROVEN\n    evidence: ""', '  - status: NOT_PROVEN\n    evidence: ""', "acceptance_evidence[0]"),
         ]
         for relative, before, after, expected in cases:
@@ -604,7 +604,7 @@ class ValidatorRegressionTests(unittest.TestCase):
         marker = "local_hygiene:\n"
         self.assertIn(marker, text)
         start = text.index(marker)
-        end_marker = "\nchanged_files:\n"
+        end_marker = "\ncommits_created:\n"
         end = text.index(end_marker, start)
         path.write_text(text[:start] + text[end + 1 :], encoding="utf-8")
         result = self.run_validator(root)
@@ -1399,6 +1399,152 @@ class Task0020GovernanceOwnershipTests(unittest.TestCase):
         self.assertNotIn("structure_policy:", text)
         result = self.run_validator(root)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+
+class Task0021EvidenceLifecycleTests(unittest.TestCase):
+    def fixture(self) -> tuple[tempfile.TemporaryDirectory[str], Path]:
+        temp = tempfile.TemporaryDirectory()
+        root = Path(temp.name) / "repo"
+        shutil.copytree(ROOT, root)
+        self.addCleanup(temp.cleanup)
+        return temp, root
+
+    def run_validator(self, root: Path) -> subprocess.CompletedProcess[str]:
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+        original_root = VALIDATOR_MODULE.ROOT
+        try:
+            VALIDATOR_MODULE.ROOT = root
+            with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+                returncode = VALIDATOR_MODULE.main()
+        finally:
+            VALIDATOR_MODULE.ROOT = original_root
+        return subprocess.CompletedProcess(
+            args=["python3", str(root / VALIDATOR)],
+            returncode=returncode,
+            stdout=stdout.getvalue(),
+            stderr=stderr.getvalue(),
+        )
+
+    def remove_top_level_block(self, text: str, key: str) -> str:
+        lines = text.splitlines(keepends=True)
+        matches = [index for index, line in enumerate(lines) if line == f"{key}:\n"]
+        if not matches:
+            return text
+        start = matches[0]
+        end = start + 1
+        while end < len(lines) and (not lines[end].strip() or lines[end][0].isspace()):
+            end += 1
+        return "".join(lines[:start] + lines[end:])
+
+    def test_compact_report_can_omit_changed_file_enumeration(self) -> None:
+        _, root = self.fixture()
+        path = root / "templates" / "report.yaml"
+        text = path.read_text(encoding="utf-8")
+        path.write_text(self.remove_top_level_block(text, "changed_files"), encoding="utf-8")
+
+        result = self.run_validator(root)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_default_report_template_omits_operational_timing(self) -> None:
+        _, root = self.fixture()
+        path = root / "templates" / "report.yaml"
+        text = path.read_text(encoding="utf-8")
+        self.assertIn("# operational_timing:\n", text)
+        document = VALIDATOR_MODULE.load_protocol_document("templates/report.yaml")
+        assert document is not None
+        self.assertNotIn("operational_timing", document)
+
+        result = self.run_validator(root)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_report_accepts_explicit_two_timestamp_timing(self) -> None:
+        _, root = self.fixture()
+        path = root / "templates" / "report.yaml"
+        text = self.remove_top_level_block(path.read_text(encoding="utf-8"), "operational_timing")
+        text += (
+            "\noperational_timing:\n"
+            '  started_at_utc: "2026-09-03T10:00:00Z"\n'
+            '  terminal_decision_at_utc: "2026-09-03T10:05:00Z"\n'
+        )
+        path.write_text(text, encoding="utf-8")
+
+        result = self.run_validator(root)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_report_rejects_partial_operational_timing(self) -> None:
+        _, root = self.fixture()
+        path = root / "templates" / "report.yaml"
+        text = self.remove_top_level_block(path.read_text(encoding="utf-8"), "operational_timing")
+        text += '\noperational_timing:\n  started_at_utc: "2026-09-03T10:00:00Z"\n'
+        path.write_text(text, encoding="utf-8")
+
+        result = self.run_validator(root)
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("operational_timing", result.stdout + result.stderr)
+
+    def test_report_rejects_non_utc_or_derived_timing_fields(self) -> None:
+        _, root = self.fixture()
+        path = root / "templates" / "report.yaml"
+        text = self.remove_top_level_block(path.read_text(encoding="utf-8"), "operational_timing")
+        text += (
+            "\noperational_timing:\n"
+            '  started_at_utc: "2026-09-03T17:00:00+07:00"\n'
+            '  terminal_decision_at_utc: "2026-09-03T10:05:00Z"\n'
+            "  elapsed_seconds: 300\n"
+        )
+        path.write_text(text, encoding="utf-8")
+
+        result = self.run_validator(root)
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("operational_timing", result.stdout + result.stderr)
+
+    def test_review_rejects_partial_operational_timing(self) -> None:
+        _, root = self.fixture()
+        path = root / "templates" / "review.yaml"
+        text = path.read_text(encoding="utf-8")
+        text += '\noperational_timing:\n  started_at_utc: "2026-09-03T10:00:00Z"\n'
+        path.write_text(text, encoding="utf-8")
+
+        result = self.run_validator(root)
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("operational_timing", result.stdout + result.stderr)
+
+    def test_review_accepts_explicit_two_timestamp_timing(self) -> None:
+        _, root = self.fixture()
+        path = root / "templates" / "review.yaml"
+        text = path.read_text(encoding="utf-8")
+        text += (
+            "\noperational_timing:\n"
+            '  started_at_utc: "2026-09-03T10:00:00Z"\n'
+            '  terminal_decision_at_utc: "2026-09-03T10:05:00Z"\n'
+        )
+        path.write_text(text, encoding="utf-8")
+
+        result = self.run_validator(root)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_review_procedure_is_evidence_first_and_trigger_expanded(self) -> None:
+        combined = (
+            (ROOT / "architect" / "SKILL.md").read_text(encoding="utf-8")
+            + (ROOT / "contracts" / "ARCHITECT_REVIEW.md").read_text(encoding="utf-8")
+            + (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8")
+        )
+        for token in (
+            "evidence-first",
+            "exact report/task identity",
+            "candidate diff boundary",
+            "acceptance evidence",
+            "deviations/gaps",
+            "material risk triggers",
+            "stop when material predicates are proven",
+            "Deep implementation reconstruction occurs only for",
+            "preference-only revision",
+            "material consequence or contract/risk violation",
+            "omitted by default",
+            "explicitly requests",
+        ):
+            self.assertIn(token, combined)
 
 
 if __name__ == "__main__":

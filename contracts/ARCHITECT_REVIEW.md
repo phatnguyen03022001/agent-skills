@@ -16,7 +16,7 @@ Review metadata such as `independence.reviewer_role` or `separate_session_from_e
 
 ## Review artifact obligations
 
-The review checks protocol/task/report identity, execution base, skill rules, scope, structure policy, Git authority/actions, gaps, acceptance evidence, available advisory evidence, and designated-verifier evidence.
+The review is evidence-first: resolve exact report/task identity, then the candidate diff boundary, acceptance evidence, deviations/gaps, and material risk triggers, in that order; stop when material predicates are proven. Deep implementation reconstruction occurs only for contradiction, unexplained surfaces, weak or missing proof, deviation, material trust/data/public-contract/irreversibility risk, regression signal, or explicitly stronger assurance. A preference-only revision is not warranted when material authority, invariants, simplicity, and proof pass; reject local HOW only for material consequence or contract/risk violation. The review then checks protocol, execution base, skill rules, scope, structure policy, Git authority/actions, available advisory evidence, and designated-verifier evidence.
 
 The canonical v3 serialized judgment remains `ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`. Before a final canonical judgment governed by the durable-review rule is relied on across sessions or for continuation, promotion, release, or successor reconstruction, Architect publishes the existing `review.yaml` bound to the exact reviewed report commit and report revision. Reasoning may occur before persistence, but it is not durable repository-reconstructible lifecycle evidence until publication.
 
@@ -24,9 +24,9 @@ When repository write capability is materially required to persist that final re
 
 ## Optional review operational timing
 
-After resolving the exact repository/task/report binding, Architect captures `started_at_utc` from a trustworthy current UTC clock immediately before the first review-specific capability preflight or acceptance-evidence inspection, whichever occurs first, when the current review surface provides such a clock. This boundary measures Architect review processing only; task completion-to-review-start or queue latency is separate lifecycle evidence and must not be represented as review processing time.
+Review operational timing is omitted by default. Include `operational_timing` only when an operator, task, or performance audit explicitly requests it. When requested, capture `started_at_utc` from a trustworthy current UTC clock immediately before the first review-specific capability preflight or acceptance-evidence inspection, whichever occurs first; this boundary measures Architect review processing only. Task completion-to-review-start or queue latency is separate lifecycle evidence and must not be represented as review processing time.
 
-When Architect reaches a final canonical judgment (`ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`), it captures `terminal_decision_at_utc` from a trustworthy current UTC clock before publishing `review.yaml`. If trustworthy current UTC was unavailable at either required boundary, timing is unavailable for that review attempt and the entire `operational_timing` block is omitted. Timestamps must not be invented, approximated, reconstructed, partially populated, or derived from Git commit metadata.
+When timing was explicitly requested and Architect reaches a final canonical judgment (`ACCEPTED`, `REVISION_REQUIRED`, or `BLOCKED`), capture `terminal_decision_at_utc` from a trustworthy current UTC clock before publishing `review.yaml`. If either requested boundary is unavailable, timing is unavailable for that review attempt and the entire `operational_timing` block is omitted. Timestamps must not be invented, approximated, reconstructed, partially populated, or derived from Git commit metadata. No timing-enabled or telemetry-mode field is added.
 
 When present, `operational_timing` contains exactly `started_at_utc` and `terminal_decision_at_utc`, both captured RFC 3339 UTC timestamps. Elapsed review duration is derived and must not be stored as `elapsed_seconds` or another canonical duration field.
 

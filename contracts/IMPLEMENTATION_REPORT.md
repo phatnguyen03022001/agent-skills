@@ -12,7 +12,7 @@ Executor owns report content. Architect may review it but does not rewrite it.
 
 ## Required evidence
 
-The report records task/base identity, pinned skill revision, pre-execution gates, changed files, implementation commits/pushes, acceptance evidence, required checks, gaps/deviations/blockers, and final Executor result.
+The report is a compact evidence index. It preserves exact task/revision, authorized base, candidate identity, target binding, AC-to-evidence mapping, required verification identity/results, deviations/gaps/blockers, implementation push identity, and the final Executor result. Redundant successful-process attestations and changed-file enumeration may be omitted when exact Git/task/verifier evidence reconstructs the same fact; omission never means PASS, permission, or hidden success. When present, changed-file entries remain evidence, not authority.
 
 The canonical template includes `capability_preflight` for the Executor phase: phase, required semantic capabilities, observed available/missing capabilities, and pass/fail. This is evidence of the observed execution preflight, not authority.
 
@@ -20,9 +20,9 @@ The canonical template includes `capability_preflight` for the Executor phase: p
 
 ## Backward-compatible operational timing evidence
 
-Protocol-v3 timing schema is backward-compatible: historical and existing reports without `operational_timing` remain valid and require no backfill. For newly produced reports governed by the forward collection semantics, include `operational_timing` whenever both required boundary timestamps were truthfully captured from a trustworthy current UTC clock. Omission is valid only when trustworthy current timing was unavailable at either required boundary. Never partially populate the block or invent, approximate, reconstruct, or derive either timestamp from Git commit times.
+Protocol-v3 timing schema is backward-compatible: historical and existing reports without `operational_timing` remain valid and require no backfill. New reports omit operational timing by default; include it only when an operator, task, or performance audit explicitly requests timing and both required boundary timestamps were truthfully captured from a trustworthy current UTC clock. If either requested boundary is unavailable, omit the entire block. Never partially populate the block or invent, approximate, reconstruct, or derive either timestamp from Git commit times.
 
-When present, `operational_timing` contains exactly `started_at_utc` and `terminal_decision_at_utc`, both as RFC 3339 UTC timestamps. `started_at_utc` is captured after the exact task/repository/base binding is resolved and immediately before capability preflight. Approval-to-start or queue latency remains separate repository lifecycle evidence and MUST NOT be represented as Executor processing time. `terminal_decision_at_utc` is captured when the Executor reaches its terminal task result, before report publication. Elapsed processing duration is derived from those two timestamps and MUST NOT be stored as another canonical duration field.
+When present, `operational_timing` contains exactly `started_at_utc` and `terminal_decision_at_utc`, both as RFC 3339 UTC timestamps. When explicitly requested, `started_at_utc` is captured after the exact task/repository/base binding is resolved and immediately before capability preflight. Approval-to-start or queue latency remains separate repository lifecycle evidence and MUST NOT be represented as Executor processing time. `terminal_decision_at_utc` is captured when the Executor reaches its terminal task result, before report publication. Elapsed processing duration is derived from those two timestamps and MUST NOT be stored as another canonical duration field. No timing-enabled or telemetry-mode field is added.
 
 This timing is non-authoritative operational telemetry only. It cannot prove or affect PASS, quality, acceptance, authority, capability, identity, independence, lifecycle, promotion, release, or performance compliance.
 

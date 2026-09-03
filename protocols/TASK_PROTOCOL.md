@@ -294,7 +294,13 @@ Missing cleanup proof means retain or return `BLOCKED`; never guess and delete. 
 
 ## Evidence deduplication and v3 compatibility
 
-Keep unconditional protocol boilerplate here, task-specific material authority in `task.yaml`, and record evidence once where practical instead of copying the same prose through task/report/review. Existing legacy inline evidence remains valid protocol-v3 input. Additive evidence references may be used only when existing validators/contracts support them; there is no parallel compact schema, task-lite variant, or new protocol version.
+Keep unconditional protocol boilerplate here, task-specific material authority in `task.yaml`, and record evidence once where practical instead of copying the same prose through task/report/review. Normal Executor reports are evidence indexes: they preserve exact task/revision, authorized base, candidate identity, target binding, AC-to-evidence mapping, required verification identity/results, deviations/gaps/blockers, and the terminal result. Redundant successful-process attestations and changed-file enumeration may be omitted when exact Git/task/verifier evidence reconstructs the same fact; omission never means PASS, permission, or hidden success. Sparse reports remain evidence-backed rather than self-attested: shorter prose retains exact resolvable commit/check/run/path/observable proof as appropriate. Existing legacy inline evidence remains valid protocol-v3 input. Additive evidence references may be used only when existing validators/contracts support them; there is no parallel compact schema, task-lite variant, or new protocol version.
+
+## Evidence-first Architect review
+
+Architect review is evidence-first and trigger-expanded. Resolve the exact report/task identity, then the candidate diff boundary, acceptance evidence, deviations/gaps, and material risk triggers, in that order; stop when material predicates are proven. Deep implementation reconstruction occurs only for contradiction, unexplained surfaces, weak or missing proof, deviation, material trust/data/public-contract/irreversibility risk, regression signal, or explicitly stronger assurance. A preference-only revision is not warranted when material authority, invariants, simplicity, and proof pass; reject local HOW only for material consequence or contract/risk violation. Review judges consequence and evidence, not implementation taste.
+
+Operational timing is omitted by default from Architect and Executor hot paths. `operational_timing` is included only when an operator, task, or performance audit explicitly requests it. When requested, it retains the existing exact two-RFC3339-UTC-timestamp, boundary-captured, non-authoritative v3 semantics; the entire block is omitted if either trustworthy boundary capture is unavailable. No timing-enabled or telemetry-mode field is added, and timing is never reconstructed from Git.
 
 ## TASK LAUNCH presentation
 

@@ -7,6 +7,7 @@ import json
 import re
 import sys
 from copy import deepcopy
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -27,6 +28,9 @@ KEY_RE = re.compile(r"^([A-Za-z_][A-Za-z0-9_-]*):(.*)$")
 INT_RE = re.compile(r"^-?(?:0|[1-9][0-9]*)$")
 CATALOG_START = "<!-- SKILL_CATALOG_START -->"
 CATALOG_END = "<!-- SKILL_CATALOG_END -->"
+RFC3339_UTC_RE = re.compile(
+    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|\+00:00)$"
+)
 
 CONTINUATION_MODES = frozenset({"MANUAL", "AUTO_UNTIL_STOP"})
 CONTINUATION_STOP_CONDITIONS = frozenset({
@@ -646,6 +650,32 @@ def validate_release_authority(label: str, doc: dict[str, Any]) -> None:
     )
 
 
+def validate_operational_timing(label: str, doc: dict[str, Any]) -> None:
+    timing = get_path(doc, "operational_timing")
+    if timing is _MISSING:
+        return
+    valid = require_mapping_schema(
+        label,
+        timing,
+        "operational_timing",
+        {
+            "started_at_utc": str,
+            "terminal_decision_at_utc": str,
+        },
+    )
+    if not valid:
+        return
+    for field in ("started_at_utc", "terminal_decision_at_utc"):
+        value = timing[field]
+        if not RFC3339_UTC_RE.fullmatch(value):
+            error(f"{label}: path 'operational_timing.{field}' must be RFC 3339 UTC timestamp")
+            continue
+        try:
+            datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except ValueError:
+            error(f"{label}: path 'operational_timing.{field}' must be a valid RFC 3339 UTC timestamp")
+
+
 def validate_generated_program_template() -> None:
     label = "templates/program.generated.json"
     doc = load_json_document(label)
@@ -960,6 +990,8 @@ def validate_report_template() -> None:
     ]:
         require_field(label, doc, dotted, expected_type)
     for dotted, schema in REPORT_SEQUENCE_SCHEMAS.items():
+        if dotted == "changed_files" and get_path(doc, dotted) is _MISSING:
+            continue
         closed_values = {"classification": GAP_CLASSIFICATIONS} if dotted == "discovered_gaps" else None
         require_mapping_sequence_schema(label, doc, dotted, schema, closed_values)
     require_field(label, doc, "deviations_from_task", list)
@@ -1010,6 +1042,8 @@ def validate_report_template() -> None:
             if result == "RETAINED_FOR_EVIDENCE" and not retained:
                 error(f"{label}: RETAINED_FOR_EVIDENCE requires retained artifact identity and reason")
 
+    validate_operational_timing(label, doc)
+
 
 def validate_review_template() -> None:
     label = "templates/review.yaml"
@@ -1043,6 +1077,8 @@ def validate_review_template() -> None:
                 require_mapping_schema(
                     label, item["origin"], f"follow_up_tasks[{index}].origin", FOLLOW_UP_ORIGIN_SCHEMA
                 )
+
+    validate_operational_timing(label, doc)
 
     independence = get_path(doc, "independence")
     if independence is not _MISSING:
@@ -1218,6 +1254,16 @@ def validate_protocol_docs() -> None:
         "capability_requirements", "release_authority", "RELEASED",
         "GitHub Actions must not become an iterative debugger",
         "Tool availability is not permission to consume quota",
+        "Normal Executor reports are evidence indexes",
+        "changed-file enumeration may be omitted",
+        "omission never means PASS, permission, or hidden success",
+        "Sparse reports remain evidence-backed rather than self-attested",
+        "Evidence-first Architect review",
+        "Deep implementation reconstruction occurs only for",
+        "preference-only revision",
+        "Operational timing is omitted by default",
+        "explicitly requests",
+        "No timing-enabled or telemetry-mode field",
     ])
     require_tokens(ROOT / "architect" / "SKILL.md", [
         "material WHAT, BOUNDARY, and PROOF",
@@ -1232,6 +1278,9 @@ def validate_protocol_docs() -> None:
         "PROGRAM", "program.generated.json", "full regeneration", "just in time",
         "Chat", "Executor", "Model", "Effort", "Progress",
         "PROMPT TO COPY", "Program 2/4 · agent-standards · execution",
+        "evidence-first sequence", "candidate diff boundary", "material risk triggers",
+        "stop when material predicates are proven", "preference-only revision",
+        "default hot path", "explicitly requests", "No timing-enabled or telemetry-mode field",
     ])
     require_tokens(ROOT / "executor" / "SKILL.md", [
         "inspect existing repository patterns before choosing implementation HOW",
@@ -1244,6 +1293,11 @@ def validate_protocol_docs() -> None:
         "fresh repository-local task", "fresh exact handoff", "fresh exact base HEAD",
         "authority for repository A never grants authority for repository B",
         "report/review/verifier/promotion/release lineage remains repository-local",
+        "Operational timing is omitted from the default Executor hot path",
+        "Normal reports are evidence indexes", "changed-file enumeration may be omitted",
+        "omission never means PASS, permission, or hidden success",
+        "Sparse reports remain evidence-backed rather than self-attested",
+        "explicitly requests", "No timing-enabled or telemetry-mode field",
     ])
     require_tokens(ROOT / "README.md", [
         "PROGRAM", "presentation only", "ordered repository-local tasks",
@@ -1260,9 +1314,16 @@ def validate_protocol_docs() -> None:
     ])
     require_tokens(ROOT / "contracts" / "IMPLEMENTATION_REPORT.md", [
         "template", "capability_preflight", "PROMOTED_NOT_RELEASED",
+        "compact evidence index", "changed-file enumeration may be omitted",
+        "omission never means PASS, permission, or hidden success", "explicitly requests",
+        "No timing-enabled or telemetry-mode field",
     ])
     require_tokens(ROOT / "contracts" / "ARCHITECT_REVIEW.md", [
         "template", "separate agent/session", "PROMOTED_NOT_RELEASED",
+        "evidence-first", "candidate diff boundary", "deviations/gaps",
+        "material risk triggers", "stop when material predicates are proven",
+        "preference-only revision", "omitted by default", "explicitly requests",
+        "No timing-enabled or telemetry-mode field",
     ])
 
 
