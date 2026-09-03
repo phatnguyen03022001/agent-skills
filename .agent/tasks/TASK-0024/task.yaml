@@ -1,0 +1,178 @@
+protocol_version: 3
+
+task_id: TASK-0024
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: discovered_gap
+  task_id: TASK-0023
+  gap_id: GOV_E2_GITHUB_FIRST_LOCAL_EXECUTION_CLOSURE
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "9e8add0ef47fb3d7797c6a4da4f45ceb78c4030e"
+
+architect_analysis_skills:
+  - architect
+  - simplicity
+
+execution_skills:
+  required:
+    - executor
+    - verification
+    - simplicity
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "executor/SKILL.md@9e8add0ef47fb3d7797c6a4da4f45ceb78c4030e"
+    role: "Current remote-truth, local-divergence, local-hygiene and execution-closure semantics."
+    precedence: 1
+  - source: ".agent/tasks/TASK-0023/review.yaml@9e8add0ef47fb3d7797c6a4da4f45ceb78c4030e"
+    role: "Accepted GOV-E1 authority."
+    precedence: 2
+  - source: "phatnguyen03022001/ilets TASK-0045 accepted GOV-E2 pilot evidence"
+    role: "Complex pilot proving local HOW discretion can work without authority churn. Resolve exact evidence read-only."
+    precedence: 3
+  - source: "phatnguyen03022001/SF TASK-0008 accepted GOV-E2 pilot evidence"
+    role: "Simple pilot that exposed missing canonical-local reconciliation after GitHub publication. Resolve exact evidence read-only."
+    precedence: 4
+
+structure_authority:
+  status: NOT_APPLICABLE
+  source: ""
+  rationale: "This correction changes existing Executor execution semantics and their existing regression verification only. It must not create a workspace registry, sync subsystem, runtime service, lifecycle, or new canonical owner."
+
+objective: >-
+  Close the GOV-E2 GitHub-first local-execution defect so GitHub remains canonical repository truth while any designated canonical local working copy used by Codex, Agent Runtime, Terminal, IDE, or another native execution surface is safely discovered, bound, protected, and reconciled to the final canonical GitHub ref before successful execution completion.
+
+scope:
+  required_changes:
+    - "Preserve the invariant that authorized GitHub/remote state is canonical repository truth and every local checkout is subordinate execution state."
+    - "When current target/operator authority designates a canonical local working copy, require Executor to discover and verify the actual local Git repository and exact owner/repo remote identity rather than infer that a path exists merely from repository naming."
+    - "Before local mutation, require fresh remote truth plus safe local-state classification: matching repository/branch/base, clean/behind state when synchronization is needed, and protection of dirty/ahead/unknown operator-owned state."
+    - "If the designated canonical local working copy is absent, permit creation from canonical GitHub truth only when the current execution surface and authority permit it and the destination is safely absent/empty; never overwrite, reset, delete, move, stash, or adopt unknown local state merely to create the checkout."
+    - "After GitHub publication or any task-authorized canonical ref mutation, refresh canonical GitHub truth and safely reconcile the designated canonical local working copy to that final ref using non-destructive fast-forward/equivalent semantics when possible. Successful task closure must prove the designated local copy resolves the final canonical ref when such a local copy is required by current authority."
+    - "If final reconciliation cannot be completed safely because of dirty/ahead/unknown state, missing capability, permission failure, stale remote state, or identity mismatch, preserve the local state and use the existing applicable fail-closed result; do not invent a new lifecycle state or silently claim completion."
+    - "Disposable/reference/temporary checkouts must never substitute for required closure of a separately designated canonical local working copy. Temporary work remains cleanup-bound and non-authoritative."
+    - "Keep this semantic and capability-oriented: no hard-coded operator path, no runtime-specific command recipe, and no requirement that phone-only/non-local executions create local clones."
+    - "Update existing regression verification only as needed to prove these semantics without adding a new framework."
+  allowed_existing_files_or_components:
+    - "Executor governance semantics"
+    - "existing agent-skills regression/validation companions"
+    - "read-only exact GOV-E2 evidence from ilets and SF"
+
+invariants:
+  - "GitHub/authorized remote state remains SSOT; a local checkout never becomes competing authority."
+  - "Executor discretion increases implementation freedom, not repository authority."
+  - "Operator-owned dirty/ahead/unknown local state is preserved unless explicit authority permits a destructive operation."
+  - "Local reconciliation is conditional on a designated canonical local working copy; phone-only or remote-only execution remains valid without manufacturing local state."
+  - "No exact filesystem root, repository naming convention, vendor, tunnel, IDE, or model becomes generic agent-skills policy."
+  - "No project registry, workspace database, sync daemon, state engine, orchestration layer, or new lifecycle is introduced."
+
+forbidden_changes:
+  - "Do not modify architect-profile, agent-runtime, agent-standards, agent-documents, ilets, SF, main, workflows, releases, or external repositories."
+  - "Do not add a repo registry, path registry, workspace manifest, sync service, daemon, scheduler, watcher, state database, new lifecycle status, or runtime-specific integration."
+  - "Do not make local existence or local reconciliation a prerequisite for executions whose current authority does not designate a canonical local working copy."
+  - "Do not weaken remote exact-base, dirty/ahead-state protection, verification, scope, or material-authority gates."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_write
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "GitHub-first local execution is explicit and authority-correct."
+    evidence_required: "Executor semantics state remote canonical truth, local subordinate execution state, exact local remote identity binding, and no inferred path authority."
+  - id: AC-2
+    requirement: "Pre-mutation local handling protects operator state without preventing safe execution."
+    evidence_required: "Regression evidence distinguishes absent/empty, clean/behind, dirty, ahead, identity-mismatch and stale-remote cases with destructive handling forbidden unless separately authorized."
+  - id: AC-3
+    requirement: "Successful local execution closure reconciles the designated canonical working copy after publication."
+    evidence_required: "Executor semantics require final remote refresh plus safe fast-forward/equivalent reconciliation and exact final-ref proof whenever current authority designates a canonical local working copy."
+  - id: AC-4
+    requirement: "Disposable execution cannot replace canonical-local closure."
+    evidence_required: "Semantics preserve temporary cleanup behavior while making temporary/reference checkouts non-authoritative and insufficient substitutes for a separately designated canonical working copy."
+  - id: AC-5
+    requirement: "The correction remains minimal and generic."
+    evidence_required: "No operator path, runtime-specific command sequence, registry/sync subsystem/new lifecycle, external mutation, workflow change, or phone-only regression is introduced; existing full agent-skills validation remains green."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Resolve TASK-0024 revision 1 at exact handoff base, current {dev, main} topology, accepted TASK-0023 review, exact GOV-E2 pilot evidence, and required capabilities before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Inspect current Executor remote-truth/local-divergence/local-hygiene semantics and existing regression patterns; choose the smallest sufficient correction without introducing a new subsystem."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Prove consequence cases for designated-local versus remote-only execution, absent/empty versus dirty/ahead/mismatched local state, pre-mutation binding, post-publication reconciliation, and temporary-checkout non-substitution."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Run existing validator/full test suite and diff checks; verify exact candidate changes only agent-skills-owned semantics/verification surfaces and no external repository/ref."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Publish canonical report on dev and stop at NEEDS_REVIEW."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
