@@ -1,0 +1,296 @@
+protocol_version: 3
+
+task_id: TASK-0020
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: TASK-0019
+  gap_id: "GOV-B_ATOMIC_DECISION_OWNERSHIP"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "76f2d3877d1698f91eb5a6117e2301ed49480379"
+
+architect_analysis_skills:
+  - architect
+  - simplicity
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: ".agent/tasks/TASK-0019/baseline.md"
+    role: "Accepted GOV-A evidence reproducing current decision-surface pressure points."
+    precedence: 1
+  - source: ".agent/tasks/TASK-0019/review.yaml"
+    role: "Accepted Architect judgment closing GOV-A and permitting fresh GOV-B authority."
+    precedence: 2
+  - source: "protocols/TASK_PROTOCOL.md@76f2d3877d1698f91eb5a6117e2301ed49480379"
+    role: "Current reusable protocol semantics to correct without creating a new lifecycle or protocol version."
+    precedence: 3
+  - source: "architect/SKILL.md@76f2d3877d1698f91eb5a6117e2301ed49480379"
+    role: "Current Architect procedure and ownership semantics."
+    precedence: 4
+  - source: "executor/SKILL.md@76f2d3877d1698f91eb5a6117e2301ed49480379"
+    role: "Current Executor procedure and restrictive-execution semantics."
+    precedence: 5
+  - source: "templates/task.yaml@76f2d3877d1698f91eb5a6117e2301ed49480379"
+    role: "Current expanded protocol-v3 task serialization and restrictive defaults."
+    precedence: 6
+
+structure_authority:
+  status: RESOLVED
+  source: "Operator-closed GOV-B design plus ACCEPTED TASK-0019 GOV-A evidence."
+  rationale: >-
+    GOV-B is one atomic reusable-governance correction. It changes only existing Task Protocol, Architect,
+    Executor, task-contract/template, validator, and validator-test ownership surfaces plus the normal task report.
+    It creates no new organizational role, lifecycle, protocol version, task dialect, shared framework, or top-level structure.
+
+objective: >-
+  Correct the reusable Architect/Executor decision-ownership model so Architect owns material authority,
+  material boundaries, acceptance/proof, and final judgment while Executor owns implementation judgment by default
+  inside an authorized task boundary. Make materiality consequence-based rather than category-based; make semantic/
+  component consequence the default scope representation; separate local structure from material structure; normalize
+  omitted protocol-v3 task implementation-prescription fields through one canonical default model while preserving
+  fail-closed authority and explicit historical restrictions; and prove the correction with deterministic regressions.
+
+scope:
+  required_changes:
+    - >-
+      Correct Task Protocol semantics so, inside an authorized task boundary, implementation judgment belongs to
+      Executor by default. Uncertainty alone is not escalation. Escalation is required only when a proposed choice
+      would change governing semantics, authority, acceptance, or a material trust, ownership, compatibility,
+      durability, irreversibility, dependency, cost/topology, or architectural consequence.
+    - >-
+      Make materiality consequence-based across all categories. Implementing already-frozen API, security, data,
+      migration, dependency, or structure decisions remains Executor-local HOW when material consequences do not change;
+      changing their governing consequence remains Architect-owned.
+    - >-
+      Correct Architect procedure so it closes WHAT, material BOUNDARY, and PROOF, then stops prescribing local HOW
+      unless the implementation mechanism itself is materially authoritative. Architect must not require local helper,
+      internal file decomposition, SQL organization, test-helper layout, generated-companion mechanics, formatter
+      invocation, or equivalent implementation detail merely to make a task executable.
+    - >-
+      Correct Executor procedure so it resolves exact authority, inspects current repository patterns, chooses the
+      smallest sufficient repo-native implementation, implements, and proves acceptance. Executor discretion is not
+      authority expansion or a creativity license.
+    - >-
+      Tighten LOCAL semantics: a discovered issue is LOCAL only when fixing it is necessary for current acceptance,
+      stays within the authorized material/component boundary, changes no governing semantics or authority, creates no
+      new material dependency/ownership boundary, and is deterministically verifiable. LOCAL needs no Architect approval.
+      FOLLOW_UP and BLOCKING remain consequence-based rather than category-based.
+    - >-
+      Correct scope semantics so scope owns semantic/component consequence by default. A semantic/component boundary may
+      be resolved by Executor to actual repository files through current repository truth. Path restrictions are optional
+      aids; exact-file restrictions are hard boundaries only when explicitly and materially justified.
+    - >-
+      Unexpected but materially local changed surfaces required for acceptance are not automatic pre-mutation blockers.
+      Executor must surface them truthfully in report evidence; Architect review may challenge whether they remained local.
+    - >-
+      Correct structure semantics so new-file creation is not a proxy for architectural materiality. Internal files/modules
+      inside an already-authorized component are local structure owned by Executor. New or changed top-level ownership,
+      service/package/component boundary, reusable shared abstraction, cross-component ownership move, or public/shared
+      module contract is material structure owned by Architect.
+    - >-
+      Define one canonical protocol-v3 task normalization/default table as the semantic owner for omitted optional task
+      controls. Validator and role procedure must consume the same normalized meaning. Sparse serialization is only an
+      encoding of the same protocol-v3 semantic model, not a second task dialect or lifecycle.
+    - >-
+      Preserve the critical default distinction: absence of authority remains non-permissive/fail-closed; absence of an
+      implementation prescription grants Executor discretion only inside an already-positive authorized material/component
+      boundary. Missing exact-file policy must not normalize to denial of all unlisted local files.
+    - >-
+      Preserve backward semantic compatibility. Explicit expanded-v3 controls retain their exact meaning, including
+      expected_files_are_restrictive: true and explicit structure restrictions. Do not reinterpret historical task artifacts,
+      migrate task history, or require old tasks pinned to old agent-skills revisions to adopt new semantics.
+    - >-
+      Update the task template to represent the new forward default compactly without introducing task-lite/task-compact,
+      protocol v4, another artifact type, or a second semantic model. Keep positive authority/boundary and acceptance explicit.
+    - >-
+      Update the task artifact contract only as needed to align with the corrected protocol ownership and normalized
+      task semantics. Do not duplicate the full protocol into the contract.
+    - >-
+      Update the existing validator and its existing unit-test suite so normalization/default semantics have one
+      deterministic implementation and regression coverage. Tests must cover both over-governance and under-governance:
+      local implementation discretion remains allowed; material semantic/authority changes still fail closed; explicit
+      old restrictive controls stay restrictive; missing authority never becomes permission.
+    - >-
+      Preserve protocol version 3, exactly fifteen curated skills, existing task/report/review artifact ownership,
+      exact-base handoff, authority/capability separation, lifecycle, promotion/release separation, and current PROGRAM
+      authority NONE semantics.
+    - >-
+      Produce one coherent implementation candidate, run repository-native validator and unit tests on that exact candidate,
+      publish it to dev, require the existing Validate skill library GitHub Actions workflow to PASS on the exact candidate,
+      then publish the canonical report and stop at NEEDS_REVIEW.
+
+  allowed_existing_files_or_components:
+    - protocols/TASK_PROTOCOL.md
+    - architect/SKILL.md
+    - executor/SKILL.md
+    - contracts/IMPLEMENTATION_CONTRACT.md
+    - templates/task.yaml
+    - scripts/validate_skill_library.py
+    - scripts/test_validate_skill_library.py
+    - .agent/tasks/TASK-0019/baseline.md
+    - .agent/tasks/TASK-0019/review.yaml
+    - .agent/tasks/TASK-0020/task.yaml
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Architect owns material authority and acceptance; Executor owns implementation judgment inside that authority by default."
+  - "Executor discretion never expands task authority."
+  - "Materiality is consequence-based, never category-based."
+  - "Scope bounds semantic/component consequences by default; exact files are restrictive only when explicitly justified."
+  - "Local structure is Executor-owned; material ownership/component/public/shared structure is Architect-owned."
+  - "Sparse protocol v3 is serialization only: omitted controls normalize into one canonical semantic model."
+  - "Missing authority denies; missing implementation prescription permits bounded Executor discretion."
+  - "Existing explicit expanded-v3 restrictions preserve their meaning and historical pinned semantics are not rewritten."
+  - "Review consequence/evidence remains distinct from implementation taste; GOV-C review sparsification is not part of this task."
+  - "No new role, lifecycle, task dialect/version, registry, cache, compiler, orchestrator, state database, or PROGRAM delegation is introduced."
+  - "agent-standards, agent-documents, agent-runtime, and architect-profile remain unchanged."
+
+forbidden_changes:
+  - "Do not modify report/review templates, IMPLEMENTATION_REPORT, ARCHITECT_REVIEW, operational-timing semantics, or evidence-lifecycle sparsification; those belong to GOV-C."
+  - "Do not create governance eval-suite files beyond the validator regression tests necessary to prove GOV-B; broader paired model evals belong to GOV-D."
+  - "Do not modify README.md, simplicity/SKILL.md, github-workflow/SKILL.md, any other skill, workflow, dependency, PROGRAM artifact, release machinery, or repository topology."
+  - "Do not modify agent-standards, agent-documents, agent-runtime, architect-profile, ilets, SF, or any external repository."
+  - "Do not migrate, normalize, backfill, or rewrite historical .agent task/report/review artifacts."
+  - "Do not create branches, PRs, issues, tags, releases, or mutate main."
+  - "Do not add a new parser library, YAML dependency, schema framework, code generator, registry, cache, or orchestration layer."
+
+execution_routing:
+  preferred_surface: "Codex"
+  model: "Luna"
+  effort: "xhigh"
+  reason: >-
+    GOV-B changes protocol semantics plus deterministic validator/test behavior and therefore benefits from exact repository-native
+    execution. The operator's phone Codex surface is sufficient; Agent Runtime is not required.
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_write
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Default decision ownership is explicit, bounded, and consequence-based."
+    evidence_required: >-
+      Task Protocol plus Architect/Executor skills state that implementation judgment inside positive task authority defaults to
+      Executor, uncertainty alone does not escalate, and escalation occurs only on governing/material consequence change.
+  - id: AC-2
+    requirement: "Executor discretion is safely constrained rather than converted into local architecture freedom."
+    evidence_required: >-
+      Executor procedure requires inspect-before-design, smallest sufficient repo-native HOW, unchanged authority, tightened LOCAL
+      predicates, deterministic proof, and consequence-based FOLLOW_UP/BLOCKING behavior.
+  - id: AC-3
+    requirement: "Scope and structure no longer use filenames as the default proxy for material authority."
+    evidence_required: >-
+      Protocol/task semantics support positive semantic/component boundaries resolved to local files by Executor; unexpected local
+      companion surfaces are report/review signals rather than automatic blockers; local internal files/modules do not require
+      Architect structure decisions while material ownership/component/public/shared boundary changes still do.
+  - id: AC-4
+    requirement: "Protocol-v3 omission semantics normalize through one canonical default model without weakening authority."
+    evidence_required: >-
+      One canonical default table defines missing-field normalized values; validator and task template agree with it; missing
+      authority remains non-permissive while missing implementation prescription permits discretion only inside positive authority.
+  - id: AC-5
+    requirement: "Backward semantic compatibility is preserved forward."
+    evidence_required: >-
+      Regression tests prove explicit expanded-v3 restrictive controls retain their prior meaning, historical artifacts are not
+      rewritten, protocol version remains 3, and new sparse/omitted controls do not create a second dialect or silently relax
+      explicit restrictions.
+  - id: AC-6
+    requirement: "GOV-B is internally coherent as one semantic adoption unit."
+    evidence_required: >-
+      Protocol, Architect, Executor, implementation contract, task template, validator, and validator tests agree on decision
+      ownership, scope/structure, LOCAL behavior, and normalization/default semantics with no contradictory intermediate stable state.
+  - id: AC-7
+    requirement: "The correction is subtraction-focused and bounded to reproduced GOV-A pressure points."
+    evidence_required: >-
+      Exact diff contains only authorized GOV-B semantic surfaces plus report evidence; no report/review sparsification, timing
+      redesign, profile changes, PROGRAM delegation, new role/lifecycle/version/framework, external-repository change, or unrelated cleanup appears.
+  - id: AC-8
+    requirement: "The exact candidate is deterministically verified before review."
+    evidence_required: >-
+      python3 scripts/validate_skill_library.py and python3 -m unittest scripts/test_validate_skill_library.py PASS on the exact
+      candidate, and existing Validate skill library GitHub Actions concludes success for that same candidate SHA before report publication.
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Resolve TASK-0020 revision 1 at the exact handoff base, require topology exactly {dev, main}, require main unchanged at the pinned stable revision, resolve accepted TASK-0019 evidence, and preflight all EXECUTION capabilities before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Inspect the existing protocol/role/contract/template/validator/test patterns before choosing implementation HOW; preserve protocol v3 and the closed fifteen-skill taxonomy."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Implement the smallest coherent correction across only authorized GOV-B surfaces; verify the exact diff has no historical-artifact rewrite or out-of-scope semantic change."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Run python3 scripts/validate_skill_library.py and python3 -m unittest scripts/test_validate_skill_library.py against the exact implementation candidate; both must PASS."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Push the exact candidate to dev and require the existing Validate skill library GitHub Actions run for that exact candidate SHA to conclude success; do not modify the workflow merely to obtain PASS."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Publish report.yaml only after exact-candidate local and authoritative verification PASS, bind the candidate/run evidence, verify final topology and unchanged main, and stop at NEEDS_REVIEW."
+      required: true
+  authoritative_verification:
+    required: true
+    mechanism: "Existing .github/workflows/validate-skill-library.yml on the exact pushed implementation candidate."
+    expected_signal: "Validate skill library concludes success for the exact candidate SHA after validator and unit-test steps pass."
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
