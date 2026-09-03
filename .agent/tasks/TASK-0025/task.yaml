@@ -1,13 +1,14 @@
 protocol_version: 3
 
 task_id: TASK-0025
-task_revision: 1
+task_revision: 2
 state: APPROVED
 
 origin:
-  type: continuation
-  task_id: TASK-0024
-  gap_id: GOV_G_STABLE_ADOPTION_GATE
+  type: revision
+  prior_task_revision: 1
+  review: ".agent/tasks/TASK-0025/review.yaml@bf8d8e613e3c1af466fb45c433a472cc28b99cb4"
+  gap_id: GOV-G-P1-EVIDENCE-STRENGTH
 
 architect_binding:
   target_repository: phatnguyen03022001/agent-skills
@@ -45,71 +46,87 @@ external_skills:
   execution_recommended: []
 
 authority_sources:
-  - source: ".agent/tasks/TASK-0024/review.yaml@16217bb78a578160efb68afc84acdeff9c36ed38"
-    role: "Accepted GitHub-first local-execution closure."
+  - source: ".agent/tasks/TASK-0025/review.yaml@bf8d8e613e3c1af466fb45c433a472cc28b99cb4"
+    role: "Revision authority: strengthen proof quality only; reusable semantics remain frozen."
     precedence: 1
-  - source: ".agent/tasks/TASK-0019 through TASK-0024 accepted governance evidence"
-    role: "GOV-A through GOV-E/GitHub-local redesign evidence and regression lineage."
+  - source: ".agent/tasks/TASK-0025/report.yaml@03f6f69794a1791c14bbcdfa916a67a537e699a0"
+    role: "Exact rev1 REVERIFY_REQUIRED evidence and P1 verification gap."
     precedence: 2
-  - source: "phatnguyen03022001/ilets TASK-0045 accepted review@4b88bbde9558ae50de2c17941677c73fe7c504c8"
-    role: "Fresh complex GOV-E2 pilot evidence."
+  - source: ".agent/tasks/TASK-0024/review.yaml@16217bb78a578160efb68afc84acdeff9c36ed38"
+    role: "Accepted GitHub-first local-execution semantics."
     precedence: 3
-  - source: "phatnguyen03022001/SF TASK-0008 accepted review@dd518fa0ae693f57befcedf341410d4cf28026d8"
-    role: "Fresh simple GOV-E2 pilot evidence and discovered local-closure defect."
+  - source: ".agent/tasks/TASK-0019 through TASK-0023 accepted governance evidence"
+    role: "Accepted GOV-A through GOV-E1 evidence and historical replay."
     precedence: 4
-  - source: "phatnguyen03022001/architect-profile TASK-0015 accepted review@71921cde6228c21b4d2e3e6509e685d82981dc9c"
-    role: "Accepted GOV-F operator-profile adoption."
+  - source: "phatnguyen03022001/ilets TASK-0045 accepted review@4b88bbde9558ae50de2c17941677c73fe7c504c8"
+    role: "Fresh complex GOV-E2 pilot."
     precedence: 5
-  - source: "main@76f2d3877d1698f91eb5a6117e2301ed49480379"
-    role: "Current stable agent-skills baseline before GOV-G promotion."
+  - source: "phatnguyen03022001/SF TASK-0008 accepted review@dd518fa0ae693f57befcedf341410d4cf28026d8"
+    role: "Fresh simple GOV-E2 pilot."
     precedence: 6
+  - source: "phatnguyen03022001/architect-profile TASK-0015 accepted review@71921cde6228c21b4d2e3e6509e685d82981dc9c"
+    role: "Accepted GOV-F operator-specific ownership/profile boundary."
+    precedence: 7
+  - source: "main@76f2d3877d1698f91eb5a6117e2301ed49480379"
+    role: "Stable baseline that must remain unchanged until every rev2 gate passes."
+    precedence: 8
 
 structure_authority:
   status: RESOLVED
-  source: "Closed GOV-G rollout."
+  source: "TASK-0025 revision-2 verification correction."
   rationale: >-
-    GOV-G may persist one bounded gate-evidence artifact under TASK-0025 and extend the existing regression test companion only as needed to encode adversarial stable-adoption cases. It must not change reusable governance semantics during the gate itself.
+    Revision 2 may modify only the existing TASK-0025 gate evidence and existing unittest
+    companion to strengthen verification. It may use test-local temporary Git fixtures and
+    read-only exact external evidence, but may not add reusable policy/runtime machinery.
 
 objective: >-
-  Perform the final fail-closed adversarial regression and adoption gate for the accepted agent-skills governance redesign, then non-force promote the exact independently verified candidate to stable main only if every compatibility, decision-ownership, pilot, local-reconciliation, ownership, and verification gate passes without requiring a semantic correction.
+  Re-run GOV-G with evidence strong enough to support stable adoption: replace rev1's weak
+  prose/identity-only proof with executable regression where an executable semantic surface
+  already exists, and with independently reconstructed exact canonical evidence where the
+  governance is intentionally documentary rather than executable. Promote stable main only
+  if every required gate is independently proven without changing reusable semantics.
 
 scope:
   required_changes:
-    - "Re-resolve exact current dev/main refs, TASK-0025 revision 1, accepted TASK-0024 review, exact GOV-A..F evidence, and required capabilities before mutation."
-    - "Create one compact .agent/tasks/TASK-0025/gate.md evidence artifact recording exact identities, adversarial cases, results, and promotion decision."
-    - "Extend only the existing scripts/test_validate_skill_library.py regression companion as needed to make the stable gate executable and repeatable; do not change reusable governance semantics merely to make tests pass."
-    - "Run the full existing validator, full unittest suite, git diff --check, and focused stable-gate regressions on the exact candidate."
-    - "Require the existing Validate skill library GitHub Actions workflow to run successfully for the exact candidate SHA before any stable promotion. The candidate must therefore contain a legitimate bounded regression-companion change that triggers the existing workflow; do not modify workflow triggers merely to manufacture a run."
-    - "Adversarially verify backward compatibility for explicit expanded-v3 tasks, sparse-v3 normalization/defaults, fail-closed missing authority, Executor discretion when only implementation prescription is absent, LOCAL/FOLLOW_UP/BLOCKING consequence boundaries, scope/component semantics, material structure semantics, report/review evidence behavior, and the paired over/under-governance corpus."
-    - "Re-evaluate the historical TASK-0044 replay and fresh IELTS TASK-0045 plus SF TASK-0008 pilots: local-HOW churn must be reduced without weakening public/trust/data/material authority, and both fresh pilots must remain one-revision accepted examples rather than being reinterpreted to fit the redesign."
-    - "Adversarially verify GitHub-first local execution: path names never grant authority; absent/empty, clean/behind, dirty/ahead/unknown, identity mismatch, stale remote, temporary checkout, post-publication reconciliation, and phone/remote-only cases retain their accepted consequences."
-    - "Resolve the GOV-F follow-up concerning Architect-owned GitHub mutations without adding synchronization machinery: an Architect remote-only review/task-authority write may temporarily advance GitHub beyond a local copy, but no later local mutation may trust or use that stale copy without fresh GitHub resolution and safe reconciliation under existing Executor semantics. Do not require instant mirroring, a daemon, watcher, registry, or background sync service."
-    - "Verify ownership remains narrow: generic governance only in agent-skills; operator-specific filesystem/presentation preferences only in architect-profile; agent-runtime remains execution capability only; no standards/documents/runtime mutation is required."
-    - "If and only if every gate passes and main is still exactly 76f2d3877d1698f91eb5a6117e2301ed49480379 with a proven fast-forward ancestry path to the exact candidate, non-force promote that exact candidate to main. Do not promote the later report commit."
-    - "After successful promotion, publish the canonical report-only child on dev, refresh both refs, safely reconcile the designated /Users/tienphat/Developer/agent-skills working copy to final dev, and prove its exact owner/repo remote identity and final dev ref before NEEDS_REVIEW."
+    - "Revise .agent/tasks/TASK-0025/gate.md so every PASS row names the actual proof mechanism and exact evidence rather than merely asserting that prose or an identity exists."
+    - "Revise only scripts/test_validate_skill_library.py as needed for executable proof using existing validator/normalization/corpus/test helpers. Do not create a governance classifier, decision engine, sync implementation, second semantic model, or new reusable helper component."
+    - "For expanded-v3, sparse-v3 and missing-authority versus missing-HOW, retain or strengthen mutation/normalization tests that actually execute the current validator/model."
+    - "For consequence ownership and over/under-governance, exercise the accepted governance_eval_corpus as the regression expectation: prove all eight pairs retain exactly one ALLOW_LOCAL and one ESCALATE_TO_ARCHITECT outcome, prove expected pair identities/outcomes for trust, persistence, ownership, dependency, public/generated contract, preference/material HOW and local/cross-component companion cases, and retain adversarial corpus-integrity rejection tests. Do not represent the corpus as live task authority or an automated Architect."
+    - "For GitHub-first local handling, independently reconstruct the required state matrix. Where useful, use bounded test-local temporary Git repositories/worktrees to establish real Git facts for absent/empty, clean/behind, dirty/untracked or ahead/diverged, remote identity mismatch, stale remote, and safe fast-forward behavior. The gate must separately map those proven facts to the frozen Executor consequence contract without introducing a reusable sync primitive."
+    - "For Architect remote-only mutation, prove from exact canonical lineage that an Architect review/task-authority commit can advance GitHub after Executor local reconciliation, and prove the next local execution preflight re-resolved GitHub and safely fast-forwarded before mutation. Use TASK-0024/TASK-0025 and architect-profile TASK-0015 exact evidence as applicable; do not infer from chat history."
+    - "For TASK-0044 replay, independently reconstruct the accepted replay conclusion from the exact replay artifact plus the immutable historical task/revision evidence it cites. Do not treat phrase presence in replay.md as sufficient proof. Record which revisions disappear and which material correction remains, with exact source identities."
+    - "For IELTS TASK-0045 and SF TASK-0008, independently resolve exact task/report/review/candidate lineages and exact changed-path/material-boundary evidence. Prove each is revision-1 accepted evidence and that neither pilot is being retrospectively reinterpreted merely to satisfy GOV-G."
+    - "For ownership, independently verify agent-skills candidate diff contains no operator-specific path/presentation/runtime policy and re-resolve accepted architect-profile ownership plus agent-runtime capability boundary read-only. No external mutation is permitted."
+    - "Run focused rev2 regressions, the full validator, full unittest suite and git diff --check on the exact new candidate."
+    - "Push the new exact candidate to dev and require the existing Validate skill library workflow to complete success with head_sha exactly equal to that candidate. Do not modify the workflow."
+    - "Only after all evidence rows are PASS, refresh dev/main, require main still exactly 76f2d3877d1698f91eb5a6117e2301ed49480379, prove ancestry from main to the exact rev2 candidate, and non-force fast-forward main to exactly the rev2 candidate. Never promote rev1 candidate c045d9cf79c5293b7343c7f92c2d2578225e292e or any report/review/task-authority child."
+    - "After successful promotion, publish the rev2 canonical report-only child on dev, refresh topology, and safely reconcile the designated local /Users/tienphat/Developer/agent-skills working copy to final dev while preserving operator-owned local state."
+
   allowed_existing_files_or_components:
-    - ".agent/tasks/TASK-0025"
+    - ".agent/tasks/TASK-0025/gate.md"
     - "scripts/test_validate_skill_library.py"
-    - "read-only accepted governance evidence in agent-skills"
-    - "read-only exact accepted pilot/profile evidence from ilets, SF, and architect-profile"
+    - "test-local temporary Git fixtures created under temporary directories"
+    - "read-only accepted agent-skills governance evidence"
+    - "read-only exact historical/pilot/profile/runtime evidence"
 
 invariants:
-  - "This is a gate, not a redesign task. A real semantic defect blocks promotion and becomes separately authorized follow-up work."
-  - "GitHub/authorized remote state remains repository SSOT; local state remains subordinate execution state."
-  - "Executor discretion increases HOW freedom, never authority."
-  - "Missing authority fails closed; missing implementation prescription does not."
-  - "Material consequences remain governed even when local-HOW prescription is reduced."
-  - "Historical expanded-v3 meaning is preserved; sparse-v3 remains serialization into one semantic model rather than a second dialect."
-  - "Phone-only/remote-only execution remains valid without manufacturing local state."
-  - "No instant-mirror requirement, project registry, path registry, sync daemon, watcher, state database, orchestration layer, or new lifecycle is introduced."
-  - "No operator-specific path, presentation convention, model, tunnel, IDE, or provider leaks into generic agent-skills semantics."
+  - "Revision 2 changes proof quality only; reusable governance semantics are frozen."
+  - "A documentary governance contract is not required to become executable merely to be verified; independent exact evidence is valid where no executable policy surface intentionally exists."
+  - "Test-only Git fixtures may prove Git-state facts but must not become a reusable synchronization implementation or competing authority model."
+  - "The governance eval corpus is a regression expectation only, never live task authority, classifier, scorer, or automated Architect."
+  - "GitHub remains repository SSOT and local state remains subordinate execution state."
+  - "Missing authority fails closed; missing implementation prescription preserves bounded Executor discretion."
+  - "Material public/trust/data/ownership/persistence/dependency/architecture consequences remain Architect-governed."
+  - "Phone-only/remote-only execution remains valid without manufactured local state."
+  - "No operator-specific path, presentation convention, model, tunnel, IDE, provider, or runtime preference leaks into generic agent-skills semantics."
 
 forbidden_changes:
-  - "Do not modify executor, architect, Task Protocol, contracts, templates, validator semantics, reusable corpus semantics, workflows, README, or any other reusable governance content during GOV-G. If such a semantic correction is needed, fail closed and open separate authority."
+  - "Do not modify executor/SKILL.md, architect/SKILL.md, protocols, contracts, templates, validator semantics, governance_eval_corpus.json, workflow, README, or any other reusable governance semantic/content owner."
   - "Do not modify architect-profile, agent-runtime, agent-standards, agent-documents, ilets, SF, or any external repository."
-  - "Do not force-push, rewrite history, create staging, create branches, PRs, issues, tags, releases, or mutate repository metadata."
-  - "Do not promote main if any required test, exact-candidate workflow, evidence identity, ancestry, pilot, ownership, or adversarial case is FAIL/UNKNOWN where PASS is required."
-  - "Do not promote the report commit to main."
+  - "Do not add a classifier, policy engine, repo/path registry, sync primitive/service, daemon, watcher, state database, orchestration layer, new lifecycle, or new test framework."
+  - "Do not force-push, rewrite history, create branches/staging/PRs/issues/tags/releases, or mutate repository metadata."
+  - "Do not promote main while any required gate is FAIL, UNKNOWN, NOT_PROVEN, identity-mismatched, stale, or supported only by rev1-style phrase/identity presence where stronger evidence is required."
+  - "Do not promote a report/review/task-authority commit to main."
 
 gap_policy:
   local_auto_fix: false
@@ -144,54 +161,55 @@ capability_requirements:
 
 acceptance_criteria:
   - id: AC-1
-    requirement: "Current agent-skills semantics pass the complete existing validation and backward-compatibility surface without semantic mutation during the gate."
-    evidence_required: "Exact candidate full validator/unittest/diff results plus focused expanded-v3, sparse normalization, authority/discretion, scope/structure, lifecycle, report/review, and paired-corpus regression evidence."
+    requirement: "Executable protocol-v3 compatibility and authority/discretion gates are genuinely exercised."
+    evidence_required: "Mutation/normalization/validator evidence proves expanded-v3 preservation, sparse defaults into one model, missing authority rejection and missing-HOW discretion without semantic mutation."
   - id: AC-2
-    requirement: "The redesign is neither over-governing nor under-governing under adversarial cases."
-    evidence_required: "Gate evidence proves preference-only/local-HOW alternatives remain Executor-owned while public/trust/data/ownership/persistence/dependency/material consequences still require Architect authority."
+    requirement: "Over/under-governance and material consequence ownership are proven beyond phrase presence."
+    evidence_required: "Executable corpus integrity/pair-outcome evidence covers all accepted pairs and independently ties those expectations to the frozen material-boundary authority without turning the corpus into live authority."
   - id: AC-3
-    requirement: "Historical and fresh pilot evidence supports stable adoption."
-    evidence_required: "Exact TASK-0044 replay plus IELTS TASK-0045 and SF TASK-0008 accepted identities show reduced local-HOW churn, no material-authority regression, and no reinterpretation of failed/unknown evidence as PASS."
+    requirement: "Historical replay and fresh pilots are independently reconstructed from exact canonical evidence."
+    evidence_required: "Exact immutable source identities, lineage/diff/boundary facts and accepted review states support TASK-0044 replay plus IELTS TASK-0045 and SF TASK-0008 conclusions; identity presence alone is insufficient."
   - id: AC-4
-    requirement: "GitHub-first local execution and Architect-owned remote mutation compose without hidden local authority or new synchronization machinery."
-    evidence_required: "Regression/gate evidence covers local-state classifications and proves remote-only Architect writes may leave a local copy temporarily behind only because the next local mutation must re-resolve GitHub and safely reconcile before use; no instant mirror/daemon/registry is required."
+    requirement: "GitHub-first local execution and Architect-owned remote mutation are proven with real state/lineage evidence."
+    evidence_required: "Real/test-local Git-state evidence plus exact canonical execution lineages cover absent/empty, safe clean/behind reconciliation, preservation/fail-closed divergent states, identity mismatch/stale remote, temporary checkout non-authority, and later preflight after remote-only Architect mutation."
   - id: AC-5
-    requirement: "Repository ownership remains correct and minimal."
-    evidence_required: "No external mutation; no operator-specific leakage into agent-skills; accepted architect-profile owns Developer/<repo-name>, scratch, task-presentation and communication preferences; agent-runtime remains capability only."
+    requirement: "Ownership remains narrow and generic/operator boundaries do not leak."
+    evidence_required: "Exact candidate diff plus independently resolved architect-profile/runtime ownership evidence; no external mutation and no generic operator-specific leakage."
   - id: AC-6
-    requirement: "The exact stable candidate receives authoritative existing CI verification."
-    evidence_required: "Validate skill library GitHub Actions run completes success with head_sha exactly equal to the candidate; no workflow mutation is used to create the signal."
+    requirement: "The exact rev2 candidate passes all local and authoritative verification."
+    evidence_required: "Focused rev2 tests, full validator, full unittest suite, git diff --check, and existing GitHub Actions workflow completed success with head_sha exactly the rev2 candidate."
   - id: AC-7
-    requirement: "Stable main promotion is exact, non-force, ancestry-safe, and candidate-bound."
-    evidence_required: "Fresh refs prove main remained exactly 76f2d3877d1698f91eb5a6117e2301ed49480379 until promotion, that it is an ancestor of the verified candidate, and final main equals exactly the candidate rather than the report child."
+    requirement: "Stable promotion is exact, ancestry-safe and limited to the verified rev2 candidate."
+    evidence_required: "Fresh refs prove old main unchanged until promotion, old main ancestor of rev2 candidate, and final main equals exactly rev2 candidate rather than rev1 or any report/review/task commit."
   - id: AC-8
-    requirement: "Post-promotion dev/report and designated local closure are exact and non-destructive."
-    evidence_required: "Report-only direct child on dev, final {dev, main} topology, main=candidate, dev=report, exact local owner/repo binding, safe final dev reconciliation, and preserved operator-owned local state."
+    requirement: "Post-promotion dev/report/local closure is exact and non-destructive."
+    evidence_required: "Rev2 report-only child on dev, topology exactly {dev, main}, main=rev2 candidate, dev=rev2 report, exact local owner/repo binding and final dev reconciliation with operator-owned state preserved."
 
 verification:
   executor_checks:
     - id: CHECK-1
-      command_or_check: "Resolve TASK-0025 revision 1 at exact handoff base, fresh {dev, main}, accepted TASK-0024 review, exact GOV-A..F evidence, current workflow, and required capabilities before write."
+      command_or_check: "Resolve TASK-0025 revision 2 at exact handoff base, fresh dev/main refs, revision-1 review/report, accepted GOV-A..F evidence, workflow and required capabilities before mutation."
       required: true
     - id: CHECK-2
-      command_or_check: "Build the bounded stable-gate regression additions in the existing unittest companion and gate.md only; fail if satisfying a case requires reusable semantic changes."
+      command_or_check: "Strengthen only gate.md and the existing unittest companion; prove each affected P1 row using an executable existing surface or independently reconstructed exact evidence, not phrase/identity presence alone."
       required: true
     - id: CHECK-3
-      command_or_check: "Run focused adversarial cases plus python3 scripts/validate_skill_library.py, python3 -m unittest scripts/test_validate_skill_library.py, and git diff --check on the exact candidate."
+      command_or_check: "Run focused revision-2 regressions, python3 scripts/validate_skill_library.py, python3 -m unittest scripts/test_validate_skill_library.py and git diff --check on the exact candidate."
       required: true
     - id: CHECK-4
-      command_or_check: "Publish the exact candidate to dev, require the existing Validate skill library workflow for that exact SHA to complete success, and fail closed on failed/skipped/cancelled/mismatched verification."
+      command_or_check: "Push exact rev2 candidate to dev and require existing Validate skill library workflow success for exactly that head_sha; no workflow mutation."
       required: true
     - id: CHECK-5
-      command_or_check: "Immediately before promotion refresh dev/main and prove main is still the exact old stable SHA and is an ancestor of the verified candidate; non-force fast-forward main to exactly the candidate only after every gate passes."
+      command_or_check: "Before promotion fresh-resolve refs and independently verify every gate artifact claim; only then non-force fast-forward unchanged old main to exactly rev2 candidate."
       required: true
     - id: CHECK-6
-      command_or_check: "Publish report.yaml only on dev as the direct report-only child, verify final main=candidate and dev=report with topology exactly {dev, main}, reconcile the designated local agent-skills copy safely to final dev, and stop at NEEDS_REVIEW."
+      command_or_check: "Publish rev2 report-only child on dev, verify final {dev, main} with main=rev2 candidate and dev=report, safely reconcile designated local agent-skills copy to final dev, and stop at NEEDS_REVIEW."
       required: true
+
   authoritative_verification:
     required: true
     mechanism: "existing .github/workflows/validate-skill-library.yml on push to dev"
-    expected_signal: "completed success with head_sha exactly equal to the implementation/gate candidate"
+    expected_signal: "completed success with head_sha exactly equal to the revision-2 candidate"
 
 git_authority:
   create_branch: false
