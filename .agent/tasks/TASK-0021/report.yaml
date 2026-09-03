@@ -1,0 +1,195 @@
+protocol_version: 3
+
+task_id: TASK-0021
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0021/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "d03b3de9d929b9def8d77df475e18d3b87491716"
+  pre_execution_head: "d03b3de9d929b9def8d77df475e18d3b87491716"
+  final_execution_head: "60d0515f73ce74843dbd4324788d3be4373a8a0e"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "4982be8639eed54ecacb1d357a098b27e7507e1d"
+  observed_revision: "4982be8639eed54ecacb1d357a098b27e7507e1d"
+
+execution_skills_used:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+  external:
+    - superpowers:using-superpowers
+    - superpowers:test-driven-development
+
+pre_execution_checks:
+  protocol_version_supported: true
+  handoff_type_confirmed: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  working_tree_clean: true
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+  available:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+  missing: []
+  passed: true
+
+authoritative_verification:
+  required: true
+  performed: true
+  result: PASS
+  evidence: >-
+    The unchanged .github/workflows/validate-skill-library.yml ran on exact candidate
+    60d0515f73ce74843dbd4324788d3be4373a8a0e in push run 33713282298 (run 71). The
+    validate job completed with conclusion success; its Validate and Unit tests steps
+    both completed with conclusion success. The local validator passed, the full
+    scripts/test_validate_skill_library.py suite passed with 81 tests, and git diff
+    --check passed before publication.
+
+local_hygiene:
+  result: PASS
+  run_root: "/private/tmp/agent-skills-task-0021.V6nRSi"
+  cleanup_performed: true
+  retained: []
+  evidence: >-
+    Execution used a run-owned detached worktree rooted at the exact temporary path;
+    the stale Codex checkout and the operator checkout were not used for mutation.
+    Current-run test cache artifacts were removed, the temporary root was proven
+    realpath-contained and free of symlink traversal before cleanup, and no operator
+    dirty or untracked state was modified.
+
+commits_created:
+  - sha: "60d0515f73ce74843dbd4324788d3be4373a8a0e"
+    message: "fix(agent): simplify evidence lifecycle"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: >-
+      Protocol, Architect, Executor, and report-contract guidance defines compact
+      evidence indexes that preserve exact task, revision, base, candidate, target,
+      verifier, acceptance, deviation, gap, blocker, and terminal-result evidence;
+      redundant successful attestations and reconstructable changed-file enumeration
+      may be omitted without implying PASS, permission, or hidden success.
+  - criterion_id: AC-2
+    status: PASS
+    evidence: >-
+      Architect guidance now reviews evidence first in the required order, expands
+      reconstruction only for material risk triggers, stops when material predicates
+      are proven, and rejects preference-only revision requests when authority,
+      invariants, simplicity, and proof are satisfied.
+  - criterion_id: AC-3
+    status: PASS
+    evidence: >-
+      Operational timing remains explicit opt-in compatibility only: when requested,
+      the report or review uses exactly started_at_utc and terminal_decision_at_utc;
+      the block is omitted when trustworthy boundary capture is unavailable, with no
+      timing mode, telemetry flag, or new lifecycle structure introduced.
+  - criterion_id: AC-4
+    status: PASS
+    evidence: >-
+      The canonical validator accepts compact reports without changed_files when the
+      fact is reconstructable and strictly validates optional timing as a complete
+      RFC 3339 UTC two-timestamp mapping, rejecting partial, non-UTC, invalid, or
+      extra fields; focused regressions cover each rule.
+  - criterion_id: AC-5
+    status: PASS
+    evidence: >-
+      Protocol v3 remains the active version. Contracts, templates, role skills, and
+      protocol documentation carry the evidence-first, compact-report, and explicit
+      timing semantics, with deterministic regressions preserving legacy v3 validity.
+  - criterion_id: AC-6
+    status: PASS
+    evidence: >-
+      One coherent implementation commit changed exactly the nine authorized
+      protocol, role, contract, template, validator, and regression-test paths. No
+      workflow, README, task authority, historical artifact, dependency, release,
+      main branch, or unrelated operator state was changed.
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: >-
+      Live GitHub dev was repeatedly confirmed at d03b3de9d929b9def8d77df475e18d3b87491716
+      before mutation; the exact task, pinned skill revision 4982be8639eed54ecacb1d357a098b27e7507e1d,
+      repository identity, integration branch, authority, and required capabilities were resolved.
+      The real operator checkout remained at its pre-existing detached-safe state with its
+      pre-existing .DS_Store and .codex/ untracked entries untouched.
+  - check_id: CHECK-2
+    result: PASS
+    evidence: >-
+      Existing protocol, Architect, Executor, contract, template, validator, workflow,
+      and test patterns were inspected before implementation. The closed skill taxonomy,
+      protocol v3, existing workflow, and repository-native validation path were preserved.
+  - check_id: CHECK-3
+    result: PASS
+    evidence: >-
+      TDD regressions were written first and observed RED for compact changed_files
+      omission, default timing omission, strict timing validation, and evidence-first
+      documentation. The smallest coherent implementation then made the focused tests
+      GREEN and changed only the authorized paths.
+  - check_id: CHECK-4
+    result: PASS
+    evidence: >-
+      On the exact candidate checkout, python3 scripts/validate_skill_library.py passed,
+      python3 -m unittest scripts/test_validate_skill_library.py passed with 81 tests,
+      and git diff --check passed.
+  - check_id: CHECK-5
+    result: PASS
+    evidence: >-
+      Candidate 60d0515f73ce74843dbd4324788d3be4373a8a0e was fast-forward pushed to dev
+      without force. The unchanged .github/workflows/validate-skill-library.yml run
+      33713282298 on that exact SHA completed success, including successful Validate and
+      Unit tests steps.
+  - check_id: CHECK-6
+    result: PASS
+    evidence: >-
+      The report is the only post-candidate artifact and is published after candidate
+      verification. Final remote ref, report-only parent/diff, unchanged main ref, exact
+      task/report resolution, clean execution state, and non-use of the stale detached
+      checkout are re-read before returning NEEDS_REVIEW.
+
+discovered_gaps: []
+structural_observations: []
+deviations_from_task: []
+blockers: []
+
+working_tree_after:
+  clean: true
+  summary: >-
+    The report-only publication is a direct child of the verified candidate and keeps
+    the candidate identity in execution.final_execution_head. The candidate was
+    verified on dev before report publication; main was not mutated, and the run-owned
+    detached worktree was removed after final evidence capture.
+
+result: NEEDS_REVIEW
