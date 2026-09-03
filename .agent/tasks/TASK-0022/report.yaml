@@ -1,0 +1,219 @@
+protocol_version: 3
+
+task_id: TASK-0022
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0022/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "587124739f329fcebb8eeca6b8d4201e8702ecbb"
+  pre_execution_head: "587124739f329fcebb8eeca6b8d4201e8702ecbb"
+  final_execution_head: "3dc4863b2d8e14a8999f3c745a513854082f15e9"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "bb2ae08b1d3609e7375a3510bb859b61d98b3616"
+  observed_revision: "bb2ae08b1d3609e7375a3510bb859b61d98b3616"
+
+execution_skills_used:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+  external:
+    - superpowers:using-superpowers
+    - superpowers:executing-plans
+    - superpowers:using-git-worktrees
+    - superpowers:test-driven-development
+    - superpowers:verification-before-completion
+
+pre_execution_checks:
+  protocol_version_supported: true
+  handoff_type_confirmed: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  working_tree_clean: true
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+  available:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+  missing: []
+  passed: true
+
+authoritative_verification:
+  required: true
+  performed: true
+  result: PASS
+  evidence: >-
+    The unchanged .github/workflows/validate-skill-library.yml ran on exact candidate
+    3dc4863b2d8e14a8999f3c745a513854082f15e9 in push run 33714702471 (run 72). The
+    validate job completed with conclusion success, and its Validate and Unit tests
+    steps both completed with conclusion success.
+
+local_hygiene:
+  result: PASS
+  run_root: "/var/folders/c7/hxf11mk94tx7ylhyq1sqqll40000gn/T/agent-skills-task-0022.XXXXXX.FZcyqhw36I"
+  cleanup_performed: true
+  retained: []
+  evidence: >-
+    Execution used a detached worktree rooted at the exact run-owned temporary path;
+    the operator checkout and its pre-existing .DS_Store and .codex/ untracked state
+    were not used for mutation. The only run-created untracked artifacts were the two
+    Python bytecode files produced by the verification commands; ownership and exact
+    paths were verified before removing them. The execution worktree was clean before
+    report publication, and the run-owned worktree is removed after final evidence capture.
+
+changed_files:
+  - path: scripts/fixtures/governance_eval_corpus.json
+    summary: "Add eight generic paired decision-ownership evaluation pairs."
+    new_file: true
+    in_scope: true
+    structure_authorized: true
+  - path: scripts/test_validate_skill_library.py
+    summary: "Add deterministic integrity regressions for the evaluation corpus."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+
+commits_created:
+  - sha: "3dc4863b2d8e14a8999f3c745a513854082f15e9"
+    message: "feat(eval): add paired governance corpus"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: >-
+      The corpus contains 16 cases in eight complete pairs. Each case records stable
+      case_id and pair_id values, a generic scenario, evaluation_kind, expected_outcome,
+      and a concise consequence-based rationale. The pairs cover route contracts,
+      persistence semantics, ownership boundaries, dependency topology, generated
+      contracts, trust boundaries, local HOW choices, and companion ownership.
+  - criterion_id: AC-2
+    status: PASS
+    evidence: >-
+      Each pair contains one over_governance and one under_governance case. The
+      preference-only local HOW case expects ALLOW_LOCAL, while material public,
+      persistence, ownership, dependency, generated-contract, trust-boundary, HOW,
+      and cross-component changes expect ESCALATE_TO_ARCHITECT. The fixtures encode
+      expected evaluation outcomes only and do not grant live authority.
+  - criterion_id: AC-3
+    status: PASS
+    evidence: >-
+      The implementation is limited to one JSON fixture and bounded test-only
+      integrity checks. No materiality classifier, decision matrix, policy engine,
+      model runner, prompt scorer, eval framework, role, lifecycle, protocol version,
+      registry, or orchestrator was introduced.
+  - criterion_id: AC-4
+    status: PASS
+    evidence: >-
+      Eight TASK-0022 regressions cover canonical validity, duplicate case IDs,
+      incomplete pairs, unsupported kinds or outcomes, missing fields, malformed
+      fields, pair-count drift, and target-specific rule leakage. The full suite
+      passed with 89 tests.
+  - criterion_id: AC-5
+    status: PASS
+    evidence: >-
+      The exact base-to-candidate diff contains only scripts/fixtures/governance_eval_corpus.json
+      and scripts/test_validate_skill_library.py. Protocol, roles, contracts/templates,
+      workflow, dependencies, historical artifacts, topology, main, and external
+      repositories remain unchanged; the workflow blob and pinned skill surfaces were
+      explicitly rechecked before report creation.
+  - criterion_id: AC-6
+    status: PASS
+    evidence: >-
+      On exact candidate 3dc4863b2d8e14a8999f3c745a513854082f15e9, python3
+      scripts/validate_skill_library.py passed, python3 -m unittest scripts.test_validate_skill_library
+      passed with 89 tests, python3 -m unittest discover -s scripts -p 'test*.py' passed
+      with 89 tests, git diff --check passed, and the unchanged GitHub Actions workflow
+      completed success in run 33714702471.
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: >-
+      Live GitHub refs were resolved before mutation as dev=587124739f329fcebb8eeca6b8d4201e8702ecbb
+      and main=76f2d3877d1698f91eb5a6117e2301ed49480379. TASK-0022 revision 1,
+      pinned skill revision bb2ae08b1d3609e7375a3510bb859b61d98b3616, accepted TASK-0021
+      review authority, exact repository/branch/base identity, structure authority,
+      and all required EXECUTION capabilities were confirmed.
+  - check_id: CHECK-2
+    result: PASS
+    evidence: >-
+      Existing scripts validation and unittest conventions were inspected. The
+      repository has no separate fixture or eval framework, so the smallest existing
+      scripts ownership area was used with one nested JSON fixture and the existing
+      validator regression suite.
+  - check_id: CHECK-3
+    result: PASS
+    evidence: >-
+      TDD focused regressions were first observed RED because the corpus was missing,
+      then GREEN after the minimal fixture was added. The candidate contains only the
+      authorized corpus/test paths, uses consequences rather than preferred wording,
+      and contains no target-specific product semantics or governance-semantic rewrite.
+  - check_id: CHECK-4
+    result: PASS
+    evidence: >-
+      Exact candidate verification returned zero failures for python3
+      scripts/validate_skill_library.py, python3 -m unittest scripts.test_validate_skill_library,
+      python3 -m unittest discover -s scripts -p 'test*.py', and git diff --check.
+      Both unit invocations ran all 89 repository tests.
+  - check_id: CHECK-5
+    result: PASS
+    evidence: >-
+      Candidate 3dc4863b2d8e14a8999f3c745a513854082f15e9 was non-force pushed to dev
+      from exact authorized base 587124739f329fcebb8eeca6b8d4201e8702ecbb. The
+      unchanged .github/workflows/validate-skill-library.yml run 33714702471 on that
+      exact SHA completed success, including successful Validate and Unit tests steps.
+  - check_id: CHECK-6
+    result: PASS
+    evidence: >-
+      Before report publication, fresh canonical refs confirmed candidate dev and
+      unchanged main, the exact candidate parent and bounded diff were rechecked, and
+      the execution worktree was clean. The report is the only authorized post-candidate
+      artifact; after its publication, the report commit is verified as a single-parent
+      child of the candidate with report-only changes, main is unchanged, and the
+      branch topology remains exactly {dev, main}.
+
+discovered_gaps: []
+
+structural_observations: []
+
+deviations_from_task: []
+blockers: []
+
+working_tree_after:
+  clean: true
+  summary: >-
+    The implementation candidate worktree was clean after current-run hygiene cleanup;
+    report publication is the only authorized child commit. The operator checkout's
+    pre-existing dirty/untracked state was preserved, main was not mutated, and the
+    run-owned detached worktree was removed after final evidence capture.
+
+result: NEEDS_REVIEW
