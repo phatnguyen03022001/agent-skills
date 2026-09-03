@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
@@ -53,6 +54,44 @@ LIFECYCLE_STATES = frozenset({
 PROGRAM_ARTIFACT_TYPE = "GENERATED_PROGRAM"
 PROGRAM_AUTHORITY = "NONE"
 PROGRAM_INVALIDATION = "FULL_REGENERATION_ON_MATERIAL_INPUT_CHANGE"
+
+# One normalized semantic model serves both sparse protocol-v3 serialization and
+# explicit expanded-v3 task artifacts.  -1 means that no exact-file count cap is
+# imposed inside an already-authorized semantic/component boundary.
+TASK_NORMALIZATION_DEFAULTS: dict[str, Any] = {
+    "scope": {
+        "expected_files_are_restrictive": False,
+    },
+    "structure_policy": {
+        "expected_new_files": [],
+        "unlisted_new_files": {
+            "allowed": True,
+            "max": -1,
+            "within": [],
+            "purpose": "Executor-local structure inside the authorized semantic/component boundary",
+        },
+        "allow_new_top_level_directories": False,
+        "allow_new_shared_modules": False,
+    },
+    "continuation_policy": {
+        "mode": "MANUAL",
+        "stop_conditions": [
+            "BLOCKED",
+            "STALE_STATE",
+            "AUTHORITY_REQUIRED",
+            "CURRENT_PHASE_CAPABILITY_UNAVAILABLE",
+            "REVIEW_REQUIRED",
+            "REVERIFY_REQUIRED",
+            "USER_STOP",
+        ],
+    },
+    "capability_requirements": {},
+    "release_authority": {
+        "create_version_tag": False,
+        "mutate_repository_metadata": False,
+        "publish_release": False,
+    },
+}
 
 errors: list[str] = []
 warnings: list[str] = []
@@ -354,6 +393,29 @@ def load_json_document(relative_path: str) -> dict[str, Any] | None:
 
 
 _MISSING = object()
+
+
+def normalize_task_document(document: dict[str, Any]) -> dict[str, Any]:
+    """Materialize one canonical meaning for omitted optional task controls."""
+    normalized = deepcopy(document)
+
+    scope = normalized.get("scope")
+    if type(scope) is dict:
+        scope.setdefault(
+            "expected_files_are_restrictive",
+            TASK_NORMALIZATION_DEFAULTS["scope"]["expected_files_are_restrictive"],
+        )
+
+    for key in (
+        "structure_policy",
+        "continuation_policy",
+        "capability_requirements",
+        "release_authority",
+    ):
+        if key not in normalized or normalized[key] == {}:
+            normalized[key] = deepcopy(TASK_NORMALIZATION_DEFAULTS[key])
+
+    return normalized
 
 TASK_SEQUENCE_SCHEMAS: dict[str, dict[str, type]] = {
     "authority_sources": {"source": str, "role": str, "precedence": int},
@@ -770,6 +832,7 @@ def validate_task_template() -> None:
     doc = load_protocol_document(label)
     if doc is None:
         return
+    doc = normalize_task_document(doc)
     validate_version(label, doc)
     for dotted, expected_type in [
         ("task_id", str), ("task_revision", int), ("state", str),
@@ -1124,6 +1187,17 @@ def require_tokens(path: Path, tokens: list[str]) -> None:
 def validate_protocol_docs() -> None:
     require_tokens(ROOT / "protocols" / "TASK_PROTOCOL.md", [
         "Supported protocol version", "one active target repository",
+        "Decision ownership and consequence-based materiality",
+        "implementation judgment and local HOW by default",
+        "Uncertainty, unfamiliarity, or a preference difference alone is not an escalation trigger",
+        "Protocol-v3 task normalization/defaults",
+        "same protocol-v3 semantic model",
+        "missing authority remains fail-closed",
+        "semantic/component boundary",
+        "A newly discovered companion surface",
+        "Local structure is Executor-owned",
+        "material structure and remain Architect-owned",
+        "LOCAL needs no Architect approval",
         "simultaneous ambiguous active target is forbidden",
         "explicit terminal handoff/result", "fresh repository-local task",
         "fresh exact handoff", "fresh exact base HEAD",
@@ -1146,6 +1220,11 @@ def validate_protocol_docs() -> None:
         "Tool availability is not permission to consume quota",
     ])
     require_tokens(ROOT / "architect" / "SKILL.md", [
+        "material WHAT, BOUNDARY, and PROOF",
+        "delegates implementation judgment to Executor by default",
+        "uncertainty alone does not require escalation",
+        "normalization/default table",
+        "Omitted implementation prescription",
         "one active target repository", "close the current repository-specific phase",
         "explicitly identify the next `owner/repo`", "refresh canonical GitHub truth",
         "discard previous repository-specific assumptions",
@@ -1155,6 +1234,11 @@ def validate_protocol_docs() -> None:
         "PROMPT TO COPY", "Program 2/4 · agent-standards · execution",
     ])
     require_tokens(ROOT / "executor" / "SKILL.md", [
+        "inspect existing repository patterns before choosing implementation HOW",
+        "implementation judgment belongs to Executor by default",
+        "smallest sufficient repo-native implementation",
+        "LOCAL needs no Architect approval",
+        "automatic pre-mutation blockers",
         "active task/repository binding remains immutable", "explicit terminal handoff/result",
         "previous evidence finalized", "no outstanding mutation authority carried forward",
         "fresh repository-local task", "fresh exact handoff", "fresh exact base HEAD",
@@ -1168,6 +1252,10 @@ def validate_protocol_docs() -> None:
         "Program 2/4 · agent-standards · execution", "fake percentages",
     ])
     require_tokens(ROOT / "contracts" / "IMPLEMENTATION_CONTRACT.md", [
+        "positive semantic/component scope",
+        "normalization/default table",
+        "Missing exact-file or local-structure prescription",
+        "Missing authority fields never default to permission",
         "template", "continuation_policy", "capability_requirements", "release_authority",
     ])
     require_tokens(ROOT / "contracts" / "IMPLEMENTATION_REPORT.md", [

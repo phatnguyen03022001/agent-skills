@@ -144,7 +144,6 @@ class ValidatorRegressionTests(unittest.TestCase):
 
     def test_structure_restriction_fields_are_required(self) -> None:
         cases = [
-            ("scope.expected_files_are_restrictive", "  expected_files_are_restrictive: true", "  expected_files_are_restrictive_missing: true"),
             ("structure_policy.unlisted_new_files.allowed", "    allowed: false", "    allowed_missing: false"),
             ("structure_policy.unlisted_new_files.max", "    max: 0", "    max_missing: 0"),
             ("structure_policy.unlisted_new_files.within", "    within: []", "    within_missing: []"),
@@ -156,6 +155,8 @@ class ValidatorRegressionTests(unittest.TestCase):
             with self.subTest(path=dotted):
                 def mutate(root: Path, before=before, after=after) -> None:
                     path = root / "templates" / "task.yaml"
+                    legacy = root / ".agent" / "tasks" / "TASK-0001" / "task.yaml"
+                    path.write_text(legacy.read_text(encoding="utf-8"), encoding="utf-8")
                     text = path.read_text(encoding="utf-8")
                     self.assertIn(before, text)
                     text = text.replace(before, after, 1)
@@ -1267,6 +1268,137 @@ class Task0011GeneratedProgramTests(unittest.TestCase):
             "planner service",
         ):
             self.assertIn(forbidden, protocol)
+
+
+class Task0020GovernanceOwnershipTests(unittest.TestCase):
+    def fixture(self) -> tuple[tempfile.TemporaryDirectory[str], Path]:
+        temp = tempfile.TemporaryDirectory()
+        root = Path(temp.name) / "repo"
+        shutil.copytree(ROOT, root)
+        self.addCleanup(temp.cleanup)
+        return temp, root
+
+    def run_validator(self, root: Path) -> subprocess.CompletedProcess[str]:
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+        original_root = VALIDATOR_MODULE.ROOT
+        try:
+            VALIDATOR_MODULE.ROOT = root
+            with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+                returncode = VALIDATOR_MODULE.main()
+        finally:
+            VALIDATOR_MODULE.ROOT = original_root
+        return subprocess.CompletedProcess(
+            args=["python3", str(root / VALIDATOR)],
+            returncode=returncode,
+            stdout=stdout.getvalue(),
+            stderr=stderr.getvalue(),
+        )
+
+    def load_task(self, root: Path) -> dict[str, object]:
+        original_root = VALIDATOR_MODULE.ROOT
+        try:
+            VALIDATOR_MODULE.ROOT = root
+            document = VALIDATOR_MODULE.load_protocol_document("templates/task.yaml")
+        finally:
+            VALIDATOR_MODULE.ROOT = original_root
+        assert document is not None
+        return document
+
+    def remove_sparse_optional_controls(self, root: Path) -> None:
+        path = root / "templates" / "task.yaml"
+        lines = path.read_text(encoding="utf-8").splitlines()
+        output: list[str] = []
+        skip_structure = False
+        skip_control = False
+        for line in lines:
+            if line == "  expected_files_are_restrictive: true":
+                continue
+            if line == "structure_policy:":
+                skip_structure = True
+                continue
+            if skip_structure and line == "continuation_policy:":
+                skip_structure = False
+            if skip_structure:
+                continue
+            if line in {"continuation_policy:", "capability_requirements:", "release_authority:"}:
+                skip_control = True
+                continue
+            if skip_control and line and not line.startswith(" "):
+                skip_control = False
+            if skip_control:
+                continue
+            output.append(line)
+        path.write_text("\n".join(output) + "\n", encoding="utf-8")
+
+    def test_sparse_implementation_controls_normalize_to_bounded_local_defaults(self) -> None:
+        _, root = self.fixture()
+        self.remove_sparse_optional_controls(root)
+        document = self.load_task(root)
+        normalized = VALIDATOR_MODULE.normalize_task_document(document)
+
+        scope = normalized["scope"]
+        structure = normalized["structure_policy"]
+        unlisted = structure["unlisted_new_files"]
+        self.assertFalse(scope["expected_files_are_restrictive"])
+        self.assertEqual(structure["expected_new_files"], [])
+        self.assertTrue(unlisted["allowed"])
+        self.assertEqual(unlisted["max"], -1)
+        self.assertEqual(unlisted["within"], [])
+        self.assertFalse(structure["allow_new_top_level_directories"])
+        self.assertFalse(structure["allow_new_shared_modules"])
+        self.assertEqual(normalized["continuation_policy"]["mode"], "MANUAL")
+        self.assertEqual(normalized["capability_requirements"], {})
+        self.assertEqual(
+            normalized["release_authority"],
+            {
+                "create_version_tag": False,
+                "mutate_repository_metadata": False,
+                "publish_release": False,
+            },
+        )
+        result = self.run_validator(root)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_expanded_v3_restrictions_remain_restrictive_after_normalization(self) -> None:
+        _, root = self.fixture()
+        legacy = root / ".agent" / "tasks" / "TASK-0001" / "task.yaml"
+        self.assertTrue(legacy.is_file())
+        (root / "templates" / "task.yaml").write_text(legacy.read_text(encoding="utf-8"), encoding="utf-8")
+        document = self.load_task(root)
+        normalized = VALIDATOR_MODULE.normalize_task_document(document)
+        self.assertTrue(normalized["scope"]["expected_files_are_restrictive"])
+        self.assertFalse(normalized["structure_policy"]["unlisted_new_files"]["allowed"])
+        self.assertEqual(normalized["structure_policy"]["unlisted_new_files"]["max"], 0)
+        result = self.run_validator(root)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_missing_positive_authority_still_fails_closed(self) -> None:
+        _, root = self.fixture()
+        self.remove_sparse_optional_controls(root)
+        path = root / "templates" / "task.yaml"
+        text = path.read_text(encoding="utf-8")
+        text = text.replace(
+            "  allowed_existing_files_or_components:\n    - \"\"\n",
+            "  allowed_existing_files_or_components_missing:\n    - \"\"\n",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+        result = self.run_validator(root)
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("missing required path 'scope.allowed_existing_files_or_components'", result.stdout + result.stderr)
+
+    def test_template_serializes_sparse_v3_without_a_second_task_dialect(self) -> None:
+        _, root = self.fixture()
+        path = root / "templates" / "task.yaml"
+        text = path.read_text(encoding="utf-8")
+        self.assertNotIn("task-lite", text)
+        self.assertNotIn("task-compact", text)
+        self.assertNotIn("protocol_version: 4", text)
+        self.assertNotIn("  expected_files_are_restrictive:", text)
+        self.assertNotIn("structure_policy:", text)
+        result = self.run_validator(root)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
 
 if __name__ == "__main__":

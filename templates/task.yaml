@@ -56,7 +56,6 @@ scope:
     - ""
   allowed_existing_files_or_components:
     - ""
-  expected_files_are_restrictive: true
 
 invariants: []
 
@@ -71,16 +70,6 @@ gap_policy:
   dependency_change: revised_contract_required
   public_contract_change: revised_contract_required
   blocking_gap_behavior: BLOCKED
-
-structure_policy:
-  expected_new_files: []
-  unlisted_new_files:
-    allowed: false
-    max: 0
-    within: []
-    purpose: ""
-  allow_new_top_level_directories: false
-  allow_new_shared_modules: false
 
 continuation_policy:
   mode: MANUAL

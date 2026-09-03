@@ -4,7 +4,7 @@ This protocol defines reusable Architect-to-Executor governance across repositor
 
 This file is the semantic owner for reusable cross-role task-governance semantics, including repository/task binding, organizational-role and acceptance boundaries, artifact/authority/capability separation, handoff/base identity, lifecycle and continuation, promotion lineage, and release separation. Role skills own role-local procedure and safety boundaries; contracts own artifact-specific obligations; templates are example/default shapes; README is discovery/overview; the validator mechanically enforces supported structure and compatibility. If a summary conflicts with this protocol, this protocol governs.
 
-Supported protocol version: **3**. These additions are backward-compatible. Existing valid expanded v3 artifacts remain valid; optional controls that are absent default to manual, fail-closed, and non-permissive behavior. Unsupported versions fail closed and are never silently upgraded.
+Supported protocol version: **3**. These additions are backward-compatible. Existing valid expanded v3 artifacts remain valid. Omitted optional task controls normalize through the single protocol-v3 defaults table below: missing authority remains fail-closed, while missing implementation prescription grants only bounded Executor discretion inside a positive authorized semantic/component boundary. Unsupported versions fail closed and are never silently upgraded.
 
 ## Core bindings
 
@@ -31,6 +31,16 @@ An explicitly configured operator-profile observation write is non-authoritative
 There are two organizational roles: Architect and Executor. Architect is ChatGPT. Reviewer, verifier, red-team, debugger, researcher, coder, and similar execution modes are Executor specializations, not additional organizational roles. Other execution agents/sessions, including Codex, operate as Executors when used. Role specialization never changes artifact ownership or authority boundaries.
 
 Exactly one current governing Architect owns final ACCEPT/REJECT/REVISE judgment for the active repository binding. Independent reviewer/red-team/verifier sessions are an Executor specialization and produce advisory evidence unless the target explicitly designates verifier-owned authoritative PASS/FAIL. They never become a second Architect or independently own product/governance acceptance. Existing v3 `review.yaml` values remain `ACCEPTED`, `REVISION_REQUIRED`, and `BLOCKED` for backward compatibility.
+
+## Decision ownership and consequence-based materiality
+
+Inside a positive authorized task boundary, Architect owns the material WHAT, material BOUNDARY, and PROOF: governing semantics, authority, acceptance, and any consequence-backed boundary that must remain fixed. Executor owns implementation judgment and local HOW by default. Uncertainty, unfamiliarity, or a preference difference alone is not an escalation trigger.
+
+Escalation is required only when a proposed choice would change governing semantics, authority, acceptance, or a material consequence involving trust, ownership, compatibility, durability, irreversibility, dependency, cost/topology, or architecture. Materiality is consequence-based across categories: implementing an already-frozen API, security, data, migration, dependency, or structure decision remains Executor-local HOW when those consequences do not change; changing the governing consequence remains Architect-owned.
+
+Architect closes WHAT, material BOUNDARY, and PROOF, then stops prescribing local HOW unless the mechanism itself is materially authoritative. Local helper choice, internal file decomposition, SQL organization, test-helper layout, generated-companion mechanics, formatter invocation, and equivalent implementation detail are not task authority merely because they make execution concrete.
+
+Executor must inspect current repository patterns, choose the smallest sufficient repo-native implementation, preserve authority and material consequences, and prove acceptance. Executor discretion is bounded implementation judgment; it never expands authority or becomes a creativity license.
 
 ## Repository-local authority across sequential bindings
 
@@ -112,6 +122,20 @@ An available generic local execution surface may satisfy ordinary engineering ca
 `task.git_authority` governs Executor Git mutations. `create_branch`, `commit`, `push`, and `promote_to_main` are independent. `commit: true` does not authorize branch creation, push, `main` mutation, or promotion. `push: true` does not authorize branch creation, force push, `main` mutation, or promotion. `promote_to_main: false` forbids `main` ref mutation and merge into `main`. If `create_branch: false`, Executor MUST NOT invoke branch-creation capability for testing, probing, staging, temporary work, backup, recovery, or cleanup. Negative tests use isolated fixtures or mocks, never the live repository.
 
 `task.release_authority`, when present, is separately owned authority with three independent booleans: `create_version_tag`, `mutate_repository_metadata`, and `publish_release`. If absent, all three are false. Commit, push, and `promote_to_main` never imply any release authority.
+
+### Protocol-v3 task normalization/defaults
+
+Sparse serialization is only an encoding of this same protocol-v3 semantic model. The validator materializes the following table before validating or consuming an optional control; it must not create a task-lite/task-compact dialect or protocol v4.
+
+| Omitted serialized control | Canonical normalized meaning |
+| --- | --- |
+| `scope.expected_files_are_restrictive` | `false`; exact-file enumeration is an optional aid, not a default boundary. |
+| `structure_policy` | local structure is allowed inside the positive semantic/component boundary; `expected_new_files: []`, `unlisted_new_files.allowed: true`, `unlisted_new_files.max: -1` (unbounded), `within: []`, and the canonical Executor-local purpose; new top-level directories and shared modules remain `false`. |
+| `continuation_policy` | `mode: MANUAL` with every non-waivable stop condition: `BLOCKED`, `STALE_STATE`, `AUTHORITY_REQUIRED`, `CURRENT_PHASE_CAPABILITY_UNAVAILABLE`, `REVIEW_REQUIRED`, `REVERIFY_REQUIRED`, and `USER_STOP`. |
+| `capability_requirements` | `{}`; no capability is declared or granted by omission. |
+| `release_authority` | `create_version_tag: false`, `mutate_repository_metadata: false`, and `publish_release: false`. |
+
+The positive authority fields are not defaulted: `structure_authority`, the required semantic/component scope, acceptance criteria, and applicable Git authority remain explicit and fail closed when absent. An explicit expanded-v3 control is validated and preserved exactly, including `expected_files_are_restrictive: true`, explicit exact-file restrictions, and explicit structure restrictions. `-1` is only the normalized sparse default; an explicit `max: 0` remains restrictive.
 
 ## External normative authority
 
@@ -299,9 +323,13 @@ Architect owns `structure_authority.status`:
 
 Executor never changes this status to unblock itself.
 
+Scope owns semantic/component consequence by default. `scope.allowed_existing_files_or_components` is the positive boundary; Executor may resolve a semantic/component boundary to actual repository files using current repository truth. Path restrictions are optional aids, and exact-file restrictions are hard boundaries only when explicitly and materially justified. A newly discovered companion surface that is materially local and necessary for current acceptance is reported as evidence for Architect review rather than becoming an automatic pre-mutation blocker.
+
+Structure is local when it consists of internal files or modules inside an already-authorized component and changes no material ownership, public/shared contract, or component boundary. Local structure is Executor-owned. New or changed top-level ownership, service/package/component boundaries, reusable shared abstractions, cross-component ownership moves, or public/shared module contracts are material structure and remain Architect-owned.
+
 ## Gap policy
 
-`LOCAL` is necessary for current acceptance criteria, completely inside authorized scope, and permitted by task policy. `FOLLOW_UP` is real but unnecessary or unauthorized for the current task; record it and do not fix it. `BLOCKING` means safe continuation requires missing or conflicting authority; stop with evidence. Discovery is never authorization.
+`LOCAL` is necessary for current acceptance criteria, completely inside the authorized material/component boundary, changes no governing semantics or authority, creates no new material dependency or ownership boundary, is permitted by task policy, and is deterministically verifiable. LOCAL needs no Architect approval. `FOLLOW_UP` and `BLOCKING` are consequence-based: FOLLOW_UP is real but unnecessary or unauthorized for the current task; record it and do not fix it, while BLOCKING means safe continuation requires missing or conflicting authority; stop with evidence. Discovery is never authorization.
 
 ## Stable maintenance and change admission
 

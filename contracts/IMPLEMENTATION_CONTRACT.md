@@ -16,13 +16,15 @@ Task fields remain explicit where they carry artifact-specific obligations:
 - optional `release_authority` records task-specific release permissions and defaults non-permissively when absent;
 - optional phase-specific `capability_requirements` records semantic capabilities the task requires;
 - optional `continuation_policy` records the task's continuation mode;
-- `structure_authority`, restrictive scope, gap policy, acceptance criteria, and verification remain task-owned material authority.
+- `structure_authority`, positive semantic/component scope, gap policy, acceptance criteria, and verification remain task-owned material authority.
+
+The Task Protocol owns one protocol-v3 normalization/default table for omitted optional implementation-prescription controls. Missing exact-file or local-structure prescription defaults to bounded Executor discretion inside the positive semantic/component boundary; it does not deny necessary local companion files. Missing authority fields never default to permission. Explicit expanded-v3 controls, including restrictive exact-file and structure policies, retain their original meaning.
 
 The semantic meaning and interaction of those controls are defined once in the Task Protocol rather than repeated here.
 
 ## Structure, scope, and revisions
 
-Architect owns `structure_authority` and task revisions. Task approval does not authorize unrelated cleanup, speculative features, architecture/spec/public-contract drift, dependency changes, or structural reorganization.
+Architect owns `structure_authority`, material boundaries, and task revisions. Task approval does not authorize unrelated cleanup, speculative features, architecture/spec/public-contract drift, dependency changes, or structural reorganization. Executor owns implementation judgment and local structure within the authorized component by default; material ownership, component, public/shared-contract, or cross-component structure remains Architect-owned.
 
 Every new source file needs existing or explicitly authorized ownership. Task-specific safety-significant choices remain explicit; unconditional protocol boilerplate need not be copied into each task.
 

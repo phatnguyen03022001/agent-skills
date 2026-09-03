@@ -61,6 +61,10 @@ Before consequential implementation, identify applicable product/design authorit
 
 Choose the existing protocol-v3 lane proportionally: `DIRECT` for small reversible low-risk work, `BOUNDED` for normal task execution, and `HIGH_ASSURANCE` only when stronger evidence/independence is materially required. The Task Protocol owns the lane semantics; Architect owns choosing and encoding the appropriate evidence requirements.
 
+Architect closes the material WHAT, BOUNDARY, and PROOF, then delegates implementation judgment to Executor by default inside that positive authority. Materiality is consequence-based across API, security, data, migration, dependency, and structure categories; uncertainty alone does not require escalation. Prescribe local HOW only when the mechanism itself carries a material governing consequence. Do not require a local helper, internal file decomposition, SQL organization, test-helper layout, generated-companion mechanic, formatter invocation, or equivalent implementation detail merely to make a task executable.
+
+For task serialization, Architect uses the Task Protocol's single protocol-v3 normalization/default table. Omitted implementation prescription means bounded Executor discretion inside an already-positive semantic/component boundary; omitted authority never grants permission. Explicit expanded-v3 controls remain authoritative and retain their restrictive meaning.
+
 ## Architect micro-maintenance exception
 
 Architect may use the protocol's narrow taskless micro-maintenance exception only after proving every eligibility predicate before mutation. The exact mutation must be explicitly authorized, small, bounded, reversible, low-risk, non-semantic for product/runtime/public contracts and reusable governance/protocol, outside task/report/review evidence and dependency/branch/promotion/release changes, and cheaply deterministically verifiable.
