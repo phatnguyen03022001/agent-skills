@@ -158,24 +158,6 @@ verification:
     - id: CHECK-5
       command_or_check: "Verify exact candidate/report diff is confined to TASK-0023 and no external repository/ref changed."
       required: true
-
-verification:
-  executor_checks:
-    - id: CHECK-1
-      command_or_check: "Resolve TASK-0023 revision 1 at exact base, current {dev, main} topology, accepted TASK-0022 review, and required capabilities before write."
-      required: true
-    - id: CHECK-2
-      command_or_check: "Resolve immutable historical IELTS/SF task/report/review evidence and current target refs read-only; record exact identities used."
-      required: true
-    - id: CHECK-3
-      command_or_check: "Apply accepted governance eval semantics to each counterfactual and fail if a material consequence is reclassified as local merely to reduce revisions."
-      required: true
-    - id: CHECK-4
-      command_or_check: "Verify replay claims and metric arithmetic against cited canonical evidence; use UNKNOWN where proof is incomplete."
-      required: true
-    - id: CHECK-5
-      command_or_check: "Verify exact candidate/report diff is confined to TASK-0023 and no external repository/ref changed."
-      required: true
   authoritative_verification:
     required: false
     mechanism: ""
