@@ -49,7 +49,13 @@ Any identity or authority mismatch is `BLOCKED`. Never refresh stale authority o
 
 ## Remote truth and local divergence
 
-Authorized remote Git state is canonical repository truth; local state is an execution copy. A local clean/behind copy may be synchronized only when authorized. Local ahead or local dirty state is divergence or unknown work: do not auto-push it, reset it, delete it, or adopt it as authority. Remote drift from the authorized ref invalidates stale execution authority and fails closed.
+Authorized remote Git state is canonical repository truth; local state is subordinate execution state. A designated canonical local working copy exists only when current target/operator authority explicitly designates one; never infer that a repository name or a path is a working copy or grants authority. Phone-only or remote-only execution remains valid when current authority designates no local copy.
+
+Before local mutation, refresh canonical GitHub truth and classify the designated local state. Discover an actual Git repository and prove its exact owner/repo remote identity, required branch, and authorized base/ref rather than assuming local location or naming. A local copy that is absent or safely empty may be created from canonical truth only when the current authority and execution surface permit it. A matching clean/behind copy may be synchronized only when authorized. Dirty/ahead/unknown state, identity mismatch, or stale remote state is never local authority: preserve it and do not auto-push, reset, stash, clean, delete, move, overwrite, or adopt it. A specifically proven non-destructive operation may proceed only when it preserves that state; otherwise use the applicable existing fail closed result.
+
+After GitHub publication or another task-authorized canonical-ref mutation, refresh canonical GitHub truth again. When a designated canonical local working copy is required, safely reconcile it to the final canonical ref with fast-forward/equivalent semantics and prove that the resolved local repository still has the exact owner/repo remote identity and resolves that final ref before successful closure. If reconciliation cannot safely complete because of dirty/ahead/unknown state, identity mismatch, stale remote state, missing capability, permission failure, or a conflict, preserve local state and return the applicable existing fail closed result rather than claiming completion.
+
+Temporary/reference/disposable checkouts remain non-authoritative and cannot substitute for a separately designated canonical local working copy. Their cleanup remains subject to the Local Hygiene Contract.
 
 ## Restrictive execution
 

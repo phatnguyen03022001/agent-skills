@@ -1721,5 +1721,41 @@ class Task0022GovernanceEvaluationTests(unittest.TestCase):
         self.assert_corpus_rejected(mutate, "target-specific rule leakage")
 
 
+class Task0024GitHubFirstLocalExecutionTests(unittest.TestCase):
+    def test_executor_closes_designated_canonical_local_execution_generically(self) -> None:
+        executor = (ROOT / "executor" / "SKILL.md").read_text(encoding="utf-8")
+        normalized = executor.lower()
+        for token in (
+            "designated canonical local working copy",
+            "exact owner/repo remote identity",
+            "do not infer",
+            "absent or safely empty",
+            "clean/behind",
+            "dirty/ahead/unknown",
+            "identity mismatch",
+            "stale remote",
+            "Before local mutation",
+            "After GitHub publication",
+            "refresh canonical GitHub truth",
+            "fast-forward/equivalent",
+            "final canonical ref",
+            "Temporary/reference/disposable checkouts",
+            "cannot substitute",
+            "phone-only or remote-only",
+            "fail closed",
+        ):
+            self.assertIn(token.lower(), normalized)
+
+        for forbidden in (
+            "workspace registry",
+            "repo registry",
+            "sync engine",
+            "state database",
+            "/Users/tienphat",
+            "Codex-specific command",
+        ):
+            self.assertNotIn(forbidden, executor)
+
+
 if __name__ == "__main__":
     unittest.main()
