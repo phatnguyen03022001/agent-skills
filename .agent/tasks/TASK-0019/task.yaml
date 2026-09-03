@@ -1,0 +1,234 @@
+protocol_version: 3
+
+task_id: TASK-0019
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: "GOV-A_DECISION_SURFACE_BASELINE"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "76f2d3877d1698f91eb5a6117e2301ed49480379"
+
+execution_skills:
+  required:
+    - executor
+  recommended:
+    - gap-analysis
+
+structure_authority:
+  status: RESOLVED
+  source: "Current accepted agent-skills protocol-v3 task artifact convention at 76f2d3877d1698f91eb5a6117e2301ed49480379 plus the operator-approved GOV-A audit boundary."
+  rationale: >-
+    GOV-A is an audit-only baseline. It introduces no reusable governance semantics and requires only one
+    task-local baseline evidence artifact plus the normal Executor report. No product, protocol, skill,
+    template, validator, workflow, dependency, branch-topology, or external-repository mutation is authorized.
+
+objective: >-
+  Establish a compact, reproducible baseline of the current Architect decision-surface failure mode before
+  GOV-B changes reusable governance. Measure evidence-backed over-governance and under-governance signals
+  across a small failure-diverse historical corpus, identify the narrow current governance pressure points,
+  and produce exact evidence that can guide GOV-B without redesigning governance during this task.
+
+scope:
+  required_changes:
+    - >-
+      Create .agent/tasks/TASK-0019/baseline.md as the sole GOV-A audit deliverable. Keep it compact and
+      evidence-indexed; it is baseline evidence for later governance work, not another normative protocol,
+      doctrine document, or reasoning-history archive.
+    - >-
+      Build the smallest historical corpus that covers the required failure diversity, using at least five
+      distinct task families across at least two repositories and no more than ten task families. Include
+      phatnguyen03022001/ilets TASK-0044 as a primary regression specimen and include evidence from
+      phatnguyen03022001/SF plus agent-skills history when needed to cover the required classes.
+    - >-
+      Required corpus coverage classes are: normal bounded success; AUTHORITY_REQUIRED or equivalent
+      missing-authority stop; generated-contract or generated-companion work; data or migration work;
+      security, ownership, or trust-boundary work; documentation-only work; work with authoritative remote
+      verification; and work whose acceptance did not require authoritative remote CI. One task may cover
+      multiple classes, but the corpus must not collapse into a single task family or repository.
+    - >-
+      Treat other repositories strictly as read-only research evidence. Record the exact repository, branch
+      or immutable commit resolved, task ID/revision, report/review identity when available, and the evidence
+      used for every scored observation. Never treat mutable external refs as normative agent-skills authority.
+    - >-
+      Measure four primary metrics with these exact denominators: Architect HOW leakage rate = unjustified
+      implementation-local Architect decisions / total counted Architect task decisions; authority miss rate =
+      executed task families with at least one preventable unclosed material-authority discovery / executed
+      task families assessed; unnecessary revision rate = task revision events caused only by local
+      implementation mechanics / executed task families assessed; review replay rate = reviews requiring deep
+      implementation reconstruction without a material evidence/risk trigger / reviews assessed.
+    - >-
+      Before scoring, state one compact counting rule for a distinct Architect task decision and apply it
+      consistently across the corpus. Every counted HOW decision must be individually traceable and classified
+      as material/justified mechanism choice or unjustified implementation-local HOW. The target is zero
+      unjustified HOW leakage, not zero mechanism decisions when a mechanism itself is materially authoritative.
+    - >-
+      Distinguish a preventable ownership miss from newly discovered target truth. A newly discovered material
+      fact is not automatically a governance regression. Count authority-miss numerator events only when the
+      pre-execution canonical evidence was sufficient for Architect to close the material decision but the task
+      left it unclosed.
+    - >-
+      Do not reconstruct hidden chat reasoning. For review replay or revision causality that cannot be proven
+      from canonical task/report/review/commit evidence, record UNKNOWN and report evidence coverage rather than
+      manufacturing a score. Do not silently convert UNKNOWN into PASS, FAIL, or zero.
+    - >-
+      Identify the smallest evidence-backed current governance pressure points that GOV-B must correct, limited
+      to observed decision ownership, restrictive scope/structure semantics, default behavior, or role procedure.
+      Do not design or implement the GOV-B solution in this audit.
+    - >-
+      Publish .agent/tasks/TASK-0019/report.yaml after the baseline is complete, bind the exact baseline commit
+      and acceptance evidence, and stop at NEEDS_REVIEW.
+
+  allowed_existing_files_or_components:
+    - .agent/tasks/
+    - protocols/TASK_PROTOCOL.md
+    - architect/SKILL.md
+    - executor/SKILL.md
+    - contracts/IMPLEMENTATION_CONTRACT.md
+    - contracts/IMPLEMENTATION_REPORT.md
+    - contracts/ARCHITECT_REVIEW.md
+    - templates/task.yaml
+    - templates/report.yaml
+    - templates/review.yaml
+    - scripts/validate_skill_library.py
+    - scripts/test_validate_skill_library.py
+  expected_files_are_restrictive: true
+
+invariants:
+  - "GOV-A is evidence gathering only; reusable agent-skills governance semantics remain unchanged."
+  - "No external repository is mutated."
+  - "TASK-0044 is used as a regression specimen without encoding IELTS-specific semantics into agent-skills doctrine."
+  - "Materiality classifications are consequence-based; category labels such as API, database, security, dependency, or structure are not sufficient by themselves."
+  - "Missing historical evidence remains UNKNOWN rather than being inferred from hidden conversation history."
+  - "The baseline stays compact: decision state, metric method/results, exact evidence references, and observed pressure points only."
+
+forbidden_changes:
+  - "Do not modify Task Protocol, Architect, Executor, contracts, templates, validator, tests, README, workflows, dependencies, or any reusable governance semantic surface."
+  - "Do not modify agent-standards, agent-documents, agent-runtime, architect-profile, ilets, SF, or any other external repository."
+  - "Do not design or implement sparse protocol semantics, report/review sparsification, PROGRAM delegation, a new role, lifecycle, task dialect, registry, cache, compiler, orchestrator, or state database."
+  - "Do not migrate, rewrite, normalize, or backfill historical task/report/review artifacts."
+  - "Do not create branches, PRs, issues, tags, releases, or mutate main."
+  - "Do not use Agent Runtime or Codex; GitHub-readable evidence is sufficient for this audit."
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0019/baseline.md
+    - .agent/tasks/TASK-0019/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_write
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "The baseline corpus is small but failure-diverse and exactly attributable."
+    evidence_required: >-
+      baseline.md covers every required corpus class with at least five distinct task families across at least
+      two repositories, includes ilets TASK-0044, stays at or below ten task families, and records exact
+      repository/task/revision/commit evidence for every scored specimen.
+  - id: AC-2
+    requirement: "Primary metrics have stable definitions, explicit denominators, and auditable counted observations."
+    evidence_required: >-
+      baseline.md states the four required formulas, one consistent task-decision counting rule, numerator and
+      denominator values, evidence coverage/UNKNOWNs, and traceable observation tables sufficient to reproduce
+      each computed result.
+  - id: AC-3
+    requirement: "The audit distinguishes over-governance from legitimate material mechanism authority."
+    evidence_required: >-
+      Every counted Architect HOW decision is classified with consequence-based rationale as either materially
+      justified or unjustified implementation-local HOW; category labels alone are never the rationale.
+  - id: AC-4
+    requirement: "The audit does not misclassify newly discovered truth as preventable Architect authority miss."
+    evidence_required: >-
+      Every authority-miss numerator event identifies canonical pre-execution evidence that was sufficient to
+      close the material decision; insufficient evidence is classified separately and not counted as a preventable miss.
+  - id: AC-5
+    requirement: "GOV-B receives a bounded evidence basis without GOV-A becoming another design artifact."
+    evidence_required: >-
+      baseline.md identifies only reproduced current pressure points and their exact evidence, contains no new
+      governance framework or expanded doctrine, and remains usable as a compact input to the already closed GOV-B direction.
+  - id: AC-6
+    requirement: "Audit execution is mutation-bounded and reviewable."
+    evidence_required: >-
+      The only execution mutations are baseline.md and report.yaml under TASK-0019; all external repositories
+      remain read-only; report.yaml binds the exact baseline evidence and returns NEEDS_REVIEW.
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Resolve TASK-0019 revision 1 at exact handoff base; verify agent-skills topology and EXECUTION capabilities before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Resolve current exact refs for agent-skills, ilets, and SF used by the audit; select the smallest corpus satisfying every required coverage class and record exact immutable evidence identities."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Build the counted-observation evidence table first, then compute all four metrics from that table; preserve UNKNOWN where canonical evidence is insufficient."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Verify TASK-0044-specific observations are abstracted only as decision-ownership evidence and no IELTS domain rule is promoted into generic governance conclusions."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Verify git diff from execution base contains only .agent/tasks/TASK-0019/baseline.md before report publication and only baseline.md plus report.yaml after publication."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Publish the truthful report, verify final dev identity and unchanged external repositories, and return NEEDS_REVIEW."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
