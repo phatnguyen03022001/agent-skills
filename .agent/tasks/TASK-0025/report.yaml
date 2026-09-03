@@ -1,0 +1,178 @@
+protocol_version: 3
+
+task_id: TASK-0025
+task_revision: 1
+report_revision: 1
+state: REPORTED
+terminal_status: NEEDS_REVIEW
+
+task_source:
+  path: .agent/tasks/TASK-0025/task.yaml
+  commit: "c045d9cf79c5293b7343c7f92c2d2578225e292e"
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "1ccad2229198e82759fd263ebd71c48c2600280b"
+  pre_execution_head: "1ccad2229198e82759fd263ebd71c48c2600280b"
+  final_execution_head: "c045d9cf79c5293b7343c7f92c2d2578225e292e"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "16217bb78a578160efb68afc84acdeff9c36ed38"
+  observed_revision: "16217bb78a578160efb68afc84acdeff9c36ed38"
+
+execution_skills_used:
+  required:
+    - executor
+    - verification
+    - simplicity
+  recommended: []
+  external:
+    - superpowers:using-superpowers
+    - superpowers:executing-plans
+    - superpowers:verification-before-completion
+    - superpowers:receiving-code-review
+
+pre_execution_checks:
+  protocol_version_supported: true
+  handoff_type_confirmed: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  working_tree_clean: false
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - github_actions_read
+  available:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - github_actions_read
+  missing: []
+  passed: true
+  evidence: "Fresh GitHub and local Git reads confirmed the exact repository, candidate parent, dev and main refs, task identity, and origin binding before report publication."
+
+authoritative_verification:
+  required: true
+  performed: true
+  result: SUCCESS
+  evidence: "Existing Validate skill library workflow run 33729112493 completed success with path .github/workflows/validate-skill-library.yml and head_sha exactly c045d9cf79c5293b7343c7f92c2d2578225e292e. Its validate job, checkout, validator, and unit-test steps completed success. This CI result is recorded as evidence only and does not establish stable-adoption PASS."
+
+local_hygiene:
+  result: RETAINED_FOR_EVIDENCE
+  run_root: ""
+  cleanup_performed: false
+  retained:
+    - identity: ".DS_Store"
+      reason: "Operator-owned untracked local state preserved without staging, modification, cleanup, deletion, or overwrite."
+    - identity: ".codex/"
+      reason: "Operator-owned untracked local state preserved without staging, modification, cleanup, deletion, or overwrite."
+  evidence: "The designated local repository remains the canonical local working copy. No destructive handling or adoption of operator-owned state was performed."
+
+changed_files:
+  - path: .agent/tasks/TASK-0025/gate.md
+    summary: "Bounded GOV-G gate evidence already present in the existing candidate."
+    new_file: true
+    in_scope: true
+    structure_authorized: true
+  - path: scripts/test_validate_skill_library.py
+    summary: "Bounded TASK-0025 stable-adoption regression additions already present in the existing candidate."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+
+commits_created:
+  - sha: "c045d9cf79c5293b7343c7f92c2d2578225e292e"
+    message: "test(TASK-0025): add stable adoption gate evidence"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: "The existing candidate is the exact direct child of authorized base 1ccad2229198e82759fd263ebd71c48c2600280b and contains only the bounded gate artifact plus the authorized existing test-companion additions. No reusable governance semantic, workflow, template, validator, README, external repository, or operator-state mutation was performed in this continuation."
+  - criterion_id: AC-2
+    status: NOT_PROVEN
+    evidence: "The P1 review found that several required adversarial claims are supported mainly by prose and identity assertions rather than sufficient executable or independently reconstructed consequence evidence. Gate PASS claims for consequence ownership, materiality, and local-state behavior are therefore not authoritative stable-adoption PASS evidence."
+  - criterion_id: AC-3
+    status: NOT_PROVEN
+    evidence: "The historical TASK-0044 replay and fresh IELTS TASK-0045 plus SF TASK-0008 identities were resolved, but the current regression evidence does not sufficiently executable-prove the required pilot and replay conclusions for stable adoption. No semantic defect has been established."
+  - criterion_id: AC-4
+    status: NOT_PROVEN
+    evidence: "The GitHub-first local matrix and post-publication reconciliation requirements are present in the accepted authority, but the current regression additions do not sufficiently exercise or independently reconstruct every required consequence."
+  - criterion_id: AC-5
+    status: PASS
+    evidence: "No external repository was mutated. Generic agent-skills remains free of operator-specific path, presentation, and runtime preferences; architect-profile remains the profile authority and Agent Runtime remains an optional capability surface."
+  - criterion_id: AC-6
+    status: PASS
+    evidence: "Run 33729112493 is the existing Validate skill library workflow, completed success, and resolved exactly to candidate c045d9cf79c5293b7343c7f92c2d2578225e292e."
+  - criterion_id: AC-7
+    status: NOT_PROVEN
+    evidence: "Stable promotion was not performed because AC-2, AC-3, and AC-4 are not sufficiently proven. Main remained exactly 76f2d3877d1698f91eb5a6117e2301ed49480379."
+  - criterion_id: AC-8
+    status: PASS
+    evidence: "This report is published only as the direct report-only child of candidate c045d9cf79c5293b7343c7f92c2d2578225e292e on dev. Final ref refresh and local reconciliation are required and recorded below before the Executor stops."
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: "Fresh GitHub refs resolved dev=c045d9cf79c5293b7343c7f92c2d2578225e292e and main=76f2d3877d1698f91eb5a6117e2301ed49480379. Candidate c045d9cf79c5293b7343c7f92c2d2578225e292e has exact parent 1ccad2229198e82759fd263ebd71c48c2600280b, and TASK-0025 revision 1 resolves to blob c3da6a4d52d48d54dd7b7e0029cc6dbdcc4a7011."
+  - check_id: CHECK-2
+    result: PASS
+    evidence: "The existing candidate changed only .agent/tasks/TASK-0025/gate.md and scripts/test_validate_skill_library.py. This report-only continuation did not modify either file or any reusable governance semantic."
+  - check_id: CHECK-3
+    result: "PASS_RECORDED"
+    evidence: "The existing candidate record contains local validator exit 0, full unittest 97/97, focused TASK-0025 regression 7/7, and git diff --check exit 0. These prior results are recorded without rerunning or reinterpreting the candidate as stable-adoption PASS."
+  - check_id: CHECK-4
+    result: PASS
+    evidence: "Existing Validate skill library workflow run 33729112493 completed success with exact candidate head_sha c045d9cf79c5293b7343c7f92c2d2578225e292e."
+  - check_id: CHECK-5
+    result: NOT_PERFORMED
+    evidence: "Main promotion was intentionally not attempted because required adversarial evidence is insufficient. Main remains 76f2d3877d1698f91eb5a6117e2301ed49480379."
+  - check_id: CHECK-6
+    result: PASS
+    evidence: "The report is the sole report-only child of c045d9cf79c5293b7343c7f92c2d2578225e292e on dev. After publication, GitHub dev and main were refreshed and the designated local copy was reconciled to final dev with origin identity preserved; operator-owned untracked state remained untouched."
+
+discovered_gaps:
+  - gap_id: GOV-G-P1-EVIDENCE-STRENGTH
+    classification: BLOCKING
+    type: verification
+    severity: high
+    description: "Several required GOV-G adversarial claims are supported mainly by prose and identity assertions rather than sufficient executable or independently reconstructed consequence evidence."
+    evidence: "Read-only review of scripts/test_validate_skill_library.py identified the affected assertions; gate.md PASS claims for those rows are not authoritative PASS evidence."
+    impact: "Stable adoption and main promotion cannot be safely accepted."
+    blocks_current_task: true
+    action_taken: "Recorded the defect truthfully, did not modify the candidate, did not rerun it as PASS, and stopped promotion."
+    suggested_next_step: reverify
+
+structural_observations: []
+
+deviations_from_task:
+  - "Stable promotion was not performed because the required adversarial evidence gate is not sufficiently proven."
+  - "No semantic correction was attempted; no reusable semantic defect has been established."
+
+blockers:
+  - "REVERIFY_REQUIRED: AC-2, AC-3, and AC-4 remain insufficiently proven for stable adoption."
+
+working_tree_after:
+  clean: false
+  summary: "Local HEAD equals final GitHub dev after report publication. The only remaining local differences are preserved operator-owned untracked .DS_Store and .codex/; no tracked file is dirty."
+
+result: REVERIFY_REQUIRED
