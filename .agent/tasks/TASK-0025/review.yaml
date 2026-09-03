@@ -1,0 +1,58 @@
+protocol_version: 3
+
+task_id: TASK-0025
+task_revision: 1
+review_revision: 1
+state: REVISION_REQUIRED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0025/report.yaml
+  commit: "03f6f69794a1791c14bbcdfa916a67a537e699a0"
+  report_revision: 1
+
+independence:
+  reviewer_role: ARCHITECT
+  separate_session_from_executor: true
+  exact_report_identity_verified: true
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: REVISION_REQUIRED
+  verifier_evidence: PARTIAL
+
+gap_disposition:
+  - gap_id: GOV-G-P1-EVIDENCE-STRENGTH
+    disposition: REVISION_REQUIRED
+    reason: >-
+      The exact candidate and exact-sha CI are valid, but AC-2, AC-3, and AC-4 remain
+      insufficiently proven. Several stable-adoption cases are asserted mainly through
+      prose/identity presence rather than executable consequence tests or independently
+      reconstructed exact evidence. Stable main promotion therefore remains forbidden.
+
+follow_up_tasks:
+  - task_id: TASK-0025
+    revision: 2
+    purpose: >-
+      Strengthen GOV-G proof quality only: replace weak prose/identity assertions with
+      executable consequence tests or independently reconstructed exact evidence for the
+      required local-state, materiality/ownership, historical replay, and fresh-pilot
+      claims. Reusable governance semantics remain frozen.
+
+promotion_readiness:
+  eligible_for_candidate_capture: false
+  reason: >-
+    Main promotion is not eligible until TASK-0025 revision 2 independently proves all
+    required GOV-G gates on a new exact candidate and exact-candidate CI passes.
+
+notes:
+  - "Candidate c045d9cf79c5293b7343c7f92c2d2578225e292e correctly failed closed and is not a stable promotion candidate."
+  - "Workflow run 33729112493 succeeded for exactly c045d9cf79c5293b7343c7f92c2d2578225e292e, but CI success does not cure insufficient semantic proof."
+  - "No reusable semantic defect has been established; revision authority is limited to evidence/gate-test strength."
+  - "main remains 76f2d3877d1698f91eb5a6117e2301ed49480379."
