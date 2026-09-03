@@ -1,0 +1,196 @@
+protocol_version: 3
+
+task_id: TASK-0023
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: continuation
+  task_id: TASK-0022
+  gap_id: GOV-E1_HISTORICAL_REPLAY
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "7107bb6786bd0e9c6663bf22efe9c76ffb8b8875"
+
+architect_analysis_skills:
+  - architect
+  - simplicity
+
+execution_skills:
+  required:
+    - executor
+    - verification
+    - simplicity
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: ".agent/tasks/TASK-0022/review.yaml@7107bb6786bd0e9c6663bf22efe9c76ffb8b8875"
+    role: "Accepted GOV-D authority and paired governance eval corpus."
+    precedence: 1
+  - source: ".agent/tasks/TASK-0019/baseline.md"
+    role: "Accepted GOV-A baseline metrics and historical pressure points."
+    precedence: 2
+  - source: "phatnguyen03022001/ilets historical TASK-0044 family"
+    role: "Primary historical regression evidence; resolve exact immutable evidence read-only."
+    precedence: 3
+  - source: "phatnguyen03022001/SF historical bounded tasks"
+    role: "Simple/main-only comparison evidence; resolve exact immutable evidence read-only."
+    precedence: 4
+
+structure_authority:
+  status: RESOLVED
+  source: "Closed GOV-E rollout."
+  rationale: "This is a read-only cross-repository replay that may persist only bounded evaluation evidence and the normal report under TASK-0023 in agent-skills."
+
+objective: "Replay representative historical IELTS and SF task lineages against the accepted GOV-B/C/D semantics to measure preventable Architect HOW leakage and revision/review ceremony before fresh GOV-E2 pilots."
+
+scope:
+  required_changes:
+    - "Re-resolve exact immutable historical evidence; do not rely on chat history as authority."
+    - "Include the IELTS TASK-0044 revision family and at least one simple bounded SF task; add other historical cases only when needed for failure diversity."
+    - "For each replayed lineage, distinguish preventable local-HOW/restrictive-authority churn from legitimate material authority correction, verifier failure, stale state, or newly discovered target truth."
+    - "State the minimal counterfactual task boundary under accepted GOV-B semantics and identify which historical revisions/review reconstruction would likely remain or disappear."
+    - "Compute the GOV-A pilot metrics only where canonical denominators are defensible; otherwise record UNKNOWN instead of estimating."
+    - "Identify one suitable fresh IELTS pilot and one suitable fresh SF pilot from current target truth for GOV-E2, but do not create or mutate target tasks."
+    - "Persist a compact replay artifact plus canonical Executor report in TASK-0023 and stop at NEEDS_REVIEW."
+  allowed_existing_files_or_components:
+    - ".agent/tasks/TASK-0023"
+    - ".agent/tasks/TASK-0019 baseline evidence"
+    - "scripts/fixtures/governance_eval_corpus.json"
+    - "read-only exact evidence from phatnguyen03022001/ilets"
+    - "read-only exact evidence from phatnguyen03022001/SF"
+
+invariants:
+  - "Historical facts are not rewritten or retroactively declared compliant/noncompliant beyond exact evidence."
+  - "Missing evidence is UNKNOWN, not guessed."
+  - "A revision disappears only when its sole cause is local HOW or reconstructable ceremony under the accepted semantics."
+  - "Material authority, public/trust/data/ownership consequences and genuine verification failures remain governed."
+  - "No external repository mutation occurs."
+
+forbidden_changes:
+  - "Do not modify reusable governance semantics, corpus semantics, validator/tests, workflows, main, release state, architect-profile, agent-standards, agent-documents, agent-runtime, ilets, SF, or any external repository."
+  - "Do not create target tasks, branches, PRs, issues, tags, releases, or synthetic historical evidence."
+  - "Do not turn the replay into a new planner, metric framework, classifier, registry, or lifecycle."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_write
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Historical replay is exact, failure-diverse, and consequence-based."
+    evidence_required: "Replay binds immutable source identities and separates local-HOW churn from legitimate material or verification gates."
+  - id: AC-2
+    requirement: "TASK-0044 counterfactual directly tests the redesign root cause."
+    evidence_required: "Replay identifies which TASK-0044 revisions would remain/disappear and why without changing its product semantics."
+  - id: AC-3
+    requirement: "A simple SF lineage proves the redesign does not under-govern low-complexity work."
+    evidence_required: "Replay shows required material boundaries and evidence remain while unnecessary prescription/reconstruction is removed."
+  - id: AC-4
+    requirement: "Pilot metrics are evidence-backed rather than aspirational."
+    evidence_required: "Each metric includes numerator/denominator and exact evidence, or UNKNOWN with the missing evidence named."
+  - id: AC-5
+    requirement: "Fresh GOV-E2 pilots are selected without pre-solving their implementation."
+    evidence_required: "One current IELTS pilot and one current SF pilot are identified by objective/material boundary only; no target task is created."
+  - id: AC-6
+    requirement: "Execution remains read-only outside TASK-0023."
+    evidence_required: "Exact diff contains only TASK-0023 replay/report evidence and all external refs remain unchanged."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Resolve TASK-0023 revision 1 at exact base, current {dev, main} topology, accepted TASK-0022 review, and required capabilities before write."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Resolve immutable historical IELTS/SF task/report/review evidence and current target refs read-only; record exact identities used."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Apply accepted governance eval semantics to each counterfactual and fail if a material consequence is reclassified as local merely to reduce revisions."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Verify replay claims and metric arithmetic against cited canonical evidence; use UNKNOWN where proof is incomplete."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Verify exact candidate/report diff is confined to TASK-0023 and no external repository/ref changed."
+      required: true
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Resolve TASK-0023 revision 1 at exact base, current {dev, main} topology, accepted TASK-0022 review, and required capabilities before write."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Resolve immutable historical IELTS/SF task/report/review evidence and current target refs read-only; record exact identities used."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Apply accepted governance eval semantics to each counterfactual and fail if a material consequence is reclassified as local merely to reduce revisions."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Verify replay claims and metric arithmetic against cited canonical evidence; use UNKNOWN where proof is incomplete."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Verify exact candidate/report diff is confined to TASK-0023 and no external repository/ref changed."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
