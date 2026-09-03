@@ -1,0 +1,212 @@
+protocol_version: 3
+
+task_id: TASK-0022
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: continuation
+  task_id: TASK-0021
+  gap_id: GOV-D_PAIRED_GOVERNANCE_EVALS
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "bb2ae08b1d3609e7375a3510bb859b61d98b3616"
+
+architect_analysis_skills:
+  - architect
+  - simplicity
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: ".agent/tasks/TASK-0021/review.yaml@bb2ae08b1d3609e7375a3510bb859b61d98b3616"
+    role: "Accepted GOV-C authority and rollout predecessor."
+    precedence: 1
+  - source: "protocols/TASK_PROTOCOL.md@bb2ae08b1d3609e7375a3510bb859b61d98b3616"
+    role: "Current decision-ownership and consequence-based materiality semantics under evaluation."
+    precedence: 2
+  - source: ".agent/tasks/TASK-0019/baseline.md@bb2ae08b1d3609e7375a3510bb859b61d98b3616"
+    role: "Accepted baseline evidence motivating over-governance and authority-miss regression coverage."
+    precedence: 3
+
+structure_authority:
+  status: RESOLVED
+  source: "Operator-closed GOV-D rollout and accepted GOV-B/GOV-C semantics."
+  rationale: >-
+    GOV-D adds one reusable generic evaluation corpus inside an existing repository-native test/fixture ownership area and
+    the smallest existing regression-test support needed to keep that corpus structurally valid. It creates no new top-level
+    governance owner, role, lifecycle, protocol version, decision engine, classifier, or framework.
+
+objective: >-
+  Materialize a small generic paired governance-evaluation corpus that can detect both Architect over-governance and Executor
+  under-governance without turning consequence-based judgment into a category matrix. Preserve expected outcomes as test fixtures,
+  not executable authority, so GOV-E can use them for historical dry-runs and real agent pilots.
+
+scope:
+  required_changes:
+    - >-
+      Persist one machine-readable generic decision-ownership evaluation corpus in the smallest existing repository-native
+      test/fixture location. Do not create a new top-level directory or a second governance semantic owner.
+    - >-
+      Keep the corpus intentionally small: six to eight paired scenarios. Every pair must hold the implementation domain/surface
+      substantially constant while changing the material consequence, so one variant remains local Executor judgment and the
+      paired variant requires Architect authority or revision.
+    - >-
+      Cover these consequence contrasts without encoding target-specific product rules: local route implementation vs changing
+      public route/contract semantics; mechanical SQL organization vs changing persistence semantics; internal helper/module vs
+      creating a cross-component reusable/shared ownership boundary; use of an already-approved dependency vs introducing a
+      materially new dependency/cost/topology consequence; generated/local companion mechanics vs changing an externally meaningful
+      generated/public contract; implementing already-frozen auth/security behavior vs changing the trust boundary; preference-only
+      alternate local HOW vs a HOW that creates a material consequence; and, if needed for the sixth-to-eighth pair budget,
+      unexpected local companion work vs a cross-component ownership move.
+    - >-
+      Each case must record a stable case identity, pair identity, short scenario, evaluation kind, expected outcome, and concise
+      consequence-based rationale sufficient for a later model/pilot evaluator to judge behavior. Expected outcomes are regression
+      expectations only; they do not grant task authority or replace Architect judgment on live repository truth.
+    - >-
+      Include both over-governance and under-governance failure expectations. A case where Architect unnecessarily prescribes or
+      revises valid local HOW must fail; a case where Executor proceeds through a material semantic/authority change without
+      escalation must fail.
+    - >-
+      Add the smallest deterministic regression checks needed to keep the corpus structurally sound: unique case IDs, complete
+      two-case pairs, allowed evaluation kinds/outcomes, required fields, bounded pair count, and no target-specific IELTS/SF rule
+      leakage. Do not implement a materiality classifier, decision matrix, policy engine, prompt scorer, model runner, or new eval framework.
+    - >-
+      Preserve current protocol/Architect/Executor/report/review semantics unchanged unless a direct contradiction is reproduced.
+      GOV-D evaluates the accepted model; it does not redesign it.
+    - >-
+      Run the existing validator, full existing unit-test suite including the new eval-integrity regressions, and git diff --check
+      on one exact candidate; publish the candidate to dev; require the unchanged Validate skill library GitHub Actions workflow to
+      PASS on that exact SHA; publish the canonical Executor report; stop at NEEDS_REVIEW.
+
+  allowed_existing_files_or_components:
+    - "existing repository-native validation/test fixture ownership area"
+    - "existing validator regression test suite"
+    - ".agent/tasks/TASK-0022/report.yaml"
+
+invariants:
+  - "The eval corpus tests decision ownership/outcome, not preferred wording."
+  - "Materiality remains consequence-based rather than category-based."
+  - "Executor-local and Architect-material variants are paired rather than encoded as a universal classifier."
+  - "The corpus is regression evidence, not live task authority."
+  - "No IELTS-specific or SF-specific product semantics become generic governance rules."
+  - "No new role, lifecycle, task dialect/version, decision engine, eval framework, registry, cache, compiler, orchestrator, or PROGRAM delegation is introduced."
+
+forbidden_changes:
+  - "Do not change Task Protocol, Architect, Executor, task/report/review contracts or templates, task normalization, timing semantics, lifecycle, PROGRAM semantics, workflows, dependencies, README, release machinery, topology, main, or historical artifacts unless a direct contradiction makes the task BLOCKING rather than locally fixable."
+  - "Do not modify agent-standards, agent-documents, agent-runtime, architect-profile, ilets, SF, or any external repository."
+  - "Do not create a materiality classifier, decision matrix, model-scoring service, prompt benchmark framework, new top-level eval system, or automated Architect replacement."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_write
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "The corpus is small, generic, paired, and consequence-sensitive."
+    evidence_required: "Six to eight complete pairs cover both local and material variants with stable identities, expected outcomes, and consequence-based rationales; no target-specific product doctrine appears."
+  - id: AC-2
+    requirement: "The evals detect both over-governance and under-governance."
+    evidence_required: "At least one pair makes preference-only Architect intervention an expected failure and at least one pair makes un-escalated Executor material-authority drift an expected failure; local alternatives remain allowed when material consequences stay fixed."
+  - id: AC-3
+    requirement: "The suite does not become a classifier or second governance model."
+    evidence_required: "Implementation contains fixture/corpus data and bounded integrity tests only; no decision engine, category matrix, model runner, prompt scorer, framework, new role/lifecycle/version, or semantic duplication is introduced."
+  - id: AC-4
+    requirement: "Eval integrity is deterministic and regression-safe."
+    evidence_required: "Tests reject duplicate/missing IDs, incomplete pairs, unsupported kinds/outcomes, malformed required fields, pair-count drift, and explicit target-specific rule leakage while accepting the canonical corpus."
+  - id: AC-5
+    requirement: "Accepted GOV-B/GOV-C governance remains unchanged."
+    evidence_required: "Exact candidate diff is bounded to the corpus/test ownership plus canonical report; protocol, roles, contracts/templates, workflows, dependencies, external repositories, main, and historical evidence remain unchanged."
+  - id: AC-6
+    requirement: "Exact candidate verification passes before review."
+    evidence_required: "python3 scripts/validate_skill_library.py, the full unit-test suite, git diff --check, and the unchanged Validate skill library GitHub Actions workflow all PASS on the same exact candidate SHA before report publication."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Resolve TASK-0022 revision 1 at exact handoff base, accepted TASK-0021 authority, exact {dev, main} topology, and all required EXECUTION capabilities before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Inspect current test/fixture conventions and choose the smallest existing repository-native location; do not create a new top-level eval framework."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Build the paired corpus and integrity regressions without implementing a materiality classifier or changing accepted governance semantics; inspect exact diff for target-specific leakage and out-of-scope surfaces."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Run python3 scripts/validate_skill_library.py, the full repository unit-test suite, and git diff --check on the exact candidate; all must PASS."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Publish the exact candidate to dev and require the unchanged Validate skill library workflow to conclude success for that exact SHA."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Publish the canonical report only after exact-candidate verification, verify final refs/topology and unchanged main, then stop at NEEDS_REVIEW."
+      required: true
+  authoritative_verification:
+    required: true
+    mechanism: "Existing .github/workflows/validate-skill-library.yml on the exact pushed candidate."
+    expected_signal: "Validate skill library concludes success for the exact candidate SHA."
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
