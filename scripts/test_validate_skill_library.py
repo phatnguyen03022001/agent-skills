@@ -1904,34 +1904,122 @@ class Task0025StableAdoptionGateTests(unittest.TestCase):
         ):
             self.assertIn(phrase, combined)
 
-    def test_github_first_local_matrix_requires_fresh_remote_reconciliation(self) -> None:
-        executor = (ROOT / "executor" / "SKILL.md").read_text(encoding="utf-8").lower()
-        for phrase in (
-            "authorized remote git state is canonical repository truth",
-            "local state is subordinate execution state",
-            "absent or safely empty",
-            "matching clean/behind",
-            "dirty/ahead/unknown",
-            "identity mismatch",
-            "stale remote state",
-            "preserve it and do not auto-push, reset, stash, clean, delete, move, overwrite, or adopt it",
-            "after github publication or another task-authorized canonical-ref mutation, refresh canonical github truth again",
-            "fast-forward/equivalent semantics",
-            "final canonical ref",
-            "temporary/reference/disposable checkouts remain non-authoritative",
-            "cannot substitute",
-            "phone-only or remote-only execution remains valid",
-        ):
-            self.assertIn(phrase, executor)
-        self.assertLess(executor.index("before local mutation"), executor.index("after github publication"))
+    def git(self, cwd: Path, *args: str) -> str:
+        result = subprocess.run(
+            ["git", *args],
+            cwd=cwd,
+            text=True,
+            capture_output=True,
+            check=True,
+        )
+        return result.stdout.strip()
 
-        task = (ROOT / ".agent" / "tasks" / "TASK-0025" / "task.yaml").read_text(encoding="utf-8").lower()
-        for phrase in (
-            "architect remote-only review/task-authority write may temporarily advance github beyond a local copy",
-            "no later local mutation may trust or use that stale copy without fresh github resolution and safe reconciliation",
-            "no instant-mirror requirement",
-        ):
-            self.assertIn(phrase, task)
+    def is_ancestor(self, cwd: Path, ancestor: str, descendant: str) -> bool:
+        return subprocess.run(
+            ["git", "merge-base", "--is-ancestor", ancestor, descendant],
+            cwd=cwd,
+            text=True,
+            capture_output=True,
+        ).returncode == 0
+
+    def test_git_state_facts_distinguish_safe_fast_forward_from_local_authority_risks(self) -> None:
+        """A future gate must not mistake Git facts for permission to reconcile."""
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = Path(directory)
+            absent = fixture / "absent"
+            self.assertFalse((absent / ".git").exists())
+
+            empty = fixture / "empty"
+            empty.mkdir()
+            self.git(empty, "init", "--initial-branch=main")
+            self.assertEqual(self.git(empty, "remote"), "")
+            self.assertEqual(self.git(empty, "status", "--porcelain"), "")
+
+            remote = fixture / "canonical.git"
+            self.git(fixture, "init", "--bare", "--initial-branch=main", str(remote))
+            seed = fixture / "seed"
+            self.git(fixture, "clone", remote.as_uri(), str(seed))
+            self.git(seed, "config", "user.name", "Regression")
+            self.git(seed, "config", "user.email", "regression@example.invalid")
+            (seed / "authority.txt").write_text("base\n", encoding="utf-8")
+            self.git(seed, "add", "authority.txt")
+            self.git(seed, "commit", "-m", "base")
+            self.git(seed, "push", "origin", "main")
+
+            local = fixture / "local"
+            writer = fixture / "writer"
+            temporary = fixture / "temporary"
+            self.git(fixture, "clone", remote.as_uri(), str(local))
+            self.git(fixture, "clone", remote.as_uri(), str(writer))
+            self.git(fixture, "clone", remote.as_uri(), str(temporary))
+            self.git(writer, "config", "user.name", "Regression")
+            self.git(writer, "config", "user.email", "regression@example.invalid")
+            self.assertEqual(self.git(local, "remote", "get-url", "origin"), remote.as_uri())
+            self.assertEqual(self.git(temporary, "remote", "get-url", "origin"), remote.as_uri())
+            self.assertNotEqual(local.resolve(), temporary.resolve())
+
+            (writer / "authority.txt").write_text("remote-one\n", encoding="utf-8")
+            self.git(writer, "add", "authority.txt")
+            self.git(writer, "commit", "-m", "remote one")
+            self.git(writer, "push", "origin", "main")
+            cached_before_fetch = self.git(local, "rev-parse", "refs/remotes/origin/main")
+            advertised_before_fetch = self.git(local, "ls-remote", "origin", "refs/heads/main").split()[0]
+            self.assertNotEqual(cached_before_fetch, advertised_before_fetch)
+
+            self.git(local, "fetch", "origin", "main")
+            self.assertEqual(self.git(local, "rev-parse", "refs/remotes/origin/main"), advertised_before_fetch)
+            self.assertEqual(self.git(local, "status", "--porcelain"), "")
+            self.assertTrue(self.is_ancestor(local, "HEAD", "origin/main"))
+            self.git(local, "merge", "--ff-only", "origin/main")
+            self.assertEqual(self.git(local, "rev-parse", "HEAD"), advertised_before_fetch)
+
+            (writer / "authority.txt").write_text("remote-two\n", encoding="utf-8")
+            self.git(writer, "add", "authority.txt")
+            self.git(writer, "commit", "-m", "remote two")
+            self.git(writer, "push", "origin", "main")
+            self.git(local, "fetch", "origin", "main")
+            (local / "operator-owned.txt").write_text("retain\n", encoding="utf-8")
+            self.assertIn("?? operator-owned.txt", self.git(local, "status", "--porcelain"))
+            self.assertTrue(self.is_ancestor(local, "HEAD", "origin/main"))
+
+            self.git(local, "config", "user.name", "Regression")
+            self.git(local, "config", "user.email", "regression@example.invalid")
+            (local / "local-only.txt").write_text("ahead\n", encoding="utf-8")
+            self.git(local, "add", "local-only.txt")
+            self.git(local, "commit", "-m", "local only")
+            self.assertFalse(self.is_ancestor(local, "HEAD", "origin/main"))
+            self.assertFalse(self.is_ancestor(local, "origin/main", "HEAD"))
+
+            other = fixture / "other.git"
+            self.git(fixture, "init", "--bare", "--initial-branch=main", str(other))
+            self.git(local, "remote", "set-url", "origin", other.as_uri())
+            self.assertNotEqual(self.git(local, "remote", "get-url", "origin"), remote.as_uri())
+
+    def test_governance_corpus_pairs_preserve_hand_checked_consequence_outcomes(self) -> None:
+        document = json.loads((ROOT / EVAL_CORPUS).read_text(encoding="utf-8"))
+        self.assertEqual(eval_corpus_errors(document), [])
+        cases = {case["case_id"]: case for case in document["cases"]}
+        expected = {
+            "route-contract": ("route-local", "route-public-contract"),
+            "persistence-semantics": ("sql-mechanical", "persistence-semantics"),
+            "ownership-boundary": ("module-local", "shared-ownership"),
+            "dependency-topology": ("approved-dependency", "new-dependency"),
+            "generated-contract": ("generated-local", "generated-public"),
+            "auth-trust": ("frozen-auth", "trust-boundary"),
+            "local-how": ("preference-how", "material-how"),
+            "companion-ownership": ("local-companion", "cross-component-move"),
+        }
+        self.assertEqual(set(case["pair_id"] for case in cases.values()), set(expected))
+        for pair_id, (local_case_id, material_case_id) in expected.items():
+            with self.subTest(pair_id=pair_id):
+                local_case = cases[local_case_id]
+                material_case = cases[material_case_id]
+                self.assertEqual(local_case["pair_id"], pair_id)
+                self.assertEqual(local_case["evaluation_kind"], "over_governance")
+                self.assertEqual(local_case["expected_outcome"], "ALLOW_LOCAL")
+                self.assertEqual(material_case["pair_id"], pair_id)
+                self.assertEqual(material_case["evaluation_kind"], "under_governance")
+                self.assertEqual(material_case["expected_outcome"], "ESCALATE_TO_ARCHITECT")
 
     def test_historical_replay_and_fresh_pilots_keep_exact_accepted_identities(self) -> None:
         replay = (ROOT / ".agent" / "tasks" / "TASK-0023" / "replay.md").read_text(encoding="utf-8")
