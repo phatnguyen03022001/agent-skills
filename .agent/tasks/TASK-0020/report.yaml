@@ -1,0 +1,250 @@
+protocol_version: 3
+
+task_id: TASK-0020
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0020/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "8ed0ee8af12efb3bed23c7e2901b15f00628de85"
+  pre_execution_head: "8ed0ee8af12efb3bed23c7e2901b15f00628de85"
+  final_execution_head: "44566b62a31c4043f3059c5ffdcd760dfee02c8f"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "76f2d3877d1698f91eb5a6117e2301ed49480379"
+  observed_revision: "76f2d3877d1698f91eb5a6117e2301ed49480379"
+
+execution_skills_used:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+  external:
+    - superpowers:using-superpowers
+    - superpowers:test-driven-development
+
+pre_execution_checks:
+  protocol_version_supported: true
+  handoff_type_confirmed: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  working_tree_clean: true
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+  available:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+  missing: []
+  passed: true
+
+authoritative_verification:
+  required: true
+  performed: true
+  result: PASS
+  evidence: >-
+    Existing .github/workflows/validate-skill-library.yml run 33710962608 (run 70) was triggered by push,
+    completed with conclusion success, and had head_sha 44566b62a31c4043f3059c5ffdcd760dfee02c8f. Its validate
+    job completed success; the Validate and Unit tests steps both completed success. No workflow mutation was made.
+
+local_hygiene:
+  result: PASS
+  run_root: "/private/tmp/task0020.SkS7x5"
+  cleanup_performed: true
+  retained: []
+  evidence: >-
+    The exact run-owned root was proven to be the current-run temporary directory, realpath-contained at
+    /private/tmp/task0020.SkS7x5, and free of symlink traversal before recursive cleanup. It was removed and
+    verified absent after candidate verification; no local artifact was retained.
+
+changed_files:
+  - path: architect/SKILL.md
+    summary: >-
+      Delegates local implementation judgment by default after Architect closes material WHAT, BOUNDARY, and PROOF;
+      retains consequence-based material authority and explicit expanded-v3 restrictions.
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: contracts/IMPLEMENTATION_CONTRACT.md
+    summary: >-
+      Aligns contract ownership with positive semantic/component scope, bounded Executor-local structure, and one
+      protocol-owned normalization/default model.
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: executor/SKILL.md
+    summary: >-
+      Requires inspect-before-design, smallest sufficient repo-native HOW, bounded discretion, tightened LOCAL
+      predicates, and consequence-based FOLLOW_UP/BLOCKING behavior.
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: protocols/TASK_PROTOCOL.md
+    summary: >-
+      Defines consequence-based Architect/Executor decision ownership, semantic/component scope and structure
+      semantics, LOCAL handling, and the single protocol-v3 normalization/default table.
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: scripts/test_validate_skill_library.py
+    summary: >-
+      Adds deterministic regressions for sparse normalization, explicit expanded restrictive controls, missing
+      positive authority, and the compact forward task template.
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: scripts/validate_skill_library.py
+    summary: >-
+      Implements the canonical protocol-v3 normalization defaults consumed before task validation while preserving
+      explicit expanded controls and required positive authority fields.
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: templates/task.yaml
+    summary: >-
+      Represents the forward compact protocol-v3 default by omitting redundant implementation-prescription controls
+      while keeping positive scope, acceptance, capability, continuation, and release authority explicit.
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: .agent/tasks/TASK-0020/report.yaml
+    summary: >-
+      Publishes the canonical Executor evidence for the verified implementation candidate and stops at NEEDS_REVIEW.
+    new_file: true
+    in_scope: true
+    structure_authorized: true
+
+commits_created:
+  - sha: "44566b62a31c4043f3059c5ffdcd760dfee02c8f"
+    message: "fix(agent): correct GOV-B decision ownership semantics"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: >-
+      TASK_PROTOCOL.md, architect/SKILL.md, and executor/SKILL.md explicitly make Executor implementation judgment
+      the default inside positive authority, reject uncertainty alone as escalation, and escalate only for governing
+      or material consequence changes.
+  - criterion_id: AC-2
+    status: PASS
+    evidence: >-
+      Executor requires repository-pattern inspection, the smallest sufficient repo-native implementation, unchanged
+      authority, deterministic proof, bounded LOCAL predicates, and consequence-based FOLLOW_UP/BLOCKING handling.
+  - criterion_id: AC-3
+    status: PASS
+    evidence: >-
+      Protocol, contract, and role guidance define positive semantic/component scope resolved to repository files,
+      treat necessary unexpected local companions as report/review evidence, and distinguish Executor-local internal
+      structure from Architect-owned material ownership, component, public/shared, and cross-component structure.
+  - criterion_id: AC-4
+    status: PASS
+    evidence: >-
+      TASK_PROTOCOL.md contains the single protocol-v3 normalization/default table; validate_skill_library.py consumes
+      the same normalized model. Missing authority remains fail-closed, while omitted implementation prescription
+      permits only bounded discretion inside positive authority.
+  - criterion_id: AC-5
+    status: PASS
+    evidence: >-
+      Regression tests prove sparse controls normalize deterministically, explicit expected_files_are_restrictive
+      and structure restrictions retain restrictive meaning, missing positive authority fails, protocol version stays
+      3, and no historical task artifact is changed.
+  - criterion_id: AC-6
+    status: PASS
+    evidence: >-
+      One coherent candidate commit changes exactly the seven authorized GOV-B semantic surfaces. Protocol, roles,
+      contract, template, validator, and regressions were adopted together; no contradictory intermediate state was
+      published to dev.
+  - criterion_id: AC-7
+    status: PASS
+    evidence: >-
+      Candidate parent is the exact handoff base and its immutable diff contains only architect/SKILL.md,
+      contracts/IMPLEMENTATION_CONTRACT.md, executor/SKILL.md, protocols/TASK_PROTOCOL.md,
+      scripts/test_validate_skill_library.py, scripts/validate_skill_library.py, and templates/task.yaml.
+      No workflow, README, PROGRAM, profile, historical evidence, external repository, or forbidden governance
+      surface was changed.
+  - criterion_id: AC-8
+    status: PASS
+    evidence: >-
+      On the exact candidate checkout, python3 scripts/validate_skill_library.py passed, python3 -m unittest
+      scripts/test_validate_skill_library.py passed with 73 tests, and git diff --check passed. After publication,
+      Validate skill library run 33710962608 concluded success for the exact candidate SHA with successful Validate
+      and Unit tests steps.
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: >-
+      Before mutation, live login identity was phatnguyen03022001, repository permissions were available, branch
+      topology was exactly {dev, main}, dev equaled 8ed0ee8af12efb3bed23c7e2901b15f00628de85, main equaled
+      76f2d3877d1698f91eb5a6117e2301ed49480379, TASK-0020 revision 1 was APPROVED and execution-ready at that
+      base, accepted TASK-0019 evidence was resolved, pinned authority matched, and all required EXECUTION
+      capabilities were available.
+  - check_id: CHECK-2
+    result: PASS
+    evidence: >-
+      Existing protocol, Architect, Executor, contract, template, validator, and test patterns were inspected
+      before implementation. The closed fifteen-skill taxonomy and protocol version 3 were preserved; no new parser,
+      dependency, framework, lifecycle, role, or task dialect was introduced.
+  - check_id: CHECK-3
+    result: PASS
+    evidence: >-
+      TDD regressions were written first and observed RED for the missing normalizer/compact-template behavior.
+      The smallest coherent repo-native implementation then made all focused regressions GREEN and changed only the
+      seven authorized implementation paths.
+  - check_id: CHECK-4
+    result: PASS
+    evidence: >-
+      Exact candidate verification returned PASS for python3 scripts/validate_skill_library.py, PASS for
+      python3 -m unittest scripts/test_validate_skill_library.py with 73 tests, and PASS for git diff --check.
+  - check_id: CHECK-5
+    result: PASS
+    evidence: >-
+      The exact candidate was fast-forward published to dev with force false. Existing
+      .github/workflows/validate-skill-library.yml was unchanged; run 33710962608 on the exact candidate SHA
+      completed success, including successful Validate and Unit tests steps.
+  - check_id: CHECK-6
+    result: PASS
+    evidence: >-
+      This report is the only post-candidate artifact and is published after local and authoritative verification.
+      Final remote ref, parent/diff, exact topology, unchanged main, and report resolution are re-read before returning
+      NEEDS_REVIEW.
+
+discovered_gaps: []
+structural_observations: []
+deviations_from_task: []
+blockers: []
+
+working_tree_after:
+  clean: true
+  summary: >-
+    The exact candidate checkout ended clean after validator, unit-test, diff-check, and safe run-root cleanup.
+    Canonical report publication is a separate post-candidate Executor evidence artifact and does not alter
+    final_execution_head, mutate main, or authorize promotion or release.
+
+result: NEEDS_REVIEW
