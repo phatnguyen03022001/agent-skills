@@ -1,0 +1,43 @@
+protocol_version: 3
+
+task_id: TASK-0022
+task_revision: 1
+review_revision: 1
+state: ACCEPTED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0022/report.yaml
+  commit: "a38d51f6c5b62797a7cab78f5ee0d2d6f447d6b1"
+  report_revision: 1
+
+independence:
+  reviewer_role: ARCHITECT
+  separate_session_from_executor: true
+  exact_report_identity_verified: true
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: PASS
+  verifier_evidence: PASS
+
+gap_disposition: []
+follow_up_tasks: []
+
+promotion_readiness:
+  eligible_for_candidate_capture: false
+  reason: >-
+    GOV-D accepts only the paired governance evaluation corpus and integrity regressions on dev. Stable adoption remains gated by GOV-E pilots and GOV-G release/adoption review.
+
+notes:
+  - "Exact report commit a38d51f6c5b62797a7cab78f5ee0d2d6f447d6b1 is a report-only direct child of candidate 3dc4863b2d8e14a8999f3c745a513854082f15e9, whose direct parent is authorized base 587124739f329fcebb8eeca6b8d4201e8702ecbb."
+  - "The candidate changes only scripts/fixtures/governance_eval_corpus.json and scripts/test_validate_skill_library.py."
+  - "The corpus contains eight complete consequence-paired over-governance/under-governance pairs with only ALLOW_LOCAL and ESCALATE_TO_ARCHITECT expected outcomes; no target-specific product semantics, classifier, policy engine, model runner, prompt scorer, new lifecycle, or governance semantic rewrite is introduced."
+  - "Authoritative GitHub Actions run 33714702471 concluded success on exact candidate SHA 3dc4863b2d8e14a8999f3c745a513854082f15e9."
+  - "No deviations, gaps, blockers, main mutation, workflow mutation, external repository mutation, or unrelated cleanup require deeper review reconstruction."
