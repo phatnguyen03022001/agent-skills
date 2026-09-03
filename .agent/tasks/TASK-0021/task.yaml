@@ -1,0 +1,192 @@
+protocol_version: 3
+
+task_id: TASK-0021
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: continuation
+  task_id: TASK-0020
+  gap_id: GOV-C_SPARSE_EVIDENCE_LIFECYCLE
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "4982be8639eed54ecacb1d357a098b27e7507e1d"
+
+architect_analysis_skills:
+  - architect
+  - simplicity
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: ".agent/tasks/TASK-0020/review.yaml@4982be8639eed54ecacb1d357a098b27e7507e1d"
+    role: "Accepted GOV-B authority."
+    precedence: 1
+  - source: "protocols/TASK_PROTOCOL.md@4982be8639eed54ecacb1d357a098b27e7507e1d"
+    role: "Current evidence/review lifecycle semantics."
+    precedence: 2
+  - source: "contracts/IMPLEMENTATION_REPORT.md@4982be8639eed54ecacb1d357a098b27e7507e1d"
+    role: "Current Executor report obligations."
+    precedence: 3
+  - source: "contracts/ARCHITECT_REVIEW.md@4982be8639eed54ecacb1d357a098b27e7507e1d"
+    role: "Current Architect review obligations."
+    precedence: 4
+
+structure_authority:
+  status: RESOLVED
+  source: "Operator-closed GOV-C rollout and accepted TASK-0020 authority."
+  rationale: "Change only existing evidence/review/timing owners and their validator regressions; add no role, lifecycle, protocol version, artifact type, telemetry framework, or external structure."
+
+objective: "Make protocol-v3 report/review evidence compact and reconstructable, make Architect review evidence-first and trigger-expanded, and omit operational timing from the default hot path while preserving explicit opt-in timing compatibility."
+
+scope:
+  required_changes:
+    - "Keep one protocol-v3 evidence model; compact report/review serialization is not a second dialect or lifecycle."
+    - "Make normal Executor reports evidence indexes that preserve exact task/revision, authorized base, candidate identity, target binding, AC-to-evidence mapping, required verification identity/results, deviations/gaps/blockers, and terminal result."
+    - "Allow omission of redundant successful-process attestations or changed-file enumeration when exact Git/task/verifier evidence reconstructs the same fact; omission never means PASS, permission, or hidden success."
+    - "Keep sparse reports evidence-backed rather than self-attested: shorter prose must retain exact resolvable commit/check/run/path/observable proof as appropriate."
+    - "Preserve truthful failure, blocker, deviation, missing-capability, and verifier-failure reporting."
+    - "Make Architect review evidence-first: exact report/task identity -> candidate diff boundary -> acceptance evidence -> deviations/gaps -> material risk triggers; stop when material predicates are proven."
+    - "Deep implementation reconstruction occurs only for contradiction, unexplained surfaces, weak/missing proof, deviation, material trust/data/public-contract/irreversibility risk, regression signal, or explicitly stronger assurance."
+    - "Do not require revision merely because Architect prefers another local HOW when material authority, invariants, simplicity, and proof pass; reject local HOW only for material consequence or contract/risk violation."
+    - "Remove default clock capture from Architect and Executor hot paths. operational_timing is omitted unless operator/task/performance audit explicitly requests it. Add no timing-enabled or telemetry-mode field."
+    - "When explicitly opted in, retain the existing exact two-RFC3339-UTC-timestamp, boundary-captured, non-authoritative v3 timing semantics; never reconstruct from Git."
+    - "Update existing protocol/role/report-review contract/template/validator/test owners only as needed to express and enforce these semantics."
+    - "Regression-test compact forward forms, prior expanded v3 compatibility, fail-closed missing identity/evidence, timing absent-by-default plus explicit timing compatibility, and closed review-state/authority invariants."
+    - "Preserve GOV-B ownership/task normalization, protocol v3, fifteen skills, lifecycle/continuation/Git/release separation, PROGRAM authority NONE, and external-repo boundaries."
+    - "Create one coherent candidate; run validator, full unit tests, git diff --check; publish to dev; require existing Validate skill library GitHub Actions PASS on that exact SHA; then publish report and stop at NEEDS_REVIEW."
+  allowed_existing_files_or_components:
+    - "Task Protocol evidence/review/timing semantics"
+    - "Architect review procedure"
+    - "Executor report/timing procedure"
+    - "Implementation Report contract"
+    - "Architect Review contract"
+    - "canonical report/review templates"
+    - "existing validator and validator tests"
+
+invariants:
+  - "Exact identity, acceptance proof, verification proof, deviations/gaps, and result remain reconstructable."
+  - "Omission of ritual evidence never means PASS and never grants authority."
+  - "Review judges consequence/evidence, not implementation taste."
+  - "Deep review is trigger-driven."
+  - "Operational timing is omitted by default and remains optional non-authoritative v3 evidence only when explicitly requested."
+  - "Historical expanded-v3 report/review artifacts remain valid and are not rewritten."
+
+forbidden_changes:
+  - "Do not change task normalization/default semantics, task template, IMPLEMENTATION_CONTRACT, GOV-B ownership, gap, or structure semantics unless a direct contradiction is proven."
+  - "Do not add telemetry framework, timing mode/flag, database, registry, cache, compiler, orchestrator, new role/lifecycle/version/artifact, or GOV-D eval suite."
+  - "Do not modify README, PROGRAM semantics, workflows, dependencies, release machinery, topology, historical artifacts, main, agent-standards, agent-documents, agent-runtime, architect-profile, ilets, SF, or any external repository."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_write
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Compact reports remain exact, reconstructable, and evidence-backed."
+    evidence_required: "Forward report semantics retain required identities, AC proof, verification proof, deviations/gaps/blockers, and result while redundant reconstructable ritual may be omitted without becoming implicit PASS."
+  - id: AC-2
+    requirement: "Architect review is evidence-first, trigger-expanded, and preference-neutral."
+    evidence_required: "Protocol/Architect/review contract encode ordered review, stop rule, expansion triggers, no preference-only revision, and consequence-based rejection of harmful HOW."
+  - id: AC-3
+    requirement: "Operational timing leaves the default hot path without compatibility loss."
+    evidence_required: "Normal procedure/templates omit timing; no enablement framework exists; explicit opt-in preserves the existing two-timestamp non-authoritative v3 semantics."
+  - id: AC-4
+    requirement: "Backward and fail-closed evidence compatibility is preserved."
+    evidence_required: "Tests prove compact and expanded v3 forms, timing-bearing and timing-free forms, and rejection of missing exact identity/required evidence or invalid review authority/state."
+  - id: AC-5
+    requirement: "GOV-C remains subtraction-focused and bounded."
+    evidence_required: "Candidate changes only evidence/review/timing owners and validator regressions; GOV-B/task/PROGRAM/profile/external/workflow/main semantics remain unchanged."
+  - id: AC-6
+    requirement: "Exact candidate verification passes before review."
+    evidence_required: "Validator, full unit tests, git diff --check, and existing Validate skill library Actions PASS on the same candidate SHA before report publication."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Resolve TASK-0021 revision 1 at exact base; require {dev, main}; resolve ACCEPTED TASK-0020 and all required capabilities before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Inspect current evidence/review/timing owners and validator patterns before choosing the smallest repo-native HOW."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Verify candidate diff is bounded to authorized evidence-lifecycle components and contains no GOV-B reopening or historical rewrite."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Run python3 scripts/validate_skill_library.py, python3 -m unittest scripts/test_validate_skill_library.py, and git diff --check on the exact candidate; all must PASS."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Publish exact candidate to dev and require unchanged Validate skill library workflow success for that exact SHA."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Publish canonical report after verification, verify final refs/topology, and stop at NEEDS_REVIEW."
+      required: true
+  authoritative_verification:
+    required: true
+    mechanism: "Existing .github/workflows/validate-skill-library.yml on the exact pushed candidate."
+    expected_signal: "Validate skill library concludes success for the exact candidate SHA."
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
