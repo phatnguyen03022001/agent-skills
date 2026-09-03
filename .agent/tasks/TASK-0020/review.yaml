@@ -1,0 +1,61 @@
+protocol_version: 3
+
+task_id: TASK-0020
+task_revision: 1
+review_revision: 1
+state: ACCEPTED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0020/report.yaml
+  commit: "f7b2d89412762dfecfae15ee8e79a21187fc3ab4"
+  report_revision: 1
+
+independence:
+  reviewer_role: ARCHITECT
+  separate_session_from_executor: true
+  exact_report_identity_verified: true
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: PASS
+  verifier_evidence: PASS
+
+gap_disposition: []
+follow_up_tasks: []
+
+promotion_readiness:
+  eligible_for_candidate_capture: false
+  reason: >-
+    TASK-0020 closes GOV-B as an accepted reusable-governance correction on dev. The redesign rollout requires
+    GOV-C evidence-lifecycle correction and later eval/pilot gates before any stable release or promotion decision.
+
+notes:
+  - >-
+    Exact report f7b2d89412762dfecfae15ee8e79a21187fc3ab4 binds candidate
+    44566b62a31c4043f3059c5ffdcd760dfee02c8f as the direct child of authorized base
+    8ed0ee8af12efb3bed23c7e2901b15f00628de85.
+  - >-
+    Candidate diff is bounded to the seven authorized GOV-B surfaces and introduces no workflow, PROGRAM,
+    report/review lifecycle, profile, external-repository, main, or historical-artifact mutation.
+  - >-
+    Protocol, Architect, Executor, implementation contract, task template, validator, and regression tests agree
+    that Executor owns local implementation judgment by default inside positive authority while material consequence
+    changes remain Architect-owned.
+  - >-
+    Validator normalizes omitted implementation-prescription controls before validation, preserves explicit expanded-v3
+    restrictive controls, and still rejects missing positive authority. Sparse v3 therefore remains one semantic model,
+    not a second dialect.
+  - >-
+    Exact candidate verification passed repository validator, 73 unit tests, git diff --check, and existing Validate
+    skill library GitHub Actions run 33710962608 with head_sha
+    44566b62a31c4043f3059c5ffdcd760dfee02c8f and conclusion success.
+  - >-
+    No material contradiction, unexplained changed surface, weak acceptance proof, or preference-only implementation
+    disagreement justifies REVISION_REQUIRED. GOV-C may proceed from this accepted authority.
