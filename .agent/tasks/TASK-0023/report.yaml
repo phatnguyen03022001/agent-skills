@@ -1,0 +1,136 @@
+protocol_version: 3
+
+task_id: TASK-0023
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0023/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "5167e6b0d30c254cce01f03b727569a18528429e"
+  pre_execution_head: "5167e6b0d30c254cce01f03b727569a18528429e"
+  final_execution_head: "7eba61d02c748fe131a8d8613cfc35d5eca329fc"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "7107bb6786bd0e9c6663bf22efe9c76ffb8b8875"
+  observed_revision: "7107bb6786bd0e9c6663bf22efe9c76ffb8b8875"
+
+execution_skills_used:
+  required:
+    - executor
+    - verification
+    - simplicity
+  recommended: []
+  external:
+    - superpowers:using-superpowers
+    - superpowers:executing-plans
+    - superpowers:using-git-worktrees
+
+pre_execution_checks:
+  protocol_version_supported: true
+  handoff_type_confirmed: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  working_tree_clean: true
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+  available:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+  missing: []
+  passed: true
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: "NOT_REQUIRED"
+  evidence: >-
+    TASK-0023 requires exact immutable source resolution, replay claim and arithmetic checks, bounded diff verification, and final remote-ref checks; it designates no separate authoritative verifier for this evidence-only replay.
+
+commits_created:
+  - sha: "7eba61d02c748fe131a8d8613cfc35d5eca329fc"
+    message: "docs(TASK-0023): add GOV-E1 historical replay"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: >-
+      .agent/tasks/TASK-0023/replay.md binds exact immutable IELTS TASK-0044 and SF TASK-0002 identities and applies accepted GOV-B/C/D consequence semantics. It distinguishes local HOW, restrictive local companion churn, and reconstructable report ceremony from public-contract, trust/ownership, persisted-data, source-integrity, and verifier consequences without retroactively rewriting history.
+  - criterion_id: AC-2
+    status: PASS
+    evidence: >-
+      TASK-0044 replay re-resolves revisions 1-5, candidate 13b2577e02050c1f354017389a106da66de0872d, sentinel 6c8bc9552a55a85c62b642e4ff40cdb7d4c080f3, Actions run 33684727585 attempt 1 success, report/review closure, the three accepted HOW leaks, the three out-of-allowlist verification companions, and an explicit counterfactual retaining material revision 2 while removing only local-HOW/reconstructable-ceremony task revisions.
+  - criterion_id: AC-3
+    status: PASS
+    evidence: >-
+      SF TASK-0002 is replayed as the simple bounded control using authorized base 6ff17cd216b89f95e224aa5957426ec61536d7b4, candidate a185917b5ce51157c8229936f2d2550aa145e058, report b2d07bc5c30d148eca9045126f2f2428e34738cd, and accepted current review. Its material owner/routing boundaries remain while no historical revision is removed and no deep review is invented.
+  - criterion_id: AC-4
+    status: PASS
+    evidence: >-
+      Replay emits only accepted GOV-A metrics with defensible evidence: HOW leakage 3/15 = 20.0%, unnecessary local-mechanics revisions 2/5 = 40.0%, and untriggered deep review replay 0/5 = 0.0%. Authority miss rate is recorded UNKNOWN because one of five baseline families remains canonically unclassified; the two confirmed misses are not converted into an estimated rate.
+  - criterion_id: AC-5
+    status: PASS
+    evidence: >-
+      Fresh target truth selects IELTS PM-L02 Gist Sprint TRAINING and an SF contextual lesson for existing L3 05.03.03 Change Authorization. Each selection states only objective, material boundary, and proof intent; no target task, implementation file plan, helper/module choice, dependency, or implementation mechanism is prescribed.
+  - criterion_id: AC-6
+    status: PASS
+    evidence: >-
+      Candidate 7eba61d02c748fe131a8d8613cfc35d5eca329fc is a direct child of authorized base 5167e6b0d30c254cce01f03b727569a18528429e and adds only .agent/tasks/TASK-0023/replay.md. The report is prepared as the only subsequent TASK-0023 path. Pre-publication external refs remained IELTS dev 1a33e0466a2416a7d1afcf71d604de9fdbb3f9a0/main e707aeee43411cc8f99448b63220eb8beff552b6 and SF main 3ace885f84c9c88df87ab3a0d7888b5030920f23; agent-skills main remained 76f2d3877d1698f91eb5a6117e2301ed49480379.
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: >-
+      Fresh GitHub preflight resolved agent-skills topology exactly {dev, main}, dev exactly 5167e6b0d30c254cce01f03b727569a18528429e before mutation, main 76f2d3877d1698f91eb5a6117e2301ed49480379, TASK-0023 revision 1 APPROVED/execution_ready at that base, accepted TASK-0022 review at pinned authority 7107bb6786bd0e9c6663bf22efe9c76ffb8b8875, and all three required semantic capabilities available.
+  - check_id: CHECK-2
+    result: PASS
+    evidence: >-
+      Exact immutable historical evidence was resolved through GitHub for TASK-0044 revision commits c792761e14c7c34a5f033e1ceb0b69c876f0807c, 7c857adf9a275b12f06d018791617daa54bc8c4d, f81ea09ec1935c348866769b623d15bf9a6ec916, ca3a07115f677054f770c790fa2dc7439d2e8f87, 04cc4b29246b074f2a33e83d89a665660222e9c1, candidate/sentinel/run/report/review evidence, and SF TASK-0002 candidate/report/review evidence. Fresh current IELTS and SF refs were resolved read-only for pilot selection.
+  - check_id: CHECK-3
+    result: PASS
+    evidence: >-
+      Counterfactual classification follows accepted GOV-D pairs and GOV-B materiality: exact selector/embedding/filename/local companion choices are local only when consequences stay fixed; generated public contract, public route, trust/ownership, persisted variant semantics, scoring behavior, source integrity, and cross-boundary consequences remain Architect-governed. No material consequence is relabeled local merely to remove a revision.
+  - check_id: CHECK-4
+    result: PASS
+    evidence: >-
+      Replay source-identity assertions passed; metric arithmetic was checked directly; incomplete authority-miss evidence remains UNKNOWN. On exact candidate 7eba61d02c748fe131a8d8613cfc35d5eca329fc, python3 scripts/validate_skill_library.py passed, python3 -m unittest scripts/test_validate_skill_library.py passed 89 tests, and git diff --check passed.
+  - check_id: CHECK-5
+    result: PASS
+    evidence: >-
+      Exact base-to-candidate changed-path set is only .agent/tasks/TASK-0023/replay.md. This report is the sole following authorized path; no external repository mutation was performed. Final remote-ref and report-only-child verification is performed immediately after report publication before the Executor terminal result.
+
+discovered_gaps: []
+structural_observations: []
+deviations_from_task: []
+blockers: []
+
+working_tree_after:
+  clean: true
+  summary: >-
+    The isolated execution worktree is clean after committing the replay and report artifacts; run-generated Python cache state is removed. The run-owned isolated worktree is removed after canonical report publication and final remote verification.
+
+result: NEEDS_REVIEW
