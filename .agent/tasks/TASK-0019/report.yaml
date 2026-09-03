@@ -1,0 +1,205 @@
+protocol_version: 3
+
+task_id: TASK-0019
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0019/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "79d556edfd6f9d33828e5caf675d95976e98eede"
+  pre_execution_head: "79d556edfd6f9d33828e5caf675d95976e98eede"
+  final_execution_head: "ee036d62ab8628753f2fbb85e8de60c5cac7da1b"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "76f2d3877d1698f91eb5a6117e2301ed49480379"
+  observed_revision: "76f2d3877d1698f91eb5a6117e2301ed49480379"
+
+execution_skills_used:
+  required:
+    - executor
+  recommended:
+    - gap-analysis
+  external:
+    - superpowers:using-superpowers
+    - superpowers:executing-plans
+    - superpowers:verification-before-completion
+
+pre_execution_checks:
+  protocol_version_supported: true
+  handoff_type_confirmed: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  working_tree_clean: true
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+  available:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+  missing: []
+  passed: true
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_REQUIRED
+  evidence: >-
+    TASK-0019 revision 1 designates no authoritative remote verifier for GOV-A. The audit uses exact immutable
+    GitHub task/report/review/commit evidence plus current branch identity and exact changed-path verification.
+
+local_hygiene:
+  result: PASS
+  run_root: ""
+  cleanup_performed: false
+  retained: []
+  evidence: >-
+    Execution used ChatGPT plus GitHub remote reads/writes only. No local checkout, temporary repository,
+    runtime, dependency, or run-owned local artifact was created.
+
+changed_files:
+  - path: .agent/tasks/TASK-0019/baseline.md
+    summary: >-
+      Added the bounded GOV-A decision-surface baseline: five-family failure-diverse corpus, explicit counting rule,
+      auditable four-metric observations, UNKNOWN preservation, and observed GOV-B pressure points only.
+    new_file: true
+    in_scope: true
+    structure_authorized: true
+  - path: .agent/tasks/TASK-0019/report.yaml
+    summary: >-
+      Added the canonical Executor report binding the exact baseline commit, acceptance evidence, required checks,
+      mutation boundary, and NEEDS_REVIEW result.
+    new_file: true
+    in_scope: true
+    structure_authorized: true
+
+commits_created:
+  - sha: "ee036d62ab8628753f2fbb85e8de60c5cac7da1b"
+    message: "audit(TASK-0019): add decision-surface baseline"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PROVEN
+    evidence: >-
+      baseline.md contains exactly five task families across three repositories: ilets/TASK-0044,
+      SF/TASK-0001, SF/TASK-0002, SF/TASK-0003, and agent-skills/TASK-0015. It records exact immutable
+      task/report/review/candidate evidence and covers bounded success, missing-authority stop,
+      generated-contract/companion work, data/migration work, security/ownership trust boundary,
+      documentation-only work, authoritative remote verification, and acceptance without authoritative remote CI.
+  - criterion_id: AC-2
+    status: PROVEN
+    evidence: >-
+      baseline.md states the exact four required formulas and one task-decision counting rule, then records
+      15 individually traceable HOW observations and the metric results: HOW leakage 3/15 = 20.0%; confirmed
+      authority-miss floor 2/5 = 40.0% with one UNKNOWN family and bounded upper 3/5 = 60.0%; unnecessary
+      revision events 2/5 = 40.0%; review replay 0/5 = 0.0%. Evidence coverage is stated for every metric.
+  - criterion_id: AC-3
+    status: PROVEN
+    evidence: >-
+      Every counted H01-H15 Architect mechanism decision is individually classified as JUSTIFIED or LEAK with
+      a consequence-based rationale. Public compatibility, persisted data ownership, security/trust boundary,
+      evidence integrity/reproducibility, and reusable governance semantics justify mechanism authority where
+      material; category labels alone are never used as the rationale.
+  - criterion_id: AC-4
+    status: PROVEN
+    evidence: >-
+      The authority-miss numerator includes only ilets/TASK-0044 and SF/TASK-0001, with exact pre-execution
+      evidence showing the missed material authority was already discoverable: TASK-0044 revision-4 base contained
+      the three repository-native generated/canonical verification companions omitted by its restrictive allowlist,
+      and SF/TASK-0001 revision 2 explicitly set promote_to_main=false before main was mutated. agent-skills/TASK-0015
+      remains UNKNOWN because canonical pre-execution repository evidence does not independently prove the later
+      operator-intent detail; it is not converted into PASS, FAIL, or zero.
+  - criterion_id: AC-5
+    status: PROVEN
+    evidence: >-
+      baseline.md limits GOV-B input to four reproduced pressure points: restrictive companion-path prediction,
+      delegation of non-semantic local mechanics, preservation of material fail-closed authority gates, and
+      trigger-driven review depth. It introduces no sparse protocol design, new role, lifecycle, registry, cache,
+      compiler, orchestrator, state database, or other reusable governance solution.
+  - criterion_id: AC-6
+    status: PROVEN
+    evidence: >-
+      The implementation candidate ee036d62ab8628753f2fbb85e8de60c5cac7da1b is a direct child of exact base
+      79d556edfd6f9d33828e5caf675d95976e98eede and changes only new baseline.md. Canonical report publication is
+      restricted to new report.yaml. No external repository write or reusable governance-semantic mutation is
+      performed; final exact dev/topology/diff verification is re-read after report publication before terminal handoff.
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: >-
+      Before first mutation, live dev was exactly 79d556edfd6f9d33828e5caf675d95976e98eede,
+      topology was exactly {dev, main}, main was 76f2d3877d1698f91eb5a6117e2301ed49480379,
+      TASK-0019 at the exact base was revision 1, APPROVED, execution_ready: true, structure authority RESOLVED,
+      pinned agent-skills authority was 76f2d3877d1698f91eb5a6117e2301ed49480379, and all three required
+      EXECUTION semantic capabilities were available.
+  - check_id: CHECK-2
+    result: PASS
+    evidence: >-
+      Exact current research refs were resolved read-only as ilets dev
+      1a33e0466a2416a7d1afcf71d604de9fdbb3f9a0, SF main
+      a4695c9ad3a994a1e7e9ae76cc7c1c0954bb35cd, and pinned agent-skills
+      76f2d3877d1698f91eb5a6117e2301ed49480379. The five-family corpus is the smallest selected set
+      covering every required class while including the mandatory ilets/TASK-0044 regression specimen.
+  - check_id: CHECK-3
+    result: PASS
+    evidence: >-
+      The counted H01-H15 observation table and authority/revision/review specimen classifications were built before
+      the metric results. All four values are computed directly from those observations, and the single unresolved
+      authority-miss classification is retained explicitly as UNKNOWN with bounded coverage instead of being inferred.
+  - check_id: CHECK-4
+    result: PASS
+    evidence: >-
+      TASK-0044 is used only to observe generic decision ownership: restrictive companion-path authority,
+      implementation-local selector/embedding mechanics, materially authoritative public/data/security/provenance
+      mechanisms, revision causality, and review triggers. No IELTS feature, scoring rule, media rule, or domain identity
+      is promoted into agent-skills governance doctrine.
+  - check_id: CHECK-5
+    result: PASS
+    evidence: >-
+      Exact base-to-candidate verification before report publication shows one commit and exactly one changed path,
+      .agent/tasks/TASK-0019/baseline.md. Report publication is scoped to the only remaining authorized path,
+      .agent/tasks/TASK-0019/report.yaml. Final base-to-dev verification is performed immediately after publication
+      and must contain exactly these two paths before terminal handoff.
+  - check_id: CHECK-6
+    result: PASS
+    evidence: >-
+      The bounded baseline is complete and this report truthfully binds final_execution_head
+      ee036d62ab8628753f2fbb85e8de60c5cac7da1b. External repositories were accessed read-only only.
+      Final dev identity, topology, unchanged main, exact two-path diff, and current external refs are re-read after
+      publication before Executor returns NEEDS_REVIEW.
+
+discovered_gaps: []
+structural_observations: []
+deviations_from_task: []
+blockers: []
+
+working_tree_after:
+  clean: true
+  summary: >-
+    No local working tree was used. Remote execution is bounded to the TASK-0019 baseline candidate plus this
+    canonical report; no external repository or reusable governance-semantic surface is mutated.
+
+result: NEEDS_REVIEW
