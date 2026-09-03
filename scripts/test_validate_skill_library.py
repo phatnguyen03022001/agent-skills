@@ -1757,5 +1757,225 @@ class Task0024GitHubFirstLocalExecutionTests(unittest.TestCase):
             self.assertNotIn(forbidden, executor)
 
 
+class Task0025StableAdoptionGateTests(unittest.TestCase):
+    def fixture(self) -> tuple[tempfile.TemporaryDirectory[str], Path]:
+        temp = tempfile.TemporaryDirectory()
+        root = Path(temp.name) / "repo"
+        shutil.copytree(ROOT, root)
+        self.addCleanup(temp.cleanup)
+        return temp, root
+
+    def load_document(self, root: Path, relative: str) -> dict[str, object]:
+        original_root = VALIDATOR_MODULE.ROOT
+        try:
+            VALIDATOR_MODULE.ROOT = root
+            document = VALIDATOR_MODULE.load_protocol_document(relative)
+        finally:
+            VALIDATOR_MODULE.ROOT = original_root
+        assert document is not None
+        return document
+
+    def run_validator(self, root: Path) -> subprocess.CompletedProcess[str]:
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+        original_root = VALIDATOR_MODULE.ROOT
+        try:
+            VALIDATOR_MODULE.ROOT = root
+            with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+                returncode = VALIDATOR_MODULE.main()
+        finally:
+            VALIDATOR_MODULE.ROOT = original_root
+        return subprocess.CompletedProcess(
+            args=["python3", str(root / VALIDATOR)],
+            returncode=returncode,
+            stdout=stdout.getvalue(),
+            stderr=stderr.getvalue(),
+        )
+
+    def copy_task(self, root: Path, relative: str) -> Path:
+        target = root / "templates" / "task.yaml"
+        target.write_text((root / relative).read_text(encoding="utf-8"), encoding="utf-8")
+        return target
+
+    def remove_optional_task_controls(self, path: Path) -> None:
+        lines = path.read_text(encoding="utf-8").splitlines()
+        optional_keys = {
+            "structure_policy:",
+            "continuation_policy:",
+            "capability_requirements:",
+            "release_authority:",
+        }
+        output: list[str] = []
+        skipping = False
+        for line in lines:
+            if skipping:
+                if line and not line.startswith(" "):
+                    skipping = False
+                else:
+                    continue
+            if line in optional_keys:
+                skipping = True
+                continue
+            if line == "  expected_files_are_restrictive: true":
+                continue
+            output.append(line)
+        path.write_text("\n".join(output) + "\n", encoding="utf-8")
+
+    def test_expanded_and_sparse_v3_use_one_normalized_semantic_model(self) -> None:
+        _, root = self.fixture()
+
+        sparse_path = self.copy_task(root, ".agent/tasks/TASK-0001/task.yaml")
+        self.remove_optional_task_controls(sparse_path)
+        sparse = self.load_document(root, "templates/task.yaml")
+        normalized_sparse = VALIDATOR_MODULE.normalize_task_document(sparse)
+        for key in ("structure_policy", "continuation_policy", "capability_requirements", "release_authority"):
+            self.assertEqual(
+                normalized_sparse[key],
+                VALIDATOR_MODULE.TASK_NORMALIZATION_DEFAULTS[key],
+            )
+        self.assertFalse(normalized_sparse["scope"]["expected_files_are_restrictive"])
+        sparse_result = self.run_validator(root)
+        self.assertEqual(sparse_result.returncode, 0, sparse_result.stdout + sparse_result.stderr)
+
+        self.copy_task(root, ".agent/tasks/TASK-0001/task.yaml")
+        expanded = self.load_document(root, "templates/task.yaml")
+        normalized_expanded = VALIDATOR_MODULE.normalize_task_document(expanded)
+        self.assertTrue(normalized_expanded["scope"]["expected_files_are_restrictive"])
+        self.assertFalse(normalized_expanded["structure_policy"]["unlisted_new_files"]["allowed"])
+        self.assertEqual(normalized_expanded["structure_policy"]["unlisted_new_files"]["max"], 0)
+        expanded_result = self.run_validator(root)
+        self.assertEqual(expanded_result.returncode, 0, expanded_result.stdout + expanded_result.stderr)
+
+    def test_missing_authority_fails_closed_but_missing_how_preserves_discretion(self) -> None:
+        _, authority_root = self.fixture()
+        authority_path = self.copy_task(authority_root, ".agent/tasks/TASK-0001/task.yaml")
+        authority_text = authority_path.read_text(encoding="utf-8")
+        authority_text = authority_text.replace(
+            "  allowed_existing_files_or_components:\n",
+            "  allowed_existing_files_or_components_missing:\n",
+            1,
+        )
+        authority_path.write_text(authority_text, encoding="utf-8")
+        authority_result = self.run_validator(authority_root)
+        authority_output = authority_result.stdout + authority_result.stderr
+        self.assertNotEqual(authority_result.returncode, 0, authority_output)
+        self.assertIn("missing required path 'scope.allowed_existing_files_or_components'", authority_output)
+
+        _, sparse_root = self.fixture()
+        sparse_path = self.copy_task(sparse_root, ".agent/tasks/TASK-0001/task.yaml")
+        self.remove_optional_task_controls(sparse_path)
+        sparse_result = self.run_validator(sparse_root)
+        self.assertEqual(sparse_result.returncode, 0, sparse_result.stdout + sparse_result.stderr)
+        normalized = self.load_document(sparse_root, "templates/task.yaml")
+        normalized = VALIDATOR_MODULE.normalize_task_document(normalized)
+        self.assertEqual(normalized["structure_policy"], VALIDATOR_MODULE.TASK_NORMALIZATION_DEFAULTS["structure_policy"])
+
+        executor = (ROOT / "executor" / "SKILL.md").read_text(encoding="utf-8").lower()
+        contract = (ROOT / "contracts" / "IMPLEMENTATION_CONTRACT.md").read_text(encoding="utf-8").lower()
+        self.assertIn("implementation judgment belongs to executor by default", executor)
+        self.assertIn("missing exact-file or local-structure prescription defaults to bounded executor discretion", contract)
+        self.assertIn("missing authority fields never default to permission", contract)
+
+    def test_materiality_scope_structure_gap_and_report_ownership_remain_closed(self) -> None:
+        paths = (
+            "protocols/TASK_PROTOCOL.md",
+            "contracts/IMPLEMENTATION_CONTRACT.md",
+            "contracts/IMPLEMENTATION_REPORT.md",
+            "contracts/ARCHITECT_REVIEW.md",
+            "architect/SKILL.md",
+            "executor/SKILL.md",
+        )
+        combined = "\n".join((ROOT / path).read_text(encoding="utf-8") for path in paths).lower()
+        for phrase in (
+            "trust, ownership, compatibility, durability, irreversibility, dependency, cost/topology, or architecture",
+            "implementing an already-frozen api, security, data, migration, dependency, or structure decision",
+            "public/shared contract",
+            "prescribe local how only when the mechanism itself carries a material governing consequence",
+            "executor discretion never expands authority or changes a material consequence",
+            "scope owns semantic/component consequence by default",
+            "structure is local when it consists of internal files or modules",
+            "new or changed top-level ownership",
+            "`local` is necessary for current acceptance criteria",
+            "`follow_up` and `blocking` are consequence-based",
+            "preference-only revision is not warranted",
+            "reject local how only for material consequence or contract/risk violation",
+            "executor owns report content. architect may review it but does not rewrite it.",
+            "missing authority fields never default to permission",
+        ):
+            self.assertIn(phrase, combined)
+
+    def test_github_first_local_matrix_requires_fresh_remote_reconciliation(self) -> None:
+        executor = (ROOT / "executor" / "SKILL.md").read_text(encoding="utf-8").lower()
+        for phrase in (
+            "authorized remote git state is canonical repository truth",
+            "local state is subordinate execution state",
+            "absent or safely empty",
+            "matching clean/behind",
+            "dirty/ahead/unknown",
+            "identity mismatch",
+            "stale remote state",
+            "preserve it and do not auto-push, reset, stash, clean, delete, move, overwrite, or adopt it",
+            "after github publication or another task-authorized canonical-ref mutation, refresh canonical github truth again",
+            "fast-forward/equivalent semantics",
+            "final canonical ref",
+            "temporary/reference/disposable checkouts remain non-authoritative",
+            "cannot substitute",
+            "phone-only or remote-only execution remains valid",
+        ):
+            self.assertIn(phrase, executor)
+        self.assertLess(executor.index("before local mutation"), executor.index("after github publication"))
+
+        task = (ROOT / ".agent" / "tasks" / "TASK-0025" / "task.yaml").read_text(encoding="utf-8").lower()
+        for phrase in (
+            "architect remote-only review/task-authority write may temporarily advance github beyond a local copy",
+            "no later local mutation may trust or use that stale copy without fresh github resolution and safe reconciliation",
+            "no instant-mirror requirement",
+        ):
+            self.assertIn(phrase, task)
+
+    def test_historical_replay_and_fresh_pilots_keep_exact_accepted_identities(self) -> None:
+        replay = (ROOT / ".agent" / "tasks" / "TASK-0023" / "replay.md").read_text(encoding="utf-8")
+        for phrase in (
+            "Revision 3 disappears.",
+            "Revision 4 disappears.",
+            "Revision 5 disappears as a task revision",
+            "No verifier/stale/new-truth deletion claim",
+            "public/trust/data/integrity consequences",
+            "The historical evidence supports the accepted redesign without weakening material governance",
+        ):
+            self.assertIn(phrase, replay)
+
+        task = (ROOT / ".agent" / "tasks" / "TASK-0025" / "task.yaml").read_text(encoding="utf-8")
+        for identity in (
+            ".agent/tasks/TASK-0024/review.yaml@16217bb78a578160efb68afc84acdeff9c36ed38",
+            "phatnguyen03022001/ilets TASK-0045 accepted review@4b88bbde9558ae50de2c17941677c73fe7c504c8",
+            "phatnguyen03022001/SF TASK-0008 accepted review@dd518fa0ae693f57befcedf341410d4cf28026d8",
+            "phatnguyen03022001/architect-profile TASK-0015 accepted review@71921cde6228c21b4d2e3e6509e685d82981dc9c",
+        ):
+            self.assertIn(identity, task)
+
+    def test_existing_validate_workflow_is_the_candidate_verifier(self) -> None:
+        workflow = (ROOT / ".github" / "workflows" / "validate-skill-library.yml").read_text(encoding="utf-8").lower()
+        self.assertIn("branches:\n      - dev", workflow)
+        self.assertIn('"scripts/test_validate_skill_library.py"', workflow)
+        self.assertIn("python3 scripts/validate_skill_library.py", workflow)
+        self.assertIn("python3 -m unittest scripts/test_validate_skill_library.py", workflow)
+
+    def test_operator_preferences_stay_outside_generic_agent_skills(self) -> None:
+        generic_paths = (
+            "README.md",
+            "protocols/TASK_PROTOCOL.md",
+            "architect/SKILL.md",
+            "executor/SKILL.md",
+        )
+        generic = "\n".join((ROOT / path).read_text(encoding="utf-8") for path in generic_paths)
+        self.assertNotIn("/Users/tienphat", generic)
+        self.assertNotIn("Developer/<repo-name>", generic)
+        generic = generic.lower()
+        self.assertIn("does not prescribe task launch field names", generic)
+        self.assertIn("agent runtime remains an optional capability surface", generic)
+        self.assertIn("mobile/chatgpt+github-only operation is first-class", generic)
+
+
 if __name__ == "__main__":
     unittest.main()
