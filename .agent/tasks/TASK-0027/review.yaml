@@ -1,0 +1,65 @@
+protocol_version: 3
+
+task_id: TASK-0027
+task_revision: 1
+review_revision: 1
+state: ACCEPTED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0027/report.yaml
+  commit: "6042a5d74fb56d33f02b32dbd0fe92029d03028f"
+  report_revision: 1
+
+independence:
+  reviewer_role: ARCHITECT
+  separate_session_from_executor: true
+  exact_report_identity_verified: true
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: PASS
+  verifier_evidence: NOT_REQUIRED
+
+admission:
+  case_router: ACCEPTED
+  scope: "Static navigation projection only. Initial reusable case set remains exactly EXECUTE -> executor."
+  embedding: NOT_ADMITTED
+  rationale: >-
+    CR-00 proved repeated material routing waste and >=50% median reducible byte overhead.
+    TASK-0027 preserves that benefit with a 58-byte navigation artifact and no moved semantic
+    authority, classifier, workflow/state semantics, or second capability registry. The current
+    corpus does not prove residual semantic-search waste requiring embeddings.
+
+contract_boundaries:
+  - "CASE remains navigation only and is distinct from BINDING, SPECIALIZATION, MODE, TASK, and STATE."
+  - "No additional case ID is admitted by this review. Future case additions require fresh real-pilot evidence."
+  - "Bootstrap is not made a CASE by this review; bootstrap may locate the router as a pre-router primitive."
+  - "Unknown or malformed navigation must fail closed; silent ambiguity resolution is not accepted behavior."
+  - "Case entries may name capability keys only; owner/path/SHA resolution remains canonical external capability authority."
+  - "Embedding/vector/semantic-search machinery remains unadmitted."
+
+promotion_readiness:
+  eligible_for_stable_promotion: true
+  candidate_commit: "4a063c41f429207577434600a3571dc17822cd78"
+  stable_base: "337c0be6618090e704b345b1bf93df488a4985af"
+  reason: >-
+    Exact candidate implements and validates only the admitted Case Router slice. GitHub compare
+    proves stable main is the merge-base ancestor of the candidate; the report commit is a
+    report-only child and must not itself be promoted as the stable semantic candidate.
+
+follow_up_tasks:
+  - task_id: TASK-0028
+    purpose: "Promote exact accepted Case Router candidate to agent-skills/main without semantic expansion, then leave ecosystem activation for a later architect-profile authority-lock/bootstrap task."
+
+notes:
+  - "Focused case tests passed 8/8; full unittest passed 106 tests; repository validator and git diff --check passed according to the canonical report."
+  - "The 12-episode pilot retained 51.8327605956472% median byte reduction, above the accepted >=50% threshold."
+  - "Support-repository preloading beyond bootstrap/lock/router remains the quantity to minimize; bootstrap/lock/router themselves are explicit required primitives, not hidden context."
+  - "The architectural target remains: bootstrap -> locked authority set -> exact static Case Router -> CASE -> capability keys -> capability routing -> exact canonical artifacts."
