@@ -1,0 +1,105 @@
+protocol_version: 3
+
+task_id: TASK-0036
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0036/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "3bc831696949ef4cacfc7896dbccd7e19e96fff5"
+  final_execution_head: "452ca48454e4a2653643b3f2f23aa332198f4236"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "ac2f213095e339dafa96825d89a6f6de164792bc"
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  available:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  missing: []
+  passed: true
+  evidence: >-
+    Agent Runtime resolved the exact repository and pinned task authority, executed repository-native checks,
+    created the authorized candidate commit, and a non-mutating push dry-run plus the subsequent exact
+    non-force candidate push proved current publication capability.
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_REQUIRED
+  evidence: "TASK-0036 designates no separate authoritative verifier."
+
+pushed: true
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: >-
+      Exact base 3bc831696949ef4cacfc7896dbccd7e19e96fff5 to candidate
+      452ca48454e4a2653643b3f2f23aa332198f4236 diff adds only root .gitignore. Parsed line-set proof
+      matched exactly the 15 authorized patterns with no additional entries.
+  - criterion_id: AC-2
+    status: PASS
+    evidence: >-
+      git ls-files -ci --exclude-standard returned no paths with the candidate ignore policy active.
+  - criterion_id: AC-3
+    status: PASS
+    evidence: >-
+      Synthetic git check-ignore evidence matched .DS_Store, Python cache/bytecode/venv/cache artifacts,
+      coverage artifacts, .env/.env.local, and .codex/environments/environment.toml. Quiet negative checks
+      proved .env.example, .env.test.example, and .codex/config.toml are not ignored.
+  - criterion_id: AC-4
+    status: PASS
+    evidence: >-
+      python3 scripts/validate_skill_library.py passed; python3 -m unittest scripts/test_validate_skill_library.py
+      passed 116/116 tests; staged and exact base-to-candidate git diff checks passed; no tracked file outside
+      .gitignore changed in the candidate.
+  - criterion_id: AC-5
+    status: NOT_PROVEN
+    evidence: >-
+      Before report authorship, fresh remote proof showed dev at the exact candidate
+      452ca48454e4a2653643b3f2f23aa332198f4236, main unchanged at
+      ac2f213095e339dafa96825d89a6f6de164792bc, and topology exactly {dev, main}. This report commit/publication
+      and final local hygiene proof occur after report content is committed and are intentionally not self-attested.
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: >-
+      Fresh resolution proved the exact task revision/base, target identity, pinned skill authority, remote
+      topology, root .gitignore absence at base, relevant tracked-file inventory, and preserved local untracked state
+      without reading operator-owned file contents.
+  - check_id: CHECK-2
+    result: PASS
+    evidence: >-
+      Only the authorized .gitignore was added. Deterministic line-set, tracked-ignore, synthetic positive/negative
+      check-ignore, repository validator, 116-test suite, and diff-check evidence all passed.
+  - check_id: CHECK-3
+    result: NOT_PROVEN
+    evidence: >-
+      Exact candidate publication is proven. Report-only child publication plus final fresh dev/main/topology and
+      local tracked/index hygiene proof are post-report facts and will be resolved after this report commit.
+
+result: NEEDS_REVIEW
