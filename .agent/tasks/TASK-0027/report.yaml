@@ -1,0 +1,251 @@
+protocol_version: 3
+
+task_id: TASK-0027
+task_revision: 1
+report_revision: 1
+state: REPORTED
+terminal_status: NEEDS_REVIEW
+
+task_source:
+  path: .agent/tasks/TASK-0027/task.yaml
+  commit: "763e12d1d8c900397070964e0dd291a265325ed5"
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "763e12d1d8c900397070964e0dd291a265325ed5"
+  pre_execution_head: "763e12d1d8c900397070964e0dd291a265325ed5"
+  final_execution_head: "4a063c41f429207577434600a3571dc17822cd78"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "337c0be6618090e704b345b1bf93df488a4985af"
+  observed_revision: "337c0be6618090e704b345b1bf93df488a4985af"
+
+execution_skills_used:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+  external:
+    - superpowers:using-superpowers
+    - superpowers:test-driven-development
+    - superpowers:verification-before-completion
+
+pre_execution_checks:
+  protocol_version_supported: true
+  handoff_type_confirmed: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  working_tree_clean: false
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_commit
+    - git_push
+  available:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_commit
+    - git_push
+  missing: []
+  passed: true
+  evidence: >-
+    Direct git ls-remote resolved live origin/dev=763e12d1d8c900397070964e0dd291a265325ed5,
+    origin/main=337c0be6618090e704b345b1bf93df488a4985af, and remote HEAD=main before
+    mutation. Native Python and Git execution were available; the repository validator and
+    unittest surface executed successfully; configured author/committer identities and a
+    non-mutating push dry-run proved commit and push capability before mutation.
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_REQUIRED
+  evidence: >-
+    TASK-0027 sets authoritative_verification.required=false. Repository-native validator,
+    focused tests, full unittest regression, exact baseline pilot recomputation, and GitHub
+    ref observations were required and performed; no separate authoritative verifier was
+    authorized or needed.
+
+local_hygiene:
+  result: RETAINED_FOR_EVIDENCE
+  run_root: ""
+  cleanup_performed: true
+  retained:
+    - identity: ".DS_Store"
+      reason: "Pre-existing operator-owned untracked state was neither staged nor modified."
+    - identity: ".codex/"
+      reason: "Pre-existing operator-owned untracked environment metadata was neither staged nor modified."
+  evidence: >-
+    The only current-run Python cache under scripts/__pycache__/ was removed after verification.
+    No disposable clone or temporary publication root was created. The pre-existing .DS_Store
+    and .codex/ entries remain preserved; neither was included in any commit.
+
+changed_files:
+  - path: .agent/case-router.yaml
+    summary: "One strict machine-readable navigation artifact admitting only EXECUTE -> executor."
+    new_file: true
+    in_scope: true
+    structure_authorized: true
+  - path: scripts/validate_skill_library.py
+    summary: "Minimal existing-validator support for strict case navigation and canonical capability resolution."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: scripts/test_validate_skill_library.py
+    summary: "Focused positive and fail-closed case-navigation regression tests reused in the existing unittest surface."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+
+commits_created:
+  - sha: "4a063c41f429207577434600a3571dc17822cd78"
+    message: "feat(TASK-0027): add static execute case router"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: >-
+      .agent/case-router.yaml contains exactly one case entry, id EXECUTE, whose only
+      capability load is executor. The canonical-shape test parses the exact document and
+      the validator accepts it; the base-to-candidate changed-path proof contains one new
+      case artifact and no second case.
+  - criterion_id: AC-2
+    status: PASS
+    evidence: >-
+      The entry schema is closed to id and capabilities only. Focused tests reject binding,
+      specialization, mode, task, state, next, retry, success, failure, terminal, and
+      transition fields, proving CASE is navigation-only and separate from those dimensions.
+  - criterion_id: AC-3
+    status: PASS
+    evidence: >-
+      The case artifact contains no owner, path, SHA, repository, branch, task, or skill-body
+      data. Capability validation reuses the existing EXPECTED_SKILLS taxonomy and canonical
+      skill folders; no new capability registry or duplicated owner/path resolution was added.
+      Focused owner/path/sha mutation tests fail closed.
+  - criterion_id: AC-4
+    status: PASS
+    evidence: >-
+      Eight focused test methods cover canonical acceptance, unknown and duplicate case IDs,
+      empty and duplicate capability loads, unknown and noncanonical capability keys, malformed
+      shapes, forbidden dimensions/lifecycle fields, and owner/path/SHA fields. Focused tests
+      pass, full validator passes, and the complete unittest surface passes with 106 tests.
+  - criterion_id: AC-5
+    status: PASS
+    evidence: >-
+      The exact CR-00 baseline at .agent/tasks/TASK-0026/case-routing-baseline.json is read-only
+      pilot evidence. For all 12 exact episodes, the recomputation uses task identity, the one
+      EXECUTE navigation entry, the existing executor capability key, and task-declared
+      requirements. The pilot read set is baseline minimal task+executor artifacts plus the
+      58-byte case artifact: three artifacts per episode, with no whole-support-repository
+      preload, no moved semantic authority, and no additional inference layer.
+  - criterion_id: AC-6
+    status: PASS
+    evidence: >-
+      Mechanical nearest-rank recomputation over all 12 episodes gives observed routing count
+      5/6 per episode versus pilot count 3, median artifact-count reduction 40.0%, and observed
+      routing bytes versus minimal-plus-router bytes median reduction 51.8327605956472%. The
+      bytes metric therefore preserves the required >=50% median reduction. The case artifact
+      is 58 raw bytes; no token, timing, or semantic-search proxy was used.
+  - criterion_id: AC-7
+    status: PASS
+    evidence: >-
+      Candidate scope is exactly .agent/case-router.yaml, scripts/validate_skill_library.py,
+      and scripts/test_validate_skill_library.py. The validator and tests add no classifier,
+      fuzzy routing, workflow/state engine, transition map, embedding/vector/index/retrieval
+      machinery, registry, daemon, database, queue, scheduler, cache, role, or unrelated
+      governance change. Full validator, full unittest, and git diff --check passed.
+  - criterion_id: AC-8
+    status: PASS
+    evidence: >-
+      Candidate 4a063c41f429207577434600a3571dc17822cd78 was pushed non-force to dev and an
+      independent GitHub read proved dev exactly equals that SHA while main remained
+      337c0be6618090e704b345b1bf93df488a4985af and topology remained exactly {dev, main}.
+      The report-only child publication, final remote observation, local reconciliation, and
+      final tracked/index cleanliness are recorded in CHECK-6 and terminal evidence below.
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: >-
+      Fresh resolution proved repository phatnguyen03022001/agent-skills, active branch dev,
+      exact base 763e12d1d8c900397070964e0dd291a265325ed5, exact TASK-0027 revision 1,
+      pinned stable skill authority 337c0be6618090e704b345b1bf93df488a4985af, accepted TASK-0026
+      review/baseline lineage, live topology {dev, main}, origin/dev and origin/main identities,
+      and all required native read/write/execute/commit/push capabilities before source mutation.
+  - check_id: CHECK-2
+    result: PASS
+    evidence: >-
+      Existing unittest surface was extended before implementation. The canonical artifact test
+      failed because .agent/case-router.yaml was absent, and invalid-shape mutation tests failed
+      because the validator initially ignored the new artifact. After the minimum implementation,
+      all focused case-navigation tests passed.
+  - check_id: CHECK-3
+    result: PASS
+    evidence: >-
+      Focused case-navigation tests: 8 tests PASS. python3 scripts/validate_skill_library.py:
+      PASS. python3 -m unittest scripts/test_validate_skill_library.py: 106 tests PASS.
+      git diff --check: PASS on the exact candidate.
+  - check_id: CHECK-4
+    result: PASS
+    evidence: >-
+      The exact 12-episode CR-00 pilot was recomputed from the baseline JSON and raw case-router
+      byte size. The per-episode pilot count is minimal_count+1 and pilot bytes are
+      minimal_bytes+58; nearest-rank median byte reduction is 51.8327605956472%, with no new
+      semantic authority or repository preload.
+  - check_id: CHECK-5
+    result: PASS
+    evidence: >-
+      The implementation candidate staged and committed exactly three authorized paths. The
+      case artifact is four lines and 58 bytes; all case semantics are explicit, closed, and
+      local to the existing validator/test machinery. No branch was created, renamed, or deleted,
+      and main was not mutated.
+  - check_id: CHECK-6
+    result: PENDING_FINAL_REFRESH
+    evidence: >-
+      Candidate publication and independent remote confirmation are complete. This report-only
+      child must be committed and pushed next; then refresh GitHub dev/main/topology, prove the
+      report SHA on dev, reconcile local dev with final remote dev using fast-forward semantics,
+      and prove local HEAD equals remote dev with tracked/index clean before terminal NEEDS_REVIEW.
+
+discovered_gaps: []
+
+structural_observations:
+  - type: case_navigation_boundary
+    path: .agent/case-router.yaml
+    evidence: >-
+      The intentionally shallow artifact is the single admitted CASE navigation projection.
+      Additional case IDs require later evidence/admission; no speculative taxonomy was added.
+    recommendation: architect_review
+    action_taken: none
+
+deviations_from_task: []
+blockers: []
+
+working_tree_after:
+  clean: false
+  summary: >-
+    No tracked or staged differences remain after publication/reconciliation; pre-existing
+    operator-owned .DS_Store and .codex/ untracked state is preserved and never staged.
+
+result: NEEDS_REVIEW
