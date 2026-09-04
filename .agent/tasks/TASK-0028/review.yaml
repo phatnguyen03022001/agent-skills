@@ -1,0 +1,51 @@
+protocol_version: 3
+
+task_id: TASK-0028
+task_revision: 1
+review_revision: 1
+state: ACCEPTED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0028/report.yaml
+  commit: "7db11b83819ee962dedc6d17df6c1af1f5541e1b"
+  report_revision: 1
+
+independence:
+  reviewer_role: ARCHITECT
+  separate_session_from_executor: true
+  exact_report_identity_verified: true
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: PASS
+  verifier_evidence: NOT_REQUIRED
+
+gap_disposition: []
+follow_up_tasks:
+  - task_id: "CR-04"
+    origin:
+      type: accepted_follow_up
+      task_id: TASK-0028
+      gap_id: CASE_ROUTER_BOOTSTRAP_ACTIVATION
+
+promotion_readiness:
+  eligible_for_candidate_capture: false
+  reason: >-
+    Stable support promotion is complete: agent-skills/main equals exact accepted Case Router
+    candidate 4a063c41f429207577434600a3571dc17822cd78. Ecosystem activation remains intentionally
+    pending until architect-profile updates its exact authority lock/bootstrap binding and later
+    activates a new profile main commit.
+
+notes:
+  - "Fresh GitHub branch resolution proves topology exactly {dev, main}, dev=7db11b83819ee962dedc6d17df6c1af1f5541e1b, and main=4a063c41f429207577434600a3571dc17822cd78."
+  - "The report commit is report-only; main is the exact accepted semantic candidate, not a task/report/review descendant."
+  - "Case Router semantics remain exactly EXECUTE -> executor. No additional CASE, lifecycle transition, classifier, embedding, semantic retrieval, or second capability registry is admitted."
+  - "Agent Runtime invocation from this Architect conversation remains platform-forbidden, so final local mirror equality cannot be independently re-executed here. The canonical Executor report records local==remote and tracked/index cleanliness, while fresh GitHub evidence independently confirms the remote half of closure with no contradiction."
+  - "Support-main promotion does not activate ecosystem authority. architect-profile/main remains the activation pointer."
