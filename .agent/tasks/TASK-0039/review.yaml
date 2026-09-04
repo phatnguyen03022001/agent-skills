@@ -1,0 +1,51 @@
+protocol_version: 3
+
+task_id: TASK-0039
+task_revision: 1
+review_revision: 1
+state: ACCEPTED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0039/report.yaml
+  commit: "a285ce9ca8bd90bfafe471f9ca483373e50c1ea4"
+  report_revision: 1
+
+independence:
+  reviewer_role: ARCHITECT
+  exact_report_identity_verified: true
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: PASS
+  verifier_evidence: NOT_REQUIRED
+
+accepted_candidate:
+  commit: "ed8d9fb35bb8b052530ca879e68a227d77e4a8a6"
+  role: "Agent Runtime one-logical-bundle to one-terminal_exec realization correction"
+
+acceptance_basis:
+  - "Fresh review-boundary GitHub observation proves dev=a285ce9ca8bd90bfafe471f9ca483373e50c1ea4, main=11a5720adf96555bfe4187067d8dd51627ec8676, topology exactly {dev, main}."
+  - "Exact base-to-candidate comparison proves ed8d9fb35bb8b052530ca879e68a227d77e4a8a6 is one direct child of f9b0e00185b39f9c84ecb07121b5bf2c281ee7d9 and changes only executor/SKILL.md."
+  - "Exact candidate diff makes the operational realization unambiguous: one logical EXECUTION BUNDLE on Agent Runtime maps to exactly one terminal_exec invocation; per-job terminal_exec micro-orchestration is non-compliant absent a permitted return boundary."
+  - "The correction requires pre-derived jobs/order/guards/stop behavior/JOIN and permits split invocations only for named semantic/authority/capability/failure/terminal boundaries or concrete bounded execution limits; convenience inspection is explicitly insufficient."
+  - "Exact candidate-to-report comparison proves a285ce9ca8bd90bfafe471f9ca483373e50c1ea4 is one direct child of the candidate and adds only .agent/tasks/TASK-0039/report.yaml."
+  - "Canonical report records validator PASS, 116/116 unittest PASS, git diff --check PASS, exact changed-path and forbidden-surface guards PASS, with no runtime/API/orchestration expansion."
+  - "AC-5/CHECK-4 are correctly NOT_PROVEN inside the self-containing report; exact report publication and final remote closure are independently proven at review boundary."
+
+activation_status:
+  ecosystem_active: false
+  reason: "agent-skills/main remains 11a5720adf96555bfe4187067d8dd51627ec8676; exact accepted candidate promotion and later architect-profile lock activation are separate phases."
+
+follow_up_tasks:
+  - "Promote exact accepted candidate ed8d9fb35bb8b052530ca879e68a227d77e4a8a6 to agent-skills/main under separate authority."
+  - "After promotion, update architect-profile authority lock to the exact promoted SHA and separately activate that profile candidate before rerunning the CHATGPT_LOCAL natural pilot."
+
+notes:
+  - "Do not interpret TASK-0039 acceptance as evidence that CHATGPT_LOCAL now obeys the one-call bundle rule; behavioral proof requires a later natural execution under an activated authority set."
