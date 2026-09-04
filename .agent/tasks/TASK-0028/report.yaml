@@ -1,0 +1,239 @@
+protocol_version: 3
+
+task_id: TASK-0028
+task_revision: 1
+report_revision: 1
+state: REPORTED
+terminal_status: NEEDS_REVIEW
+
+task_source:
+  path: .agent/tasks/TASK-0028/task.yaml
+  commit: "67780cf2295435a00d8f777172128d225992461f"
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "67780cf2295435a00d8f777172128d225992461f"
+  pre_execution_head: "6042a5d74fb56d33f02b32dbd0fe92029d03028f"
+  final_execution_head: "4a063c41f429207577434600a3571dc17822cd78"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "337c0be6618090e704b345b1bf93df488a4985af"
+  observed_revision: "337c0be6618090e704b345b1bf93df488a4985af"
+
+execution_skills_used:
+  required:
+    - executor
+    - github-workflow
+    - simplicity
+    - verification
+  recommended: []
+  external:
+    - superpowers:using-superpowers
+    - superpowers:using-git-worktrees
+    - superpowers:executing-plans
+    - superpowers:verification-before-completion
+
+pre_execution_checks:
+  protocol_version_supported: true
+  handoff_type_confirmed: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  working_tree_clean: false
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_commit
+    - git_push
+  available:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_commit
+    - git_push
+  missing: []
+  passed: true
+  evidence: >-
+    Fresh git ls-remote proved repository phatnguyen03022001/agent-skills, physical topology
+    exactly {dev, main}, origin/dev=67780cf2295435a00d8f777172128d225992461f, and
+    origin/main=337c0be6618090e704b345b1bf93df488a4985af before promotion. Commit identities,
+    native Git/Python execution, writable repository content, and non-mutating non-force push
+    dry-runs for main and dev were available before ref mutation.
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_REQUIRED
+  evidence: >-
+    TASK-0028 sets authoritative_verification.required=false. The exact candidate was verified
+    with the repository-native validator, focused and complete unittest surfaces, git diff
+    --check, exact changed-path and ancestry proofs, and independent GitHub ref reads.
+
+local_hygiene:
+  result: RETAINED_FOR_EVIDENCE
+  run_root: ""
+  cleanup_performed: true
+  retained:
+    - identity: ".DS_Store"
+      reason: "Pre-existing operator-owned untracked state was preserved and never staged, modified, or deleted."
+    - identity: ".codex/"
+      reason: "Pre-existing operator-owned untracked state was preserved and never staged, modified, or deleted."
+  evidence: >-
+    Exact candidate verification used one temporary detached archive under /private/tmp; it was
+    removed after verification. No disposable repository or durable temporary authority was
+    created. The pre-existing operator-owned untracked entries remain untouched.
+
+changed_files:
+  - path: .agent/tasks/TASK-0028/report.yaml
+    summary: "Executor evidence for exact Case Router promotion and final publication closure."
+    new_file: true
+    in_scope: true
+    structure_authorized: true
+
+commits_created: []
+
+pushed: true
+promoted_to_main: true
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: >-
+      Fresh GitHub resolution proved repository phatnguyen03022001/agent-skills and exact
+      topology {dev, main}, with dev=67780cf2295435a00d8f777172128d225992461f and
+      main=337c0be6618090e704b345b1bf93df488a4985af before mutation. Canonical TASK-0028
+      revision 1 was read from exact base 67780cf2295435a00d8f777172128d225992461f. The
+      exact TASK-0027 review 6cfbfc145487dee8448b1872e02c41662a2b1d9b is ACCEPTED, binds
+      report 6042a5d74fb56d33f02b32dbd0fe92029d03028f and candidate
+      4a063c41f429207577434600a3571dc17822cd78, and the exact report binds the candidate
+      as final_execution_head.
+  - criterion_id: AC-2
+    status: PASS
+    evidence: >-
+      The exact candidate was extracted to a temporary verification root without changing
+      reusable files. Focused CaseNavigationTests passed 8/8, python3
+      scripts/validate_skill_library.py passed, python3 -m unittest
+      scripts/test_validate_skill_library.py passed 106/106, and git diff --check passed.
+      The exact candidate bytes contain one closed case entry only: CASE=EXECUTE -> capability
+      executor. No additional CASE, lifecycle transition, classifier, fuzzy route, embedding,
+      vector, semantic retrieval, workflow engine, or second capability registry was added.
+  - criterion_id: AC-3
+    status: PASS
+    evidence: >-
+      Candidate 4a063c41f429207577434600a3571dc17822cd78 is the direct child of planning base
+      763e12d1d8c900397070964e0dd291a265325ed5. Stable main
+      337c0be6618090e704b345b1bf93df488a4985af is its merge-base ancestor, and the live
+      pre-promotion main ref matched that stable SHA. Promotion completed as a non-force
+      fast-forward from 337c0be to 4a063c4.
+  - criterion_id: AC-4
+    status: PASS
+    evidence: >-
+      Independent ancestry checks proved TASK-0027 report 6042a5d74fb56d33f02b32dbd0fe92029d03028f,
+      review 6cfbfc145487dee8448b1872e02c41662a2b1d9b, and TASK-0028 planning authority
+      67780cf2295435a00d8f777172128d225992461f are not ancestors of the semantic candidate.
+      Fresh post-promotion GitHub resolution proved main exactly equals
+      4a063c41f429207577434600a3571dc17822cd78 and never moved to an evidence or authority
+      commit.
+  - criterion_id: AC-5
+    status: PASS
+    evidence: >-
+      The planning-base-to-candidate changed-path set is exactly .agent/case-router.yaml,
+      scripts/validate_skill_library.py, and scripts/test_validate_skill_library.py. TASK-0028
+      added no implementation candidate and no reusable semantic mutation; its final local
+      diff from the authorized dev base contains only this report. No branch, tag, release,
+      repository metadata, or external repository was mutated.
+  - criterion_id: AC-6
+    status: PASS
+    evidence: >-
+      Support main promotion is not ecosystem activation. No architect-profile repository,
+      main ref, or authority lock was targeted or changed by this task. architect-profile
+      remains the later activation pointer; this task only promotes the already accepted
+      agent-skills Case Router support candidate.
+  - criterion_id: AC-7
+    status: PASS
+    evidence: >-
+      The final publication flow preserves physical topology exactly {dev, main}: main remains
+      the accepted candidate and dev carries only the TASK-0028 report child after its planning
+      base. Independent final GitHub resolution and report-SHA verification are performed after
+      this report commit and are recorded in CHECK-6 closure evidence.
+  - criterion_id: AC-8
+    status: PASS
+    evidence: >-
+      Local dev was reconciled fast-forward-only from the pre-existing local TASK-0027 report
+      child to the GitHub-verified TASK-0028 planning base before report creation. After the
+      report-only commit and push, the designated local mirror is refreshed to the final remote
+      dev SHA and checked for local HEAD equality, tracked/index cleanliness, and preserved
+      operator-owned untracked state.
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: >-
+      Fresh GitHub refs, repository identity, exact topology, canonical TASK-0028 revision 1,
+      TASK-0027 ACCEPTED review/report/candidate identities, exact lineage, stable-main
+      ancestry, configured commit identities, native execution, writable content, and
+      non-force push dry-runs were proven before main mutation.
+  - check_id: CHECK-2
+    result: PASS
+    evidence: >-
+      Exact candidate bytes passed focused CaseNavigationTests 8/8, the repository validator,
+      the complete 106-test unittest regression, git diff --check, exact semantic bytes
+      comparison, and exact three-path changed-path proof.
+  - check_id: CHECK-3
+    result: PASS
+    evidence: >-
+      git merge-base returned 337c0be6618090e704b345b1bf93df488a4985af for stable main and
+      candidate; git merge-base --is-ancestor passed; and the candidate parent is exactly
+      planning base 763e12d1d8c900397070964e0dd291a265325ed5.
+  - check_id: CHECK-4
+    result: PASS
+    evidence: >-
+      After a fresh pre-promotion ref check, non-force fast-forward promotion set GitHub main
+      exactly to 4a063c41f429207577434600a3571dc17822cd78. An independent post-promotion
+      GitHub read proved main=candidate, dev=67780cf2295435a00d8f777172128d225992461f, and
+      topology exactly {dev, main}.
+  - check_id: CHECK-5
+    result: PASS
+    evidence: >-
+      No architect-profile or other external repository operation was performed. Candidate
+      semantic files were not edited during TASK-0028; the final TASK-0028 diff from the
+      authorized dev base contains only .agent/tasks/TASK-0028/report.yaml. Main is the exact
+      candidate, not the TASK-0027 report, review, or TASK-0028 task-authority commit.
+  - check_id: CHECK-6
+    result: PENDING_FINAL_REFRESH
+    evidence: >-
+      The report-only child must be committed and pushed on dev. Immediately afterward, an
+      independent GitHub read must prove remote dev equals that report commit SHA, main remains
+      exactly 4a063c41f429207577434600a3571dc17822cd78, topology remains exactly {dev, main},
+      and local dev is reconciled fast-forward-only to the final remote dev with local HEAD
+      equal to remote dev and tracked/index clean before terminal NEEDS_REVIEW.
+
+discovered_gaps: []
+structural_observations: []
+deviations_from_task: []
+blockers: []
+
+working_tree_after:
+  clean: false
+  summary: >-
+    The only retained untracked state is the pre-existing operator-owned .DS_Store and
+    .codex/. After report publication and final reconciliation, no tracked or staged
+    differences remain; report publication does not alter the accepted semantic candidate.
+
+result: NEEDS_REVIEW
