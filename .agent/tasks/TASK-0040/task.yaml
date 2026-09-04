@@ -1,0 +1,178 @@
+protocol_version: 3
+
+task_id: TASK-0040
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: accepted_follow_up
+  source: ".agent/tasks/TASK-0039/review.yaml@6c8fc8aa1617a954fcf220563a1cf389de2752c4"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "11a5720adf96555bfe4187067d8dd51627ec8676"
+
+execution_skills:
+  required:
+    - executor
+    - verification
+    - simplicity
+    - github-workflow
+
+authority_sources:
+  - source: "architect-profile/main@b7753ba37abe193c8801ac26302ecff7bbb35604"
+    role: "current active ecosystem authority set before support-repo promotion"
+    precedence: 1
+  - source: ".agent/tasks/TASK-0039/review.yaml@6c8fc8aa1617a954fcf220563a1cf389de2752c4"
+    role: "accepted exact one-call bundle realization candidate and Architect judgment"
+    precedence: 2
+  - source: ".agent/tasks/TASK-0039/report.yaml@a285ce9ca8bd90bfafe471f9ca483373e50c1ea4"
+    role: "accepted candidate verification evidence"
+    precedence: 3
+  - source: "agent-skills/main@11a5720adf96555bfe4187067d8dd51627ec8676"
+    role: "current stable support revision"
+    precedence: 4
+
+structure_authority:
+  status: RESOLVED
+  source: "existing dev/main support-repository promotion topology"
+  rationale: >-
+    This task performs only strict non-force promotion of the exact accepted TASK-0039 candidate to main and then
+    publishes one TASK-0040 report on dev. It adds no source semantics, runtime capability, repository structure,
+    scheduler, state machine, or orchestration surface.
+
+objective: >-
+  Promote the exact accepted TASK-0039 candidate ed8d9fb35bb8b052530ca879e68a227d77e4a8a6 to
+  agent-skills/main by strict non-force ref movement, reusing still-applicable accepted immutable correctness evidence
+  and refreshing only consequence-sensitive mutable predicates. This task does not activate the new revision
+  ecosystem-wide; architect-profile authority-lock update and activation remain separate later phases.
+
+scope:
+  required_changes:
+    - >-
+      Freshly re-resolve exact TASK-0039 review, report, candidate, current main/dev refs, topology, candidate ancestry,
+      and current promotion capability in this new binding. Do not trust chat/session cache.
+    - >-
+      Reuse TASK-0039 validator, 116-test, diff-check, exact-scope, semantic-invariant, and forbidden-surface evidence
+      only after confirming it covers the exact currently required correctness predicates under still-applicable
+      semantics/dependencies. Do not rerun acceptance-equivalent producers merely because this is a promotion phase.
+    - >-
+      Immediately before mutation prove main is exactly 11a5720adf96555bfe4187067d8dd51627ec8676, topology is exactly
+      {dev, main}, old main is an ancestor of ed8d9fb35bb8b052530ca879e68a227d77e4a8a6, and promotion capability is current.
+    - >-
+      Execute one bounded deterministic promotion consequence with ordered serial phases: fresh guard -> exact strict
+      non-force push of ed8d9fb35bb8b052530ca879e68a227d77e4a8a6 to refs/heads/main -> fresh remote post-proof -> compact
+      attributable JOIN. Guard failure or ambiguity means zero promotion mutation; push exit success without exact
+      post-proof is not success.
+    - >-
+      Publish only .agent/tasks/TASK-0040/report.yaml on dev after promotion. After report publication, freshly prove
+      final dev/main/topology and required local managed-mirror closure without altering accepted candidate bytes.
+
+invariants:
+  - "The promoted source candidate is exactly ed8d9fb35bb8b052530ca879e68a227d77e4a8a6; no reconstructed, amended, merged, rebased, or cherry-picked substitute is permitted."
+  - "No TASK-0039 candidate bytes are modified."
+  - "No acceptance-equivalent correctness producer is rerun absent a specifically named invalidated, uncovered, or newly required predicate."
+  - "Promotion is strict non-force and exact; failure or ambiguity fails closed."
+  - "Topology remains exactly {dev, main}."
+  - "Only agent-skills/main ref movement plus TASK-0040 report publication on dev are authorized persistent changes."
+  - "This promotion alone does not make the new semantics ecosystem-active; architect-profile/main remains the activation pointer."
+
+forbidden_changes:
+  - "Do not modify executor/SKILL.md or any other candidate/source bytes."
+  - "Do not rerun TASK-0039 validator/116-test/diff-check/scope/semantic producers unless a named predicate is invalidated or uncovered."
+  - "Do not force-push, merge, rebase, cherry-pick, reset, or create/delete/rename branches, tags, releases, dependencies, services, registries, caches, schedulers, queues, daemons, or callbacks."
+  - "Do not mutate architect-profile or any sibling support repository in this task."
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  REVIEW:
+    - repository_content_read
+    - repository_content_write
+    - exact_commit_report_resolution
+    - remote_ref_read
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: >-
+      Fresh binding exactly re-resolves TASK-0039 accepted review/report/candidate evidence and proves reused immutable
+      evidence still covers all currently required correctness predicates under applicable semantics/dependencies.
+    evidence_required: "Exact artifact identities plus explicit predicate-applicability classification."
+  - id: AC-2
+    requirement: >-
+      No acceptance-equivalent TASK-0039 correctness producer is rerun absent a named invalidated/new predicate.
+    evidence_required: "Report names reused evidence and every newly executed proof."
+  - id: AC-3
+    requirement: >-
+      Immediately before promotion, main is exactly 11a5720adf96555bfe4187067d8dd51627ec8676, topology is exactly
+      {dev, main}, old main is an ancestor of ed8d9fb35bb8b052530ca879e68a227d77e4a8a6, and promotion capability is current.
+    evidence_required: "Fresh refs/topology/ancestry/capability proof."
+  - id: AC-4
+    requirement: >-
+      One bounded deterministic consequence performs fresh guard -> exact strict non-force promotion -> fresh remote
+      post-proof and returns attributable JOIN; failed or ambiguous guard means zero promotion mutation.
+    evidence_required: "Compact stage/result evidence and exact post-promotion main identity."
+  - id: AC-5
+    requirement: >-
+      After promotion main equals ed8d9fb35bb8b052530ca879e68a227d77e4a8a6; only TASK-0040 report evidence is then
+      published on dev; topology remains {dev, main}; required local managed-mirror closure is truthful.
+    evidence_required: "Fresh refs/topology, exact report commit, and final local hygiene proof."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: >-
+        Fresh-resolve exact task/base, TASK-0039 accepted review/report/candidate identities, current active authority,
+        current refs/topology/ancestry, promotion capability, and exact reused-evidence predicate applicability.
+      required: true
+    - id: CHECK-2
+      command_or_check: >-
+        Reuse unchanged accepted TASK-0039 correctness evidence; do not rerun producers absent a named invalidated/new predicate.
+      required: true
+    - id: CHECK-3
+      command_or_check: >-
+        Run one bounded deterministic promotion consequence: fresh refs/topology/ancestry/identity guard; if all pass,
+        exact strict non-force push candidate to refs/heads/main; fresh-prove main equals candidate; return compact JOIN.
+      required: true
+    - id: CHECK-4
+      command_or_check: >-
+        Publish compact TASK-0040 report on dev, then freshly prove final dev/main/topology and required local hygiene.
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: true
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
