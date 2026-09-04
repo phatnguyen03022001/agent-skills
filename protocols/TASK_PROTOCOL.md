@@ -283,9 +283,19 @@ Examples: repository content write/test execution for `EXECUTION`; exact commit/
 
 ## Consequence-based execution guards
 
-Read, inspect, test, and reproduce work inside the active binding may remain comparatively loose when it does not persistently mutate target truth. Persistent target mutation remains bounded by current task/user authority. At each consequence boundary, refresh only the mutable evidence whose validity the consequence requires: immediately before an authorized consequence that depends on current local, remote, or runtime state, and immediately after a canonical publication/ref mutation for the affected remote truth. Unchanged `IMMUTABLE` evidence remains reusable.
+Read, inspect, test, and reproduce work inside the active binding may remain comparatively loose when it does not persistently mutate target truth. Persistent target mutation remains bounded by current task/user authority. At each consequence boundary, refresh only the mutable evidence whose validity the consequence requires: immediately before an authorized consequence that depends on current local, remote, or runtime state, and immediately after a canonical publication/ref mutation for the affected remote truth. A consequence-boundary evidence refresh is an evidence obligation, not automatically a model/runtime synchronization boundary. Unchanged `IMMUTABLE` evidence remains reusable.
 
 Guard by consequence rather than executable name: the same generic capability may support observation mutation, authorized target-ref mutation, and canonical publication mutation with different refresh requirements. Generic execution capability never grants secret disclosure, sibling-repository mutation, destructive cleanup, promotion, or release authority; existing repository, Git, secret, rebinding, lifecycle, and release boundaries continue to govern. External remote drift between observations is resolved by a fresh `REMOTE_MUTABLE` read at the next consequence boundary, not by assuming that absence of an Executor mutation preserves remote truth.
+
+## Deterministic execution bundling
+
+Once all required semantic choices, current authority, and current-phase capabilities are resolved, Executor **MUST** execute the maximal contiguous mechanically derivable suffix as one bounded `EXECUTION BUNDLE`. “Maximal contiguous” means that every subsequent job whose inputs, ordering, authority, evidence obligations, and postcondition are already determined is included until a required judgment or terminal condition is reached. A refresh of `LOCAL_MUTABLE`, `REMOTE_MUTABLE`, or `RUNTIME` evidence at a consequence boundary remains mandatory, but when no semantic decision is needed between that refresh and the next job, the refresh is an internal job of the same bundle rather than an automatic model/runtime handoff.
+
+The bundle is an invocation boundary, not a new authority or lifecycle boundary. Serial internal phases remain valid when ordering or mutation requires them. Conflicting writes, migrations, canonical ref/publication mutation, and final mutation gates remain serial, and independent jobs may run in parallel only under the existing safe-parallel rules. Commit, push, report publication, promotion, release, and other lifecycle/consequence boundaries retain their independent authority, evidence, and postconditions even when their already-authorized work is carried as serial jobs in one bundle.
+
+Each job retains a stable identity, an independently attributable result, and enough evidence for the compact `JOIN` to show every result; an aggregate success must not hide a failed job. A bundle failure or ambiguous postcondition stops the remaining deterministic suffix, preserves truthful partial state, returns attributable failure evidence, and does not self-retry or choose recovery. After a successful attributable `JOIN`, do not re-read or re-confirm unchanged `IMMUTABLE` evidence merely for confidence; continue the already-derived suffix inside the bundle when no judgment is required.
+
+Control returns to the model/controller only when the next action is no longer mechanically derivable because of one of these conditions: new material information; contradiction or ambiguous/invalidated evidence; missing or invalidated authority or capability; a semantic gap requiring judgment; a failed or ambiguous postcondition; or a terminal lifecycle result. An explicit `USER_STOP` remains an existing operator stop under continuation policy. Returning control does not grant the next phase, recovery, promotion, release, or any other authority; the existing lifecycle and continuation rules still govern.
 
 ## Target-authoritative Git topologies
 
@@ -370,7 +380,9 @@ These unconditional protocol rules need not be recopied as prose into every task
 
 ## Executor flow
 
-`receive exact handoff → verify base/task/rules → preflight EXECUTION capability → execute restrictive scope → resolve LOCAL only → record FOLLOW_UP → stop on BLOCKING → run checks → local hygiene gate → write truthful REPORTED report for NEEDS_REVIEW or any terminal blocking result when authorized/capable → commit/publish report only when separately authorized → terminal handoff/result → stop`
+The arrows below describe logical procedure, not mandatory model/runtime round trips. After semantic choices, current authority, and current-phase capabilities are resolved, the maximal contiguous mechanically derivable suffix is one bounded `EXECUTION BUNDLE`; its evidence refreshes and any required serial internal phases remain jobs within that bundle when no judgment is needed between them.
+
+`receive exact handoff → verify base/task/rules → preflight EXECUTION capability → resolve required semantic choices/current authority → execute the maximal contiguous mechanically derivable suffix as one bounded EXECUTION BUNDLE (restrictive scope → resolve LOCAL only → record FOLLOW_UP → stop on BLOCKING → run checks → local hygiene gate) → write truthful REPORTED report for NEEDS_REVIEW or any terminal blocking result when authorized/capable → commit/publish report only when separately authorized → terminal handoff/result → stop`
 
 Executor never self-accepts its report. Only after that terminal boundary may a reused Executor chat establish another repository binding from fresh authority.
 
