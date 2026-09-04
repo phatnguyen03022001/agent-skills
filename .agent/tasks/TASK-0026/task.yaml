@@ -1,0 +1,215 @@
+protocol_version: 3
+
+task_id: TASK-0026
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: "CR-00-CASE-ROUTER-ADMISSION"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "337c0be6618090e704b345b1bf93df488a4985af"
+
+architect_analysis_skills:
+  - architect
+  - gap-analysis
+  - simplicity
+  - verification
+
+execution_skills:
+  required:
+    - executor
+    - gap-analysis
+    - simplicity
+    - verification
+  recommended:
+    - research
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "operator-approved CR-00 Case Router admission plan in the current Architect conversation"
+    role: "current material admission and anti-God-Context authority"
+    precedence: 1
+  - source: "phatnguyen03022001/architect-profile/.agent/tasks/TASK-0017/review.yaml@68350ff54749b2548a2bb5f4f7cc40f2c0d29cd8"
+    role: "accepted OPM-02 guardrail: admit a future case/navigation map only when real pilots prove repeated material context or decision-routing waste"
+    precedence: 2
+  - source: "phatnguyen03022001/agent-skills@337c0be6618090e704b345b1bf93df488a4985af"
+    role: "stable generic governance, role, task, evidence, and capability-owner authority"
+    precedence: 3
+
+structure_authority:
+  status: RESOLVED
+  source: "CR-00 admission design"
+  rationale: >-
+    This task may add only one bounded machine-readable baseline artifact inside TASK-0026
+    plus the normal Executor report. It must not add a reusable case taxonomy, router,
+    classifier, schema family, embedding index, service, workflow state, or capability registry.
+
+objective: >-
+  Produce empirical, reproducible admission evidence for whether a small static CASE -> required
+  capability navigation layer is justified. Measure the current routing/context cost on real
+  canonical task episodes, compare it with a post-hoc minimal sufficient read set using only
+  already-existing canonical owners, and stop without implementing a Case Router or embedding.
+
+scope:
+  required_changes:
+    - "Create exactly one bounded evidence artifact at .agent/tasks/TASK-0026/case-routing-baseline.json. It is derived evaluation evidence with authority NONE and must not be imported or consumed as live workflow authority."
+    - "Build a corpus of exactly 12 real canonical task episodes spanning at least 5 repositories. The corpus must include architect-profile TASK-0016 and TASK-0017, agent-skills TASK-0024 and TASK-0025, ilets TASK-0045, SF TASK-0008, and at least one elite-drive episode. Select the remaining episodes by a declared deterministic rule from current canonical history rather than cherry-picking for a desired result. Accepted, blocked, or reverify episodes are all eligible when their canonical task/report/review evidence is reconstructible and materially useful for routing analysis."
+    - "For every episode start from the smallest realistic canonical locator available to a fresh Executor/Architect for that episode, fresh-resolve the exact immutable and mutable GitHub identities required by current governance, and record every canonical artifact actually consulted until the semantic capability owner/path set is sufficient to proceed. Do not rely on remembered chat context."
+    - "For every consulted artifact record repository, exact revision/commit, path, byte size when mechanically available, purpose, and whether it was necessary for routing, necessary only after routing, or unnecessary to the routing decision."
+    - "For every episode record each material inference point required before the correct capability owner/path set became known. Examples may include deciding which owner repo to inspect, distinguishing role/specialization/binding/mode, or discovering that a previously read artifact was not needed. Do not invent a future CASE taxonomy while recording these facts."
+    - "After the observed trace is complete, derive a post-hoc minimal sufficient routing read set using only existing canonical owners, exact current capability entrypoints where they already exist, and the same episode authority. This is a counterfactual measurement only; it must not create or assume a router implementation."
+    - "Compute per-episode and aggregate metrics: observed routing artifact count, minimal routing artifact count, observed routing bytes, minimal routing bytes, distinct support repositories touched before routing closure, material inference-point count, unnecessary routing-read count, and percentage reduction from observed to minimal for artifact count and bytes where sizes are available. Report median and p75 for the corpus."
+    - "Identify repeated routing-waste patterns only when the same materially similar inference/read waste appears in at least 3 independent episodes across at least 2 repositories. Separately prove whether at least 2 materially different capability sets recur such that a static case key could select different loads."
+    - "Evaluate, but do not architecturally decide, the admission gate. Evidence supports Case Router admission only if: repeated material routing waste is proven; at least two materially different recurring capability sets are proven; and the measured median reducible routing overhead is at least 50% in artifact count or bytes without moving semantic authority. Otherwise record admission evidence as NOT_PROVEN. Final admission remains Architect judgment."
+    - "Record whether meaningful semantic-search waste remains after the post-hoc minimal static routing projection. This is only an embedding admission observation. Do not build embeddings, vector storage, semantic indexes, or retrieval machinery."
+    - "Publish the baseline artifact and normal canonical Executor report on dev only. Preserve main exactly. Fresh-observe remote dev after each push and finish with the designated canonical local agent-skills working copy synchronized to final remote dev when executing locally."
+
+  allowed_existing_files_or_components:
+    - ".agent/tasks/TASK-0026/task.yaml"
+    - ".agent/tasks/TASK-0026/case-routing-baseline.json"
+    - ".agent/tasks/TASK-0026/report.yaml"
+    - "read-only canonical evidence from architect-profile, agent-skills, agent-standards, agent-documents, agent-runtime, ilets, SF, elite-drive, argus, and other explicitly selected corpus repositories"
+    - "one-off shell/Python commands used only to measure, validate, sort, count, or recompute TASK-0026 evidence"
+
+invariants:
+  - "CR-00 measures whether a Case Router deserves to exist; it must not assume the answer is yes."
+  - "CASE remains a proposed navigation dimension only. This task must not define CASE values, lifecycle transitions, next-step semantics, retry semantics, terminal states, task state, binding state, specialization state, or execution-mode state."
+  - "CASE, BINDING, SPECIALIZATION, MODE, TASK, and STATE remain conceptually separate; CR-00 must record ambiguity evidence without collapsing these dimensions."
+  - "Five support repositories are canonical modular authorities, not a context bundle to preload. Whole-repository preload is never the baseline requirement."
+  - "A post-hoc minimal read set may reference only already-existing canonical authority owners/paths. It cannot smuggle in future router semantics."
+  - "Embedding is not authority and is not admitted by this task. Any embedding observation is advisory measurement only."
+  - "External repositories are read-only evidence sources. No external task, report, review, branch, issue, PR, release, tag, metadata, or source code may be mutated."
+  - "GitHub is canonical repository truth. Chat history, local cwd, remembered project state, and model memory are non-authoritative."
+  - "Physical branch topology for agent-skills remains exactly {dev, main}; no staging or third branch is permitted."
+  - "Reusable agent-skills semantics remain unchanged in CR-00."
+
+forbidden_changes:
+  - "Do not modify architect/SKILL.md, executor/SKILL.md, protocols, contracts, templates, README, validators, reusable scripts, skill taxonomy, capability semantics, or any other reusable agent-skills authority."
+  - "Do not create a case router, case map, case taxonomy, classifier, decision engine, state machine, next map, workflow engine, planner, orchestrator, registry, daemon, service, database, queue, scheduler, cache, or persistent execution capsule."
+  - "Do not create embeddings, vectors, semantic-search indexes, retrieval stores, similarity thresholds, embedding providers, or derived authority caches."
+  - "Do not mutate agent-skills/main or any external repository."
+  - "Do not create, rename, or delete branches."
+  - "Do not manufacture historical token counts, timing, artifact reads, or chat behavior that cannot be independently reconstructed. Use mechanically measurable file/read-set proxies instead."
+  - "Do not label a routing pattern a CASE merely because it appears once or sounds conceptually neat."
+
+gap_policy:
+  local_auto_fix: false
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_commit
+    - git_push
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_read
+    - repository_content_write
+    - remote_ref_read
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "A reproducible 12-episode corpus from at least 5 real repositories is bound to exact canonical source identities and selected by an explicit non-cherry-picked rule."
+    evidence_required: "case-routing-baseline.json source manifest, exact Git identities, and deterministic corpus-selection rationale."
+  - id: AC-2
+    requirement: "Each episode contains an evidence-backed observed routing trace and a separately labeled post-hoc minimal sufficient routing read set without relying on trusted chat memory or inventing future router semantics."
+    evidence_required: "Per-episode artifact/read records, exact owner/path/revision identities, measurable byte/count data where available, and recorded material inference points."
+  - id: AC-3
+    requirement: "Aggregate routing-cost metrics are mechanically recomputable from the baseline artifact and distinguish observed routing cost from work that occurs only after routing closure."
+    evidence_required: "One-off stdlib validation/recomputation output for counts, bytes, repo hops, inference points, unnecessary reads, medians, p75, and reduction percentages."
+  - id: AC-4
+    requirement: "Repeated routing waste and materially distinct recurring capability-load patterns are either proven under the explicit thresholds or honestly recorded as NOT_PROVEN."
+    evidence_required: "Cross-episode pattern table with source episode IDs, repository diversity, capability-set identities, and threshold evaluation."
+  - id: AC-5
+    requirement: "The baseline produces an admission-evidence result without pre-deciding architecture: PROVEN only when repeated material waste, distinct recurring capability loads, and >=50% median reducible overhead are all supported; otherwise NOT_PROVEN."
+    evidence_required: "Machine-readable admission_evidence section plus Executor explanation mapping each gate to exact measurements."
+  - id: AC-6
+    requirement: "Embedding remains unimplemented and non-authoritative; the baseline only records whether residual semantic-search waste remains after the minimal static-routing projection."
+    evidence_required: "Explicit embedding_admission_observation with evidence references and exact changed-path proof showing no embedding/retrieval machinery."
+  - id: AC-7
+    requirement: "CR-00 changes no reusable governance semantics and introduces no router/workflow subsystem."
+    evidence_required: "Exact base-to-candidate diff limited to TASK-0026 baseline/report artifacts, git diff --check, and simplicity review."
+  - id: AC-8
+    requirement: "All task artifacts are published on dev with remote SHA confirmation, main remains unchanged, topology remains exactly {dev, main}, and local execution closes with local HEAD equal to final remote dev when a designated local mirror is used."
+    evidence_required: "Exact implementation/baseline SHA, report SHA, independent remote-ref observations, final topology proof, and local==remote proof for local execution."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Fresh-resolve TASK-0026 revision 1, exact dev/main refs, pinned agent-skills authority, architect-profile TASK-0017 accepted review, and all selected corpus source identities before writing baseline evidence."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Validate case-routing-baseline.json with one-off Python stdlib checks: valid JSON; exactly 12 unique episodes; >=5 repositories; mandatory anchor episodes present; every consulted artifact has repo/path/revision/purpose/classification; aggregate counts and percentages recompute exactly from episode data."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Independently recompute repeated-pattern thresholds, distinct capability-set count, median and p75 routing overhead, >=50% admission threshold, and embedding residual observation from the recorded episode data; do not accept hand-written aggregate numbers that disagree with raw entries."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Verify exact changed paths before the report commit are limited to .agent/tasks/TASK-0026/case-routing-baseline.json; after report publication the only additional changed path is .agent/tasks/TASK-0026/report.yaml."
+      required: true
+    - id: CHECK-5
+      command_or_check: "git diff --check and any repository-native task-artifact validation applicable without modifying reusable validator semantics."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Push exact baseline candidate to dev, independently observe remote dev == candidate SHA, publish the canonical report-only child, independently observe remote dev == report SHA, require main unchanged and topology exactly {dev, main}, and if executing in the designated local mirror reconcile local dev to final remote dev before NEEDS_REVIEW."
+      required: true
+
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
