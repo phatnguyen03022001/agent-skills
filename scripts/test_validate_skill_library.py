@@ -2555,5 +2555,60 @@ class Task0029SparseSerializationTests(unittest.TestCase):
         self.assertIn("expanded-v3 review fields remain valid compatibility input", review_contract)
 
 
+class Task0030ControlPlaneAccelerationTests(unittest.TestCase):
+    def test_evidence_validity_classes_and_consequence_invalidation_are_explicit(self) -> None:
+        protocol = (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8")
+        for evidence_class in ("IMMUTABLE", "LOCAL_MUTABLE", "REMOTE_MUTABLE", "RUNTIME"):
+            self.assertIn(f"`{evidence_class}`", protocol)
+        for mutation_kind in (
+            "observation mutation",
+            "authorized target-ref mutation",
+            "canonical publication mutation",
+        ):
+            self.assertIn(mutation_kind, protocol.lower())
+        self.assertIn("consequence boundary", protocol.lower())
+        self.assertIn("creates no persistent cache", protocol.lower())
+
+    def test_execution_bundle_is_bounded_and_parallel_only_when_all_safety_predicates_hold(self) -> None:
+        executor = (ROOT / "executor" / "SKILL.md").read_text(encoding="utf-8").lower()
+        verification = (ROOT / "verification" / "SKILL.md").read_text(encoding="utf-8").lower()
+        optimization = (ROOT / "optimization" / "SKILL.md").read_text(encoding="utf-8").lower()
+        combined = "\n".join((executor, verification, optimization))
+        self.assertIn("execution bundle", combined)
+        for predicate in (
+            "no shared mutable state",
+            "no ordering dependency",
+            "no conflicting externally rate-limited dependency",
+            "no material resource contention",
+            "independently attributable",
+        ):
+            self.assertIn(predicate, combined)
+        self.assertIn("otherwise serialize", combined)
+        self.assertIn("one bounded", combined)
+        self.assertIn("compact", combined)
+        self.assertIn("join", combined)
+
+    def test_mandatory_full_suite_subsumes_focused_happy_path(self) -> None:
+        verification = (ROOT / "verification" / "SKILL.md").read_text(encoding="utf-8").lower()
+        self.assertIn("mandatory full suite", verification)
+        self.assertIn("subsumes", verification)
+        self.assertIn("happy path", verification)
+        self.assertIn("diagnostic after failure", verification)
+        self.assertIn("distinct acceptance authority", verification)
+
+    def test_report_publication_closure_has_explicit_owners_without_self_reference(self) -> None:
+        protocol = (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8").lower()
+        report = (ROOT / "contracts" / "IMPLEMENTATION_REPORT.md").read_text(encoding="utf-8").lower()
+        review = (ROOT / "contracts" / "ARCHITECT_REVIEW.md").read_text(encoding="utf-8").lower()
+        combined = "\n".join((protocol, report, review))
+        self.assertIn("same-commit post-publication", combined)
+        self.assertIn("fresh remote publication proof", combined)
+        self.assertIn("after push", combined)
+        self.assertIn("review boundary", combined)
+        self.assertIn("local mirror", combined)
+        self.assertIn("local_mutable", combined)
+        self.assertIn("not canonical remote authority", combined)
+
+
 if __name__ == "__main__":
     unittest.main()

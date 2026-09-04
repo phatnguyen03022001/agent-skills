@@ -39,7 +39,9 @@ Prefer optimizations that preserve conceptual integrity and have a rollback path
 
 Avoid speculative caches, parallelism, batching, denormalization, larger machines, or new services without evidence that they address the measured bottleneck.
 
-Prefer removal of unnecessary work before clever acceleration. A deleted network hop, query, build step, dependency, or redundant transformation often improves both performance and maintainability. When parallelism is justified, include coordination, contention, ordering, retry, and failure overhead in the measurement rather than counting theoretical concurrency as throughput.
+Prefer removal of unnecessary work before clever acceleration. A deleted network hop, query, build step, dependency, or redundant transformation often improves both performance and maintainability. For model/runtime control-plane work, first remove redundant synchronization such as a focused happy-path suite already subsumed by the mandatory full suite; then batch safe deterministic checks into an EXECUTION BUNDLE.
+
+Measure synchronization mechanically against an equivalent predicate-preserving serial plan: if the one-command-per-check baseline needs `N` model/runtime boundaries and the bundled plan needs `M`, reduction is `(N - M) / N`. Count the same assurance predicates on both sides. Parallel execution is allowed only with no shared mutable state, no ordering dependency, no conflicting externally rate-limited dependency, no material resource contention, and independently attributable results; otherwise serialize. Wall-clock telemetry may supplement this count when trustworthy, but it is not authority or a substitute for correctness.
 
 ## Re-measure
 

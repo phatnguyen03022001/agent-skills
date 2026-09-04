@@ -24,6 +24,16 @@ Useful methods include:
 
 TDD is useful when behavior can be expressed before implementation and feedback is fast. It is a method inside verification, not a ritual required for every configuration, migration, generated artifact, or exploratory task.
 
+## Bounded deterministic execution bundles
+
+When several required checks are deterministic and independent, they may share one **EXECUTION BUNDLE**: one bounded runtime invocation containing multiple jobs and one compact attributable `JOIN` result. Parallelize only a subset proven to have no shared mutable state, no ordering dependency, no conflicting externally rate-limited dependency, no material resource contention, and independently attributable results. Otherwise serialize the affected jobs inside or outside the bundle. Publication/ref mutation, migrations, shared databases/ports/temp/cache writes, and final mutation gates are serial.
+
+The JOIN must preserve per-job identity and result; one failed job cannot be hidden by aggregate success. Bundling changes synchronization cost, not the assurance predicate set.
+
+## Focused versus full suites
+
+When a mandatory full suite semantically subsumes a focused suite, run the mandatory full suite directly on the happy path. Do not spend an extra synchronization boundary on focused-before-full ceremony. The focused suite becomes a diagnostic after failure unless it has distinct acceptance authority or proves a predicate the full suite does not cover. Separately authoritative focused checks remain mandatory.
+
 ## Evidence quality
 
 A check should have a clear failure meaning. Verify that new tests can fail for the defect they claim to detect; a permanently green test is decoration. Avoid assertions tied only to implementation details, mocks that prove their own setup, and broad suites used as a substitute for a targeted causal test.

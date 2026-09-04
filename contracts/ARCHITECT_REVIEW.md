@@ -8,7 +8,7 @@ This contract owns review-artifact obligations only. Reusable lifecycle, authori
 
 Exactly one current governing Architect owns final review judgment for the active repository binding. Architect reviews Executor evidence; it does not rewrite it.
 
-`reviewed_report.commit` names the exact commit containing the exact `report.yaml` revision being judged. The review context must resolve that commit and content deterministically. Remote-only review requires remote reachability; local-only review requires an explicitly shared trusted checkout/object environment resolving the same object.
+`reviewed_report.commit` names the exact commit containing the exact `report.yaml` revision being judged. The review context must resolve that commit and content deterministically. Remote-only review requires remote reachability; local-only review requires an explicitly shared trusted checkout/object environment resolving the same object. At a remote review boundary, independently refresh the `REMOTE_MUTABLE` publication/ref evidence needed by the review; do not rely on a report predicting its own same-commit post-publication state. Fresh remote publication proof after push belongs here or at the preceding publication consequence boundary. A local mirror is `LOCAL_MUTABLE` hygiene, not canonical remote authority.
 
 Independent reviewer, red-team, verifier, debugger, researcher, or similar work may run in a separate agent/session as Executor-specialized evidence. Advisory evidence remains advisory; a designated verifier owns authoritative exact-SHA PASS/FAIL only when target authority explicitly grants that role. Neither independently owns Architect product/governance acceptance.
 

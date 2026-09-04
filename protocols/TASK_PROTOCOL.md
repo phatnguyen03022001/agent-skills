@@ -20,6 +20,23 @@ Evidence gathering is gate-scoped. For the current decision or execution gate, r
 
 Within one active context and exact binding, an already-resolved immutable commit, blob, task revision, report revision, or authority revision may be reused when its identity is unchanged instead of rereading it for ceremony. This is context-local reuse only: it creates no persistent cache, cross-session authority, hidden registry, or permission to reuse mutable refs/state without the fresh checks required at consequential mutation, review, promotion, or release boundaries.
 
+### Evidence validity and consequence-boundary invalidation
+
+Evidence used by one active exact binding belongs to one validity class. These classes describe reuse and invalidation only; they do not grant authority, add lifecycle state, or create persistence:
+
+- `IMMUTABLE`: exact commit/blob/task/review/skill/candidate identities and content addressed by those identities. Reuse them inside the unchanged binding without ceremonial rereads. Rebinding, identity contradiction, or proof that the named object differs ends reuse.
+- `LOCAL_MUTABLE`: working-tree/index state, local HEAD/ref state, local remote-tracking refs, generated local observations, and local mirror hygiene. Refresh the affected local evidence after a relevant local write or observation mutation before a consequence depends on it.
+- `REMOTE_MUTABLE`: live canonical repository refs, topology, remotely visible publication identity, and other remote facts that may drift independently. Freshly resolve the affected remote evidence immediately before a canonical consequence that depends on it and again after a canonical publication mutation. Executor inactivity is not proof that remote truth stayed unchanged.
+- `RUNTIME`: current capability, authentication, quota/rate-limit availability, process/tool availability, and equivalent volatile execution facts. This evidence is short-lived, is never authority, and is invalidated by a material environment/session/auth/quota change or when a later consequence materially depends on current availability.
+
+This classification creates no persistent cache, evidence registry, execution database, or cross-session authority. Refresh only the validity classes invalidated by the event or required by the next consequence; do not reread unchanged `IMMUTABLE` evidence merely because another class was refreshed.
+
+Keep mutation consequences distinct:
+
+- **observation mutation** changes only the execution/observation surface, such as `git fetch` updating local remote-tracking refs. It invalidates affected `LOCAL_MUTABLE` observations but does not itself publish or change canonical remote authority.
+- **authorized target-ref mutation** moves a task-authorized repository ref in the current execution context, such as a local commit advancing the bound branch. Refresh the local/ref evidence required by the next consequence; it still does not imply canonical publication.
+- **canonical publication mutation** changes canonical remote truth, such as an authorized push, promotion, or durable report/review publication. Fresh `REMOTE_MUTABLE` proof is required after publication and again at a later review/promotion/release consequence boundary when that remote identity matters.
+
 ## Optional operator profile
 
 A host/session/operator may supply an optional operator profile location/content at bootstrap. It is durable preference/environment context, not target-repository factual or mutation authority. Explicit current user decisions, target-repository canonical facts, and exact task authority outrank profile preferences. Reusable governance does not hard-code operator identity, profile location, machine, secret, personal provider/model default, personal path, or branch preference. A missing profile is not a blocker.
@@ -192,6 +209,8 @@ Keep these identities distinct within each repository binding:
 
 `report.yaml` state belongs to Executor evidence. It may remain `REPORTED` / `NEEDS_REVIEW` after the Architect accepts that exact report. Architect acceptance is separate evidence and does not justify rewriting the Executor report merely to mirror later review state.
 
+A report cannot truthfully encode a same-commit post-publication predicate about the commit that contains itself. The report records candidate and pre-publication evidence available before its own commit. After push, fresh remote publication proof is resolved outside that same report at the publication consequence boundary and independently again at the review boundary when remote reachability/ref identity matters. Do not use `PASS`, `PENDING_FINAL_REFRESH`, or equivalent ceremony inside the report to predict its own remote publication. A required local mirror closure is `LOCAL_MUTABLE` operational hygiene, not canonical remote authority.
+
 ## Executor-binding terminal vs whole-task lifecycle
 
 An Executor-binding terminal ends current mutation authority when required execution evidence is finalized. `NEEDS_REVIEW` / `REPORTED`, `BLOCKED`, `STALE_STATE`, `AUTHORITY_REQUIRED`, `CURRENT_PHASE_CAPABILITY_UNAVAILABLE`, failed terminal execution, or completed execution may all close an Executor binding when no mutation authority remains. This does not imply acceptance, promotion, or release and does not skip later lifecycle boundaries.
@@ -264,9 +283,9 @@ Examples: repository content write/test execution for `EXECUTION`; exact commit/
 
 ## Consequence-based execution guards
 
-Read, inspect, test, and reproduce work inside the active binding may remain comparatively loose when it does not persistently mutate target truth. Persistent target mutation remains bounded by current task/user authority. Before an authorized operation that can lose or overwrite work, publish or externally mutate state, irreversibly change state, or materially diverge canonical work, refresh the state and identity evidence appropriate to that consequence.
+Read, inspect, test, and reproduce work inside the active binding may remain comparatively loose when it does not persistently mutate target truth. Persistent target mutation remains bounded by current task/user authority. At each consequence boundary, refresh only the mutable evidence whose validity the consequence requires: immediately before an authorized consequence that depends on current local, remote, or runtime state, and immediately after a canonical publication/ref mutation for the affected remote truth. Unchanged `IMMUTABLE` evidence remains reusable.
 
-Guard by consequence rather than executable name: the same generic capability may support both low-consequence investigation and high-consequence mutation. Generic execution capability never grants secret disclosure, sibling-repository mutation, destructive cleanup, promotion, or release authority; existing repository, Git, secret, rebinding, lifecycle, and release boundaries continue to govern.
+Guard by consequence rather than executable name: the same generic capability may support observation mutation, authorized target-ref mutation, and canonical publication mutation with different refresh requirements. Generic execution capability never grants secret disclosure, sibling-repository mutation, destructive cleanup, promotion, or release authority; existing repository, Git, secret, rebinding, lifecycle, and release boundaries continue to govern. External remote drift between observations is resolved by a fresh `REMOTE_MUTABLE` read at the next consequence boundary, not by assuming that absence of an Executor mutation preserves remote truth.
 
 ## Target-authoritative Git topologies
 

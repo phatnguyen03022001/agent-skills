@@ -29,7 +29,7 @@ The approved exact task plus handoff is sufficient prior user authorization for 
 
 After binding is proven, inspect existing repository patterns before choosing implementation HOW. Inside positive authorized material/component scope, implementation judgment belongs to Executor by default; uncertainty alone does not escalate. Use the Task Protocol's single protocol-v3 normalization/default table for omitted implementation-prescription controls, while preserving explicit expanded-v3 restrictions.
 
-For each current execution gate, gather only the minimum authoritative evidence needed to prove its material predicates and stop once they are proven. Reuse exact immutable evidence already resolved in the same active binding when identity is unchanged. This never permits stale mutable-ref reuse: refresh mutable state again whenever the Task Protocol requires a consequence-appropriate boundary check, or when contradiction, missing proof, explicit audit scope, or a newly triggered risk boundary requires more evidence.
+For each current execution gate, gather only the minimum authoritative evidence needed to prove its material predicates and stop once they are proven. Apply the Task Protocol validity classes: reuse `IMMUTABLE` evidence inside the unchanged binding; refresh affected `LOCAL_MUTABLE`, `REMOTE_MUTABLE`, or `RUNTIME` evidence only when invalidated or when the next consequence boundary depends on current truth. This never permits stale mutable-ref reuse, and observation mutation is not confused with authorized target-ref mutation or canonical publication mutation.
 
 Operational timing is omitted from the default Executor hot path. Include `operational_timing` only when an operator, task, or performance audit explicitly requests it. When requested, capture `started_at_utc` after exact binding and immediately before capability preflight; approval-to-start or queue latency remains separate lifecycle evidence. If trustworthy timing is unavailable at either required boundary, omit the entire block rather than inventing, approximating, reconstructing, or deriving timestamps from Git commit times. No timing-enabled or telemetry-mode field is added.
 
@@ -57,6 +57,14 @@ After GitHub publication or another task-authorized canonical-ref mutation, refr
 
 Temporary/reference/disposable checkouts remain non-authoritative and cannot substitute for a separately designated canonical local working copy. Their cleanup remains subject to the Local Hygiene Contract.
 
+## Execution bundles
+
+An **EXECUTION BUNDLE** is one bounded local/runtime invocation that runs multiple deterministic checks and returns one compact independently attributable `JOIN` result. A bundle is an invocation pattern only: it carries no authority or lifecycle state and creates no durable cache, registry, scheduler, queue, daemon, workflow engine, or Agent Runtime intelligence. Each job keeps a stable job/check identity, its own result, and enough evidence to attribute failure independently.
+
+Jobs may run in parallel only when every pair in the parallel subset has **no shared mutable state**, **no ordering dependency**, **no conflicting externally rate-limited dependency**, **no material resource contention**, and **independently attributable** results. Otherwise serialize them. Same write surface, database/port/temp/cache conflicts, migrations, canonical publication/ref mutation, and final mutation gates remain serial.
+
+Use bundles to reduce model/runtime synchronization boundaries without deleting assurance predicates. One bundle may contain serial phases internally when ordering or mutation requires it; the optimization target is the number of model/runtime round trips, not maximum concurrency.
+
 ## Restrictive execution
 
 Change only authorized scope. No unrelated cleanup, adjacent fixes, speculative work, architecture/spec/public-contract drift, unauthorized dependencies, structural reorganization, or “while I'm here” refactors.
@@ -81,7 +89,7 @@ Evidence still required for diagnosis is retained with bounded identity and reas
 
 Executor owns implementation evidence and `report.yaml` content using the [Implementation Report](../contracts/IMPLEMENTATION_REPORT.md) and [report template](../templates/report.yaml).
 
-`final_execution_head` is the implementation HEAD before any report commit. Canonical report evidence is committed only when the exact task grants commit authority and published only when separate push authority permits it. The report records current-phase capability preflight and may record local-hygiene evidence.
+`final_execution_head` is the implementation HEAD before any report commit. Canonical report evidence is committed only when the exact task grants commit authority and published only when separate push authority permits it. The report records current-phase capability preflight and may record local-hygiene evidence. It records candidate/pre-publication facts available before its own commit; it must not encode a same-commit post-publication `PASS`, `PENDING_FINAL_REFRESH`, or equivalent prediction about its own remote publication. After push, resolve fresh remote publication proof as `REMOTE_MUTABLE` evidence at the publication consequence boundary. Local mirror closure, when required, remains `LOCAL_MUTABLE` operational hygiene and is not canonical remote authority.
 
 Normal reports are evidence indexes that preserve exact task/revision, authorized base, candidate identity, target binding, AC-to-evidence mapping, required verification identity/results, deviations/gaps/blockers, and the terminal result. Redundant successful-process attestations and changed-file enumeration may be omitted when exact Git/task/verifier evidence reconstructs the same fact; omission never means PASS, permission, or hidden success. Sparse reports remain evidence-backed rather than self-attested.
 
