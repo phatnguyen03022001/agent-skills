@@ -1,0 +1,130 @@
+protocol_version: 3
+
+task_id: TASK-0033
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0033/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "44d598c617a1df2e6ca76a6c61e3b8410369c149"
+  final_execution_head: "c4d6d4e7e7ecde58444d8da7bd5e26f8735562a3"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "db03b97b5c42c9c64ad8dce76bc694530e41a206"
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  available:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  missing: []
+  passed: true
+  evidence: >-
+    Agent Runtime provided the designated native repository surface; exact local Git history and content
+    were readable; the report path was writable; commit author identity was configured; fresh remote-ref
+    reads succeeded; and an exact non-mutating non-force promotion dry-run succeeded before mutation.
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_REQUIRED
+  evidence: >-
+    TASK-0033 requires reuse of accepted immutable TASK-0032 correctness evidence and no separate
+    authoritative verifier.
+
+pushed: true
+promoted_to_main: true
+
+operational_timing:
+  started_at_utc: "2026-09-04T11:29:37Z"
+  terminal_decision_at_utc: "2026-09-04T11:33:24Z"
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: >-
+      Exact immutable TASK-0032 review at 2fde360c73c474f5aa723866164578f9c07bdb5e is ACCEPTED,
+      names reviewed report 2e38f47f5694c0d68a9e3562bba93296699c07c6 and accepted candidate
+      c4d6d4e7e7ecde58444d8da7bd5e26f8735562a3, and the report resolves that same final execution
+      head plus the accepted validator, 116/116 unittest, py_compile, and git diff --check evidence.
+      Live architect-profile/main remained exactly 116e624b4c17d4949562b4d3f16385bfcf582130;
+      no candidate, review, governing-authority, or correctness-predicate invalidation was identified.
+  - criterion_id: AC-2
+    status: PASS
+    evidence: >-
+      The TASK-0032 validator, 116-test suite, py_compile, and git diff --check were not rerun. Their
+      immutable accepted evidence was reused. Newly run proof was limited to exact review/report identity,
+      live governing-authority identity, current remote refs/topology, old-main ancestry, current promotion
+      capability, and fresh post-promotion remote identity.
+  - criterion_id: AC-3
+    status: PASS
+    evidence: >-
+      The consequence-boundary guard freshly proved dev=44d598c617a1df2e6ca76a6c61e3b8410369c149,
+      main=db03b97b5c42c9c64ad8dce76bc694530e41a206, topology exactly {dev, main}, old main an ancestor
+      of the exact candidate, and current promotion capability by exact non-mutating push dry-run.
+  - criterion_id: AC-4
+    status: PASS
+    evidence: >-
+      One bounded Agent Runtime invocation executed ordered serial phases guard -> exact non-force push
+      of c4d6d4e7e7ecde58444d8da7bd5e26f8735562a3 to refs/heads/main -> fresh remote post-proof.
+      Its attributable JOIN returned guard=PASS, push=PASS, post=PASS, result=PASS; post-proof showed
+      main=candidate, dev unchanged at the planning base, and topology exactly {dev, main}.
+  - criterion_id: AC-5
+    status: NOT_PROVEN
+    evidence: >-
+      Promotion post-proof already established main exactly at the accepted candidate while dev remained
+      at the TASK-0033 base and topology stayed {dev, main}. This report is the only authorized dev content
+      mutation; its own exact commit/publication and final remote/local closure occur after this artifact is
+      committed and therefore are intentionally not predicted as same-commit PASS.
+  - criterion_id: AC-6
+    status: PASS
+    evidence: >-
+      Existing-schema operational timing was captured from the current UTC clock at both required boundaries:
+      started_at_utc after exact binding immediately before capability preflight, and terminal_decision_at_utc
+      at terminal NEEDS_REVIEW decision before report publication. Timing was not used as correctness evidence.
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: >-
+      Exact TASK-0033 revision 1/base, TASK-0032 accepted review/candidate/report, pinned required skills,
+      governing authority identity, current capabilities, refs/topology, ancestry, and evidence invalidation
+      conditions were resolved without rerunning acceptance-equivalent correctness verification.
+  - check_id: CHECK-2
+    result: PASS
+    evidence: >-
+      Accepted immutable TASK-0032 validator, 116/116 unittest, py_compile, and git diff --check evidence
+      was reused unchanged; no invalidated or newly required correctness predicate was found.
+  - check_id: CHECK-3
+    result: PASS
+    evidence: >-
+      The single bounded consequence bundle returned an attributable PASS JOIN across fresh guard, exact
+      non-force main promotion, and fresh post-promotion remote proof.
+  - check_id: CHECK-4
+    result: NOT_PROVEN
+    evidence: >-
+      Report-only commit/push identity plus final remote {dev, main} and local-hygiene closure are
+      post-publication facts and are completed after this report commit.
+
+result: NEEDS_REVIEW
