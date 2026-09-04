@@ -1,0 +1,101 @@
+protocol_version: 3
+
+task_id: TASK-0029
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0029/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "4b0c95c23b8193c5a0581df8dca0b8900b37d450"
+  final_execution_head: "67f2c17e092a6f490de5c90f4ca1363c5cadd03a"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "4a063c41f429207577434600a3571dc17822cd78"
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  available:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  missing: []
+  passed: true
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_REQUIRED
+  evidence: "TASK-0029 designates repository-native deterministic verification; no separate authoritative verifier is required."
+
+pushed: true
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: "Candidate 67f2c17e092a6f490de5c90f4ca1363c5cadd03a sparsifies canonical task/report/review defaults; focused TASK-0029 tests and full validator regression pass."
+  - criterion_id: AC-2
+    status: PASS
+    evidence: "Focused normalization test proves sparse task omissions equal explicit existing protocol-v3 defaults; positive authority remains required and fail-closed."
+  - criterion_id: AC-3
+    status: PASS
+    evidence: "Focused sparse/expanded report-review tests preserve durable identity/material judgment; negative tests reject missing final candidate, AC/check evidence, result, or reviewed-report commit."
+  - criterion_id: AC-4
+    status: PASS
+    evidence: "Final six-episode validator-passing pilot reductions are 57.31, 56.95, 47.76, 54.40, 58.40, and 51.04 percent; mechanical median is 55.68 percent."
+  - criterion_id: AC-5
+    status: PASS
+    evidence: "Exact-base canonical templates are 6046 bytes and candidate templates are 2972 bytes; reduction is 50.84 percent."
+  - criterion_id: AC-6
+    status: PASS
+    evidence: "Repository validator PASS; 112/112 unittest regression PASS including historical expanded-v3 compatibility; changed Python py_compile PASS; git diff --check PASS."
+  - criterion_id: AC-7
+    status: PASS
+    evidence: "Implementation diff is exactly 10 authorized existing paths; no new dependency/schema/lifecycle/CASE/service/branch; protocol remains v3; Case Router SHA-256 remains 549d9f3835c5cfaae0e249cc84c684c7ade573df5ea93e786c002ecc5954ea68."
+  - criterion_id: AC-8
+    status: PASS
+    evidence: "Implementation candidate is independently proven at remote dev=67f2c17e092a6f490de5c90f4ca1363c5cadd03a with main unchanged at 4a063c41f429207577434600a3571dc17822cd78 and topology {dev, main}; report-child publication is closed by CHECK-7 after this artifact is committed."
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: "Fresh exact task/base, repository identity, authority-set 89dacd43b7a200a7b9cd36d9545f23c930eb4f44, pinned skill authority 4a063c41f429207577434600a3571dc17822cd78, branch/topology, capabilities, and operator-owned state were proven before continuation mutation."
+  - check_id: CHECK-2
+    result: PASS
+    evidence: "Exact-base template bytes and six historical episode baselines were measured mechanically in run-owned temporary fixtures."
+  - check_id: CHECK-3
+    result: PASS
+    evidence: "Task0029SparseSerializationTests PASS 6/6, covering sparse-expanded equivalence and mandatory-evidence negatives."
+  - check_id: CHECK-4
+    result: PASS
+    evidence: "Full repository validator PASS and complete unittest suite PASS 112/112; expanded-v3 task/report/review/continuation compatibility remains covered."
+  - check_id: CHECK-5
+    result: PASS
+    evidence: "Final canonical-template reduction is 50.84 percent and final validator-passing six-episode median reduction is 55.68 percent."
+  - check_id: CHECK-6
+    result: PASS
+    evidence: "py_compile and git diff --check PASS; implementation changed-path set is exact; no new dependency or file family; Case Router and operator-owned hashes are unchanged; run-owned temporary roots were removed."
+  - check_id: CHECK-7
+    result: PENDING_FINAL_REFRESH
+    evidence: "After this report-only child is committed and pushed, independently prove remote dev equals the report SHA, main remains 4a063c41f429207577434600a3571dc17822cd78, topology remains {dev, main}, local HEAD equals origin/dev, tracked/index is clean, and operator-owned hashes remain unchanged."
+
+result: NEEDS_REVIEW
