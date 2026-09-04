@@ -1,0 +1,3516 @@
+{
+  "authority": "NONE",
+  "artifact_kind": "derived_evaluation_evidence",
+  "schema_version": "cr-00-case-routing-baseline-v1",
+  "task": {
+    "id": "TASK-0026",
+    "revision": 1,
+    "state": "APPROVED",
+    "source_repository": "phatnguyen03022001/agent-skills",
+    "source_commit": "dd26c2851a0d7d488170f895cb09bd12b8c93ae0",
+    "source_path": ".agent/tasks/TASK-0026/task.yaml",
+    "source_remote_ref": "refs/heads/dev",
+    "authorized_base_head": "dd26c2851a0d7d488170f895cb09bd12b8c93ae0",
+    "target_repository": "phatnguyen03022001/agent-skills",
+    "target_branch": "dev",
+    "pinned_agent_skills_authority": {
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "337c0be6618090e704b345b1bf93df488a4985af",
+      "resolved_main_ref": "refs/heads/main",
+      "resolved_main_sha": "337c0be6618090e704b345b1bf93df488a4985af"
+    },
+    "architect_profile_guardrail": {
+      "repository": "phatnguyen03022001/architect-profile",
+      "task_id": "TASK-0017",
+      "accepted_review_path": ".agent/tasks/TASK-0017/review.yaml",
+      "accepted_review_commit": "68350ff54749b2548a2bb5f4f7cc40f2c0d29cd8",
+      "role": "accepted OPM-02 guardrail evidence"
+    }
+  },
+  "measurement_methodology": {
+    "scope": "Current real-repository canonical read-set measurement; not a reconstruction of historical model token counts, timing, or chat behavior.",
+    "start_rule": "Start at exact owner/repo plus task path on the current target branch tip; resolve that mutable ref, then read immutable task/report/review blobs and pinned skill entrypoints.",
+    "routing_closure_rule_observed": "The broad intake proxy closes routing after task, all task-declared execution skill entrypoints, and architect role entrypoint have been read; report/review are read after closure.",
+    "routing_closure_rule_minimal": "The post-hoc projection closes routing after task artifact and exact pinned executor/SKILL.md are read; task authority already carries target, capability, and positive owner/path boundary.",
+    "observed_trace_is_reproducible": true,
+    "minimal_trace_is_counterfactual": true,
+    "byte_measurement": "Raw Git blob bytes from exact immutable revisions via git show; no newline normalization, token estimate, or timing proxy.",
+    "routing_artifact_definition": "Artifacts in observed_trace.read_order_before_routing_closure; post-routing artifacts are excluded from observed routing cost.",
+    "unnecessary_read_definition": "Pre-closure artifacts whose routing_classification is unnecessary_to_routing_decision.",
+    "percentile_method": "Nearest-rank: sorted values, rank=ceil(p*n), one-indexed; p50 is median and p75 is the 75th percentile.",
+    "support_repository_definition": "Distinct exact repository identities represented by pre-closure artifact reads; target and agent-skills owner are counted, unrelated repositories are not preloaded."
+  },
+  "corpus_selection": {
+    "fixed_source_universe": [
+      "phatnguyen03022001/agent-documents",
+      "phatnguyen03022001/agent-runtime",
+      "phatnguyen03022001/agent-skills",
+      "phatnguyen03022001/agent-standards",
+      "phatnguyen03022001/architect-profile",
+      "phatnguyen03022001/argus",
+      "phatnguyen03022001/elite-drive",
+      "phatnguyen03022001/ilets",
+      "phatnguyen03022001/SF"
+    ],
+    "eligibility": "Task/report/review all exist at exact current canonical tip and review/report state is reconstructible; ACCEPTED, BLOCKED, REVISION_REQUIRED, REVIEWED, and REVERIFY_REQUIRED outcomes remain eligible.",
+    "eligible_pool_count": 102,
+    "eligible_pool_sha256": "aec5d9609085b140ae81d400ac52a51dc1748cc607ea0d12b269b85ca5d71252",
+    "eligible_pool": [
+      {
+        "id": "agent-documents/TASK-0002",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-documents/TASK-0003",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-documents/TASK-0004",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-documents/TASK-0005",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-documents/TASK-0006",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-runtime/TASK-0006",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-runtime/TASK-0007",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-runtime/TASK-0008",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-runtime/TASK-0009",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-runtime/TASK-0011",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-runtime/TASK-0012",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-runtime/TASK-0013",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-runtime/TASK-0014",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-runtime/TASK-0015",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-runtime/TASK-0016",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-skills/TASK-0010",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-skills/TASK-0011",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-skills/TASK-0012",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-skills/TASK-0013",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-skills/TASK-0014",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-skills/TASK-0015",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-skills/TASK-0016",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-skills/TASK-0017",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-skills/TASK-0018",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-skills/TASK-0019",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-skills/TASK-0020",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-skills/TASK-0021",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-skills/TASK-0022",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-skills/TASK-0023",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-skills/TASK-0024",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-skills/TASK-0025",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "agent-standards/TASK-0012",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "architect-profile/TASK-0002",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "architect-profile/TASK-0003",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "architect-profile/TASK-0004",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "architect-profile/TASK-0005",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "architect-profile/TASK-0006",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "architect-profile/TASK-0007",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "architect-profile/TASK-0009",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "architect-profile/TASK-0010",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "architect-profile/TASK-0011",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "architect-profile/TASK-0012",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "architect-profile/TASK-0013",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "architect-profile/TASK-0014",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "architect-profile/TASK-0015",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "architect-profile/TASK-0016",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "architect-profile/TASK-0017",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "argus/TASK-0001",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "argus/TASK-0002",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "argus/TASK-0003",
+        "review_state": "REVISION_REQUIRED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "elite-drive/TASK-0001",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "elite-drive/TASK-0002",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "elite-drive/TASK-0003",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "elite-drive/TASK-0004",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "elite-drive/TASK-0005",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "elite-drive/TASK-0006",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "elite-drive/TASK-0007",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0001",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0002",
+        "review_state": "BLOCKED",
+        "report_result": "BLOCKED"
+      },
+      {
+        "id": "ilets/TASK-0003",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0004",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0005",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0006",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0007",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0008",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0009",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0010",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0011",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0012",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0013",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0014",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0015",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0016",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0017",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0019",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0021",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0024",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0025",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0026",
+        "review_state": "ACCEPTED",
+        "report_result": "BLOCKED"
+      },
+      {
+        "id": "ilets/TASK-0027",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0028",
+        "review_state": "ACCEPTED",
+        "report_result": "BLOCKED"
+      },
+      {
+        "id": "ilets/TASK-0029",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0030",
+        "review_state": "ACCEPTED",
+        "report_result": ""
+      },
+      {
+        "id": "ilets/TASK-0031",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0032",
+        "review_state": "ACCEPTED",
+        "report_result": "CURRENT_PHASE_CAPABILITY_UNAVAILABLE"
+      },
+      {
+        "id": "ilets/TASK-0033",
+        "review_state": "ACCEPTED",
+        "report_result": "BLOCKED"
+      },
+      {
+        "id": "ilets/TASK-0037",
+        "review_state": "REVIEWED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0039",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0040",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0041",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0042",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0043",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0044",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "ilets/TASK-0045",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "SF/TASK-0001",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "SF/TASK-0002",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "SF/TASK-0003",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "SF/TASK-0004",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "SF/TASK-0005",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "SF/TASK-0006",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "SF/TASK-0007",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      },
+      {
+        "id": "SF/TASK-0008",
+        "review_state": "ACCEPTED",
+        "report_result": "NEEDS_REVIEW"
+      }
+    ],
+    "mandatory_anchor_ids": [
+      "architect-profile/TASK-0016",
+      "architect-profile/TASK-0017",
+      "agent-skills/TASK-0024",
+      "agent-skills/TASK-0025",
+      "ilets/TASK-0045",
+      "SF/TASK-0008"
+    ],
+    "elite_drive_rule": "Choose lexicographically smallest eligible elite-drive episode using normalized repository name and numeric task id.",
+    "selected_elite_drive_id": "elite-drive/TASK-0001",
+    "remaining_rule": "After mandatory anchors and elite-drive selection, sort eligible pool by normalized repository name (case-folded), numeric task id, repository, task id; take first five not already selected.",
+    "remaining_selected_ids": [
+      "agent-documents/TASK-0002",
+      "agent-documents/TASK-0003",
+      "agent-documents/TASK-0004",
+      "agent-documents/TASK-0005",
+      "agent-documents/TASK-0006"
+    ],
+    "selected_episode_ids": [
+      "agent-documents/TASK-0002",
+      "agent-documents/TASK-0003",
+      "agent-documents/TASK-0004",
+      "agent-documents/TASK-0005",
+      "agent-documents/TASK-0006",
+      "agent-skills/TASK-0024",
+      "agent-skills/TASK-0025",
+      "architect-profile/TASK-0016",
+      "architect-profile/TASK-0017",
+      "elite-drive/TASK-0001",
+      "ilets/TASK-0045",
+      "SF/TASK-0008"
+    ],
+    "selected_episode_count": 12,
+    "selected_repository_count": 6,
+    "selection_is_outcome_independent": true
+  },
+  "source_repositories": [
+    {
+      "repository": "phatnguyen03022001/agent-documents",
+      "remote_url": "https://github.com/phatnguyen03022001/agent-documents.git",
+      "observed_remote_heads": {
+        "dev": "6918f46282f4a92bbc61071444a5ff5dab30ddc9",
+        "main": "6918f46282f4a92bbc61071444a5ff5dab30ddc9"
+      },
+      "selected_canonical_branch": "dev",
+      "selected_canonical_tip_sha": "6918f46282f4a92bbc61071444a5ff5dab30ddc9",
+      "observation": "git ls-remote --heads exact remote ref read"
+    },
+    {
+      "repository": "phatnguyen03022001/agent-runtime",
+      "remote_url": "https://github.com/phatnguyen03022001/agent-runtime.git",
+      "observed_remote_heads": {
+        "dev": "59f53fc1b092aede20ac9e2003510e54f64ecd1b",
+        "main": "9d5320d5afbc9aff20834801bfd6695b27cf2a0e"
+      },
+      "selected_canonical_branch": "dev",
+      "selected_canonical_tip_sha": "59f53fc1b092aede20ac9e2003510e54f64ecd1b",
+      "observation": "git ls-remote --heads exact remote ref read"
+    },
+    {
+      "repository": "phatnguyen03022001/agent-skills",
+      "remote_url": "https://github.com/phatnguyen03022001/agent-skills.git",
+      "observed_remote_heads": {
+        "dev": "dd26c2851a0d7d488170f895cb09bd12b8c93ae0",
+        "main": "337c0be6618090e704b345b1bf93df488a4985af"
+      },
+      "selected_canonical_branch": "dev",
+      "selected_canonical_tip_sha": "dd26c2851a0d7d488170f895cb09bd12b8c93ae0",
+      "observation": "git ls-remote --heads exact remote ref read"
+    },
+    {
+      "repository": "phatnguyen03022001/agent-standards",
+      "remote_url": "https://github.com/phatnguyen03022001/agent-standards.git",
+      "observed_remote_heads": {
+        "dev": "456f95f58a93b7d8be7765c7aa3751905571ac26",
+        "main": "3f4950f280a3a35fee81471d4b83715fa72cf9ee"
+      },
+      "selected_canonical_branch": "dev",
+      "selected_canonical_tip_sha": "456f95f58a93b7d8be7765c7aa3751905571ac26",
+      "observation": "git ls-remote --heads exact remote ref read"
+    },
+    {
+      "repository": "phatnguyen03022001/architect-profile",
+      "remote_url": "https://github.com/phatnguyen03022001/architect-profile.git",
+      "observed_remote_heads": {
+        "dev": "68350ff54749b2548a2bb5f4f7cc40f2c0d29cd8",
+        "main": "71921cde6228c21b4d2e3e6509e685d82981dc9c"
+      },
+      "selected_canonical_branch": "dev",
+      "selected_canonical_tip_sha": "68350ff54749b2548a2bb5f4f7cc40f2c0d29cd8",
+      "observation": "git ls-remote --heads exact remote ref read"
+    },
+    {
+      "repository": "phatnguyen03022001/argus",
+      "remote_url": "https://github.com/phatnguyen03022001/argus.git",
+      "observed_remote_heads": {
+        "main": "1af6fbe17c63e33c85facd075adf90cc237d032f"
+      },
+      "selected_canonical_branch": "main",
+      "selected_canonical_tip_sha": "1af6fbe17c63e33c85facd075adf90cc237d032f",
+      "observation": "git ls-remote --heads exact remote ref read"
+    },
+    {
+      "repository": "phatnguyen03022001/elite-drive",
+      "remote_url": "https://github.com/phatnguyen03022001/elite-drive.git",
+      "observed_remote_heads": {
+        "dev": "41ff779d6e33794f34bff20ff7e01c2c9f1b7999",
+        "main": "7b4b45fdf3f9ade55f7f6ecf549a02e0d41e3cbf"
+      },
+      "selected_canonical_branch": "dev",
+      "selected_canonical_tip_sha": "41ff779d6e33794f34bff20ff7e01c2c9f1b7999",
+      "observation": "git ls-remote --heads exact remote ref read"
+    },
+    {
+      "repository": "phatnguyen03022001/ilets",
+      "remote_url": "https://github.com/phatnguyen03022001/ilets.git",
+      "observed_remote_heads": {
+        "dev": "4b88bbde9558ae50de2c17941677c73fe7c504c8",
+        "main": "e707aeee43411cc8f99448b63220eb8beff552b6"
+      },
+      "selected_canonical_branch": "dev",
+      "selected_canonical_tip_sha": "4b88bbde9558ae50de2c17941677c73fe7c504c8",
+      "observation": "git ls-remote --heads exact remote ref read"
+    },
+    {
+      "repository": "phatnguyen03022001/SF",
+      "remote_url": "https://github.com/phatnguyen03022001/SF.git",
+      "observed_remote_heads": {
+        "main": "dd518fa0ae693f57befcedf341410d4cf28026d8"
+      },
+      "selected_canonical_branch": "main",
+      "selected_canonical_tip_sha": "dd518fa0ae693f57befcedf341410d4cf28026d8",
+      "observation": "git ls-remote --heads exact remote ref read"
+    }
+  ],
+  "artifact_catalog": [
+    {
+      "id": "SF_TASK_0008__report",
+      "repository": "phatnguyen03022001/SF",
+      "revision": "fb67f45f59834b7848a7a76acaa44084541b960f",
+      "path": ".agent/tasks/TASK-0008/report.yaml",
+      "bytes": 5545,
+      "blob_sha": "c750698cc1a07c73e208d135fe0338eba02a96e6",
+      "purpose": "Verify the completed episode implementation candidate and changed-path evidence after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "SF_TASK_0008__review",
+      "repository": "phatnguyen03022001/SF",
+      "revision": "dd518fa0ae693f57befcedf341410d4cf28026d8",
+      "path": ".agent/tasks/TASK-0008/review.yaml",
+      "bytes": 2410,
+      "blob_sha": "8f7107b14ca1a7d52fcaa68aad2f3a421f8827d5",
+      "purpose": "Verify the Architect review state and exact report binding after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "SF_TASK_0008__task",
+      "repository": "phatnguyen03022001/SF",
+      "revision": "83bcf6ae33abf8740ce66077f92fd523706354b5",
+      "path": ".agent/tasks/TASK-0008/task.yaml",
+      "bytes": 6796,
+      "blob_sha": "9b58d6268ffb4e815183493824a56d8c5563afa3",
+      "purpose": "Resolve exact task identity, target owner/branch, authority, required skills, capabilities, and positive owner/path boundary from the smallest canonical locator.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "agent_documents_TASK_0002__report",
+      "repository": "phatnguyen03022001/agent-documents",
+      "revision": "748ceb574bceee62db9f2f7952cf162dcd9489eb",
+      "path": ".agent/tasks/TASK-0002/report.yaml",
+      "bytes": 10579,
+      "blob_sha": "2d85e11b91f35b504a8a13dd55a85b9d4d59bdde",
+      "purpose": "Verify the completed episode implementation candidate and changed-path evidence after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "agent_documents_TASK_0002__review",
+      "repository": "phatnguyen03022001/agent-documents",
+      "revision": "c13b4f51639b34f7c6417bfb10afe0eeee290b8e",
+      "path": ".agent/tasks/TASK-0002/review.yaml",
+      "bytes": 1536,
+      "blob_sha": "d30dddd079fe74a8a283f59c1a24da32536ccd24",
+      "purpose": "Verify the Architect review state and exact report binding after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "agent_documents_TASK_0002__task",
+      "repository": "phatnguyen03022001/agent-documents",
+      "revision": "d6337c02c5e87b92bdf97696f05186fd35c9fe99",
+      "path": ".agent/tasks/TASK-0002/task.yaml",
+      "bytes": 13523,
+      "blob_sha": "aa288ea36c0b51941044f7f24bac5802a5039d07",
+      "purpose": "Resolve exact task identity, target owner/branch, authority, required skills, capabilities, and positive owner/path boundary from the smallest canonical locator.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "agent_documents_TASK_0003__report",
+      "repository": "phatnguyen03022001/agent-documents",
+      "revision": "9d5d71d0bf74953fcba482293d357a8765f375d3",
+      "path": ".agent/tasks/TASK-0003/report.yaml",
+      "bytes": 8462,
+      "blob_sha": "56ce0419e061dc1221ce64f903975f0603fb2541",
+      "purpose": "Verify the completed episode implementation candidate and changed-path evidence after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "agent_documents_TASK_0003__review",
+      "repository": "phatnguyen03022001/agent-documents",
+      "revision": "e6728594b0371e2e941c1457fc8efdc14a90deee",
+      "path": ".agent/tasks/TASK-0003/review.yaml",
+      "bytes": 1405,
+      "blob_sha": "c9c8cca67dcf5b29b82849aadddc341a02034d19",
+      "purpose": "Verify the Architect review state and exact report binding after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "agent_documents_TASK_0003__task",
+      "repository": "phatnguyen03022001/agent-documents",
+      "revision": "7d7faf30e5a598e4eea9c30a96ab3f2f619cfe4a",
+      "path": ".agent/tasks/TASK-0003/task.yaml",
+      "bytes": 10422,
+      "blob_sha": "16105de6f6c59f84292ab9966275d1f77d52f858",
+      "purpose": "Resolve exact task identity, target owner/branch, authority, required skills, capabilities, and positive owner/path boundary from the smallest canonical locator.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "agent_documents_TASK_0004__report",
+      "repository": "phatnguyen03022001/agent-documents",
+      "revision": "063e095da8e5e349613481d4bf65c7a0e0af5b16",
+      "path": ".agent/tasks/TASK-0004/report.yaml",
+      "bytes": 10427,
+      "blob_sha": "493127c4e850dced40281b822141783cccf60adf",
+      "purpose": "Verify the completed episode implementation candidate and changed-path evidence after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "agent_documents_TASK_0004__review",
+      "repository": "phatnguyen03022001/agent-documents",
+      "revision": "acb3f02616e700190586681306a86905792e4c07",
+      "path": ".agent/tasks/TASK-0004/review.yaml",
+      "bytes": 2191,
+      "blob_sha": "e347fb312ee56e6d3044b861dbb14aeb19193142",
+      "purpose": "Verify the Architect review state and exact report binding after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "agent_documents_TASK_0004__task",
+      "repository": "phatnguyen03022001/agent-documents",
+      "revision": "a874e385c8adc5c2a0ed02e5f919dc38cdd50cb9",
+      "path": ".agent/tasks/TASK-0004/task.yaml",
+      "bytes": 16361,
+      "blob_sha": "98de0ce4323353917139041751f47f5dd279996c",
+      "purpose": "Resolve exact task identity, target owner/branch, authority, required skills, capabilities, and positive owner/path boundary from the smallest canonical locator.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "agent_documents_TASK_0005__report",
+      "repository": "phatnguyen03022001/agent-documents",
+      "revision": "13741f768888c6b4655d33b62ad0cc401e273b99",
+      "path": ".agent/tasks/TASK-0005/report.yaml",
+      "bytes": 10993,
+      "blob_sha": "a43a8dbb726f61582811917ba989042b7b0b9263",
+      "purpose": "Verify the completed episode implementation candidate and changed-path evidence after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "agent_documents_TASK_0005__review",
+      "repository": "phatnguyen03022001/agent-documents",
+      "revision": "8b3fe8d3afec25b661fbc5f31705124058486209",
+      "path": ".agent/tasks/TASK-0005/review.yaml",
+      "bytes": 2751,
+      "blob_sha": "ad4c39d42961e95a915254055d7a5fdc88f5ccd7",
+      "purpose": "Verify the Architect review state and exact report binding after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "agent_documents_TASK_0005__task",
+      "repository": "phatnguyen03022001/agent-documents",
+      "revision": "eb587944d5f3fb0a6d66697023b57fade15f9f83",
+      "path": ".agent/tasks/TASK-0005/task.yaml",
+      "bytes": 12501,
+      "blob_sha": "ebb025eeb9c84c4129ae65c44b52e56335edb365",
+      "purpose": "Resolve exact task identity, target owner/branch, authority, required skills, capabilities, and positive owner/path boundary from the smallest canonical locator.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "agent_documents_TASK_0006__report",
+      "repository": "phatnguyen03022001/agent-documents",
+      "revision": "5aff041cefd1cc49bca3f84a3e67b1596bea02d5",
+      "path": ".agent/tasks/TASK-0006/report.yaml",
+      "bytes": 9503,
+      "blob_sha": "23b3c8a55b5a885269995c1f1b0e421c88e8b807",
+      "purpose": "Verify the completed episode implementation candidate and changed-path evidence after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "agent_documents_TASK_0006__review",
+      "repository": "phatnguyen03022001/agent-documents",
+      "revision": "6918f46282f4a92bbc61071444a5ff5dab30ddc9",
+      "path": ".agent/tasks/TASK-0006/review.yaml",
+      "bytes": 2732,
+      "blob_sha": "eeeb614e6807d5dca9890e631966a8453e9b2ad4",
+      "purpose": "Verify the Architect review state and exact report binding after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "agent_documents_TASK_0006__task",
+      "repository": "phatnguyen03022001/agent-documents",
+      "revision": "091b4bdfa84f17182cd73538a549f09f41863873",
+      "path": ".agent/tasks/TASK-0006/task.yaml",
+      "bytes": 12666,
+      "blob_sha": "94537b3643b0c7c69ebe5c79b014354edc6a1d85",
+      "purpose": "Resolve exact task identity, target owner/branch, authority, required skills, capabilities, and positive owner/path boundary from the smallest canonical locator.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "agent_skills_TASK_0024__report",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "2c2c72bb491b097f45c34ead8c429c2428b87b9b",
+      "path": ".agent/tasks/TASK-0024/report.yaml",
+      "bytes": 7897,
+      "blob_sha": "fce210e27d79113764c9b77032306b4878326034",
+      "purpose": "Verify the completed episode implementation candidate and changed-path evidence after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "agent_skills_TASK_0024__review",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "16217bb78a578160efb68afc84acdeff9c36ed38",
+      "path": ".agent/tasks/TASK-0024/review.yaml",
+      "bytes": 1595,
+      "blob_sha": "7983a8a26d721c66864953494bfaf567ec781884",
+      "purpose": "Verify the Architect review state and exact report binding after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "agent_skills_TASK_0024__task",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "5a5a6e24706f1beea691eb2adc2ef78aaa3e38d0",
+      "path": ".agent/tasks/TASK-0024/task.yaml",
+      "bytes": 9991,
+      "blob_sha": "7912a12df411776f2d33711527ec3c8382a0304b",
+      "purpose": "Resolve exact task identity, target owner/branch, authority, required skills, capabilities, and positive owner/path boundary from the smallest canonical locator.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "agent_skills_TASK_0025__report",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "51cecf0b4346ebd291f1de0f650b169f9bcf7b2b",
+      "path": ".agent/tasks/TASK-0025/report.yaml",
+      "bytes": 8005,
+      "blob_sha": "46183bc83f0edee6f775e6f93e03a7b3f5296349",
+      "purpose": "Verify the completed episode implementation candidate and changed-path evidence after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "agent_skills_TASK_0025__review",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "1e0f7e0835807419e4be72c67bbfea1b0d61c537",
+      "path": ".agent/tasks/TASK-0025/review.yaml",
+      "bytes": 2105,
+      "blob_sha": "ad22a37d273d71b19c52cd5ba352fe68826d4d77",
+      "purpose": "Verify the Architect review state and exact report binding after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "agent_skills_TASK_0025__task",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "6f36dbc5ccaa480c1aca28d1d77587999e302744",
+      "path": ".agent/tasks/TASK-0025/task.yaml",
+      "bytes": 15083,
+      "blob_sha": "ccabb71bcdcb4195251e4fabcb22ea07d49be3d6",
+      "purpose": "Resolve exact task identity, target owner/branch, authority, required skills, capabilities, and positive owner/path boundary from the smallest canonical locator.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "architect_profile_TASK_0016__report",
+      "repository": "phatnguyen03022001/architect-profile",
+      "revision": "a86492fc2bd0fc87b86afcd40514f1d15ddbcd1e",
+      "path": ".agent/tasks/TASK-0016/report.yaml",
+      "bytes": 10954,
+      "blob_sha": "d3ece406e7da1a50b810212b51cb6517e2fe4744",
+      "purpose": "Verify the completed episode implementation candidate and changed-path evidence after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "architect_profile_TASK_0016__review",
+      "repository": "phatnguyen03022001/architect-profile",
+      "revision": "9ba53cbdc5d5fb3545dfc8990f28ca568c4b96dc",
+      "path": ".agent/tasks/TASK-0016/review.yaml",
+      "bytes": 4883,
+      "blob_sha": "ca391a22c785e90f2c53ec9e9856d10f817ea2bf",
+      "purpose": "Verify the Architect review state and exact report binding after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "architect_profile_TASK_0016__task",
+      "repository": "phatnguyen03022001/architect-profile",
+      "revision": "707acfea1f749591621751785b87ae792355a0eb",
+      "path": ".agent/tasks/TASK-0016/task.yaml",
+      "bytes": 15283,
+      "blob_sha": "967514ece2a1196354b0e6497b8e075d09977e8f",
+      "purpose": "Resolve exact task identity, target owner/branch, authority, required skills, capabilities, and positive owner/path boundary from the smallest canonical locator.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "architect_profile_TASK_0017__report",
+      "repository": "phatnguyen03022001/architect-profile",
+      "revision": "96af40258f582fff849c89ebadf782c5844e8132",
+      "path": ".agent/tasks/TASK-0017/report.yaml",
+      "bytes": 10163,
+      "blob_sha": "d9a7cd296f8cb208842d04ff828701d85a62d92b",
+      "purpose": "Verify the completed episode implementation candidate and changed-path evidence after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "architect_profile_TASK_0017__review",
+      "repository": "phatnguyen03022001/architect-profile",
+      "revision": "68350ff54749b2548a2bb5f4f7cc40f2c0d29cd8",
+      "path": ".agent/tasks/TASK-0017/review.yaml",
+      "bytes": 2486,
+      "blob_sha": "4e80aa464dd161ce79659fb29b5af09bb4182d70",
+      "purpose": "Verify the Architect review state and exact report binding after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "architect_profile_TASK_0017__task",
+      "repository": "phatnguyen03022001/architect-profile",
+      "revision": "3a074b13420f87e5a7ed44dc7aaf18599dc3c509",
+      "path": ".agent/tasks/TASK-0017/task.yaml",
+      "bytes": 12977,
+      "blob_sha": "1bb82907d46b795537f4445825bbb70d7d234a5d",
+      "purpose": "Resolve exact task identity, target owner/branch, authority, required skills, capabilities, and positive owner/path boundary from the smallest canonical locator.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "elite_drive_TASK_0001__report",
+      "repository": "phatnguyen03022001/elite-drive",
+      "revision": "56505870addd16773f013e9435bdbb5002fe5450",
+      "path": ".agent/tasks/TASK-0001/report.yaml",
+      "bytes": 8940,
+      "blob_sha": "17dc1c548ca3282459fa1a6ea0eba661106f86de",
+      "purpose": "Verify the completed episode implementation candidate and changed-path evidence after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "elite_drive_TASK_0001__review",
+      "repository": "phatnguyen03022001/elite-drive",
+      "revision": "b0ae72a9da16c708471e9be6564159a1287e7a5e",
+      "path": ".agent/tasks/TASK-0001/review.yaml",
+      "bytes": 3227,
+      "blob_sha": "f3a4ff1dfc459071330cada3149df5236853e469",
+      "purpose": "Verify the Architect review state and exact report binding after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "elite_drive_TASK_0001__task",
+      "repository": "phatnguyen03022001/elite-drive",
+      "revision": "a15b630db61640c204607124fd5f1388a670fa7e",
+      "path": ".agent/tasks/TASK-0001/task.yaml",
+      "bytes": 12075,
+      "blob_sha": "d77d1bfa48a3c88eef727fe1de8cd01245820a4b",
+      "purpose": "Resolve exact task identity, target owner/branch, authority, required skills, capabilities, and positive owner/path boundary from the smallest canonical locator.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "ilets_TASK_0045__report",
+      "repository": "phatnguyen03022001/ilets",
+      "revision": "439877fcf6874ff11c6e2da8daeaa63bb688bd79",
+      "path": ".agent/tasks/TASK-0045/report.yaml",
+      "bytes": 12121,
+      "blob_sha": "2022b93e6c3a8b1f5a9dd9fac07a90d5efb5209f",
+      "purpose": "Verify the completed episode implementation candidate and changed-path evidence after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "ilets_TASK_0045__review",
+      "repository": "phatnguyen03022001/ilets",
+      "revision": "4b88bbde9558ae50de2c17941677c73fe7c504c8",
+      "path": ".agent/tasks/TASK-0045/review.yaml",
+      "bytes": 2038,
+      "blob_sha": "47b237cfc2f85b353622e2d90df35b448082c9a8",
+      "purpose": "Verify the Architect review state and exact report binding after routing has closed.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "after_routing_closure"
+    },
+    {
+      "id": "ilets_TASK_0045__task",
+      "repository": "phatnguyen03022001/ilets",
+      "revision": "c6f8f91c8d8b12e4a46f17916ea476e71fce4c5e",
+      "path": ".agent/tasks/TASK-0045/task.yaml",
+      "bytes": 8538,
+      "blob_sha": "4f6aa4d5ce5c00d88f11ea09766f6816c57550cb",
+      "purpose": "Resolve exact task identity, target owner/branch, authority, required skills, capabilities, and positive owner/path boundary from the smallest canonical locator.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__architect__16217bb78a57",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "16217bb78a578160efb68afc84acdeff9c36ed38",
+      "path": "architect/SKILL.md",
+      "bytes": 16380,
+      "blob_sha": "8943c0e3249eb28d66c66d2c5e8cbed086cac78e",
+      "purpose": "Broad role-boundary cross-check in the observed intake; executor/SKILL.md already provides routing ownership, so this is not needed for routing.",
+      "routing_classification": "unnecessary_to_routing_decision",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__architect__1fcf5a2ebeee",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "1fcf5a2ebeeec7f3e1498d207148a9cd81a95456",
+      "path": "architect/SKILL.md",
+      "bytes": 12946,
+      "blob_sha": "e6662d23c449c8975da0392eb19bf3ae29495449",
+      "purpose": "Broad role-boundary cross-check in the observed intake; executor/SKILL.md already provides routing ownership, so this is not needed for routing.",
+      "routing_classification": "unnecessary_to_routing_decision",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__architect__337c0be66180",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "337c0be6618090e704b345b1bf93df488a4985af",
+      "path": "architect/SKILL.md",
+      "bytes": 16380,
+      "blob_sha": "8943c0e3249eb28d66c66d2c5e8cbed086cac78e",
+      "purpose": "Broad role-boundary cross-check in the observed intake; executor/SKILL.md already provides routing ownership, so this is not needed for routing.",
+      "routing_classification": "unnecessary_to_routing_decision",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__architect__33f138c56dee",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "33f138c56dee6a2a1e8b8a6dc52b1399452ef177",
+      "path": "architect/SKILL.md",
+      "bytes": 10634,
+      "blob_sha": "82e4d97f0ffcb71cd124458b6f5d538b59c614b1",
+      "purpose": "Broad role-boundary cross-check in the observed intake; executor/SKILL.md already provides routing ownership, so this is not needed for routing.",
+      "routing_classification": "unnecessary_to_routing_decision",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__architect__533eaef0dbed",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "533eaef0dbed13c5bbfdad1195218d8382a38e5c",
+      "path": "architect/SKILL.md",
+      "bytes": 12946,
+      "blob_sha": "e6662d23c449c8975da0392eb19bf3ae29495449",
+      "purpose": "Broad role-boundary cross-check in the observed intake; executor/SKILL.md already provides routing ownership, so this is not needed for routing.",
+      "routing_classification": "unnecessary_to_routing_decision",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__architect__76f2d3877d16",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "76f2d3877d1698f91eb5a6117e2301ed49480379",
+      "path": "architect/SKILL.md",
+      "bytes": 15611,
+      "blob_sha": "a02094c84110b38bd58010ef4096b1718b247f56",
+      "purpose": "Broad role-boundary cross-check in the observed intake; executor/SKILL.md already provides routing ownership, so this is not needed for routing.",
+      "routing_classification": "unnecessary_to_routing_decision",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__architect__9e8add0ef47f",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "9e8add0ef47fb3d7797c6a4da4f45ceb78c4030e",
+      "path": "architect/SKILL.md",
+      "bytes": 16380,
+      "blob_sha": "8943c0e3249eb28d66c66d2c5e8cbed086cac78e",
+      "purpose": "Broad role-boundary cross-check in the observed intake; executor/SKILL.md already provides routing ownership, so this is not needed for routing.",
+      "routing_classification": "unnecessary_to_routing_decision",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__architect__fe3fd6de46c6",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "fe3fd6de46c6e2220edbcadfb27f12c8dd23b2d6",
+      "path": "architect/SKILL.md",
+      "bytes": 9124,
+      "blob_sha": "d1af0e1eb40a3403256973b2423f9592bdc12d2a",
+      "purpose": "Broad role-boundary cross-check in the observed intake; executor/SKILL.md already provides routing ownership, so this is not needed for routing.",
+      "routing_classification": "unnecessary_to_routing_decision",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__executor__16217bb78a57",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "16217bb78a578160efb68afc84acdeff9c36ed38",
+      "path": "executor/SKILL.md",
+      "bytes": 16079,
+      "blob_sha": "0b82de9be72b1ea3da107213e2119f26951b7b33",
+      "purpose": "Resolve exact current Executor capability-owner entrypoint at the task's pinned agent-skills revision.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__executor__1fcf5a2ebeee",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "1fcf5a2ebeeec7f3e1498d207148a9cd81a95456",
+      "path": "executor/SKILL.md",
+      "bytes": 10319,
+      "blob_sha": "a60bdba0669c82f182fd9c3139f0769ac466acc6",
+      "purpose": "Resolve exact current Executor capability-owner entrypoint at the task's pinned agent-skills revision.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__executor__337c0be66180",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "337c0be6618090e704b345b1bf93df488a4985af",
+      "path": "executor/SKILL.md",
+      "bytes": 16079,
+      "blob_sha": "0b82de9be72b1ea3da107213e2119f26951b7b33",
+      "purpose": "Resolve exact current Executor capability-owner entrypoint at the task's pinned agent-skills revision.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__executor__33f138c56dee",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "33f138c56dee6a2a1e8b8a6dc52b1399452ef177",
+      "path": "executor/SKILL.md",
+      "bytes": 7154,
+      "blob_sha": "0d70bca2900f0b7ae385a12db894c736152297f4",
+      "purpose": "Resolve exact current Executor capability-owner entrypoint at the task's pinned agent-skills revision.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__executor__533eaef0dbed",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "533eaef0dbed13c5bbfdad1195218d8382a38e5c",
+      "path": "executor/SKILL.md",
+      "bytes": 8497,
+      "blob_sha": "60d7355bb6827562dc7efaee884f832652f229b4",
+      "purpose": "Resolve exact current Executor capability-owner entrypoint at the task's pinned agent-skills revision.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__executor__76f2d3877d16",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "76f2d3877d1698f91eb5a6117e2301ed49480379",
+      "path": "executor/SKILL.md",
+      "bytes": 12750,
+      "blob_sha": "ce832b5a129dc70dbdb80b9835975769cc896b68",
+      "purpose": "Resolve exact current Executor capability-owner entrypoint at the task's pinned agent-skills revision.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__executor__9e8add0ef47f",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "9e8add0ef47fb3d7797c6a4da4f45ceb78c4030e",
+      "path": "executor/SKILL.md",
+      "bytes": 14340,
+      "blob_sha": "8fdd098b55a365e41706021a66c5f60e45e7b1b9",
+      "purpose": "Resolve exact current Executor capability-owner entrypoint at the task's pinned agent-skills revision.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__executor__fe3fd6de46c6",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "fe3fd6de46c6e2220edbcadfb27f12c8dd23b2d6",
+      "path": "executor/SKILL.md",
+      "bytes": 6169,
+      "blob_sha": "fd58572b322e32d6c7b520731bfc36b5b43f37c9",
+      "purpose": "Resolve exact current Executor capability-owner entrypoint at the task's pinned agent-skills revision.",
+      "routing_classification": "necessary_for_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__github_workflow__337c0be66180",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "337c0be6618090e704b345b1bf93df488a4985af",
+      "path": "github-workflow/SKILL.md",
+      "bytes": 7836,
+      "blob_sha": "624acc8b2666a02e161e5bb86c0fde49c88af302",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__reliability__76f2d3877d16",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "76f2d3877d1698f91eb5a6117e2301ed49480379",
+      "path": "reliability/SKILL.md",
+      "bytes": 2593,
+      "blob_sha": "6129545af569e95a1c3cdd67f5855660ee7192ee",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__reliability__fe3fd6de46c6",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "fe3fd6de46c6e2220edbcadfb27f12c8dd23b2d6",
+      "path": "reliability/SKILL.md",
+      "bytes": 2593,
+      "blob_sha": "6129545af569e95a1c3cdd67f5855660ee7192ee",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__simplicity__16217bb78a57",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "16217bb78a578160efb68afc84acdeff9c36ed38",
+      "path": "simplicity/SKILL.md",
+      "bytes": 7465,
+      "blob_sha": "1d97eaf5b0202f8896fba90918b72689abb92ba0",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__simplicity__1fcf5a2ebeee",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "1fcf5a2ebeeec7f3e1498d207148a9cd81a95456",
+      "path": "simplicity/SKILL.md",
+      "bytes": 7465,
+      "blob_sha": "1d97eaf5b0202f8896fba90918b72689abb92ba0",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__simplicity__337c0be66180",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "337c0be6618090e704b345b1bf93df488a4985af",
+      "path": "simplicity/SKILL.md",
+      "bytes": 7465,
+      "blob_sha": "1d97eaf5b0202f8896fba90918b72689abb92ba0",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__simplicity__33f138c56dee",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "33f138c56dee6a2a1e8b8a6dc52b1399452ef177",
+      "path": "simplicity/SKILL.md",
+      "bytes": 7465,
+      "blob_sha": "1d97eaf5b0202f8896fba90918b72689abb92ba0",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__simplicity__533eaef0dbed",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "533eaef0dbed13c5bbfdad1195218d8382a38e5c",
+      "path": "simplicity/SKILL.md",
+      "bytes": 7465,
+      "blob_sha": "1d97eaf5b0202f8896fba90918b72689abb92ba0",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__simplicity__76f2d3877d16",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "76f2d3877d1698f91eb5a6117e2301ed49480379",
+      "path": "simplicity/SKILL.md",
+      "bytes": 7465,
+      "blob_sha": "1d97eaf5b0202f8896fba90918b72689abb92ba0",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__simplicity__9e8add0ef47f",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "9e8add0ef47fb3d7797c6a4da4f45ceb78c4030e",
+      "path": "simplicity/SKILL.md",
+      "bytes": 7465,
+      "blob_sha": "1d97eaf5b0202f8896fba90918b72689abb92ba0",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__verification__16217bb78a57",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "16217bb78a578160efb68afc84acdeff9c36ed38",
+      "path": "verification/SKILL.md",
+      "bytes": 2458,
+      "blob_sha": "58b46e3ad3b4dee058b0c97cc9e1df9bf0e58e3e",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__verification__1fcf5a2ebeee",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "1fcf5a2ebeeec7f3e1498d207148a9cd81a95456",
+      "path": "verification/SKILL.md",
+      "bytes": 2458,
+      "blob_sha": "58b46e3ad3b4dee058b0c97cc9e1df9bf0e58e3e",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__verification__337c0be66180",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "337c0be6618090e704b345b1bf93df488a4985af",
+      "path": "verification/SKILL.md",
+      "bytes": 2458,
+      "blob_sha": "58b46e3ad3b4dee058b0c97cc9e1df9bf0e58e3e",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__verification__33f138c56dee",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "33f138c56dee6a2a1e8b8a6dc52b1399452ef177",
+      "path": "verification/SKILL.md",
+      "bytes": 2458,
+      "blob_sha": "58b46e3ad3b4dee058b0c97cc9e1df9bf0e58e3e",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__verification__533eaef0dbed",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "533eaef0dbed13c5bbfdad1195218d8382a38e5c",
+      "path": "verification/SKILL.md",
+      "bytes": 2458,
+      "blob_sha": "58b46e3ad3b4dee058b0c97cc9e1df9bf0e58e3e",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__verification__76f2d3877d16",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "76f2d3877d1698f91eb5a6117e2301ed49480379",
+      "path": "verification/SKILL.md",
+      "bytes": 2458,
+      "blob_sha": "58b46e3ad3b4dee058b0c97cc9e1df9bf0e58e3e",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__verification__9e8add0ef47f",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "9e8add0ef47fb3d7797c6a4da4f45ceb78c4030e",
+      "path": "verification/SKILL.md",
+      "bytes": 2458,
+      "blob_sha": "58b46e3ad3b4dee058b0c97cc9e1df9bf0e58e3e",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    },
+    {
+      "id": "skill__verification__fe3fd6de46c6",
+      "repository": "phatnguyen03022001/agent-skills",
+      "revision": "fe3fd6de46c6e2220edbcadfb27f12c8dd23b2d6",
+      "path": "verification/SKILL.md",
+      "bytes": 2458,
+      "blob_sha": "58b46e3ad3b4dee058b0c97cc9e1df9bf0e58e3e",
+      "purpose": "Task-declared execution specialization; required after routing, but intentionally preloaded in the observed broad intake proxy.",
+      "routing_classification": "necessary_only_after_routing",
+      "observed_read_phase": "before_routing_closure"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "agent-documents/TASK-0002",
+      "repository": "phatnguyen03022001/agent-documents",
+      "task_id": "TASK-0002",
+      "task_revision": 1,
+      "canonical_locator": {
+        "repository": "phatnguyen03022001/agent-documents",
+        "task_path": ".agent/tasks/TASK-0002/task.yaml",
+        "target_branch": "dev",
+        "remote_ref": "refs/heads/dev",
+        "remote_tip_sha": "6918f46282f4a92bbc61071444a5ff5dab30ddc9",
+        "exact_locator_url": "https://github.com/phatnguyen03022001/agent-documents/blob/6918f46282f4a92bbc61071444a5ff5dab30ddc9/.agent/tasks/TASK-0002/task.yaml"
+      },
+      "source_lineage": {
+        "task_source_commit": "d6337c02c5e87b92bdf97696f05186fd35c9fe99",
+        "report_source_commit": "748ceb574bceee62db9f2f7952cf162dcd9489eb",
+        "review_source_commit": "c13b4f51639b34f7c6417bfb10afe0eeee290b8e",
+        "reviewed_report_commit": "748ceb574bceee62db9f2f7952cf162dcd9489eb",
+        "implementation_candidate_head": "f7200ce763b16c16bff4ee203d9b67346fa0ac40",
+        "task_state": "EXECUTION_READY",
+        "report_state": "REPORTED",
+        "report_result": "NEEDS_REVIEW",
+        "review_state": "ACCEPTED",
+        "report_revision": 1
+      },
+      "pinned_skill_library": {
+        "repository": "phatnguyen03022001/agent-skills",
+        "authorized_revision": "fe3fd6de46c6e2220edbcadfb27f12c8dd23b2d6",
+        "resolved_as_commit": true
+      },
+      "execution_skills_required": [
+        "executor",
+        "verification",
+        "reliability"
+      ],
+      "required_execution_capabilities": [
+        "exact_remote_ref_read",
+        "isolated_test_execution",
+        "repository_content_read",
+        "repository_content_write"
+      ],
+      "owner_path_projection": {
+        "basis": "task.yaml#/scope/allowed_existing_files_or_components",
+        "entries": [
+          "DOCUMENT_MODEL.md",
+          "model/project.schema.v1.json",
+          "tools/validate.py",
+          "tests/test_validate.py",
+          "templates/docs/DECISIONS.md",
+          ".agent/tasks/TASK-0002/task.yaml"
+        ],
+        "authority_remains_in_task": true,
+        "no_case_dimension_defined": true
+      },
+      "material_inference_points": [
+        {
+          "id": "owner_binding_resolution",
+          "statement": "Resolved phatnguyen03022001/agent-documents as target owner separately from pinned agent-skills authority.",
+          "evidence_artifact_ids": [
+            "agent_documents_TASK_0002__task"
+          ]
+        },
+        {
+          "id": "capability_surface_resolution",
+          "statement": "Resolved exact task-declared execution skills and capability set before choosing path-specific work.",
+          "evidence_artifact_ids": [
+            "agent_documents_TASK_0002__task"
+          ]
+        },
+        {
+          "id": "semantic_owner_boundary_resolution",
+          "statement": "Resolved existing task-declared semantic owner/path boundary while keeping CASE separate from binding, specialization, mode, task, and state.",
+          "evidence_artifact_ids": [
+            "agent_documents_TASK_0002__task"
+          ]
+        }
+      ],
+      "observed_trace": {
+        "trace_kind": "current broad canonical intake proxy, executed in this measurement run",
+        "read_order_before_routing_closure": [
+          "agent_documents_TASK_0002__task",
+          "skill__executor__fe3fd6de46c6",
+          "skill__verification__fe3fd6de46c6",
+          "skill__reliability__fe3fd6de46c6",
+          "skill__architect__fe3fd6de46c6"
+        ],
+        "routing_closure_after_artifact_index": 5,
+        "read_order_after_routing_closure": [
+          "agent_documents_TASK_0002__report",
+          "agent_documents_TASK_0002__review"
+        ],
+        "all_consulted_artifact_ids": [
+          "agent_documents_TASK_0002__task",
+          "skill__executor__fe3fd6de46c6",
+          "skill__verification__fe3fd6de46c6",
+          "skill__reliability__fe3fd6de46c6",
+          "skill__architect__fe3fd6de46c6",
+          "agent_documents_TASK_0002__report",
+          "agent_documents_TASK_0002__review"
+        ]
+      },
+      "minimal_sufficient_routing_projection": {
+        "rule": "Use only exact task artifact plus existing pinned executor/SKILL.md; task already carries target binding, capability requirements, authority sources, and positive owner/path boundary.",
+        "read_artifact_ids": [
+          "agent_documents_TASK_0002__task",
+          "skill__executor__fe3fd6de46c6"
+        ],
+        "authority_owner_paths": [
+          ".agent/tasks/TASK-0002/task.yaml#/scope/allowed_existing_files_or_components"
+        ],
+        "capability_owner_paths": [
+          "phatnguyen03022001/agent-skills@fe3fd6de46c6e2220edbcadfb27f12c8dd23b2d6:executor/SKILL.md"
+        ],
+        "counterfactual_only": true,
+        "does_not_define_case_or_workflow": true
+      },
+      "metrics": {
+        "observed_routing_artifact_count": 5,
+        "minimal_routing_artifact_count": 2,
+        "observed_routing_bytes": 33867,
+        "minimal_routing_bytes": 19692,
+        "distinct_support_repositories_touched_before_routing_closure": 2,
+        "support_repositories_before_routing_closure": [
+          "phatnguyen03022001/agent-documents",
+          "phatnguyen03022001/agent-skills"
+        ],
+        "material_inference_point_count": 3,
+        "unnecessary_routing_read_count": 1,
+        "premature_after_routing_read_count": 2,
+        "artifact_count_reduction_percentage": 60.0,
+        "bytes_reduction_percentage": 41.854903
+      },
+      "capability_set": {
+        "signature": "sha256:5555baf3de42bb008e3ec6e2e7bfc52b5c6e36cd767cac2f9e4637cc2c4f27e4",
+        "capabilities": [
+          "exact_remote_ref_read",
+          "isolated_test_execution",
+          "repository_content_read",
+          "repository_content_write"
+        ],
+        "static_key_not_defined": true
+      },
+      "observed_semantic_search_waste": {
+        "meaningful_residual_after_projection": false,
+        "status": "NOT_PROVEN",
+        "evidence": "Projection uses exact canonical paths and no semantic retrieval operation; absence outside this proxy is not claimed."
+      }
+    },
+    {
+      "id": "agent-documents/TASK-0003",
+      "repository": "phatnguyen03022001/agent-documents",
+      "task_id": "TASK-0003",
+      "task_revision": 1,
+      "canonical_locator": {
+        "repository": "phatnguyen03022001/agent-documents",
+        "task_path": ".agent/tasks/TASK-0003/task.yaml",
+        "target_branch": "dev",
+        "remote_ref": "refs/heads/dev",
+        "remote_tip_sha": "6918f46282f4a92bbc61071444a5ff5dab30ddc9",
+        "exact_locator_url": "https://github.com/phatnguyen03022001/agent-documents/blob/6918f46282f4a92bbc61071444a5ff5dab30ddc9/.agent/tasks/TASK-0003/task.yaml"
+      },
+      "source_lineage": {
+        "task_source_commit": "7d7faf30e5a598e4eea9c30a96ab3f2f619cfe4a",
+        "report_source_commit": "9d5d71d0bf74953fcba482293d357a8765f375d3",
+        "review_source_commit": "e6728594b0371e2e941c1457fc8efdc14a90deee",
+        "reviewed_report_commit": "9d5d71d0bf74953fcba482293d357a8765f375d3",
+        "implementation_candidate_head": "e31186b7d4b84020e9d99bdda4dc5a58cfec2c7c",
+        "task_state": "APPROVED",
+        "report_state": "REPORTED",
+        "report_result": "NEEDS_REVIEW",
+        "review_state": "ACCEPTED",
+        "report_revision": 1
+      },
+      "pinned_skill_library": {
+        "repository": "phatnguyen03022001/agent-skills",
+        "authorized_revision": "33f138c56dee6a2a1e8b8a6dc52b1399452ef177",
+        "resolved_as_commit": true
+      },
+      "execution_skills_required": [
+        "executor",
+        "simplicity",
+        "verification"
+      ],
+      "required_execution_capabilities": [
+        "exact_remote_ref_read",
+        "repository_content_read",
+        "repository_content_write"
+      ],
+      "owner_path_projection": {
+        "basis": "task.yaml#/scope/allowed_existing_files_or_components",
+        "entries": [
+          "README.md",
+          "DOCUMENT_MODEL.md",
+          ".agent/tasks/TASK-0003/task.yaml"
+        ],
+        "authority_remains_in_task": true,
+        "no_case_dimension_defined": true
+      },
+      "material_inference_points": [
+        {
+          "id": "owner_binding_resolution",
+          "statement": "Resolved phatnguyen03022001/agent-documents as target owner separately from pinned agent-skills authority.",
+          "evidence_artifact_ids": [
+            "agent_documents_TASK_0003__task"
+          ]
+        },
+        {
+          "id": "capability_surface_resolution",
+          "statement": "Resolved exact task-declared execution skills and capability set before choosing path-specific work.",
+          "evidence_artifact_ids": [
+            "agent_documents_TASK_0003__task"
+          ]
+        },
+        {
+          "id": "semantic_owner_boundary_resolution",
+          "statement": "Resolved existing task-declared semantic owner/path boundary while keeping CASE separate from binding, specialization, mode, task, and state.",
+          "evidence_artifact_ids": [
+            "agent_documents_TASK_0003__task"
+          ]
+        }
+      ],
+      "observed_trace": {
+        "trace_kind": "current broad canonical intake proxy, executed in this measurement run",
+        "read_order_before_routing_closure": [
+          "agent_documents_TASK_0003__task",
+          "skill__executor__33f138c56dee",
+          "skill__simplicity__33f138c56dee",
+          "skill__verification__33f138c56dee",
+          "skill__architect__33f138c56dee"
+        ],
+        "routing_closure_after_artifact_index": 5,
+        "read_order_after_routing_closure": [
+          "agent_documents_TASK_0003__report",
+          "agent_documents_TASK_0003__review"
+        ],
+        "all_consulted_artifact_ids": [
+          "agent_documents_TASK_0003__task",
+          "skill__executor__33f138c56dee",
+          "skill__simplicity__33f138c56dee",
+          "skill__verification__33f138c56dee",
+          "skill__architect__33f138c56dee",
+          "agent_documents_TASK_0003__report",
+          "agent_documents_TASK_0003__review"
+        ]
+      },
+      "minimal_sufficient_routing_projection": {
+        "rule": "Use only exact task artifact plus existing pinned executor/SKILL.md; task already carries target binding, capability requirements, authority sources, and positive owner/path boundary.",
+        "read_artifact_ids": [
+          "agent_documents_TASK_0003__task",
+          "skill__executor__33f138c56dee"
+        ],
+        "authority_owner_paths": [
+          ".agent/tasks/TASK-0003/task.yaml#/scope/allowed_existing_files_or_components"
+        ],
+        "capability_owner_paths": [
+          "phatnguyen03022001/agent-skills@33f138c56dee6a2a1e8b8a6dc52b1399452ef177:executor/SKILL.md"
+        ],
+        "counterfactual_only": true,
+        "does_not_define_case_or_workflow": true
+      },
+      "metrics": {
+        "observed_routing_artifact_count": 5,
+        "minimal_routing_artifact_count": 2,
+        "observed_routing_bytes": 38133,
+        "minimal_routing_bytes": 17576,
+        "distinct_support_repositories_touched_before_routing_closure": 2,
+        "support_repositories_before_routing_closure": [
+          "phatnguyen03022001/agent-documents",
+          "phatnguyen03022001/agent-skills"
+        ],
+        "material_inference_point_count": 3,
+        "unnecessary_routing_read_count": 1,
+        "premature_after_routing_read_count": 2,
+        "artifact_count_reduction_percentage": 60.0,
+        "bytes_reduction_percentage": 53.908688
+      },
+      "capability_set": {
+        "signature": "sha256:2b727526b168abf069459610ae490b069439dd298e9bae7f8e1a1b93763fcc69",
+        "capabilities": [
+          "exact_remote_ref_read",
+          "repository_content_read",
+          "repository_content_write"
+        ],
+        "static_key_not_defined": true
+      },
+      "observed_semantic_search_waste": {
+        "meaningful_residual_after_projection": false,
+        "status": "NOT_PROVEN",
+        "evidence": "Projection uses exact canonical paths and no semantic retrieval operation; absence outside this proxy is not claimed."
+      }
+    },
+    {
+      "id": "agent-documents/TASK-0004",
+      "repository": "phatnguyen03022001/agent-documents",
+      "task_id": "TASK-0004",
+      "task_revision": 3,
+      "canonical_locator": {
+        "repository": "phatnguyen03022001/agent-documents",
+        "task_path": ".agent/tasks/TASK-0004/task.yaml",
+        "target_branch": "dev",
+        "remote_ref": "refs/heads/dev",
+        "remote_tip_sha": "6918f46282f4a92bbc61071444a5ff5dab30ddc9",
+        "exact_locator_url": "https://github.com/phatnguyen03022001/agent-documents/blob/6918f46282f4a92bbc61071444a5ff5dab30ddc9/.agent/tasks/TASK-0004/task.yaml"
+      },
+      "source_lineage": {
+        "task_source_commit": "a874e385c8adc5c2a0ed02e5f919dc38cdd50cb9",
+        "report_source_commit": "063e095da8e5e349613481d4bf65c7a0e0af5b16",
+        "review_source_commit": "acb3f02616e700190586681306a86905792e4c07",
+        "reviewed_report_commit": "063e095da8e5e349613481d4bf65c7a0e0af5b16",
+        "implementation_candidate_head": "fb217c86b690f013bb386a7ecaa56d0927569b79",
+        "task_state": "APPROVED",
+        "report_state": "REPORTED",
+        "report_result": "NEEDS_REVIEW",
+        "review_state": "ACCEPTED",
+        "report_revision": 1
+      },
+      "pinned_skill_library": {
+        "repository": "phatnguyen03022001/agent-skills",
+        "authorized_revision": "533eaef0dbed13c5bbfdad1195218d8382a38e5c",
+        "resolved_as_commit": true
+      },
+      "execution_skills_required": [
+        "executor",
+        "simplicity",
+        "verification"
+      ],
+      "required_execution_capabilities": [
+        "exact_remote_ref_read",
+        "isolated_test_execution",
+        "repository_content_read",
+        "repository_content_write"
+      ],
+      "owner_path_projection": {
+        "basis": "task.yaml#/scope/allowed_existing_files_or_components",
+        "entries": [
+          "DOCUMENT_MODEL.md",
+          "model/project.schema.v1.json",
+          "tools/validate.py",
+          "tests/test_validate.py",
+          ".agent/tasks/TASK-0004/task.yaml"
+        ],
+        "authority_remains_in_task": true,
+        "no_case_dimension_defined": true
+      },
+      "material_inference_points": [
+        {
+          "id": "owner_binding_resolution",
+          "statement": "Resolved phatnguyen03022001/agent-documents as target owner separately from pinned agent-skills authority.",
+          "evidence_artifact_ids": [
+            "agent_documents_TASK_0004__task"
+          ]
+        },
+        {
+          "id": "capability_surface_resolution",
+          "statement": "Resolved exact task-declared execution skills and capability set before choosing path-specific work.",
+          "evidence_artifact_ids": [
+            "agent_documents_TASK_0004__task"
+          ]
+        },
+        {
+          "id": "semantic_owner_boundary_resolution",
+          "statement": "Resolved existing task-declared semantic owner/path boundary while keeping CASE separate from binding, specialization, mode, task, and state.",
+          "evidence_artifact_ids": [
+            "agent_documents_TASK_0004__task"
+          ]
+        }
+      ],
+      "observed_trace": {
+        "trace_kind": "current broad canonical intake proxy, executed in this measurement run",
+        "read_order_before_routing_closure": [
+          "agent_documents_TASK_0004__task",
+          "skill__executor__533eaef0dbed",
+          "skill__simplicity__533eaef0dbed",
+          "skill__verification__533eaef0dbed",
+          "skill__architect__533eaef0dbed"
+        ],
+        "routing_closure_after_artifact_index": 5,
+        "read_order_after_routing_closure": [
+          "agent_documents_TASK_0004__report",
+          "agent_documents_TASK_0004__review"
+        ],
+        "all_consulted_artifact_ids": [
+          "agent_documents_TASK_0004__task",
+          "skill__executor__533eaef0dbed",
+          "skill__simplicity__533eaef0dbed",
+          "skill__verification__533eaef0dbed",
+          "skill__architect__533eaef0dbed",
+          "agent_documents_TASK_0004__report",
+          "agent_documents_TASK_0004__review"
+        ]
+      },
+      "minimal_sufficient_routing_projection": {
+        "rule": "Use only exact task artifact plus existing pinned executor/SKILL.md; task already carries target binding, capability requirements, authority sources, and positive owner/path boundary.",
+        "read_artifact_ids": [
+          "agent_documents_TASK_0004__task",
+          "skill__executor__533eaef0dbed"
+        ],
+        "authority_owner_paths": [
+          ".agent/tasks/TASK-0004/task.yaml#/scope/allowed_existing_files_or_components"
+        ],
+        "capability_owner_paths": [
+          "phatnguyen03022001/agent-skills@533eaef0dbed13c5bbfdad1195218d8382a38e5c:executor/SKILL.md"
+        ],
+        "counterfactual_only": true,
+        "does_not_define_case_or_workflow": true
+      },
+      "metrics": {
+        "observed_routing_artifact_count": 5,
+        "minimal_routing_artifact_count": 2,
+        "observed_routing_bytes": 47727,
+        "minimal_routing_bytes": 24858,
+        "distinct_support_repositories_touched_before_routing_closure": 2,
+        "support_repositories_before_routing_closure": [
+          "phatnguyen03022001/agent-documents",
+          "phatnguyen03022001/agent-skills"
+        ],
+        "material_inference_point_count": 3,
+        "unnecessary_routing_read_count": 1,
+        "premature_after_routing_read_count": 2,
+        "artifact_count_reduction_percentage": 60.0,
+        "bytes_reduction_percentage": 47.916274
+      },
+      "capability_set": {
+        "signature": "sha256:5555baf3de42bb008e3ec6e2e7bfc52b5c6e36cd767cac2f9e4637cc2c4f27e4",
+        "capabilities": [
+          "exact_remote_ref_read",
+          "isolated_test_execution",
+          "repository_content_read",
+          "repository_content_write"
+        ],
+        "static_key_not_defined": true
+      },
+      "observed_semantic_search_waste": {
+        "meaningful_residual_after_projection": false,
+        "status": "NOT_PROVEN",
+        "evidence": "Projection uses exact canonical paths and no semantic retrieval operation; absence outside this proxy is not claimed."
+      }
+    },
+    {
+      "id": "agent-documents/TASK-0005",
+      "repository": "phatnguyen03022001/agent-documents",
+      "task_id": "TASK-0005",
+      "task_revision": 1,
+      "canonical_locator": {
+        "repository": "phatnguyen03022001/agent-documents",
+        "task_path": ".agent/tasks/TASK-0005/task.yaml",
+        "target_branch": "dev",
+        "remote_ref": "refs/heads/dev",
+        "remote_tip_sha": "6918f46282f4a92bbc61071444a5ff5dab30ddc9",
+        "exact_locator_url": "https://github.com/phatnguyen03022001/agent-documents/blob/6918f46282f4a92bbc61071444a5ff5dab30ddc9/.agent/tasks/TASK-0005/task.yaml"
+      },
+      "source_lineage": {
+        "task_source_commit": "eb587944d5f3fb0a6d66697023b57fade15f9f83",
+        "report_source_commit": "13741f768888c6b4655d33b62ad0cc401e273b99",
+        "review_source_commit": "8b3fe8d3afec25b661fbc5f31705124058486209",
+        "reviewed_report_commit": "13741f768888c6b4655d33b62ad0cc401e273b99",
+        "implementation_candidate_head": "a7990ac272c5976ee5379ea63979b8d615dc91df",
+        "task_state": "APPROVED",
+        "report_state": "REPORTED",
+        "report_result": "NEEDS_REVIEW",
+        "review_state": "ACCEPTED",
+        "report_revision": 1
+      },
+      "pinned_skill_library": {
+        "repository": "phatnguyen03022001/agent-skills",
+        "authorized_revision": "1fcf5a2ebeeec7f3e1498d207148a9cd81a95456",
+        "resolved_as_commit": true
+      },
+      "execution_skills_required": [
+        "executor",
+        "simplicity",
+        "verification"
+      ],
+      "required_execution_capabilities": [
+        "exact_remote_ref_read",
+        "isolated_test_execution",
+        "repository_content_read",
+        "repository_content_write"
+      ],
+      "owner_path_projection": {
+        "basis": "task.yaml#/scope/allowed_existing_files_or_components",
+        "entries": [
+          "tools/validate.py",
+          "tests/test_validate.py",
+          ".agent/tasks/TASK-0005/task.yaml"
+        ],
+        "authority_remains_in_task": true,
+        "no_case_dimension_defined": true
+      },
+      "material_inference_points": [
+        {
+          "id": "owner_binding_resolution",
+          "statement": "Resolved phatnguyen03022001/agent-documents as target owner separately from pinned agent-skills authority.",
+          "evidence_artifact_ids": [
+            "agent_documents_TASK_0005__task"
+          ]
+        },
+        {
+          "id": "capability_surface_resolution",
+          "statement": "Resolved exact task-declared execution skills and capability set before choosing path-specific work.",
+          "evidence_artifact_ids": [
+            "agent_documents_TASK_0005__task"
+          ]
+        },
+        {
+          "id": "semantic_owner_boundary_resolution",
+          "statement": "Resolved existing task-declared semantic owner/path boundary while keeping CASE separate from binding, specialization, mode, task, and state.",
+          "evidence_artifact_ids": [
+            "agent_documents_TASK_0005__task"
+          ]
+        }
+      ],
+      "observed_trace": {
+        "trace_kind": "current broad canonical intake proxy, executed in this measurement run",
+        "read_order_before_routing_closure": [
+          "agent_documents_TASK_0005__task",
+          "skill__executor__1fcf5a2ebeee",
+          "skill__simplicity__1fcf5a2ebeee",
+          "skill__verification__1fcf5a2ebeee",
+          "skill__architect__1fcf5a2ebeee"
+        ],
+        "routing_closure_after_artifact_index": 5,
+        "read_order_after_routing_closure": [
+          "agent_documents_TASK_0005__report",
+          "agent_documents_TASK_0005__review"
+        ],
+        "all_consulted_artifact_ids": [
+          "agent_documents_TASK_0005__task",
+          "skill__executor__1fcf5a2ebeee",
+          "skill__simplicity__1fcf5a2ebeee",
+          "skill__verification__1fcf5a2ebeee",
+          "skill__architect__1fcf5a2ebeee",
+          "agent_documents_TASK_0005__report",
+          "agent_documents_TASK_0005__review"
+        ]
+      },
+      "minimal_sufficient_routing_projection": {
+        "rule": "Use only exact task artifact plus existing pinned executor/SKILL.md; task already carries target binding, capability requirements, authority sources, and positive owner/path boundary.",
+        "read_artifact_ids": [
+          "agent_documents_TASK_0005__task",
+          "skill__executor__1fcf5a2ebeee"
+        ],
+        "authority_owner_paths": [
+          ".agent/tasks/TASK-0005/task.yaml#/scope/allowed_existing_files_or_components"
+        ],
+        "capability_owner_paths": [
+          "phatnguyen03022001/agent-skills@1fcf5a2ebeeec7f3e1498d207148a9cd81a95456:executor/SKILL.md"
+        ],
+        "counterfactual_only": true,
+        "does_not_define_case_or_workflow": true
+      },
+      "metrics": {
+        "observed_routing_artifact_count": 5,
+        "minimal_routing_artifact_count": 2,
+        "observed_routing_bytes": 45689,
+        "minimal_routing_bytes": 22820,
+        "distinct_support_repositories_touched_before_routing_closure": 2,
+        "support_repositories_before_routing_closure": [
+          "phatnguyen03022001/agent-documents",
+          "phatnguyen03022001/agent-skills"
+        ],
+        "material_inference_point_count": 3,
+        "unnecessary_routing_read_count": 1,
+        "premature_after_routing_read_count": 2,
+        "artifact_count_reduction_percentage": 60.0,
+        "bytes_reduction_percentage": 50.053623
+      },
+      "capability_set": {
+        "signature": "sha256:5555baf3de42bb008e3ec6e2e7bfc52b5c6e36cd767cac2f9e4637cc2c4f27e4",
+        "capabilities": [
+          "exact_remote_ref_read",
+          "isolated_test_execution",
+          "repository_content_read",
+          "repository_content_write"
+        ],
+        "static_key_not_defined": true
+      },
+      "observed_semantic_search_waste": {
+        "meaningful_residual_after_projection": false,
+        "status": "NOT_PROVEN",
+        "evidence": "Projection uses exact canonical paths and no semantic retrieval operation; absence outside this proxy is not claimed."
+      }
+    },
+    {
+      "id": "agent-documents/TASK-0006",
+      "repository": "phatnguyen03022001/agent-documents",
+      "task_id": "TASK-0006",
+      "task_revision": 1,
+      "canonical_locator": {
+        "repository": "phatnguyen03022001/agent-documents",
+        "task_path": ".agent/tasks/TASK-0006/task.yaml",
+        "target_branch": "dev",
+        "remote_ref": "refs/heads/dev",
+        "remote_tip_sha": "6918f46282f4a92bbc61071444a5ff5dab30ddc9",
+        "exact_locator_url": "https://github.com/phatnguyen03022001/agent-documents/blob/6918f46282f4a92bbc61071444a5ff5dab30ddc9/.agent/tasks/TASK-0006/task.yaml"
+      },
+      "source_lineage": {
+        "task_source_commit": "091b4bdfa84f17182cd73538a549f09f41863873",
+        "report_source_commit": "5aff041cefd1cc49bca3f84a3e67b1596bea02d5",
+        "review_source_commit": "6918f46282f4a92bbc61071444a5ff5dab30ddc9",
+        "reviewed_report_commit": "5aff041cefd1cc49bca3f84a3e67b1596bea02d5",
+        "implementation_candidate_head": "c5015712ae95c1f2fba2893db9638fb75b8ba52a",
+        "task_state": "APPROVED",
+        "report_state": "REPORTED",
+        "report_result": "NEEDS_REVIEW",
+        "review_state": "ACCEPTED",
+        "report_revision": 1
+      },
+      "pinned_skill_library": {
+        "repository": "phatnguyen03022001/agent-skills",
+        "authorized_revision": "1fcf5a2ebeeec7f3e1498d207148a9cd81a95456",
+        "resolved_as_commit": true
+      },
+      "execution_skills_required": [
+        "executor",
+        "simplicity",
+        "verification"
+      ],
+      "required_execution_capabilities": [
+        "exact_remote_ref_read",
+        "isolated_test_execution",
+        "repository_content_read",
+        "repository_content_write"
+      ],
+      "owner_path_projection": {
+        "basis": "task.yaml#/scope/allowed_existing_files_or_components",
+        "entries": [
+          "README.md",
+          ".agent/tasks/TASK-0006/task.yaml"
+        ],
+        "authority_remains_in_task": true,
+        "no_case_dimension_defined": true
+      },
+      "material_inference_points": [
+        {
+          "id": "owner_binding_resolution",
+          "statement": "Resolved phatnguyen03022001/agent-documents as target owner separately from pinned agent-skills authority.",
+          "evidence_artifact_ids": [
+            "agent_documents_TASK_0006__task"
+          ]
+        },
+        {
+          "id": "capability_surface_resolution",
+          "statement": "Resolved exact task-declared execution skills and capability set before choosing path-specific work.",
+          "evidence_artifact_ids": [
+            "agent_documents_TASK_0006__task"
+          ]
+        },
+        {
+          "id": "semantic_owner_boundary_resolution",
+          "statement": "Resolved existing task-declared semantic owner/path boundary while keeping CASE separate from binding, specialization, mode, task, and state.",
+          "evidence_artifact_ids": [
+            "agent_documents_TASK_0006__task"
+          ]
+        }
+      ],
+      "observed_trace": {
+        "trace_kind": "current broad canonical intake proxy, executed in this measurement run",
+        "read_order_before_routing_closure": [
+          "agent_documents_TASK_0006__task",
+          "skill__executor__1fcf5a2ebeee",
+          "skill__simplicity__1fcf5a2ebeee",
+          "skill__verification__1fcf5a2ebeee",
+          "skill__architect__1fcf5a2ebeee"
+        ],
+        "routing_closure_after_artifact_index": 5,
+        "read_order_after_routing_closure": [
+          "agent_documents_TASK_0006__report",
+          "agent_documents_TASK_0006__review"
+        ],
+        "all_consulted_artifact_ids": [
+          "agent_documents_TASK_0006__task",
+          "skill__executor__1fcf5a2ebeee",
+          "skill__simplicity__1fcf5a2ebeee",
+          "skill__verification__1fcf5a2ebeee",
+          "skill__architect__1fcf5a2ebeee",
+          "agent_documents_TASK_0006__report",
+          "agent_documents_TASK_0006__review"
+        ]
+      },
+      "minimal_sufficient_routing_projection": {
+        "rule": "Use only exact task artifact plus existing pinned executor/SKILL.md; task already carries target binding, capability requirements, authority sources, and positive owner/path boundary.",
+        "read_artifact_ids": [
+          "agent_documents_TASK_0006__task",
+          "skill__executor__1fcf5a2ebeee"
+        ],
+        "authority_owner_paths": [
+          ".agent/tasks/TASK-0006/task.yaml#/scope/allowed_existing_files_or_components"
+        ],
+        "capability_owner_paths": [
+          "phatnguyen03022001/agent-skills@1fcf5a2ebeeec7f3e1498d207148a9cd81a95456:executor/SKILL.md"
+        ],
+        "counterfactual_only": true,
+        "does_not_define_case_or_workflow": true
+      },
+      "metrics": {
+        "observed_routing_artifact_count": 5,
+        "minimal_routing_artifact_count": 2,
+        "observed_routing_bytes": 45854,
+        "minimal_routing_bytes": 22985,
+        "distinct_support_repositories_touched_before_routing_closure": 2,
+        "support_repositories_before_routing_closure": [
+          "phatnguyen03022001/agent-documents",
+          "phatnguyen03022001/agent-skills"
+        ],
+        "material_inference_point_count": 3,
+        "unnecessary_routing_read_count": 1,
+        "premature_after_routing_read_count": 2,
+        "artifact_count_reduction_percentage": 60.0,
+        "bytes_reduction_percentage": 49.873512
+      },
+      "capability_set": {
+        "signature": "sha256:5555baf3de42bb008e3ec6e2e7bfc52b5c6e36cd767cac2f9e4637cc2c4f27e4",
+        "capabilities": [
+          "exact_remote_ref_read",
+          "isolated_test_execution",
+          "repository_content_read",
+          "repository_content_write"
+        ],
+        "static_key_not_defined": true
+      },
+      "observed_semantic_search_waste": {
+        "meaningful_residual_after_projection": false,
+        "status": "NOT_PROVEN",
+        "evidence": "Projection uses exact canonical paths and no semantic retrieval operation; absence outside this proxy is not claimed."
+      }
+    },
+    {
+      "id": "agent-skills/TASK-0024",
+      "repository": "phatnguyen03022001/agent-skills",
+      "task_id": "TASK-0024",
+      "task_revision": 1,
+      "canonical_locator": {
+        "repository": "phatnguyen03022001/agent-skills",
+        "task_path": ".agent/tasks/TASK-0024/task.yaml",
+        "target_branch": "dev",
+        "remote_ref": "refs/heads/dev",
+        "remote_tip_sha": "dd26c2851a0d7d488170f895cb09bd12b8c93ae0",
+        "exact_locator_url": "https://github.com/phatnguyen03022001/agent-skills/blob/dd26c2851a0d7d488170f895cb09bd12b8c93ae0/.agent/tasks/TASK-0024/task.yaml"
+      },
+      "source_lineage": {
+        "task_source_commit": "5a5a6e24706f1beea691eb2adc2ef78aaa3e38d0",
+        "report_source_commit": "2c2c72bb491b097f45c34ead8c429c2428b87b9b",
+        "review_source_commit": "16217bb78a578160efb68afc84acdeff9c36ed38",
+        "reviewed_report_commit": "2c2c72bb491b097f45c34ead8c429c2428b87b9b",
+        "implementation_candidate_head": "cd1c5cb97a631ff7d5c5e85978eeb40ad6707362",
+        "task_state": "APPROVED",
+        "report_state": "REPORTED",
+        "report_result": "NEEDS_REVIEW",
+        "review_state": "ACCEPTED",
+        "report_revision": 1
+      },
+      "pinned_skill_library": {
+        "repository": "phatnguyen03022001/agent-skills",
+        "authorized_revision": "9e8add0ef47fb3d7797c6a4da4f45ceb78c4030e",
+        "resolved_as_commit": true
+      },
+      "execution_skills_required": [
+        "executor",
+        "verification",
+        "simplicity"
+      ],
+      "required_execution_capabilities": [
+        "exact_remote_ref_read",
+        "repository_content_read",
+        "repository_content_write"
+      ],
+      "owner_path_projection": {
+        "basis": "task.yaml#/scope/allowed_existing_files_or_components",
+        "entries": [
+          "Executor governance semantics",
+          "existing agent-skills regression/validation companions",
+          "read-only exact GOV-E2 evidence from ilets and SF"
+        ],
+        "authority_remains_in_task": true,
+        "no_case_dimension_defined": true
+      },
+      "material_inference_points": [
+        {
+          "id": "owner_binding_resolution",
+          "statement": "Resolved phatnguyen03022001/agent-skills as target owner separately from pinned agent-skills authority.",
+          "evidence_artifact_ids": [
+            "agent_skills_TASK_0024__task"
+          ]
+        },
+        {
+          "id": "capability_surface_resolution",
+          "statement": "Resolved exact task-declared execution skills and capability set before choosing path-specific work.",
+          "evidence_artifact_ids": [
+            "agent_skills_TASK_0024__task"
+          ]
+        },
+        {
+          "id": "semantic_owner_boundary_resolution",
+          "statement": "Resolved existing task-declared semantic owner/path boundary while keeping CASE separate from binding, specialization, mode, task, and state.",
+          "evidence_artifact_ids": [
+            "agent_skills_TASK_0024__task"
+          ]
+        }
+      ],
+      "observed_trace": {
+        "trace_kind": "current broad canonical intake proxy, executed in this measurement run",
+        "read_order_before_routing_closure": [
+          "agent_skills_TASK_0024__task",
+          "skill__executor__9e8add0ef47f",
+          "skill__verification__9e8add0ef47f",
+          "skill__simplicity__9e8add0ef47f",
+          "skill__architect__9e8add0ef47f"
+        ],
+        "routing_closure_after_artifact_index": 5,
+        "read_order_after_routing_closure": [
+          "agent_skills_TASK_0024__report",
+          "agent_skills_TASK_0024__review"
+        ],
+        "all_consulted_artifact_ids": [
+          "agent_skills_TASK_0024__task",
+          "skill__executor__9e8add0ef47f",
+          "skill__verification__9e8add0ef47f",
+          "skill__simplicity__9e8add0ef47f",
+          "skill__architect__9e8add0ef47f",
+          "agent_skills_TASK_0024__report",
+          "agent_skills_TASK_0024__review"
+        ]
+      },
+      "minimal_sufficient_routing_projection": {
+        "rule": "Use only exact task artifact plus existing pinned executor/SKILL.md; task already carries target binding, capability requirements, authority sources, and positive owner/path boundary.",
+        "read_artifact_ids": [
+          "agent_skills_TASK_0024__task",
+          "skill__executor__9e8add0ef47f"
+        ],
+        "authority_owner_paths": [
+          ".agent/tasks/TASK-0024/task.yaml#/scope/allowed_existing_files_or_components"
+        ],
+        "capability_owner_paths": [
+          "phatnguyen03022001/agent-skills@9e8add0ef47fb3d7797c6a4da4f45ceb78c4030e:executor/SKILL.md"
+        ],
+        "counterfactual_only": true,
+        "does_not_define_case_or_workflow": true
+      },
+      "metrics": {
+        "observed_routing_artifact_count": 5,
+        "minimal_routing_artifact_count": 2,
+        "observed_routing_bytes": 50634,
+        "minimal_routing_bytes": 24331,
+        "distinct_support_repositories_touched_before_routing_closure": 1,
+        "support_repositories_before_routing_closure": [
+          "phatnguyen03022001/agent-skills"
+        ],
+        "material_inference_point_count": 3,
+        "unnecessary_routing_read_count": 1,
+        "premature_after_routing_read_count": 2,
+        "artifact_count_reduction_percentage": 60.0,
+        "bytes_reduction_percentage": 51.947308
+      },
+      "capability_set": {
+        "signature": "sha256:2b727526b168abf069459610ae490b069439dd298e9bae7f8e1a1b93763fcc69",
+        "capabilities": [
+          "exact_remote_ref_read",
+          "repository_content_read",
+          "repository_content_write"
+        ],
+        "static_key_not_defined": true
+      },
+      "observed_semantic_search_waste": {
+        "meaningful_residual_after_projection": false,
+        "status": "NOT_PROVEN",
+        "evidence": "Projection uses exact canonical paths and no semantic retrieval operation; absence outside this proxy is not claimed."
+      }
+    },
+    {
+      "id": "agent-skills/TASK-0025",
+      "repository": "phatnguyen03022001/agent-skills",
+      "task_id": "TASK-0025",
+      "task_revision": 2,
+      "canonical_locator": {
+        "repository": "phatnguyen03022001/agent-skills",
+        "task_path": ".agent/tasks/TASK-0025/task.yaml",
+        "target_branch": "dev",
+        "remote_ref": "refs/heads/dev",
+        "remote_tip_sha": "dd26c2851a0d7d488170f895cb09bd12b8c93ae0",
+        "exact_locator_url": "https://github.com/phatnguyen03022001/agent-skills/blob/dd26c2851a0d7d488170f895cb09bd12b8c93ae0/.agent/tasks/TASK-0025/task.yaml"
+      },
+      "source_lineage": {
+        "task_source_commit": "6f36dbc5ccaa480c1aca28d1d77587999e302744",
+        "report_source_commit": "51cecf0b4346ebd291f1de0f650b169f9bcf7b2b",
+        "review_source_commit": "1e0f7e0835807419e4be72c67bbfea1b0d61c537",
+        "reviewed_report_commit": "51cecf0b4346ebd291f1de0f650b169f9bcf7b2b",
+        "implementation_candidate_head": "337c0be6618090e704b345b1bf93df488a4985af",
+        "task_state": "APPROVED",
+        "report_state": "REPORTED",
+        "report_result": "NEEDS_REVIEW",
+        "review_state": "ACCEPTED",
+        "report_revision": 2
+      },
+      "pinned_skill_library": {
+        "repository": "phatnguyen03022001/agent-skills",
+        "authorized_revision": "16217bb78a578160efb68afc84acdeff9c36ed38",
+        "resolved_as_commit": true
+      },
+      "execution_skills_required": [
+        "executor",
+        "verification",
+        "simplicity"
+      ],
+      "required_execution_capabilities": [
+        "exact_remote_ref_read",
+        "github_actions_read",
+        "native_repository_execution",
+        "repository_content_read",
+        "repository_content_write"
+      ],
+      "owner_path_projection": {
+        "basis": "task.yaml#/scope/allowed_existing_files_or_components",
+        "entries": [
+          ".agent/tasks/TASK-0025/gate.md",
+          "scripts/test_validate_skill_library.py",
+          "test-local temporary Git fixtures created under temporary directories",
+          "read-only accepted agent-skills governance evidence",
+          "read-only exact historical/pilot/profile/runtime evidence"
+        ],
+        "authority_remains_in_task": true,
+        "no_case_dimension_defined": true
+      },
+      "material_inference_points": [
+        {
+          "id": "owner_binding_resolution",
+          "statement": "Resolved phatnguyen03022001/agent-skills as target owner separately from pinned agent-skills authority.",
+          "evidence_artifact_ids": [
+            "agent_skills_TASK_0025__task"
+          ]
+        },
+        {
+          "id": "capability_surface_resolution",
+          "statement": "Resolved exact task-declared execution skills and capability set before choosing path-specific work.",
+          "evidence_artifact_ids": [
+            "agent_skills_TASK_0025__task"
+          ]
+        },
+        {
+          "id": "semantic_owner_boundary_resolution",
+          "statement": "Resolved existing task-declared semantic owner/path boundary while keeping CASE separate from binding, specialization, mode, task, and state.",
+          "evidence_artifact_ids": [
+            "agent_skills_TASK_0025__task"
+          ]
+        }
+      ],
+      "observed_trace": {
+        "trace_kind": "current broad canonical intake proxy, executed in this measurement run",
+        "read_order_before_routing_closure": [
+          "agent_skills_TASK_0025__task",
+          "skill__executor__16217bb78a57",
+          "skill__verification__16217bb78a57",
+          "skill__simplicity__16217bb78a57",
+          "skill__architect__16217bb78a57"
+        ],
+        "routing_closure_after_artifact_index": 5,
+        "read_order_after_routing_closure": [
+          "agent_skills_TASK_0025__report",
+          "agent_skills_TASK_0025__review"
+        ],
+        "all_consulted_artifact_ids": [
+          "agent_skills_TASK_0025__task",
+          "skill__executor__16217bb78a57",
+          "skill__verification__16217bb78a57",
+          "skill__simplicity__16217bb78a57",
+          "skill__architect__16217bb78a57",
+          "agent_skills_TASK_0025__report",
+          "agent_skills_TASK_0025__review"
+        ]
+      },
+      "minimal_sufficient_routing_projection": {
+        "rule": "Use only exact task artifact plus existing pinned executor/SKILL.md; task already carries target binding, capability requirements, authority sources, and positive owner/path boundary.",
+        "read_artifact_ids": [
+          "agent_skills_TASK_0025__task",
+          "skill__executor__16217bb78a57"
+        ],
+        "authority_owner_paths": [
+          ".agent/tasks/TASK-0025/task.yaml#/scope/allowed_existing_files_or_components"
+        ],
+        "capability_owner_paths": [
+          "phatnguyen03022001/agent-skills@16217bb78a578160efb68afc84acdeff9c36ed38:executor/SKILL.md"
+        ],
+        "counterfactual_only": true,
+        "does_not_define_case_or_workflow": true
+      },
+      "metrics": {
+        "observed_routing_artifact_count": 5,
+        "minimal_routing_artifact_count": 2,
+        "observed_routing_bytes": 57465,
+        "minimal_routing_bytes": 31162,
+        "distinct_support_repositories_touched_before_routing_closure": 1,
+        "support_repositories_before_routing_closure": [
+          "phatnguyen03022001/agent-skills"
+        ],
+        "material_inference_point_count": 3,
+        "unnecessary_routing_read_count": 1,
+        "premature_after_routing_read_count": 2,
+        "artifact_count_reduction_percentage": 60.0,
+        "bytes_reduction_percentage": 45.772209
+      },
+      "capability_set": {
+        "signature": "sha256:41988199368a7ad197a354bf0006d996f4684bec3eee09f889552c6d91057f07",
+        "capabilities": [
+          "exact_remote_ref_read",
+          "github_actions_read",
+          "native_repository_execution",
+          "repository_content_read",
+          "repository_content_write"
+        ],
+        "static_key_not_defined": true
+      },
+      "observed_semantic_search_waste": {
+        "meaningful_residual_after_projection": false,
+        "status": "NOT_PROVEN",
+        "evidence": "Projection uses exact canonical paths and no semantic retrieval operation; absence outside this proxy is not claimed."
+      }
+    },
+    {
+      "id": "architect-profile/TASK-0016",
+      "repository": "phatnguyen03022001/architect-profile",
+      "task_id": "TASK-0016",
+      "task_revision": 4,
+      "canonical_locator": {
+        "repository": "phatnguyen03022001/architect-profile",
+        "task_path": ".agent/tasks/TASK-0016/task.yaml",
+        "target_branch": "dev",
+        "remote_ref": "refs/heads/dev",
+        "remote_tip_sha": "68350ff54749b2548a2bb5f4f7cc40f2c0d29cd8",
+        "exact_locator_url": "https://github.com/phatnguyen03022001/architect-profile/blob/68350ff54749b2548a2bb5f4f7cc40f2c0d29cd8/.agent/tasks/TASK-0016/task.yaml"
+      },
+      "source_lineage": {
+        "task_source_commit": "707acfea1f749591621751785b87ae792355a0eb",
+        "report_source_commit": "a86492fc2bd0fc87b86afcd40514f1d15ddbcd1e",
+        "review_source_commit": "9ba53cbdc5d5fb3545dfc8990f28ca568c4b96dc",
+        "reviewed_report_commit": "a86492fc2bd0fc87b86afcd40514f1d15ddbcd1e",
+        "implementation_candidate_head": "5818ad0bc223b907481150ba8a0b0c167ce2ce1e",
+        "task_state": "APPROVED",
+        "report_state": "REPORTED",
+        "report_result": "NEEDS_REVIEW",
+        "review_state": "ACCEPTED",
+        "report_revision": 1
+      },
+      "pinned_skill_library": {
+        "repository": "phatnguyen03022001/agent-skills",
+        "authorized_revision": "337c0be6618090e704b345b1bf93df488a4985af",
+        "resolved_as_commit": true
+      },
+      "execution_skills_required": [
+        "executor",
+        "simplicity",
+        "github-workflow",
+        "verification"
+      ],
+      "required_execution_capabilities": [
+        "git_commit",
+        "git_history_read",
+        "git_push",
+        "remote_ref_read",
+        "repository_content_read",
+        "repository_content_write"
+      ],
+      "owner_path_projection": {
+        "basis": "task.yaml#/scope/allowed_existing_files_or_components",
+        "entries": [
+          "ARCHITECT_PROFILE.md",
+          "ARCHITECT_CALIBRATION.md",
+          ".agent/",
+          "existing repository-native validation/test surfaces",
+          "new small bootstrap/lock/routing/mode/presentation files at the smallest repo-native locations chosen by Executor"
+        ],
+        "authority_remains_in_task": true,
+        "no_case_dimension_defined": true
+      },
+      "material_inference_points": [
+        {
+          "id": "owner_binding_resolution",
+          "statement": "Resolved phatnguyen03022001/architect-profile as target owner separately from pinned agent-skills authority.",
+          "evidence_artifact_ids": [
+            "architect_profile_TASK_0016__task"
+          ]
+        },
+        {
+          "id": "capability_surface_resolution",
+          "statement": "Resolved exact task-declared execution skills and capability set before choosing path-specific work.",
+          "evidence_artifact_ids": [
+            "architect_profile_TASK_0016__task"
+          ]
+        },
+        {
+          "id": "semantic_owner_boundary_resolution",
+          "statement": "Resolved existing task-declared semantic owner/path boundary while keeping CASE separate from binding, specialization, mode, task, and state.",
+          "evidence_artifact_ids": [
+            "architect_profile_TASK_0016__task"
+          ]
+        }
+      ],
+      "observed_trace": {
+        "trace_kind": "current broad canonical intake proxy, executed in this measurement run",
+        "read_order_before_routing_closure": [
+          "architect_profile_TASK_0016__task",
+          "skill__executor__337c0be66180",
+          "skill__simplicity__337c0be66180",
+          "skill__github_workflow__337c0be66180",
+          "skill__verification__337c0be66180",
+          "skill__architect__337c0be66180"
+        ],
+        "routing_closure_after_artifact_index": 6,
+        "read_order_after_routing_closure": [
+          "architect_profile_TASK_0016__report",
+          "architect_profile_TASK_0016__review"
+        ],
+        "all_consulted_artifact_ids": [
+          "architect_profile_TASK_0016__task",
+          "skill__executor__337c0be66180",
+          "skill__simplicity__337c0be66180",
+          "skill__github_workflow__337c0be66180",
+          "skill__verification__337c0be66180",
+          "skill__architect__337c0be66180",
+          "architect_profile_TASK_0016__report",
+          "architect_profile_TASK_0016__review"
+        ]
+      },
+      "minimal_sufficient_routing_projection": {
+        "rule": "Use only exact task artifact plus existing pinned executor/SKILL.md; task already carries target binding, capability requirements, authority sources, and positive owner/path boundary.",
+        "read_artifact_ids": [
+          "architect_profile_TASK_0016__task",
+          "skill__executor__337c0be66180"
+        ],
+        "authority_owner_paths": [
+          ".agent/tasks/TASK-0016/task.yaml#/scope/allowed_existing_files_or_components"
+        ],
+        "capability_owner_paths": [
+          "phatnguyen03022001/agent-skills@337c0be6618090e704b345b1bf93df488a4985af:executor/SKILL.md"
+        ],
+        "counterfactual_only": true,
+        "does_not_define_case_or_workflow": true
+      },
+      "metrics": {
+        "observed_routing_artifact_count": 6,
+        "minimal_routing_artifact_count": 2,
+        "observed_routing_bytes": 65501,
+        "minimal_routing_bytes": 31362,
+        "distinct_support_repositories_touched_before_routing_closure": 2,
+        "support_repositories_before_routing_closure": [
+          "phatnguyen03022001/agent-skills",
+          "phatnguyen03022001/architect-profile"
+        ],
+        "material_inference_point_count": 3,
+        "unnecessary_routing_read_count": 1,
+        "premature_after_routing_read_count": 3,
+        "artifact_count_reduction_percentage": 66.666667,
+        "bytes_reduction_percentage": 52.119815
+      },
+      "capability_set": {
+        "signature": "sha256:911717876fa88cc3edabe746ee0f1d26302b8c37c9fee65716ad970397441fa9",
+        "capabilities": [
+          "git_commit",
+          "git_history_read",
+          "git_push",
+          "remote_ref_read",
+          "repository_content_read",
+          "repository_content_write"
+        ],
+        "static_key_not_defined": true
+      },
+      "observed_semantic_search_waste": {
+        "meaningful_residual_after_projection": false,
+        "status": "NOT_PROVEN",
+        "evidence": "Projection uses exact canonical paths and no semantic retrieval operation; absence outside this proxy is not claimed."
+      }
+    },
+    {
+      "id": "architect-profile/TASK-0017",
+      "repository": "phatnguyen03022001/architect-profile",
+      "task_id": "TASK-0017",
+      "task_revision": 1,
+      "canonical_locator": {
+        "repository": "phatnguyen03022001/architect-profile",
+        "task_path": ".agent/tasks/TASK-0017/task.yaml",
+        "target_branch": "dev",
+        "remote_ref": "refs/heads/dev",
+        "remote_tip_sha": "68350ff54749b2548a2bb5f4f7cc40f2c0d29cd8",
+        "exact_locator_url": "https://github.com/phatnguyen03022001/architect-profile/blob/68350ff54749b2548a2bb5f4f7cc40f2c0d29cd8/.agent/tasks/TASK-0017/task.yaml"
+      },
+      "source_lineage": {
+        "task_source_commit": "3a074b13420f87e5a7ed44dc7aaf18599dc3c509",
+        "report_source_commit": "96af40258f582fff849c89ebadf782c5844e8132",
+        "review_source_commit": "68350ff54749b2548a2bb5f4f7cc40f2c0d29cd8",
+        "reviewed_report_commit": "96af40258f582fff849c89ebadf782c5844e8132",
+        "implementation_candidate_head": "fcc1659755342e8fe8a0a58c8e2b96c9769b0c89",
+        "task_state": "APPROVED",
+        "report_state": "REPORTED",
+        "report_result": "NEEDS_REVIEW",
+        "review_state": "ACCEPTED",
+        "report_revision": 1
+      },
+      "pinned_skill_library": {
+        "repository": "phatnguyen03022001/agent-skills",
+        "authorized_revision": "337c0be6618090e704b345b1bf93df488a4985af",
+        "resolved_as_commit": true
+      },
+      "execution_skills_required": [
+        "executor",
+        "simplicity",
+        "github-workflow",
+        "verification"
+      ],
+      "required_execution_capabilities": [
+        "git_commit",
+        "git_history_read",
+        "git_push",
+        "remote_ref_read",
+        "repository_content_read",
+        "repository_content_write"
+      ],
+      "owner_path_projection": {
+        "basis": "task.yaml#/scope/allowed_existing_files_or_components",
+        "entries": [
+          ".agent/bootstrap/authority.lock.json",
+          ".agent/bootstrap/bootstrap.json",
+          ".agent/bootstrap/validate.py",
+          ".agent/bootstrap/test_bootstrap.py",
+          "ARCHITECT_PROFILE.md",
+          "README.md",
+          "existing repository-native validation/test surfaces"
+        ],
+        "authority_remains_in_task": true,
+        "no_case_dimension_defined": true
+      },
+      "material_inference_points": [
+        {
+          "id": "owner_binding_resolution",
+          "statement": "Resolved phatnguyen03022001/architect-profile as target owner separately from pinned agent-skills authority.",
+          "evidence_artifact_ids": [
+            "architect_profile_TASK_0017__task"
+          ]
+        },
+        {
+          "id": "capability_surface_resolution",
+          "statement": "Resolved exact task-declared execution skills and capability set before choosing path-specific work.",
+          "evidence_artifact_ids": [
+            "architect_profile_TASK_0017__task"
+          ]
+        },
+        {
+          "id": "semantic_owner_boundary_resolution",
+          "statement": "Resolved existing task-declared semantic owner/path boundary while keeping CASE separate from binding, specialization, mode, task, and state.",
+          "evidence_artifact_ids": [
+            "architect_profile_TASK_0017__task"
+          ]
+        }
+      ],
+      "observed_trace": {
+        "trace_kind": "current broad canonical intake proxy, executed in this measurement run",
+        "read_order_before_routing_closure": [
+          "architect_profile_TASK_0017__task",
+          "skill__executor__337c0be66180",
+          "skill__simplicity__337c0be66180",
+          "skill__github_workflow__337c0be66180",
+          "skill__verification__337c0be66180",
+          "skill__architect__337c0be66180"
+        ],
+        "routing_closure_after_artifact_index": 6,
+        "read_order_after_routing_closure": [
+          "architect_profile_TASK_0017__report",
+          "architect_profile_TASK_0017__review"
+        ],
+        "all_consulted_artifact_ids": [
+          "architect_profile_TASK_0017__task",
+          "skill__executor__337c0be66180",
+          "skill__simplicity__337c0be66180",
+          "skill__github_workflow__337c0be66180",
+          "skill__verification__337c0be66180",
+          "skill__architect__337c0be66180",
+          "architect_profile_TASK_0017__report",
+          "architect_profile_TASK_0017__review"
+        ]
+      },
+      "minimal_sufficient_routing_projection": {
+        "rule": "Use only exact task artifact plus existing pinned executor/SKILL.md; task already carries target binding, capability requirements, authority sources, and positive owner/path boundary.",
+        "read_artifact_ids": [
+          "architect_profile_TASK_0017__task",
+          "skill__executor__337c0be66180"
+        ],
+        "authority_owner_paths": [
+          ".agent/tasks/TASK-0017/task.yaml#/scope/allowed_existing_files_or_components"
+        ],
+        "capability_owner_paths": [
+          "phatnguyen03022001/agent-skills@337c0be6618090e704b345b1bf93df488a4985af:executor/SKILL.md"
+        ],
+        "counterfactual_only": true,
+        "does_not_define_case_or_workflow": true
+      },
+      "metrics": {
+        "observed_routing_artifact_count": 6,
+        "minimal_routing_artifact_count": 2,
+        "observed_routing_bytes": 63195,
+        "minimal_routing_bytes": 29056,
+        "distinct_support_repositories_touched_before_routing_closure": 2,
+        "support_repositories_before_routing_closure": [
+          "phatnguyen03022001/agent-skills",
+          "phatnguyen03022001/architect-profile"
+        ],
+        "material_inference_point_count": 3,
+        "unnecessary_routing_read_count": 1,
+        "premature_after_routing_read_count": 3,
+        "artifact_count_reduction_percentage": 66.666667,
+        "bytes_reduction_percentage": 54.021679
+      },
+      "capability_set": {
+        "signature": "sha256:911717876fa88cc3edabe746ee0f1d26302b8c37c9fee65716ad970397441fa9",
+        "capabilities": [
+          "git_commit",
+          "git_history_read",
+          "git_push",
+          "remote_ref_read",
+          "repository_content_read",
+          "repository_content_write"
+        ],
+        "static_key_not_defined": true
+      },
+      "observed_semantic_search_waste": {
+        "meaningful_residual_after_projection": false,
+        "status": "NOT_PROVEN",
+        "evidence": "Projection uses exact canonical paths and no semantic retrieval operation; absence outside this proxy is not claimed."
+      }
+    },
+    {
+      "id": "elite-drive/TASK-0001",
+      "repository": "phatnguyen03022001/elite-drive",
+      "task_id": "TASK-0001",
+      "task_revision": 1,
+      "canonical_locator": {
+        "repository": "phatnguyen03022001/elite-drive",
+        "task_path": ".agent/tasks/TASK-0001/task.yaml",
+        "target_branch": "dev",
+        "remote_ref": "refs/heads/dev",
+        "remote_tip_sha": "41ff779d6e33794f34bff20ff7e01c2c9f1b7999",
+        "exact_locator_url": "https://github.com/phatnguyen03022001/elite-drive/blob/41ff779d6e33794f34bff20ff7e01c2c9f1b7999/.agent/tasks/TASK-0001/task.yaml"
+      },
+      "source_lineage": {
+        "task_source_commit": "a15b630db61640c204607124fd5f1388a670fa7e",
+        "report_source_commit": "56505870addd16773f013e9435bdbb5002fe5450",
+        "review_source_commit": "b0ae72a9da16c708471e9be6564159a1287e7a5e",
+        "reviewed_report_commit": "56505870addd16773f013e9435bdbb5002fe5450",
+        "implementation_candidate_head": "29319911f4b96ef9472e5b876f1c555b729742f5",
+        "task_state": "APPROVED",
+        "report_state": "REPORTED",
+        "report_result": "NEEDS_REVIEW",
+        "review_state": "ACCEPTED",
+        "report_revision": 1
+      },
+      "pinned_skill_library": {
+        "repository": "phatnguyen03022001/agent-skills",
+        "authorized_revision": "76f2d3877d1698f91eb5a6117e2301ed49480379",
+        "resolved_as_commit": true
+      },
+      "execution_skills_required": [
+        "executor",
+        "simplicity",
+        "reliability",
+        "verification"
+      ],
+      "required_execution_capabilities": [
+        "agent_runtime_terminal_exec",
+        "docker_compose_v2",
+        "exact_remote_ref_read",
+        "local_docker_cli",
+        "non_force_git_push",
+        "orbstack_docker_context",
+        "repository_content_read",
+        "repository_content_write"
+      ],
+      "owner_path_projection": {
+        "basis": "task.yaml#/authority_sources",
+        "entries": [
+          "Operator-approved Elite Drive container direction on 2026-09-03",
+          "docs/branch-workflow.md@dev",
+          "docker/mongodb/docker-compose.yml@dev",
+          "phatnguyen03022001/agent-skills@76f2d3877d1698f91eb5a6117e2301ed49480379"
+        ],
+        "authority_remains_in_task": true,
+        "no_case_dimension_defined": true
+      },
+      "material_inference_points": [
+        {
+          "id": "owner_binding_resolution",
+          "statement": "Resolved phatnguyen03022001/elite-drive as target owner separately from pinned agent-skills authority.",
+          "evidence_artifact_ids": [
+            "elite_drive_TASK_0001__task"
+          ]
+        },
+        {
+          "id": "capability_surface_resolution",
+          "statement": "Resolved exact task-declared execution skills and capability set before choosing path-specific work.",
+          "evidence_artifact_ids": [
+            "elite_drive_TASK_0001__task"
+          ]
+        },
+        {
+          "id": "semantic_owner_boundary_resolution",
+          "statement": "Resolved existing task-declared semantic owner/path boundary while keeping CASE separate from binding, specialization, mode, task, and state.",
+          "evidence_artifact_ids": [
+            "elite_drive_TASK_0001__task"
+          ]
+        }
+      ],
+      "observed_trace": {
+        "trace_kind": "current broad canonical intake proxy, executed in this measurement run",
+        "read_order_before_routing_closure": [
+          "elite_drive_TASK_0001__task",
+          "skill__executor__76f2d3877d16",
+          "skill__simplicity__76f2d3877d16",
+          "skill__reliability__76f2d3877d16",
+          "skill__verification__76f2d3877d16",
+          "skill__architect__76f2d3877d16"
+        ],
+        "routing_closure_after_artifact_index": 6,
+        "read_order_after_routing_closure": [
+          "elite_drive_TASK_0001__report",
+          "elite_drive_TASK_0001__review"
+        ],
+        "all_consulted_artifact_ids": [
+          "elite_drive_TASK_0001__task",
+          "skill__executor__76f2d3877d16",
+          "skill__simplicity__76f2d3877d16",
+          "skill__reliability__76f2d3877d16",
+          "skill__verification__76f2d3877d16",
+          "skill__architect__76f2d3877d16",
+          "elite_drive_TASK_0001__report",
+          "elite_drive_TASK_0001__review"
+        ]
+      },
+      "minimal_sufficient_routing_projection": {
+        "rule": "Use only exact task artifact plus existing pinned executor/SKILL.md; task already carries target binding, capability requirements, authority sources, and positive owner/path boundary.",
+        "read_artifact_ids": [
+          "elite_drive_TASK_0001__task",
+          "skill__executor__76f2d3877d16"
+        ],
+        "authority_owner_paths": [
+          ".agent/tasks/TASK-0001/task.yaml#/authority_sources"
+        ],
+        "capability_owner_paths": [
+          "phatnguyen03022001/agent-skills@76f2d3877d1698f91eb5a6117e2301ed49480379:executor/SKILL.md"
+        ],
+        "counterfactual_only": true,
+        "does_not_define_case_or_workflow": true
+      },
+      "metrics": {
+        "observed_routing_artifact_count": 6,
+        "minimal_routing_artifact_count": 2,
+        "observed_routing_bytes": 52952,
+        "minimal_routing_bytes": 24825,
+        "distinct_support_repositories_touched_before_routing_closure": 2,
+        "support_repositories_before_routing_closure": [
+          "phatnguyen03022001/agent-skills",
+          "phatnguyen03022001/elite-drive"
+        ],
+        "material_inference_point_count": 3,
+        "unnecessary_routing_read_count": 1,
+        "premature_after_routing_read_count": 3,
+        "artifact_count_reduction_percentage": 66.666667,
+        "bytes_reduction_percentage": 53.117918
+      },
+      "capability_set": {
+        "signature": "sha256:a82dff0790a647b6c5544ad6a8b4c8d460c69b745ecc46b6c2b605b9672a66c4",
+        "capabilities": [
+          "agent_runtime_terminal_exec",
+          "docker_compose_v2",
+          "exact_remote_ref_read",
+          "local_docker_cli",
+          "non_force_git_push",
+          "orbstack_docker_context",
+          "repository_content_read",
+          "repository_content_write"
+        ],
+        "static_key_not_defined": true
+      },
+      "observed_semantic_search_waste": {
+        "meaningful_residual_after_projection": false,
+        "status": "NOT_PROVEN",
+        "evidence": "Projection uses exact canonical paths and no semantic retrieval operation; absence outside this proxy is not claimed."
+      }
+    },
+    {
+      "id": "ilets/TASK-0045",
+      "repository": "phatnguyen03022001/ilets",
+      "task_id": "TASK-0045",
+      "task_revision": 1,
+      "canonical_locator": {
+        "repository": "phatnguyen03022001/ilets",
+        "task_path": ".agent/tasks/TASK-0045/task.yaml",
+        "target_branch": "dev",
+        "remote_ref": "refs/heads/dev",
+        "remote_tip_sha": "4b88bbde9558ae50de2c17941677c73fe7c504c8",
+        "exact_locator_url": "https://github.com/phatnguyen03022001/ilets/blob/4b88bbde9558ae50de2c17941677c73fe7c504c8/.agent/tasks/TASK-0045/task.yaml"
+      },
+      "source_lineage": {
+        "task_source_commit": "c6f8f91c8d8b12e4a46f17916ea476e71fce4c5e",
+        "report_source_commit": "439877fcf6874ff11c6e2da8daeaa63bb688bd79",
+        "review_source_commit": "4b88bbde9558ae50de2c17941677c73fe7c504c8",
+        "reviewed_report_commit": "439877fcf6874ff11c6e2da8daeaa63bb688bd79",
+        "implementation_candidate_head": "1e5d60003b91367e128a8c5d6cccfd0943b4ea06",
+        "task_state": "APPROVED",
+        "report_state": "REPORTED",
+        "report_result": "NEEDS_REVIEW",
+        "review_state": "ACCEPTED",
+        "report_revision": 1
+      },
+      "pinned_skill_library": {
+        "repository": "phatnguyen03022001/agent-skills",
+        "authorized_revision": "9e8add0ef47fb3d7797c6a4da4f45ceb78c4030e",
+        "resolved_as_commit": true
+      },
+      "execution_skills_required": [
+        "executor",
+        "simplicity",
+        "verification"
+      ],
+      "required_execution_capabilities": [
+        "exact_remote_ref_read",
+        "native_repository_execution",
+        "repository_content_read",
+        "repository_content_write"
+      ],
+      "owner_path_projection": {
+        "basis": "task.yaml#/scope/allowed_existing_files_or_components",
+        "entries": [
+          "existing Listening Core/API training component",
+          "canonical practice/materialization ownership surfaces",
+          "existing learner activity/media contract implementation",
+          "repository-native verification companions"
+        ],
+        "authority_remains_in_task": true,
+        "no_case_dimension_defined": true
+      },
+      "material_inference_points": [
+        {
+          "id": "owner_binding_resolution",
+          "statement": "Resolved phatnguyen03022001/ilets as target owner separately from pinned agent-skills authority.",
+          "evidence_artifact_ids": [
+            "ilets_TASK_0045__task"
+          ]
+        },
+        {
+          "id": "capability_surface_resolution",
+          "statement": "Resolved exact task-declared execution skills and capability set before choosing path-specific work.",
+          "evidence_artifact_ids": [
+            "ilets_TASK_0045__task"
+          ]
+        },
+        {
+          "id": "semantic_owner_boundary_resolution",
+          "statement": "Resolved existing task-declared semantic owner/path boundary while keeping CASE separate from binding, specialization, mode, task, and state.",
+          "evidence_artifact_ids": [
+            "ilets_TASK_0045__task"
+          ]
+        }
+      ],
+      "observed_trace": {
+        "trace_kind": "current broad canonical intake proxy, executed in this measurement run",
+        "read_order_before_routing_closure": [
+          "ilets_TASK_0045__task",
+          "skill__executor__9e8add0ef47f",
+          "skill__simplicity__9e8add0ef47f",
+          "skill__verification__9e8add0ef47f",
+          "skill__architect__9e8add0ef47f"
+        ],
+        "routing_closure_after_artifact_index": 5,
+        "read_order_after_routing_closure": [
+          "ilets_TASK_0045__report",
+          "ilets_TASK_0045__review"
+        ],
+        "all_consulted_artifact_ids": [
+          "ilets_TASK_0045__task",
+          "skill__executor__9e8add0ef47f",
+          "skill__simplicity__9e8add0ef47f",
+          "skill__verification__9e8add0ef47f",
+          "skill__architect__9e8add0ef47f",
+          "ilets_TASK_0045__report",
+          "ilets_TASK_0045__review"
+        ]
+      },
+      "minimal_sufficient_routing_projection": {
+        "rule": "Use only exact task artifact plus existing pinned executor/SKILL.md; task already carries target binding, capability requirements, authority sources, and positive owner/path boundary.",
+        "read_artifact_ids": [
+          "ilets_TASK_0045__task",
+          "skill__executor__9e8add0ef47f"
+        ],
+        "authority_owner_paths": [
+          ".agent/tasks/TASK-0045/task.yaml#/scope/allowed_existing_files_or_components"
+        ],
+        "capability_owner_paths": [
+          "phatnguyen03022001/agent-skills@9e8add0ef47fb3d7797c6a4da4f45ceb78c4030e:executor/SKILL.md"
+        ],
+        "counterfactual_only": true,
+        "does_not_define_case_or_workflow": true
+      },
+      "metrics": {
+        "observed_routing_artifact_count": 5,
+        "minimal_routing_artifact_count": 2,
+        "observed_routing_bytes": 49181,
+        "minimal_routing_bytes": 22878,
+        "distinct_support_repositories_touched_before_routing_closure": 2,
+        "support_repositories_before_routing_closure": [
+          "phatnguyen03022001/agent-skills",
+          "phatnguyen03022001/ilets"
+        ],
+        "material_inference_point_count": 3,
+        "unnecessary_routing_read_count": 1,
+        "premature_after_routing_read_count": 2,
+        "artifact_count_reduction_percentage": 60.0,
+        "bytes_reduction_percentage": 53.482036
+      },
+      "capability_set": {
+        "signature": "sha256:4588daeddb87bf66e5c7657778e711b0740a2f9ee12f2808a379445a54deccec",
+        "capabilities": [
+          "exact_remote_ref_read",
+          "native_repository_execution",
+          "repository_content_read",
+          "repository_content_write"
+        ],
+        "static_key_not_defined": true
+      },
+      "observed_semantic_search_waste": {
+        "meaningful_residual_after_projection": false,
+        "status": "NOT_PROVEN",
+        "evidence": "Projection uses exact canonical paths and no semantic retrieval operation; absence outside this proxy is not claimed."
+      }
+    },
+    {
+      "id": "SF/TASK-0008",
+      "repository": "phatnguyen03022001/SF",
+      "task_id": "TASK-0008",
+      "task_revision": 1,
+      "canonical_locator": {
+        "repository": "phatnguyen03022001/SF",
+        "task_path": ".agent/tasks/TASK-0008/task.yaml",
+        "target_branch": "main",
+        "remote_ref": "refs/heads/main",
+        "remote_tip_sha": "dd518fa0ae693f57befcedf341410d4cf28026d8",
+        "exact_locator_url": "https://github.com/phatnguyen03022001/SF/blob/dd518fa0ae693f57befcedf341410d4cf28026d8/.agent/tasks/TASK-0008/task.yaml"
+      },
+      "source_lineage": {
+        "task_source_commit": "83bcf6ae33abf8740ce66077f92fd523706354b5",
+        "report_source_commit": "fb67f45f59834b7848a7a76acaa44084541b960f",
+        "review_source_commit": "dd518fa0ae693f57befcedf341410d4cf28026d8",
+        "reviewed_report_commit": "fb67f45f59834b7848a7a76acaa44084541b960f",
+        "implementation_candidate_head": "df595fbbb61fa01016b7fe965b4f22ebb430f978",
+        "task_state": "APPROVED",
+        "report_state": "REPORTED",
+        "report_result": "NEEDS_REVIEW",
+        "review_state": "ACCEPTED",
+        "report_revision": 1
+      },
+      "pinned_skill_library": {
+        "repository": "phatnguyen03022001/agent-skills",
+        "authorized_revision": "9e8add0ef47fb3d7797c6a4da4f45ceb78c4030e",
+        "resolved_as_commit": true
+      },
+      "execution_skills_required": [
+        "executor",
+        "simplicity",
+        "verification"
+      ],
+      "required_execution_capabilities": [
+        "exact_remote_ref_read",
+        "repository_content_read",
+        "repository_content_write"
+      ],
+      "owner_path_projection": {
+        "basis": "task.yaml#/authority_sources",
+        "entries": [
+          "docs/learning-model.md",
+          "docs/taxonomy.md",
+          "README.md",
+          "docs/decision-engine.md"
+        ],
+        "authority_remains_in_task": true,
+        "no_case_dimension_defined": true
+      },
+      "material_inference_points": [
+        {
+          "id": "owner_binding_resolution",
+          "statement": "Resolved phatnguyen03022001/SF as target owner separately from pinned agent-skills authority.",
+          "evidence_artifact_ids": [
+            "SF_TASK_0008__task"
+          ]
+        },
+        {
+          "id": "capability_surface_resolution",
+          "statement": "Resolved exact task-declared execution skills and capability set before choosing path-specific work.",
+          "evidence_artifact_ids": [
+            "SF_TASK_0008__task"
+          ]
+        },
+        {
+          "id": "semantic_owner_boundary_resolution",
+          "statement": "Resolved existing task-declared semantic owner/path boundary while keeping CASE separate from binding, specialization, mode, task, and state.",
+          "evidence_artifact_ids": [
+            "SF_TASK_0008__task"
+          ]
+        }
+      ],
+      "observed_trace": {
+        "trace_kind": "current broad canonical intake proxy, executed in this measurement run",
+        "read_order_before_routing_closure": [
+          "SF_TASK_0008__task",
+          "skill__executor__9e8add0ef47f",
+          "skill__simplicity__9e8add0ef47f",
+          "skill__verification__9e8add0ef47f",
+          "skill__architect__9e8add0ef47f"
+        ],
+        "routing_closure_after_artifact_index": 5,
+        "read_order_after_routing_closure": [
+          "SF_TASK_0008__report",
+          "SF_TASK_0008__review"
+        ],
+        "all_consulted_artifact_ids": [
+          "SF_TASK_0008__task",
+          "skill__executor__9e8add0ef47f",
+          "skill__simplicity__9e8add0ef47f",
+          "skill__verification__9e8add0ef47f",
+          "skill__architect__9e8add0ef47f",
+          "SF_TASK_0008__report",
+          "SF_TASK_0008__review"
+        ]
+      },
+      "minimal_sufficient_routing_projection": {
+        "rule": "Use only exact task artifact plus existing pinned executor/SKILL.md; task already carries target binding, capability requirements, authority sources, and positive owner/path boundary.",
+        "read_artifact_ids": [
+          "SF_TASK_0008__task",
+          "skill__executor__9e8add0ef47f"
+        ],
+        "authority_owner_paths": [
+          ".agent/tasks/TASK-0008/task.yaml#/authority_sources"
+        ],
+        "capability_owner_paths": [
+          "phatnguyen03022001/agent-skills@9e8add0ef47fb3d7797c6a4da4f45ceb78c4030e:executor/SKILL.md"
+        ],
+        "counterfactual_only": true,
+        "does_not_define_case_or_workflow": true
+      },
+      "metrics": {
+        "observed_routing_artifact_count": 5,
+        "minimal_routing_artifact_count": 2,
+        "observed_routing_bytes": 47439,
+        "minimal_routing_bytes": 21136,
+        "distinct_support_repositories_touched_before_routing_closure": 2,
+        "support_repositories_before_routing_closure": [
+          "phatnguyen03022001/SF",
+          "phatnguyen03022001/agent-skills"
+        ],
+        "material_inference_point_count": 3,
+        "unnecessary_routing_read_count": 1,
+        "premature_after_routing_read_count": 2,
+        "artifact_count_reduction_percentage": 60.0,
+        "bytes_reduction_percentage": 55.445941
+      },
+      "capability_set": {
+        "signature": "sha256:2b727526b168abf069459610ae490b069439dd298e9bae7f8e1a1b93763fcc69",
+        "capabilities": [
+          "exact_remote_ref_read",
+          "repository_content_read",
+          "repository_content_write"
+        ],
+        "static_key_not_defined": true
+      },
+      "observed_semantic_search_waste": {
+        "meaningful_residual_after_projection": false,
+        "status": "NOT_PROVEN",
+        "evidence": "Projection uses exact canonical paths and no semantic retrieval operation; absence outside this proxy is not claimed."
+      }
+    }
+  ],
+  "aggregate_metrics": {
+    "observed_routing_artifact_count": {
+      "total": 63,
+      "median": 5,
+      "p75": 5,
+      "min": 5,
+      "max": 6
+    },
+    "minimal_routing_artifact_count": {
+      "total": 24,
+      "median": 2,
+      "p75": 2,
+      "min": 2,
+      "max": 2
+    },
+    "observed_routing_bytes": {
+      "total": 597637,
+      "median": 47727,
+      "p75": 52952,
+      "min": 33867,
+      "max": 65501
+    },
+    "minimal_routing_bytes": {
+      "total": 292681,
+      "median": 22985,
+      "p75": 24858,
+      "min": 17576,
+      "max": 31362
+    },
+    "distinct_support_repositories_touched_before_routing_closure": {
+      "total": 22,
+      "median": 2,
+      "p75": 2,
+      "min": 1,
+      "max": 2
+    },
+    "material_inference_point_count": {
+      "total": 36,
+      "median": 3,
+      "p75": 3,
+      "min": 3,
+      "max": 3
+    },
+    "unnecessary_routing_read_count": {
+      "total": 12,
+      "median": 1,
+      "p75": 1,
+      "min": 1,
+      "max": 1
+    },
+    "premature_after_routing_read_count": {
+      "total": 27,
+      "median": 2,
+      "p75": 2,
+      "min": 2,
+      "max": 3
+    },
+    "artifact_count_reduction_percentage": {
+      "total": 740.000001,
+      "median": 60.0,
+      "p75": 60.0,
+      "min": 60.0,
+      "max": 66.666667
+    },
+    "bytes_reduction_percentage": {
+      "total": 609.513906,
+      "median": 51.947308,
+      "p75": 53.482036,
+      "min": 41.854903,
+      "max": 55.445941
+    },
+    "episode_count": 12,
+    "repository_count": 6,
+    "total_observed_routing_artifacts": 63,
+    "total_minimal_routing_artifacts": 24,
+    "total_observed_routing_bytes": 597637,
+    "total_minimal_routing_bytes": 292681
+  },
+  "routing_waste_patterns": {
+    "threshold": {
+      "minimum_independent_episodes": 3,
+      "minimum_distinct_target_repositories": 2
+    },
+    "patterns": [
+      {
+        "pattern_id": "routing-read-waste-01",
+        "description": "Task-declared non-executor skill entrypoints were read before routing closure even though the minimal projection needs only executor/SKILL.md for routing.",
+        "predicate": "routing_classification=necessary_only_after_routing and observed_read_phase=before_routing_closure",
+        "source_episode_ids": [
+          "agent-documents/TASK-0002",
+          "agent-documents/TASK-0003",
+          "agent-documents/TASK-0004",
+          "agent-documents/TASK-0005",
+          "agent-documents/TASK-0006",
+          "agent-skills/TASK-0024",
+          "agent-skills/TASK-0025",
+          "architect-profile/TASK-0016",
+          "architect-profile/TASK-0017",
+          "elite-drive/TASK-0001",
+          "ilets/TASK-0045",
+          "SF/TASK-0008"
+        ],
+        "distinct_target_repositories": [
+          "phatnguyen03022001/SF",
+          "phatnguyen03022001/agent-documents",
+          "phatnguyen03022001/agent-skills",
+          "phatnguyen03022001/architect-profile",
+          "phatnguyen03022001/elite-drive",
+          "phatnguyen03022001/ilets"
+        ],
+        "independent_episode_count": 12,
+        "threshold": {
+          "minimum_independent_episodes": 3,
+          "minimum_distinct_target_repositories": 2
+        },
+        "proven": true,
+        "semantic_authority_moved": false
+      },
+      {
+        "pattern_id": "routing-read-waste-02",
+        "description": "architect/SKILL.md was preloaded as a role-boundary cross-check although pinned executor/SKILL.md already owns Executor routing and no selected task required architect execution.",
+        "predicate": "routing_classification=unnecessary_to_routing_decision and observed_read_phase=before_routing_closure",
+        "source_episode_ids": [
+          "agent-documents/TASK-0002",
+          "agent-documents/TASK-0003",
+          "agent-documents/TASK-0004",
+          "agent-documents/TASK-0005",
+          "agent-documents/TASK-0006",
+          "agent-skills/TASK-0024",
+          "agent-skills/TASK-0025",
+          "architect-profile/TASK-0016",
+          "architect-profile/TASK-0017",
+          "elite-drive/TASK-0001",
+          "ilets/TASK-0045",
+          "SF/TASK-0008"
+        ],
+        "distinct_target_repositories": [
+          "phatnguyen03022001/SF",
+          "phatnguyen03022001/agent-documents",
+          "phatnguyen03022001/agent-skills",
+          "phatnguyen03022001/architect-profile",
+          "phatnguyen03022001/elite-drive",
+          "phatnguyen03022001/ilets"
+        ],
+        "independent_episode_count": 12,
+        "threshold": {
+          "minimum_independent_episodes": 3,
+          "minimum_distinct_target_repositories": 2
+        },
+        "proven": true,
+        "semantic_authority_moved": false
+      }
+    ],
+    "repeated_material_routing_waste_proven": true
+  },
+  "recurring_capability_sets": {
+    "sets": [
+      {
+        "signature": "sha256:2b727526b168abf069459610ae490b069439dd298e9bae7f8e1a1b93763fcc69",
+        "capabilities": [
+          "exact_remote_ref_read",
+          "repository_content_read",
+          "repository_content_write"
+        ],
+        "source_episode_ids": [
+          "agent-documents/TASK-0003",
+          "agent-skills/TASK-0024",
+          "SF/TASK-0008"
+        ],
+        "target_repositories": [
+          "phatnguyen03022001/SF",
+          "phatnguyen03022001/agent-documents",
+          "phatnguyen03022001/agent-skills"
+        ],
+        "episode_count": 3,
+        "repository_count": 3,
+        "materially_distinct_exact_load": true,
+        "static_key_not_defined": true
+      },
+      {
+        "signature": "sha256:5555baf3de42bb008e3ec6e2e7bfc52b5c6e36cd767cac2f9e4637cc2c4f27e4",
+        "capabilities": [
+          "exact_remote_ref_read",
+          "isolated_test_execution",
+          "repository_content_read",
+          "repository_content_write"
+        ],
+        "source_episode_ids": [
+          "agent-documents/TASK-0002",
+          "agent-documents/TASK-0004",
+          "agent-documents/TASK-0005",
+          "agent-documents/TASK-0006"
+        ],
+        "target_repositories": [
+          "phatnguyen03022001/agent-documents"
+        ],
+        "episode_count": 4,
+        "repository_count": 1,
+        "materially_distinct_exact_load": true,
+        "static_key_not_defined": true
+      },
+      {
+        "signature": "sha256:911717876fa88cc3edabe746ee0f1d26302b8c37c9fee65716ad970397441fa9",
+        "capabilities": [
+          "git_commit",
+          "git_history_read",
+          "git_push",
+          "remote_ref_read",
+          "repository_content_read",
+          "repository_content_write"
+        ],
+        "source_episode_ids": [
+          "architect-profile/TASK-0016",
+          "architect-profile/TASK-0017"
+        ],
+        "target_repositories": [
+          "phatnguyen03022001/architect-profile"
+        ],
+        "episode_count": 2,
+        "repository_count": 1,
+        "materially_distinct_exact_load": true,
+        "static_key_not_defined": true
+      }
+    ],
+    "materially_distinct_recurring_set_count": 3,
+    "cross_repository_recurring_set_count": 1,
+    "at_least_two_materially_different_recurring_sets_proven": true,
+    "recurrence_threshold": {
+      "minimum_independent_episodes": 2
+    },
+    "comparison_basis": "Exact task-declared capability names; recurrence is measured across independent episodes. Repository diversity is recorded separately. Exact-set differences are material when they add or remove a required execution surface. No CASE key or taxonomy is defined."
+  },
+  "admission_evidence": {
+    "repeated_material_routing_waste": true,
+    "distinct_recurring_capability_sets": true,
+    "median_reducible_overhead_at_least_50_percent": true,
+    "median_artifact_count_reduction_percentage": 60.0,
+    "median_bytes_reduction_percentage": 51.947308,
+    "threshold_percentage": 50.0,
+    "semantic_authority_moved": false,
+    "evidence_result": "PROVEN",
+    "architect_final_admission_decision": "NOT_MADE",
+    "decision_boundary": "PROVEN is only a mechanical evidence result under CR-00's three gates; it is not the Architect's final admission decision."
+  },
+  "embedding_admission_observation": {
+    "meaningful_semantic_search_waste_after_minimal_projection": false,
+    "status": "NOT_PROVEN",
+    "basis": "All projected reads are exact canonical paths and this run performed no semantic retrieval. The observation does not admit embeddings, vectors, indexes, or retrieval machinery."
+  },
+  "scope_and_authority_proof": {
+    "persistent_artifact_authority": "NONE",
+    "only_new_execution_artifact_before_report": ".agent/tasks/TASK-0026/case-routing-baseline.json",
+    "semantic_authority_owner": "Existing task, pinned agent-skills entrypoints, and each target repository's existing canonical owners remain authoritative.",
+    "not_implemented": [
+      "Case Router",
+      "case taxonomy",
+      "case map",
+      "workflow/classifier/state machinery",
+      "embedding or semantic index"
+    ],
+    "external_repositories_read_only": true,
+    "main_preservation_observed_sha": "337c0be6618090e704b345b1bf93df488a4985af"
+  }
+}
