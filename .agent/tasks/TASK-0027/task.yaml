@@ -1,0 +1,216 @@
+protocol_version: 3
+
+task_id: TASK-0027
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: admitted_follow_up
+  task_id: TASK-0026
+  gap_id: "CR-01-STATIC-CASE-NAVIGATION"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "337c0be6618090e704b345b1bf93df488a4985af"
+
+architect_analysis_skills:
+  - architect
+  - simplicity
+  - verification
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: ".agent/tasks/TASK-0026/review.yaml@fb3349cacbbefce97d0606a4d49de6c0c1ce102a"
+    role: "Architect admission authority: Case Router admitted only as a small static navigation projection; embedding not admitted."
+    precedence: 1
+  - source: ".agent/tasks/TASK-0026/case-routing-baseline.json@e42230d9e7f2c2d73b51135baafb4b51f3dc61aa"
+    role: "CR-00 empirical routing-waste and minimal-read-set evidence."
+    precedence: 2
+  - source: "phatnguyen03022001/agent-skills@337c0be6618090e704b345b1bf93df488a4985af"
+    role: "Stable generic Task/Architect/Executor/capability authority that navigation must reference rather than duplicate."
+    precedence: 3
+
+structure_authority:
+  status: RESOLVED
+  source: "CR-00 accepted admission boundary"
+  rationale: >-
+    Materialize only the smallest reusable static CASE navigation contract proven by CR-00.
+    Start with one evidence-backed hot-path case, EXECUTE, and validate the anti-state-machine
+    boundary. Do not predeclare an ecosystem-wide taxonomy that the baseline did not prove.
+
+objective: >-
+  Materialize CR-01/02 minimum viable Case Router semantics in agent-skills: one machine-readable
+  navigation-only CASE=EXECUTE entry that resolves to the existing executor capability key, plus
+  deterministic validation proving CASE remains separate from binding, specialization, mode,
+  task, and lifecycle state. Pilot it against the accepted CR-00 corpus without implementing a
+  classifier, workflow engine, or embedding.
+
+scope:
+  required_changes:
+    - "Add exactly one small reusable machine-readable case-navigation artifact at a repo-native location chosen by Executor. It must declare navigation authority only, not task/workflow authority."
+    - "The initial admitted case set is exactly one case: EXECUTE. EXECUTE means an already-authorized task is entering Executor work. It does not mean NEW, CONTINUE, VERIFY, REVIEW, RED_TEAM, EVOLVE, BLOCKED, PASS, FAIL, or any execution surface."
+    - "EXECUTE must route to exactly one existing generic capability key: executor. The case artifact must not contain repository paths, SHAs, owners, skill bodies, task fields, or duplicated capability-registry data. Exact owner/path resolution remains the responsibility of the external capability routing layer."
+    - "Represent CASE as a navigation dimension only. The reusable contract must make CASE != BINDING != SPECIALIZATION != MODE != TASK != STATE mechanically enforceable."
+    - "Extend the existing agent-skills validation/test surface minimally so the canonical case artifact is validated and malformed navigation contracts fail closed. Reuse existing validator/test machinery; do not create a second framework."
+    - "Reject unknown case IDs and reject any attempt to add lifecycle/workflow fields such as next, retry, success, failure, terminal, transition, state, binding, specialization, mode, or task into a case entry."
+    - "Reject duplicate case IDs, duplicate capability keys within a case, empty capability loads, unknown/non-canonical capability keys, and direct owner/path/SHA routing embedded in the case artifact."
+    - "Pilot CASE=EXECUTE against all 12 accepted CR-00 episodes by reconstructing the navigation sequence from exact task identity plus EXECUTE -> executor, then task-declared execution requirements. Prove this does not move semantic authority and does not require whole-support-repository preload."
+    - "Compare the pilot read set with CR-00 observed/minimal metrics. The reusable router is acceptable only if the 12-episode pilot preserves at least the CR-00 median 50% reducible routing-overhead target in artifact count or bytes and introduces no material extra routing inference."
+    - "Keep embedding unimplemented. Record no semantic index, vector, similarity threshold, provider, cache, or retrieval store."
+    - "Publish the exact implementation candidate and normal Executor report on dev only with independent remote SHA observation after each push; preserve main and topology exactly {dev, main}."
+
+  allowed_existing_files_or_components:
+    - "one new small case-navigation artifact"
+    - "scripts/validate_skill_library.py"
+    - "scripts/test_validate_skill_library.py"
+    - ".agent/tasks/TASK-0026/case-routing-baseline.json as read-only pilot evidence"
+    - ".agent/tasks/TASK-0027/task.yaml"
+    - ".agent/tasks/TASK-0027/report.yaml"
+    - "existing repository-native validation fixtures/helpers only when reuse is smaller than adding new machinery"
+
+invariants:
+  - "CASE is WHERE/which navigation context to load, not WHAT to implement and not WHAT HAPPENED."
+  - "TASK owns WHAT, material boundary, and acceptance."
+  - "BINDING owns NEW/CONTINUE semantics under the existing Task Protocol."
+  - "SPECIALIZATION remains separate from CASE. Red-team, verifier, ecosystem-evolution, researcher, coder, and similar labels do not become case IDs merely because they affect execution behavior."
+  - "MODE/execution surface remains separate from CASE. CHATGPT_GITHUB, CHATGPT_LOCAL, CODEX_CLOUD, CODEX_LOCAL, and AGENT_RUNTIME transport semantics must not appear as cases."
+  - "STATE/results remain separate from CASE. PASS, FAIL, BLOCKED, NEEDS_REVIEW, REVERIFY_REQUIRED, terminal states, and transitions must not appear as cases."
+  - "The initial reusable case set is intentionally only EXECUTE. Additional cases require later evidence/admission; absence is preferable to speculative taxonomy."
+  - "The case artifact is a navigation projection over existing canonical capability authority; it grants no mutation, review, verification, promotion, release, or lifecycle authority."
+  - "One case may name capability keys only. Owner/path/SHA resolution stays outside the case artifact."
+  - "Embedding remains NOT_ADMITTED."
+  - "GitHub remains canonical repository truth and physical topology remains exactly {dev, main}."
+
+forbidden_changes:
+  - "Do not add REVIEW, VERIFY, DESIGN, PROGRAM, EVOLVE, PROMOTE, RELEASE, BOOTSTRAP, RED_TEAM, or any other speculative case in this task."
+  - "Do not add next, retry, success, failure, terminal, transition, state, binding, specialization, mode, task, branch, repository, owner, path, revision, SHA, model, effort, controller, or transport fields to the case artifact."
+  - "Do not create a classifier, intent model, fuzzy router, decision engine, state machine, next map, workflow engine, planner, orchestrator, registry, daemon, service, database, queue, scheduler, cache, persistent capsule, or second capability registry."
+  - "Do not create embeddings, vectors, semantic indexes, retrieval stores, similarity search, embedding-provider integration, or derived authority caches."
+  - "Do not duplicate or rewrite Architect, Executor, Task Protocol, verification, GitHub workflow, standards, documents, or runtime semantics inside the case artifact."
+  - "Do not mutate agent-skills/main or any external repository."
+  - "Do not create, rename, or delete branches."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_commit
+    - git_push
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_read
+    - repository_content_write
+    - remote_ref_read
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Exactly one reusable CASE exists: EXECUTE, with navigation-only authority and exactly one required capability key: executor."
+    evidence_required: "Exact case artifact plus validator/test evidence and base-to-candidate diff."
+  - id: AC-2
+    requirement: "CASE remains mechanically separate from BINDING, SPECIALIZATION, MODE, TASK, and STATE, and workflow/lifecycle fields are rejected rather than interpreted."
+    evidence_required: "Negative mutation tests for all forbidden dimensions/fields including next/retry/transitions and mode/state confusion."
+  - id: AC-3
+    requirement: "Case navigation references capability keys only and does not become a second owner/path/SHA registry or duplicate canonical skill semantics."
+    evidence_required: "Schema/validator assertions and exact changed-surface review proving no owner/path/SHA/semantic bodies in the case artifact."
+  - id: AC-4
+    requirement: "Unknown/duplicate/empty/invalid case navigation fails closed deterministically using the existing validator/test surface."
+    evidence_required: "Focused positive and negative tests plus full existing validator/unittest regression PASS."
+  - id: AC-5
+    requirement: "The 12-episode CR-00 pilot reconstructs EXECUTE routing from task identity plus EXECUTE -> executor and then existing task-declared requirements without whole-repository preload or moved authority."
+    evidence_required: "Recomputed pilot matrix over the exact CR-00 corpus with exact source identities and no case-taxonomy expansion."
+  - id: AC-6
+    requirement: "The pilot retains at least 50% median routing-overhead reduction in artifact count or bytes relative to CR-00 observed routing and introduces no new material inference layer."
+    evidence_required: "Mechanically recomputed median artifact/byte metrics compared with the accepted CR-00 baseline."
+  - id: AC-7
+    requirement: "No embedding, classifier, workflow engine, new role, new lifecycle, second capability registry, or unrelated reusable governance change is introduced."
+    evidence_required: "Exact changed-path review, forbidden-pattern tests, full validator/unittest regression, and git diff --check."
+  - id: AC-8
+    requirement: "Implementation/report publication closes on dev with exact remote confirmation; main remains unchanged and topology remains exactly {dev, main}."
+    evidence_required: "Exact implementation SHA, report SHA, independent remote-ref observations, unchanged main, final topology proof, and local==remote proof when executed in the designated local mirror."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Fresh-resolve TASK-0027 revision 1, exact base, TASK-0026 accepted review/baseline, pinned agent-skills stable authority, dev/main refs, and required local/publication capabilities before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Add focused tests first for canonical EXECUTE navigation and all forbidden/invalid shapes; prove the negative cases fail before implementing the minimum validator support."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Run focused case-navigation tests, python3 scripts/validate_skill_library.py, python3 -m unittest scripts/test_validate_skill_library.py, and git diff --check on the exact candidate."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Recompute the exact 12-episode CR-00 pilot using canonical TASK-0026 baseline data and prove the EXECUTE navigation read set preserves >=50% median reduction in artifact count or bytes without new semantic authority."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Verify the exact candidate changed paths are limited to the one case-navigation artifact plus the smallest existing validator/test companions required for deterministic enforcement; no unrelated reusable authority changes."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Push exact candidate to dev, independently prove remote dev == candidate, publish report-only child, independently prove remote dev == report, require main unchanged/topology {dev, main}, reconcile local dev to final remote dev when local, then stop at NEEDS_REVIEW."
+      required: true
+
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
