@@ -1,0 +1,140 @@
+protocol_version: 3
+
+task_id: TASK-0031
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: accepted_follow_up
+  task_id: TASK-0030
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "4a063c41f429207577434600a3571dc17822cd78"
+
+execution_skills:
+  required:
+    - executor
+    - github-workflow
+    - verification
+    - simplicity
+
+authority_sources:
+  - source: ".agent/tasks/TASK-0030/review.yaml@a2366adbf396f1cc1a7700ddce19a5977cdca911"
+    role: "accepted exact candidate and promotion readiness"
+    precedence: 1
+  - source: "architect-profile/main@89dacd43b7a200a7b9cd36d9545f23c930eb4f44"
+    role: "active ecosystem authority-set"
+    precedence: 2
+
+structure_authority:
+  status: RESOLVED
+  source: "promotion-only existing Git workflow"
+  rationale: "No reusable semantic mutation is authorized."
+
+objective: >-
+  Promote agent-skills/main non-force and ancestry-safe from
+  4a063c41f429207577434600a3571dc17822cd78 to the exact accepted candidate
+  db03b97b5c42c9c64ad8dce76bc694530e41a206, then publish only compact TASK-0031 evidence on dev.
+
+scope:
+  required_changes:
+    - "Reverify the exact accepted candidate and current stable-main ancestry immediately before promotion."
+    - "Promote main only to db03b97b5c42c9c64ad8dce76bc694530e41a206 by non-force forward update."
+    - "Freshly prove remote main after promotion, keep topology exactly {dev, main}, and create only .agent/tasks/TASK-0031/report.yaml on dev."
+
+invariants:
+  - "No reusable source, protocol, contract, template, skill, validator, Case Router, or semantic bytes are modified."
+  - "main moves only to the exact accepted candidate, never to TASK-0030 report/review or TASK-0031 planning/report descendants."
+  - "Case Router remains exact EXECUTE -> executor."
+  - "This support-main movement does not by itself activate ecosystem semantics; architect-profile/main remains the activation pointer."
+  - "Topology remains exactly {dev, main}."
+
+forbidden_changes:
+  - "Do not modify implementation semantics."
+  - "Do not force-push."
+  - "Do not create/delete/rename branches."
+  - "Do not mutate architect-profile or any other repository."
+  - "Do not create release/tag/metadata state."
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - git_history_read
+    - git_push
+    - remote_ref_read
+    - native_repository_execution
+  REVIEW:
+    - repository_content_read
+    - repository_content_write
+    - exact_commit_report_resolution
+    - remote_ref_read
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "TASK-0030 review is ACCEPTED and exact accepted candidate is db03b97b5c42c9c64ad8dce76bc694530e41a206."
+    evidence_required: "Exact immutable review/candidate resolution."
+  - id: AC-2
+    requirement: "Current main 4a063c41f429207577434600a3571dc17822cd78 is the merge-base ancestor of the accepted candidate immediately before promotion."
+    evidence_required: "Fresh ancestry and remote-ref proof."
+  - id: AC-3
+    requirement: "Candidate verification remains green without semantic mutation."
+    evidence_required: "One bounded deterministic verification bundle covering full validator/unit regression, py_compile where applicable, git diff --check, Case Router identity, taxonomy, and exact candidate identity."
+  - id: AC-4
+    requirement: "main is moved non-force exactly to db03b97b5c42c9c64ad8dce76bc694530e41a206."
+    evidence_required: "Fresh remote post-promotion proof."
+  - id: AC-5
+    requirement: "Only compact TASK-0031 report evidence is added on dev after promotion; main stays at the exact candidate and topology remains {dev, main}."
+    evidence_required: "Exact report-child diff and fresh refs/topology at review boundary."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Fresh-resolve task/base, accepted TASK-0030 review, exact candidate, dev/main/topology, capabilities, and ancestry."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Run one bounded deterministic verification bundle over the exact candidate; mutation/publication remains serial."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Immediately before promotion refresh REMOTE_MUTABLE main/dev/topology and require main is still the exact authorized old stable ref and ancestor of candidate."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Push exact candidate to main non-force, then freshly prove remote main equals candidate."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Publish only compact TASK-0031/report.yaml on dev; fresh-prove dev report SHA, main candidate SHA, topology {dev, main}, and final local hygiene."
+      required: true
+
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: true
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
