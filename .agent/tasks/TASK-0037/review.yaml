@@ -1,0 +1,60 @@
+protocol_version: 3
+
+task_id: TASK-0037
+task_revision: 1
+review_revision: 1
+state: ACCEPTED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0037/report.yaml
+  commit: "1bb6e855a78c5cfedaa361b1bd5ccbd922612003"
+  report_revision: 1
+
+independence:
+  reviewer_role: ARCHITECT
+  exact_report_identity_verified: true
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: PASS
+  verifier_evidence: NOT_REQUIRED
+
+accepted_candidate:
+  commit: "11a5720adf96555bfe4187067d8dd51627ec8676"
+  role: "mandatory deterministic execution-bundling semantics candidate"
+
+acceptance_basis:
+  - "Fresh review-boundary GitHub observation proved dev=1bb6e855a78c5cfedaa361b1bd5ccbd922612003, main=ac2f213095e339dafa96825d89a6f6de164792bc, topology exactly {dev, main}."
+  - "Exact base-to-candidate comparison proved 11a5720adf96555bfe4187067d8dd51627ec8676 is one direct child of 33a8473dc2918139843de468212ea815b8f51d2b and changes only protocols/TASK_PROTOCOL.md and executor/SKILL.md."
+  - "Exact candidate-to-report comparison proved 1bb6e855a78c5cfedaa361b1bd5ccbd922612003 is one direct child of the candidate and adds only .agent/tasks/TASK-0037/report.yaml."
+  - "The candidate makes consequence-boundary refresh an evidence obligation rather than an automatic model/runtime handoff and requires one bounded EXECUTION BUNDLE for the maximal contiguous mechanically derivable suffix after semantic choices, authority, and current-phase capabilities are resolved."
+  - "The candidate preserves semantic/model return conditions, mutable-evidence refresh, attributable JOIN results, fail-closed stopping on failure/ambiguity, truthful partial-state preservation, independent commit/push/promotion/release/lifecycle authority, and existing safe-parallel/serial constraints."
+  - "Executor-local guidance prefers terminal_exec for bounded non-interactive Agent Runtime bundles and reserves terminal_start/terminal_poll/terminal_control for genuinely interactive or long-running work without adding a runtime API, scheduler, queue, state machine, or framework."
+  - "Canonical report records repository validator PASS, 116/116 unittest PASS, git diff --check PASS, exact scope/lineage guards PASS, and no unauthorized runtime/orchestration surface."
+  - "AC-5/CHECK-4 are correctly NOT_PROVEN inside the self-containing report; exact report publication and final remote closure are independently proven at review boundary."
+
+promotion_readiness:
+  eligible_for_candidate_capture: true
+  candidate: "11a5720adf96555bfe4187067d8dd51627ec8676"
+  reason: >-
+    The semantic correction is accepted on dev. Any movement of agent-skills/main remains a separate explicitly authorized
+    promotion phase, and ecosystem activation still requires a later architect-profile authority-lock update and activation.
+
+pilot_status:
+  state: NOT_YET_ACTIVE
+  note: >-
+    TASK-0037 acceptance proves the governance correction, not its latency effect. A natural cross-repository pilot must run only
+    after the accepted candidate is promoted to agent-skills/main and the active architect-profile authority set pins that exact SHA.
+
+follow_up_tasks: []
+
+notes:
+  - "Do not infer performance success from semantic acceptance. The first comparable natural pilot should measure E2E, runtime invocation count, semantic decision count, deterministic process time, synchronization count, correctness, fail-closed behavior, and publication closure."
+  - "Do not add a new Agent Runtime bundle API, DAG scheduler, transaction framework, queue, cache, registry, daemon, or orchestration service unless later evidence proves the existing terminal_exec carrier insufficient."
