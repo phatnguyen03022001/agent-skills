@@ -1,0 +1,162 @@
+protocol_version: 3
+
+task_id: TASK-0033
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: accepted_follow_up
+  source: ".agent/tasks/TASK-0032/review.yaml@2fde360c73c474f5aa723866164578f9c07bdb5e"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "db03b97b5c42c9c64ad8dce76bc694530e41a206"
+
+execution_skills:
+  required:
+    - executor
+    - verification
+    - simplicity
+    - github-workflow
+
+authority_sources:
+  - source: "architect-profile/main@116e624b4c17d4949562b4d3f16385bfcf582130"
+    role: "active ecosystem authority-set before support promotion"
+    precedence: 1
+  - source: ".agent/tasks/TASK-0032/review.yaml@2fde360c73c474f5aa723866164578f9c07bdb5e"
+    role: "accepted exact promotion candidate and acceptance evidence"
+    precedence: 2
+  - source: "agent-skills/main@db03b97b5c42c9c64ad8dce76bc694530e41a206"
+    role: "current stable support revision"
+    precedence: 3
+
+objective: >-
+  Promote the exact accepted TASK-0032 candidate c4d6d4e7e7ecde58444d8da7bd5e26f8735562a3
+  to agent-skills/main with no acceptance-equivalent reverification ceremony, reusing unchanged immutable
+  correctness evidence and collapsing the deterministic promotion consequence into one bounded runtime
+  invocation, then publish compact execution evidence on dev.
+
+scope:
+  required_changes:
+    - >-
+      Reuse the exact TASK-0032 ACCEPTED immutable candidate correctness evidence for
+      c4d6d4e7e7ecde58444d8da7bd5e26f8735562a3. Do not rerun validator, the 116-test suite,
+      py_compile, or git diff --check solely because promotion begins.
+    - >-
+      Before promotion, freshly prove only consequence-sensitive/current predicates required for the
+      mutation: exact current main/dev/topology, accepted review/candidate identity, old-main ancestry,
+      and current promotion capability. If candidate/review/governing identity has drifted, a newly
+      required correctness predicate is not covered by prior evidence, stronger assurance is explicitly
+      required, or contradiction appears, fail closed or perform only the newly required proof rather
+      than silently reusing unrelated evidence.
+    - >-
+      Execute the deterministic promotion consequence as one bounded runtime invocation with ordered
+      serial phases: fresh guard -> exact non-force push of candidate to refs/heads/main -> fresh remote
+      post-proof -> compact attributable JOIN. A failed/ambiguous guard must cause zero promotion mutation;
+      a successful push without exact post-proof is not success.
+    - >-
+      Publish only the compact TASK-0033 report on dev after the promotion consequence, preserving
+      main exactly at the accepted candidate and topology exactly {dev, main}.
+    - >-
+      Capture operational_timing only under the existing protocol semantics for this performance-validation
+      execution: started_at_utc after exact binding and immediately before capability preflight, and
+      terminal_decision_at_utc before report publication. Omit the whole timing block if either boundary
+      cannot be captured truthfully.
+
+invariants:
+  - "No candidate bytes are modified."
+  - "TASK-0032 accepted correctness predicates remain satisfied by exact immutable evidence unless a specific dependency/predicate invalidation is proven."
+  - "No full-suite rerun is permitted merely for promotion ceremony."
+  - "Promotion is non-force and exact; no merge/cherry-pick/rebase/substitute candidate is permitted."
+  - "Case Router, protocol, taxonomy, model policy, branch policy, runtime semantics, and support repositories other than the main ref movement remain unchanged."
+  - "Agent Runtime remains transport only; no runtime intelligence, scheduler, queue, cache, registry, daemon, callback, transaction abstraction, or telemetry framework is introduced."
+  - "Topology remains exactly {dev, main}."
+
+forbidden_changes:
+  - "Do not modify architect/SKILL.md, protocols/TASK_PROTOCOL.md, executor/SKILL.md, validators, tests, templates, contracts, Case Router, runtime, model policy, or candidate content."
+  - "Do not rerun acceptance-equivalent deterministic correctness verification unless a specific invalidated/newly required predicate is named in the report."
+  - "Do not force-push or create/delete/rename branches, tags, releases, dependencies, services, registries, caches, schedulers, or queues."
+  - "Do not mutate architect-profile in this task."
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  REVIEW:
+    - repository_content_read
+    - repository_content_write
+    - exact_commit_report_resolution
+    - remote_ref_read
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Exact TASK-0032 review is ACCEPTED and names candidate c4d6d4e7e7ecde58444d8da7bd5e26f8735562a3; prior correctness evidence remains applicable with no identified predicate/identity invalidation."
+    evidence_required: "Exact immutable review/candidate/evidence resolution plus explicit invalidation check."
+  - id: AC-2
+    requirement: "No acceptance-equivalent full correctness suite is rerun solely for promotion; prior validator/116-test/py_compile/diff-check evidence is reused."
+    evidence_required: "Report states reused immutable evidence and names any newly run proof; zero unexplained full-suite rerun."
+  - id: AC-3
+    requirement: "Immediately before promotion, main is exactly db03b97b5c42c9c64ad8dce76bc694530e41a206, topology is exactly {dev, main}, old main is an ancestor of the exact candidate, and current promotion capability is available."
+    evidence_required: "Fresh consequence-boundary refs/topology/ancestry/capability proof."
+  - id: AC-4
+    requirement: "One bounded deterministic consequence invocation performs guard -> exact non-force promotion -> fresh post-proof and returns an attributable JOIN; guard failure means zero promotion mutation."
+    evidence_required: "Compact bundle/JOIN evidence with exact stage/result and fresh post-promotion main identity."
+  - id: AC-5
+    requirement: "agent-skills/main equals c4d6d4e7e7ecde58444d8da7bd5e26f8735562a3 after promotion; only TASK-0033 report evidence is then published on dev; topology remains {dev, main}."
+    evidence_required: "Fresh remote refs/topology, exact report commit, and final local hygiene evidence."
+  - id: AC-6
+    requirement: "The execution provides truthful existing-schema operational timing when both required boundaries are available, without making timing part of correctness or acceptance."
+    evidence_required: "Optional operational_timing block with exactly started_at_utc and terminal_decision_at_utc, or explicit omission if either boundary was unavailable."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Fresh-resolve exact task/base, TASK-0032 accepted review/candidate, current refs/topology, existing immutable correctness evidence, required current capabilities, and whether any correctness predicate/identity dependency is invalidated."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Reuse unchanged TASK-0032 validator/116-test/py_compile/diff-check correctness evidence; do not rerun it absent a named invalidation/new predicate."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Run one bounded deterministic consequence bundle: fresh main/dev/topology and ancestry guard; if all guards pass, exact non-force push candidate to refs/heads/main; fresh-prove main equals candidate; return compact JOIN."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Publish compact TASK-0033 report on dev, then freshly prove final dev/main/topology and close local hygiene."
+      required: true
+
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: true
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
