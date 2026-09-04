@@ -1,0 +1,160 @@
+protocol_version: 3
+
+task_id: TASK-0035
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: accepted_follow_up
+  source: ".agent/tasks/TASK-0034/review.yaml@30337e27859bf6dab81a4353ea3ef48a7d58d997"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "c4d6d4e7e7ecde58444d8da7bd5e26f8735562a3"
+
+execution_skills:
+  required:
+    - executor
+    - verification
+    - simplicity
+    - github-workflow
+
+authority_sources:
+  - source: "architect-profile/main@116e624b4c17d4949562b4d3f16385bfcf582130"
+    role: "active ecosystem authority-set before final support promotion"
+    precedence: 1
+  - source: ".agent/tasks/TASK-0034/review.yaml@30337e27859bf6dab81a4353ea3ef48a7d58d997"
+    role: "accepted exact candidate and semantic-closure evidence"
+    precedence: 2
+  - source: "agent-skills/main@c4d6d4e7e7ecde58444d8da7bd5e26f8735562a3"
+    role: "current stable support revision"
+    precedence: 3
+
+objective: >-
+  Promote the exact accepted TASK-0034 candidate ac2f213095e339dafa96825d89a6f6de164792bc
+  to agent-skills/main while dogfooding the corrected fresh-binding evidence semantics: freshly re-resolve
+  prior canonical evidence identity, confirm exact current-predicate coverage and applicability, reuse unchanged
+  immutable correctness evidence, refresh only consequence-sensitive predicates, and perform the exact promotion
+  consequence in one bounded runtime invocation.
+
+scope:
+  required_changes:
+    - >-
+      Freshly re-resolve the exact TASK-0034 accepted review/report/candidate evidence in this new binding.
+      Reuse its validator, 116-test, py_compile, git diff --check, scope, and counterfactual results only after
+      confirming they cover the exact currently required correctness predicates and that governing/predicate
+      semantics and relevant dependencies remain applicable.
+    - >-
+      Do not rerun acceptance-equivalent correctness verification merely because this is a new binding or
+      promotion phase. If exact evidence identity drifts, a required predicate is uncovered/new/changed,
+      relevant semantics/dependencies changed, stronger assurance is explicitly required, or contradiction
+      appears, fail closed or perform only the newly required proof and report the named invalidation.
+    - >-
+      Immediately before mutation freshly prove current main/dev/topology, old-main ancestry, exact accepted
+      candidate identity, and current promotion capability.
+    - >-
+      Execute one bounded deterministic consequence invocation with ordered serial phases:
+      fresh guard -> exact non-force push of candidate to refs/heads/main -> fresh remote post-proof -> compact
+      attributable JOIN. Guard failure/ambiguity means zero promotion mutation; successful push without exact
+      post-proof is not success.
+    - >-
+      Publish only the compact TASK-0035 report on dev after promotion. Capture operational_timing under the
+      existing protocol semantics if both boundaries are truthfully available.
+
+invariants:
+  - "No candidate bytes are modified."
+  - "No acceptance-equivalent full-suite rerun is permitted absent a named invalidated/new predicate."
+  - "Fresh binding re-resolves canonical evidence identity; it never trusts chat/session cache."
+  - "Prior evidence is reusable only for exact predicates it actually proved and that remain semantically applicable."
+  - "Promotion is non-force and exact; no merge/cherry-pick/rebase/substitute candidate is permitted."
+  - "No Agent Runtime, protocol, Architect, Executor, validator, taxonomy, Case Router, model policy, branch policy, continuation, service, cache, registry, scheduler, callback, or telemetry-framework change is introduced."
+  - "Topology remains exactly {dev, main}."
+
+forbidden_changes:
+  - "Do not modify candidate content or reusable governance/runtime source files in this task."
+  - "Do not rerun validator/116 tests/py_compile/git diff --check unless a specific uncovered or invalidated predicate is named."
+  - "Do not force-push or create/delete/rename branches, tags, releases, dependencies, services, registries, caches, schedulers, queues, or callbacks."
+  - "Do not mutate architect-profile in this task."
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  REVIEW:
+    - repository_content_read
+    - repository_content_write
+    - exact_commit_report_resolution
+    - remote_ref_read
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Fresh binding exactly re-resolves TASK-0034 accepted review/report/candidate evidence and proves prior evidence covers all currently required correctness predicates under still-applicable semantics/dependencies."
+    evidence_required: "Exact immutable artifact identities plus explicit predicate-applicability classification."
+  - id: AC-2
+    requirement: "No acceptance-equivalent validator/116-test/py_compile/diff-check rerun occurs absent a named invalidated/new predicate."
+    evidence_required: "Report names reused evidence and every newly run proof."
+  - id: AC-3
+    requirement: "Immediately before promotion, main is exactly c4d6d4e7e7ecde58444d8da7bd5e26f8735562a3, topology is {dev, main}, old main is an ancestor of ac2f213095e339dafa96825d89a6f6de164792bc, and promotion capability is current."
+    evidence_required: "Fresh refs/topology/ancestry/capability proof."
+  - id: AC-4
+    requirement: "One bounded consequence invocation performs fresh guard -> exact non-force promotion -> fresh post-proof and returns attributable JOIN; failed/ambiguous guard means zero promotion mutation."
+    evidence_required: "Compact stage/result evidence and exact post-promotion main identity."
+  - id: AC-5
+    requirement: "main equals ac2f213095e339dafa96825d89a6f6de164792bc after promotion; only TASK-0035 report evidence is then published on dev; topology remains {dev, main}."
+    evidence_required: "Fresh remote refs/topology, exact report commit, and final local hygiene."
+  - id: AC-6
+    requirement: "If both existing-schema timing boundaries are truthfully available, operational_timing records only started_at_utc and terminal_decision_at_utc and is not used as correctness evidence."
+    evidence_required: "Optional existing-schema timing block or truthful omission."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Fresh-resolve exact task/base, TASK-0034 accepted evidence, current authority/ref/topology/capability truth, and exact predicate applicability in this fresh binding."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Reuse unchanged accepted TASK-0034 correctness evidence; do not rerun producers absent a named invalidated/new predicate."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Run one bounded consequence bundle: fresh refs/topology/ancestry/identity guard; if all pass, exact non-force push candidate to refs/heads/main; fresh-prove main equals candidate; return compact JOIN."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Publish compact TASK-0035 report on dev, then freshly prove final dev/main/topology and close local hygiene."
+      required: true
+
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: true
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
