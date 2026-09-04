@@ -1,0 +1,51 @@
+protocol_version: 3
+
+task_id: TASK-0038
+task_revision: 1
+review_revision: 1
+state: ACCEPTED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0038/report.yaml
+  commit: "9ee5c5c684097ae289a9a20bca3aa3bd702ace1e"
+  report_revision: 1
+
+independence:
+  reviewer_role: ARCHITECT
+  exact_report_identity_verified: true
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: PASS
+  verifier_evidence: NOT_REQUIRED
+
+accepted_candidate:
+  commit: "11a5720adf96555bfe4187067d8dd51627ec8676"
+  role: "accepted deterministic execution-bundling semantics promoted to agent-skills/main"
+
+acceptance_basis:
+  - "Fresh review-boundary GitHub observation proved dev=9ee5c5c684097ae289a9a20bca3aa3bd702ace1e, main=11a5720adf96555bfe4187067d8dd51627ec8676, topology exactly {dev, main}."
+  - "Exact TASK-0038 report identity was resolved at 9ee5c5c684097ae289a9a20bca3aa3bd702ace1e; the commit adds only .agent/tasks/TASK-0038/report.yaml on dev."
+  - "TASK-0038 freshly re-resolved TASK-0037 accepted review/report/candidate evidence, confirmed predicate applicability, and correctly reused immutable validator, 116-test, diff-check, scope, semantic-invariant, and forbidden-surface evidence without rerunning acceptance-equivalent producers."
+  - "The promotion consequence was strict non-force and exact: main moved from ac2f213095e339dafa96825d89a6f6de164792bc to 11a5720adf96555bfe4187067d8dd51627ec8676 with fresh pre-guard and post-proof."
+  - "AC-5/CHECK-4 are correctly NOT_PROVEN inside the self-containing report; exact report publication and final remote closure are independently proven at this review boundary."
+
+promotion_readiness:
+  eligible_for_candidate_capture: true
+  reason: >-
+    agent-skills/main now carries the accepted deterministic-bundling semantics. Ecosystem activation is still not implied;
+    architect-profile authority-lock update and later main activation remain separate explicitly governed phases.
+
+follow_up_tasks:
+  - "Update architect-profile authority.lock on dev to pin agent-skills@11a5720adf96555bfe4187067d8dd51627ec8676, verify the profile candidate, review it, then activate through architect-profile/main before cross-repository latency pilot."
+
+notes:
+  - "Do not treat agent-skills/main movement alone as ecosystem activation."
+  - "The first natural cross-repository pilot should occur only after architect-profile/main activates the new lockset."
