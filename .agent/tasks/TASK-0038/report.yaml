@@ -1,0 +1,152 @@
+protocol_version: 3
+
+task_id: TASK-0038
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0038/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "7c162afda06687169f8c3a94156b9539b8744e2f"
+  final_execution_head: "7c162afda06687169f8c3a94156b9539b8744e2f"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "ac2f213095e339dafa96825d89a6f6de164792bc"
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  available:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  missing: []
+  passed: true
+  evidence: >-
+    CODEX_LOCAL resolved the exact repository/task/base binding, fresh canonical refs, current promotion authority,
+    local commit capability, and report push capability. An exact non-mutating push dry-run for the report target
+    passed immediately before report authorship; no later release or ecosystem-activation capability was required.
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_REQUIRED
+  evidence: "TASK-0038 designates no separate authoritative verifier."
+
+pushed: true
+promoted_to_main: true
+
+reused_evidence:
+  accepted_review:
+    commit: "c230c260de1dd39ac8ce9545e2f5b3647a43a43e"
+    path: .agent/tasks/TASK-0037/review.yaml
+    state: ACCEPTED
+  reviewed_report:
+    commit: "1bb6e855a78c5cfedaa361b1bd5ccbd922612003"
+    path: .agent/tasks/TASK-0037/report.yaml
+    report_revision: 1
+  accepted_candidate:
+    commit: "11a5720adf96555bfe4187067d8dd51627ec8676"
+    parent: "33a8473dc2918139843de468212ea815b8f51d2b"
+  prior_correctness_proofs:
+    - "repository validator PASS"
+    - "116/116 unittest PASS"
+    - "git diff --check PASS"
+    - "exact scope/lineage guards PASS"
+    - "semantic-invariant and forbidden-surface guards PASS"
+  applicability: >-
+    Fresh binding re-resolved the exact accepted TASK-0037 review/report/candidate identities. The candidate bytes,
+    protocol/Executor semantics, validator/tests, relevant dependencies, and accepted predicates remain unchanged;
+    the current task adds only promotion and report-publication predicates. Therefore the prior immutable correctness
+    evidence remains applicable. Only current refs, topology, ancestry, promotion/report capabilities, and publication
+    proof required fresh evidence; no acceptance-equivalent correctness producer was rerun.
+
+newly_run_proofs:
+  - >-
+    Fresh canonical reads proved architect-profile/main@0f13d7a036d7c866baa66751067cc2aaf49dd849, target dev at
+    7c162afda06687169f8c3a94156b9539b8744e2f, target main at
+    ac2f213095e339dafa96825d89a6f6de164792bc, and topology exactly {dev, main} before promotion.
+  - >-
+    Exact immutable lineage inspection proved old main ac2f213095e339dafa96825d89a6f6de164792bc is an ancestor of
+    accepted candidate 11a5720adf96555bfe4187067d8dd51627ec8676, whose parent and source identity are unchanged.
+  - >-
+    One bounded deterministic promotion JOIN returned PASS across fresh guard, current non-mutating promotion
+    capability, fresh pre-mutation ref refresh, strict non-force push of the exact candidate to refs/heads/main,
+    and fresh post-proof showing main equals the candidate while dev remains unchanged.
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: >-
+      Fresh binding resolved TASK-0037 review c230c260de1dd39ac8ce9545e2f5b3647a43a43e, report
+      1bb6e855a78c5cfedaa361b1bd5ccbd922612003, and accepted candidate
+      11a5720adf96555bfe4187067d8dd51627ec8676. The applicability record confirms prior immutable correctness
+      evidence covers the current promotion predicates under unchanged candidate semantics and dependencies.
+  - criterion_id: AC-2
+    status: PASS
+    evidence: >-
+      No TASK-0037 validator, unittest, diff-check, scope, semantic, or forbidden-surface producer was rerun.
+      Reused evidence is listed above; newly executed evidence was limited to fresh identity, refs/topology,
+      ancestry, capability, promotion, and post-publication proofs required by this task.
+  - criterion_id: AC-3
+    status: PASS
+    evidence: >-
+      Immediately before promotion, fresh refs proved dev=
+      7c162afda06687169f8c3a94156b9539b8744e2f, main=
+      ac2f213095e339dafa96825d89a6f6de164792bc, topology exactly {dev, main}, and old main was an ancestor of
+      11a5720adf96555bfe4187067d8dd51627ec8676. The exact non-mutating push dry-run passed.
+  - criterion_id: AC-4
+    status: PASS
+    evidence: >-
+      One bounded promotion consequence returned JOIN status=0 with ordered fresh guard, exact strict non-force
+      push, and fresh post-proof. Post-proof showed refs/heads/main exactly at
+      11a5720adf96555bfe4187067d8dd51627ec8676; no force push or substitute candidate was used.
+  - criterion_id: AC-5
+    status: NOT_PROVEN
+    evidence: >-
+      Promotion is proven and main equals the exact candidate while dev remains the task base before report
+      authorship. This report-only child publication and final fresh dev/main/topology plus local managed-mirror
+      closure occur after report content is committed and are intentionally not self-attested.
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: >-
+      Fresh resolution proved exact TASK-0038 revision/base, TASK-0037 accepted review/report/candidate identities,
+      architect-profile authority, target identity, current refs/topology, candidate ancestry, and required
+      promotion/report execution capabilities.
+  - check_id: CHECK-2
+    result: PASS
+    evidence: >-
+      Accepted TASK-0037 correctness evidence was freshly re-resolved and its predicate applicability was confirmed;
+      no acceptance-equivalent correctness producer was rerun absent an invalidated or newly required predicate.
+  - check_id: CHECK-3
+    result: PASS
+    evidence: >-
+      The bounded promotion JOIN proved fresh guard, current capability, exact strict non-force main ref movement,
+      and exact post-promotion main identity with dev/topology preservation.
+  - check_id: CHECK-4
+    result: NOT_PROVEN
+    evidence: >-
+      Promotion and its post-proof are complete. Report-only child publication and final fresh remote/local closure
+      are post-report facts and will be resolved after this report commit rather than self-attested here.
+
+result: NEEDS_REVIEW
