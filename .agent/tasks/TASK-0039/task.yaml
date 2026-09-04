@@ -1,0 +1,200 @@
+protocol_version: 3
+
+task_id: TASK-0039
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: architect_review
+  task_id: TASK-0013
+  gap_id: "EXECUTION_BUNDLE_REALIZATION_AGENT_RUNTIME"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "11a5720adf96555bfe4187067d8dd51627ec8676"
+
+architect_analysis_skills: []
+
+execution_skills:
+  required:
+    - executor
+    - verification
+    - simplicity
+    - github-workflow
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "architect-profile/main@b7753ba37abe193c8801ac26302ecff7bbb35604"
+    role: "current active ecosystem authority set"
+    precedence: 1
+  - source: "agent-standards/.agent/tasks/TASK-0013/review.yaml@9dcb0ff9716ddf859f29485a207fc172742ec427"
+    role: "fresh natural-pilot Architect adjudication proving deterministic-bundle realization failure"
+    precedence: 2
+  - source: "agent-standards/.agent/tasks/TASK-0013/report.yaml@095695f110fc19e0892dd31e3079e34b9eac148a"
+    role: "natural CHATGPT_LOCAL execution-shape evidence: 22 post-binding terminal_exec calls and AC-4/CHECK-2/CHECK-4 FAIL"
+    precedence: 3
+  - source: "agent-skills/executor/SKILL.md@11a5720adf96555bfe4187067d8dd51627ec8676"
+    role: "current active Executor bundle semantics"
+    precedence: 4
+
+structure_authority:
+  status: RESOLVED
+  source: "existing executor/SKILL.md Execution bundles section"
+  rationale: >-
+    The protocol already defines EXECUTION BUNDLE as one bounded local/runtime invocation. The reproduced defect is
+    Executor-side operational realization on Agent Runtime: one logical bundle was still fragmented into many terminal_exec
+    calls. The smallest correction belongs only in the existing Executor bundle section; no protocol, runtime API,
+    scheduler, task schema, or new artifact class is required.
+
+objective: >-
+  Make Agent Runtime realization of an existing EXECUTION BUNDLE mechanically unambiguous so one logical bounded
+  deterministic bundle maps to one actual terminal_exec invocation containing its already-derived inner jobs, rather than
+  one terminal_exec per job, while preserving every semantic return, authority, consequence-refresh, failure, publication,
+  evidence-attribution, and lifecycle boundary.
+
+scope:
+  required_changes:
+    - >-
+      Update only executor/SKILL.md so when Agent Runtime is the selected local transport, one logical EXECUTION BUNDLE
+      MUST be carried by exactly one terminal_exec invocation. The invocation may execute multiple ordered serial jobs and
+      safe-parallel subsets internally and must return one compact attributable JOIN covering every included job.
+    - >-
+      State explicitly that issuing one terminal_exec per mechanically derivable check/job and returning to the
+      model/controller after each result is not an EXECUTION BUNDLE and is non-compliant when no permitted semantic return
+      condition exists between those jobs.
+    - >-
+      Require Executor to derive the bounded job set, ordering, guards, stop-on-failure behavior, and compact JOIN shape
+      before invoking the bundle. Existing repository-owned verifiers should be reused when they cover jobs; otherwise a
+      bounded one-shot command/script may compose existing deterministic commands without becoming durable orchestration.
+    - >-
+      Permit a logical deterministic suffix to be split into more than one Agent Runtime invocation only at an existing
+      semantic/authority/capability/failure/terminal boundary or when one invocation cannot safely and truthfully carry the
+      jobs because of a concrete bounded execution limit such as timeout, output bound, command-size/tool limitation, or a
+      genuinely interactive/long-running requirement. Any such split must have a named reason; convenience or desire to
+      inspect each successful result is insufficient.
+    - >-
+      Preserve terminal_start/terminal_poll/terminal_control only for genuinely interactive or long-running work and keep
+      all current safe-parallel, serial mutation, consequence-refresh, partial-state, no-self-retry, and JOIN attribution rules.
+    - >-
+      Publish the exact semantic candidate and compact report-only child on dev. Do not promote main in this task; a later
+      accepted promotion and architect-profile activation are required before the correction is ecosystem-active.
+  allowed_existing_files_or_components:
+    - "executor/SKILL.md"
+    - ".agent/tasks/TASK-0039/report.yaml"
+
+invariants:
+  - "Task Protocol semantics remain unchanged: this task clarifies Executor realization of the already-defined one-invocation bundle contract."
+  - "No semantic judgment boundary is removed, automated, or hidden inside a deterministic bundle."
+  - "Fresh LOCAL_MUTABLE, REMOTE_MUTABLE, and RUNTIME evidence remains mandatory at the consequence boundary that depends on it."
+  - "Bundle failure or ambiguous postcondition stops the remaining suffix, preserves truthful partial state, and returns attributable failure evidence without self-retry or self-chosen recovery."
+  - "Commit, push, report publication, promotion, release, Architect review, authoritative verification, and continuation retain independent authority and required evidence even when already-authorized deterministic jobs are serialized inside one invocation."
+  - "No Agent Runtime API, runtime intelligence, transaction/rollback guarantee, scheduler, queue, daemon, cache, registry, workflow engine, or persistent execution-plan artifact is added."
+  - "Topology remains exactly {dev, main}; main remains unchanged."
+
+forbidden_changes:
+  - "Do not modify protocols/TASK_PROTOCOL.md, verification, github-workflow, simplicity, architect, Case Router, model policy, task/report schema, or Agent Runtime."
+  - "Do not add bundle_exec, run_repo_phase, apply_repo_bundle, DAG scheduling, programmatic-tool framework, worktree transaction framework, queue, daemon, cache, registry, database, or telemetry framework."
+  - "Do not weaken mutable-evidence refresh, fail-closed behavior, per-job JOIN attribution, Git/publication proof, or lifecycle separation to reduce tool-call count."
+  - "Do not require arbitrary rollback of partial local mutation; truthful stop-and-report semantics remain authoritative."
+  - "Do not create/delete/rename branches, tags, releases, repository settings, or promote main."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: >-
+      Executor skill states unambiguously that one logical EXECUTION BUNDLE on Agent Runtime maps to exactly one
+      terminal_exec invocation and that one-terminal_exec-per-job micro-orchestration is non-compliant absent a permitted
+      semantic return condition.
+    evidence_required: "Exact diff and targeted semantic inspection."
+  - id: AC-2
+    requirement: >-
+      Executor skill requires pre-derivation of included jobs/order/guards/stop behavior/JOIN and permits split invocations
+      only for named existing semantic boundaries or concrete bounded-execution limitations, never convenience rereads.
+    evidence_required: "Exact diff plus invariant audit."
+  - id: AC-3
+    requirement: >-
+      Existing safe-parallel, serial mutation, consequence-refresh, failure, partial-state, evidence-attribution, authority,
+      and lifecycle rules remain intact; no new runtime/orchestration surface is introduced.
+    evidence_required: "Scope/forbidden-surface inspection plus current Agent Runtime four-tool identity proof."
+  - id: AC-4
+    requirement: >-
+      Existing agent-skills validation and tests remain green and git diff --check passes; exact candidate changes only
+      executor/SKILL.md.
+    evidence_required: "python3 scripts/validate_skill_library.py, 116-test suite, git diff --check, exact changed-path proof."
+  - id: AC-5
+    requirement: >-
+      Exact candidate and report-only child are published on dev; main is unchanged and topology remains {dev, main}.
+    evidence_required: "Candidate/report identities and fresh remote refs/topology."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: >-
+        Fresh-resolve exact task/base, active authority set, TASK-0013 failed-pilot review/report, current Executor bundle
+        bytes, Agent Runtime four-tool surface identity, dev/main refs/topology, and required execution capabilities.
+      required: true
+    - id: CHECK-2
+      command_or_check: >-
+        Apply only the authorized Executor operational-realization correction and inspect exact diff for unambiguous
+        one-logical-bundle -> one-terminal_exec semantics, named split reasons, and preserved safety/lifecycle boundaries.
+      required: true
+    - id: CHECK-3
+      command_or_check: >-
+        Run python3 scripts/validate_skill_library.py, python3 -m unittest scripts/test_validate_skill_library.py,
+        git diff --check, exact changed-file guard, and forbidden-surface guard in the smallest bounded deterministic shape.
+      required: true
+    - id: CHECK-4
+      command_or_check: >-
+        Publish exact candidate and report-only child on dev, then freshly prove final dev/main/topology and local hygiene;
+        do not self-attest report publication before post-push observation.
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+blocking_decisions: []
+execution_ready: true
