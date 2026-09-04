@@ -1,0 +1,164 @@
+protocol_version: 3
+
+task_id: TASK-0035
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0035/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "c9c8bd4c6b6db1785e295b0f1420791933088065"
+  final_execution_head: "c9c8bd4c6b6db1785e295b0f1420791933088065"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "c4d6d4e7e7ecde58444d8da7bd5e26f8735562a3"
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  available:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  missing: []
+  passed: true
+  evidence: >-
+    Agent Runtime resolved the exact repository/binding and immutable evidence, current remote refs/topology
+    were readable, Git commit identity was configured, and an exact non-mutating push dry-run immediately
+    before promotion proved current promotion capability.
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_REQUIRED
+  evidence: >-
+    TASK-0035 requires fresh consequence-sensitive promotion proofs while reusing accepted immutable
+    TASK-0034 correctness evidence; no separate authoritative verifier is designated.
+
+pushed: true
+promoted_to_main: true
+
+reused_evidence:
+  accepted_review:
+    commit: "30337e27859bf6dab81a4353ea3ef48a7d58d997"
+    path: .agent/tasks/TASK-0034/review.yaml
+    state: ACCEPTED
+  reviewed_report:
+    commit: "f7f58a4fd08f0d0e03407517961cd43bbcdd6559"
+    path: .agent/tasks/TASK-0034/report.yaml
+    report_revision: 1
+  accepted_candidate:
+    commit: "ac2f213095e339dafa96825d89a6f6de164792bc"
+    parent: "698ff140754b56daf6c77193e08d91d3654794ad"
+  prior_correctness_proofs:
+    - "validator PASS"
+    - "unittest 116/116 PASS"
+    - "py_compile PASS"
+    - "git diff --check PASS"
+    - "scope/forbidden guards PASS"
+    - "positive/negative fresh-binding evidence-reuse counterfactuals PASS"
+  applicability: >-
+    Fresh binding re-resolved the exact accepted review, reviewed report, and accepted candidate identities.
+    The accepted candidate still changes only protocols/TASK_PROTOCOL.md and architect/SKILL.md from its exact
+    base, with no dependency, runtime, validator, test, taxonomy, branch-policy, continuation, registry, cache,
+    scheduler, service, or other correctness surface added. The accepted evidence directly covers the semantic
+    closure and counterfactual predicates required by TASK-0035, and the current task introduces no new or changed
+    acceptance-equivalent correctness predicate. Therefore the immutable correctness evidence remains applicable;
+    only current refs/topology/ancestry/capability and post-promotion remote identity required fresh proof.
+
+newly_run_proofs:
+  - >-
+    Read-only immutable lineage inspection proved candidate
+    ac2f213095e339dafa96825d89a6f6de164792bc has sole parent
+    698ff140754b56daf6c77193e08d91d3654794ad and its exact base-to-candidate file set is only
+    architect/SKILL.md plus protocols/TASK_PROTOCOL.md.
+  - >-
+    One bounded serial consequence invocation freshly proved pre-promotion remote dev at
+    c9c8bd4c6b6db1785e295b0f1420791933088065, main at
+    c4d6d4e7e7ecde58444d8da7bd5e26f8735562a3, topology exactly {dev, main}, old-main ancestry,
+    candidate reachability/identity, and current push capability; it then non-force pushed the exact candidate
+    to refs/heads/main and freshly proved post-promotion main at
+    ac2f213095e339dafa96825d89a6f6de164792bc with dev unchanged and topology still {dev, main}.
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: >-
+      Exact TASK-0034 review/report/candidate identities were freshly re-resolved. Prior validator, 116-test,
+      py_compile, diff-check, scope, and counterfactual evidence covers the currently required semantic-closure
+      predicates and remains applicable under unchanged relevant dependencies and current task semantics.
+  - criterion_id: AC-2
+    status: PASS
+    evidence: >-
+      No acceptance-equivalent validator, 116-test, py_compile, or git diff --check producer was rerun.
+      Only immutable identity/lineage/file-set inspection and consequence-sensitive remote/capability proofs ran.
+  - criterion_id: AC-3
+    status: PASS
+    evidence: >-
+      Immediately before mutation, main was exactly c4d6d4e7e7ecde58444d8da7bd5e26f8735562a3,
+      dev was exactly c9c8bd4c6b6db1785e295b0f1420791933088065, topology was exactly {dev, main}, old main
+      was an ancestor of the exact accepted candidate, candidate lineage matched its accepted identity, and the
+      exact non-mutating push dry-run passed.
+  - criterion_id: AC-4
+    status: PASS
+    evidence: >-
+      One bounded deterministic serial consequence invocation returned JOIN PASS across fresh guard, exact
+      non-force promotion, and fresh remote post-proof. No merge, cherry-pick, rebase, force push, or substitute
+      candidate was used.
+  - criterion_id: AC-5
+    status: NOT_PROVEN
+    evidence: >-
+      Promotion itself is proven: main equals ac2f213095e339dafa96825d89a6f6de164792bc and topology is
+      {dev, main}. This report commit/publication plus final remote/local closure occur after this report content is
+      committed and are intentionally not predicted as same-commit PASS.
+  - criterion_id: AC-6
+    status: NOT_APPLICABLE
+    evidence: >-
+      The required started_at_utc boundary was not truthfully captured at the protocol-defined point, so the
+      optional operational_timing block is omitted rather than reconstructed or approximated.
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: >-
+      Exact task/base, pinned skills, architect-profile authority identity, accepted TASK-0034 evidence,
+      candidate lineage/file set, and current promotion-sensitive truth were freshly resolved for this binding.
+  - check_id: CHECK-2
+    result: PASS
+    evidence: >-
+      Accepted immutable correctness evidence was reused with explicit current-predicate applicability; no
+      acceptance-equivalent producer was rerun because no invalidated/new correctness predicate was found.
+  - check_id: CHECK-3
+    result: PASS
+    evidence: >-
+      Single consequence bundle returned JOIN PASS and freshly proved main equals the exact accepted candidate.
+  - check_id: CHECK-4
+    result: NOT_PROVEN
+    evidence: >-
+      Report commit/publication and final remote/local closure are post-report facts and will be freshly proved
+      after this report commit rather than self-attested in the report.
+
+discovered_gaps: []
+structural_observations: []
+deviations_from_task: []
+blockers: []
+
+result: NEEDS_REVIEW
