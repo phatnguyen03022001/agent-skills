@@ -1,0 +1,38 @@
+protocol_version: 3
+
+task_id: TASK-0029
+task_revision: 1
+review_revision: 1
+state: ACCEPTED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0029/report.yaml
+  commit: "49c8a143c2b3be037756594b0a9a3edb3bd8b82c"
+  report_revision: 1
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: PASS
+  verifier_evidence: NOT_REQUIRED
+
+accepted_candidate:
+  commit: "67f2c17e092a6f490de5c90f4ca1363c5cadd03a"
+  role: "accepted sparse protocol-v3 serialization candidate"
+
+follow_up_tasks:
+  - task_id: TASK-0030
+    purpose: "Reduce execution/control-plane synchronization while preserving assurance predicates; formalize evidence validity/invalidation and bounded deterministic execution bundles."
+
+notes:
+  - "Fresh GitHub review independently proves dev=49c8a143c2b3be037756594b0a9a3edb3bd8b82c, main=4a063c41f429207577434600a3571dc17822cd78, topology exactly {dev, main}, and report commit parent=67f2c17e092a6f490de5c90f4ca1363c5cadd03a with report-only diff."
+  - "Base-to-candidate diff is exactly the ten authorized existing paths; Case Router blob ae94a6603581f499b2441b19abe9fd44ea986327 is byte-identical between base and candidate."
+  - "TASK-0029 materially meets its >=40% gates: canonical templates reduce 50.84% and the six-episode pilot median is 55.68%, with reported focused/full compatibility verification green."
+  - "The report leaves CHECK-7 as PENDING_FINAL_REFRESH because report publication closure is self-referential. Fresh review closes the GitHub-visible remote half; TASK-0030 must remove this ambiguity by assigning post-publication remote/local evidence to explicit validity classes and consequence boundaries rather than treating the pending marker as durable PASS."
+  - "This acceptance does not promote agent-skills/main and does not activate the candidate ecosystem-wide."
