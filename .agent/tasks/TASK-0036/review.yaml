@@ -1,0 +1,57 @@
+protocol_version: 3
+
+task_id: TASK-0036
+task_revision: 1
+review_revision: 1
+state: ACCEPTED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0036/report.yaml
+  commit: "8ec6c742b4028fa90fbc04c9dde80ccf394dd56b"
+  report_revision: 1
+
+independence:
+  reviewer_role: ARCHITECT
+  exact_report_identity_verified: true
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: PASS
+  verifier_evidence: NOT_REQUIRED
+
+accepted_candidate:
+  commit: "452ca48454e4a2653643b3f2f23aa332198f4236"
+  role: "agent-skills root .gitignore hygiene candidate"
+
+acceptance_basis:
+  - "Fresh review-boundary GitHub observation proved dev=8ec6c742b4028fa90fbc04c9dde80ccf394dd56b, main=ac2f213095e339dafa96825d89a6f6de164792bc, topology exactly {dev, main}."
+  - "Exact base-to-candidate comparison proved 452ca48454e4a2653643b3f2f23aa332198f4236 is one direct child of 3bc831696949ef4cacfc7896dbccd7e19e96fff5 and adds only root .gitignore with 15 lines."
+  - "Exact candidate-to-report comparison proved 8ec6c742b4028fa90fbc04c9dde80ccf394dd56b is one direct child of the candidate and adds only .agent/tasks/TASK-0036/report.yaml."
+  - "Canonical report records empty git ls-files -ci --exclude-standard output, positive/negative check-ignore coverage including .codex/environments/environment.toml without ignoring all .codex, repository validator PASS, 116/116 unittest PASS, and git diff --check PASS."
+  - "Operator-owned .DS_Store and .codex/environments/environment.toml were preserved and not read, modified, or deleted; no cleanup was used to manufacture a clean tracked state."
+  - "AC-5/CHECK-3 are correctly NOT_PROVEN inside the self-containing report; exact report publication and final remote closure are independently proven at review boundary."
+
+promotion_readiness:
+  eligible_for_candidate_capture: false
+  reason: "TASK-0036 is a bounded hygiene change on dev only. No main promotion is implied by this review; any promotion requires separate explicit authority."
+
+latency_observation:
+  operator_e2e: "9m52s"
+  evidentiary_status: "OBSERVED_NOT_ATTRIBUTED"
+  note: >-
+    This natural CHATGPT_LOCAL execution used the activated instrumented Agent Runtime. The end-to-end duration is materially
+    consistent with the previously observed multi-minute floor, but the duration alone does not identify runtime, tunnel,
+    controller/model, or post-runtime contributions. Runtime/tunnel timing logs are required before attribution.
+
+follow_up_tasks: []
+
+notes:
+  - "Do not redesign Agent Runtime or workflow from the 9m52s duration alone. Correlate the runtime timing JSON with the tunnel dispatch log first."
+  - "A separate agent-runtime verify CLI defect remains deferred: bare ./verify currently uses ambient python3 instead of the repo-local .venv when PYTHON is unset; PYTHON=.venv/bin/python ./verify passes."
