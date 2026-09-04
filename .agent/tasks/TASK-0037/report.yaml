@@ -1,0 +1,118 @@
+protocol_version: 3
+
+task_id: TASK-0037
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0037/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "33a8473dc2918139843de468212ea815b8f51d2b"
+  final_execution_head: "11a5720adf96555bfe4187067d8dd51627ec8676"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "ac2f213095e339dafa96825d89a6f6de164792bc"
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  available:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  missing: []
+  passed: true
+  evidence: >-
+    CODEX_LOCAL resolved the exact target repository, task/base binding, current authority, repository-native
+    verification surface, Git commit capability, and remote read/push capability. Fresh Agent Runtime authority
+    proof at agent-runtime/dev@8f56cb2f270136da357ddb17badfbe01a36291b5 resolved exactly
+    terminal_exec, terminal_start, terminal_poll, and terminal_control; its pinned README identifies terminal_exec
+    as the preferred one-shot primitive.
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_REQUIRED
+  evidence: "TASK-0037 designates no separate authoritative verifier."
+
+pushed: true
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: >-
+      The protocol now distinguishes consequence-boundary evidence refresh from model/runtime synchronization and
+      requires Executor to execute the maximal contiguous mechanically derivable suffix as one bounded EXECUTION
+      BUNDLE after semantic choices, current authority, and current-phase capabilities are resolved.
+  - criterion_id: AC-2
+    status: PASS
+    evidence: >-
+      The protocol enumerates new material information, contradiction or ambiguous/invalidated evidence, missing or
+      invalidated authority/capability, semantic gaps requiring judgment, failed or ambiguous postconditions, and
+      terminal lifecycle results as control-return conditions. It preserves mutable-evidence refresh, attributable
+      JOIN failure handling, independent authority/postconditions, and lifecycle separation.
+  - criterion_id: AC-3
+    status: PASS
+    evidence: >-
+      executor/SKILL.md requires the same maximal deterministic bundling rule, preserves safe-parallel/serial
+      mutation constraints, and selects terminal_exec for bounded non-interactive Agent Runtime bundles while
+      reserving terminal_start/terminal_poll/terminal_control for genuinely interactive or long-running work.
+      Exact Agent Runtime dev SHA 8f56cb2f270136da357ddb17badfbe01a36291b5 exposes only the four named tools.
+  - criterion_id: AC-4
+    status: PASS
+    evidence: >-
+      python3 scripts/validate_skill_library.py passed; python3 -m unittest scripts/test_validate_skill_library.py
+      passed 116/116 tests; git diff --check passed. Exact base-to-candidate inspection proved one direct child
+      commit changing only protocols/TASK_PROTOCOL.md and executor/SKILL.md, with no runtime/API or unrelated
+      tracked-file change.
+  - criterion_id: AC-5
+    status: NOT_PROVEN
+    evidence: >-
+      Before report authorship, fresh remote proof showed dev at the exact candidate
+      11a5720adf96555bfe4187067d8dd51627ec8676, main unchanged at
+      ac2f213095e339dafa96825d89a6f6de164792bc, and topology exactly {dev, main}. This report commit/publication
+      and final local closure occur after report content is committed and are intentionally not self-attested.
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: >-
+      Fresh resolution proved the exact TASK-0037 revision/base, target remote identity, pinned skill revision,
+      architect-profile/main@0f13d7a036d7c866baa66751067cc2aaf49dd849, Agent Runtime dev@8f56cb2f270136da357ddb17badfbe01a36291b5
+      four-tool surface, dev/main topology, and required execution capabilities before mutation.
+  - check_id: CHECK-2
+    result: PASS
+    evidence: >-
+      Exact diff inspection proved only the authorized Task Protocol and Executor semantic correction was applied;
+      no new runtime surface, orchestration abstraction, scheduler, queue, cache, or lifecycle authority was added.
+  - check_id: CHECK-3
+    result: PASS
+    evidence: >-
+      One bounded verification JOIN returned PASS for the repository validator, 116-test unittest suite, diff-check,
+      exact base/scope guard, and semantic/forbidden-surface guard.
+  - check_id: CHECK-4
+    result: NOT_PROVEN
+    evidence: >-
+      The exact candidate publication and fresh post-push dev/main/topology proof are complete. Report-only child
+      publication plus final fresh remote/local closure are post-report facts and will be resolved after this report
+      commit rather than self-attested here.
+
+result: NEEDS_REVIEW
