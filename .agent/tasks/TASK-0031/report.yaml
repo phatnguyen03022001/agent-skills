@@ -1,0 +1,140 @@
+protocol_version: 3
+
+task_id: TASK-0031
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0031/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "52664288170439dcd5e05ef80c3e6e762ec0a6bc"
+  pre_execution_head: "52664288170439dcd5e05ef80c3e6e762ec0a6bc"
+  final_execution_head: "db03b97b5c42c9c64ad8dce76bc694530e41a206"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "4a063c41f429207577434600a3571dc17822cd78"
+
+execution_skills_used:
+  required:
+    - executor
+    - github-workflow
+    - verification
+    - simplicity
+  recommended: []
+  external:
+    - superpowers:using-superpowers
+    - superpowers:executing-plans
+    - superpowers:verification-before-completion
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - repository_content_read
+    - repository_content_write
+    - git_history_read
+    - git_push
+    - remote_ref_read
+    - native_repository_execution
+  available:
+    - repository_content_read
+    - repository_content_write
+    - git_history_read
+    - git_push
+    - remote_ref_read
+    - native_repository_execution
+  missing: []
+  passed: true
+  evidence: >-
+    Agent Runtime provided native repository execution and exact local Git evidence; repository
+    write/author identity was available; fresh git ls-remote resolved exact remote refs/topology;
+    and a non-mutating non-force push dry-run succeeded immediately before promotion.
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_REQUIRED
+  evidence: >-
+    TASK-0031 requires one repository-native deterministic EXECUTION BUNDLE and no separate
+    authoritative verifier.
+
+pushed: true
+promoted_to_main: true
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: >-
+      Immutable TASK-0030 review a2366adbf396f1cc1a7700ddce19a5977cdca911 was resolved directly
+      and is ACCEPTED. It names exact accepted candidate
+      db03b97b5c42c9c64ad8dce76bc694530e41a206 and stable main
+      4a063c41f429207577434600a3571dc17822cd78.
+  - criterion_id: AC-2
+    status: PASS
+    evidence: >-
+      Immediately before promotion, fresh remote proof showed topology exactly {dev, main},
+      dev=52664288170439dcd5e05ef80c3e6e762ec0a6bc, and
+      main=4a063c41f429207577434600a3571dc17822cd78. Candidate identity was unchanged and
+      git merge-base --is-ancestor proved stable main is an ancestor of the candidate.
+  - criterion_id: AC-3
+    status: PASS
+    evidence: >-
+      One bounded deterministic EXECUTION BUNDLE over an archive of the exact candidate passed:
+      validator PASS; full unittest 116/116 PASS; changed-Python py_compile PASS; git diff
+      --check PASS; Case Router blob ae94a6603581f499b2441b19abe9fd44ea986327 unchanged;
+      taxonomy exactly 15; exact candidate identity and exact eight changed paths PASS.
+  - criterion_id: AC-4
+    status: PASS
+    evidence: >-
+      main was pushed non-force by exact SHA refspec from
+      4a063c41f429207577434600a3571dc17822cd78 to
+      db03b97b5c42c9c64ad8dce76bc694530e41a206. Fresh post-promotion remote proof showed
+      main exactly equals the accepted candidate, dev remained at the TASK-0031 planning base,
+      and topology remained exactly {dev, main}.
+  - criterion_id: AC-5
+    status: NOT_PROVEN
+    evidence: >-
+      This report is the only authorized dev content mutation. Its own exact report-child commit,
+      publication on dev, final remote {dev, main} proof, and terminal local hygiene can only be
+      resolved after this report commit/push and are intentionally not predicted by this same-commit artifact.
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: >-
+      Exact TASK-0031 revision 1/base, accepted TASK-0030 review, exact candidate, required pinned
+      skills, repository identity, dev/main topology, local ownership state, current capabilities,
+      and stable-main ancestry were freshly resolved before mutation.
+  - check_id: CHECK-2
+    result: PASS
+    evidence: >-
+      The required single bounded deterministic candidate verification bundle completed with all
+      six attributable checks green and no reusable semantic mutation.
+  - check_id: CHECK-3
+    result: PASS
+    evidence: >-
+      REMOTE_MUTABLE evidence was refreshed immediately before promotion and required exact old
+      main, expected dev/topology, unchanged candidate identity, and valid ancestry.
+  - check_id: CHECK-4
+    result: PASS
+    evidence: >-
+      Exact candidate promotion used a non-force push; an immediate independent remote read proved
+      main=candidate, dev unchanged, and topology exactly {dev, main}.
+  - check_id: CHECK-5
+    result: NOT_PROVEN
+    evidence: >-
+      Report-only commit/push identity and final remote/local closure are post-publication facts and
+      are performed after this report is committed and pushed.
+
+discovered_gaps: []
+structural_observations: []
+deviations_from_task: []
+blockers: []
+
+result: NEEDS_REVIEW
