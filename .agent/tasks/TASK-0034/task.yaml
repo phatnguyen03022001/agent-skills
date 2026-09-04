@@ -1,0 +1,152 @@
+protocol_version: 3
+
+task_id: TASK-0034
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: accepted_follow_up
+  source: ".agent/tasks/TASK-0033/review.yaml@0feabe6f1b5d0c0cde39fb65de3a212173752173"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "db03b97b5c42c9c64ad8dce76bc694530e41a206"
+
+execution_skills:
+  required:
+    - executor
+    - verification
+    - simplicity
+    - github-workflow
+
+authority_sources:
+  - source: "architect-profile/main@116e624b4c17d4949562b4d3f16385bfcf582130"
+    role: "currently active ecosystem authority-set"
+    precedence: 1
+  - source: "agent-skills/main@c4d6d4e7e7ecde58444d8da7bd5e26f8735562a3"
+    role: "stable support revision containing the accepted TASK-0032 evidence-reuse authoring rule"
+    precedence: 2
+  - source: ".agent/tasks/TASK-0033/review.yaml@0feabe6f1b5d0c0cde39fb65de3a212173752173"
+    role: "accepted natural-promotion evidence and bounded correction request"
+    precedence: 3
+
+objective: >-
+  Close the remaining evidence-reuse semantic seam without adding machinery: a fresh task/repository binding
+  must discard cached/context-local resolution assumptions and freshly re-resolve exact prior canonical evidence,
+  while the evidentiary result of that immutable artifact may satisfy the current predicate only when the exact
+  prior evidence actually covers that predicate and the relevant predicate semantics/dependencies remain applicable.
+
+scope:
+  required_changes:
+    - >-
+      Clarify protocols/TASK_PROTOCOL.md so rebinding ends context-local resolution reuse and stale assumptions,
+      but does not by itself erase the evidentiary applicability of a canonically re-resolved immutable prior
+      artifact. In a fresh binding, prior immutable evidence may satisfy a current predicate only after exact
+      artifact identity is freshly re-established and its coverage of the exact current predicate is confirmed.
+    - >-
+      Tighten architect/SKILL.md so the existing immutable-evidence reuse rule explicitly requires prior evidence
+      to cover the exact currently required predicate under still-applicable governing/predicate semantics; same
+      candidate identity alone is never sufficient.
+    - >-
+      Keep all semantics referential to the existing IMMUTABLE/LOCAL_MUTABLE/REMOTE_MUTABLE/RUNTIME validity
+      classes and existing execution-bundle model. Do not create a claim object, EvidenceKey, registry, cache,
+      invalidation matrix artifact, semantic-DAG artifact, new validity class, or persistence mechanism.
+
+allowed_existing_files_or_components:
+  - protocols/TASK_PROTOCOL.md
+  - architect/SKILL.md
+  - .agent/tasks/TASK-0034/report.yaml
+
+invariants:
+  - "Canonical evidence must be freshly re-resolved after rebinding before it is relied on; hidden chat/context cache is never authority."
+  - "Prior immutable evidence is reusable only for predicates it actually proved and that remain semantically applicable."
+  - "Candidate identity drift, prior evidence identity drift, uncovered/new predicate requirements, changed predicate semantics, contradiction, or explicit stronger assurance prevents unrelated prior evidence from being treated as sufficient."
+  - "No finer-grained authority dependency engine is introduced; the current conservative governing-authority guard remains acceptable unless a later measured over-invalidation defect proves otherwise."
+  - "No continuation/lifecycle redesign, runtime change, output-capture change, model-policy change, new CASE, new schema, new service, or new framework is introduced."
+  - "Topology remains exactly {dev, main}; agent-skills/main is not mutated by this task."
+
+forbidden_changes:
+  - "Do not modify executor/SKILL.md, Agent Runtime, validators, tests, templates, contracts, taxonomy, Case Router, model policy, branch policy, or support repositories."
+  - "Do not add doctrine-token validation, evidence registries, claim graphs, invalidation tables/files, caches, databases, schedulers, callbacks, transaction abstractions, or telemetry machinery."
+  - "Do not optimize unrelated authority-set over-invalidation or pre-authorized continuation in this task."
+  - "Do not mutate agent-skills/main or architect-profile."
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  REVIEW:
+    - repository_content_read
+    - repository_content_write
+    - exact_commit_report_resolution
+    - remote_ref_read
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Task Protocol explicitly distinguishes fresh-binding re-resolution from evidentiary applicability of canonical immutable prior evidence."
+    evidence_required: "Exact changed protocol text plus ownership review proving no new validity class/lifecycle/cache semantics."
+  - id: AC-2
+    requirement: "Architect task-authoring semantics explicitly require exact current-predicate coverage before prior immutable evidence may satisfy a new binding; same candidate identity alone is insufficient."
+    evidence_required: "Exact changed architect text mapped to the clarified Task Protocol semantics."
+  - id: AC-3
+    requirement: "Read-only counterfactuals prove both sides: a fresh binding with exact re-resolved prior artifact and unchanged covered predicate may reuse the prior result without rerunning its producer; changed artifact identity or a new/changed uncovered predicate rejects reuse/fails closed or performs only the newly required proof."
+    evidence_required: "Compact positive and negative counterfactual classification in report."
+  - id: AC-4
+    requirement: "The correction remains only semantic closure in Task Protocol + Architect rule and introduces no registry/DAG/cache/matrix/runtime/continuation machinery or unrelated optimization."
+    evidence_required: "Exact base-to-candidate diff and forbidden-surface guard."
+  - id: AC-5
+    requirement: "Repository-native validator/tests, py_compile where applicable, and git diff --check remain green; exact candidate and compact report child are published on dev with main unchanged and topology {dev, main}."
+    evidence_required: "One bounded deterministic verification result plus fresh dev/main/topology proof."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Fresh-resolve exact task/base, active authority-set, stable agent-skills main, repository identity/topology, and current Task Protocol/Architect ownership text."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Apply only the smallest protocol + architect wording needed to close fresh-binding re-resolution and exact-predicate-coverage semantics; prove exact diff and forbidden-surface absence."
+      required: true
+    - id: CHECK-3
+      command_or_check: "In one bounded deterministic verification bundle run repository-native validator/tests, py_compile where applicable, git diff --check, and positive/negative evidence-reuse counterfactual guards."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Publish exact candidate then compact TASK-0034 report child on dev; fresh-prove main unchanged, topology {dev, main}, and final local hygiene."
+      required: true
+
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
