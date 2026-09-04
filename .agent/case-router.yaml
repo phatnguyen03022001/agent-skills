@@ -1,0 +1,4 @@
+cases:
+  - id: EXECUTE
+    capabilities:
+      - executor

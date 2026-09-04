@@ -709,6 +709,140 @@ class ValidatorRegressionTests(unittest.TestCase):
         self.assertIn("Supported protocol version: **3**", protocol)
 
 
+class CaseNavigationTests(unittest.TestCase):
+    CASE_PATH = Path(".agent/case-router.yaml")
+    CANONICAL_CASE = """cases:
+  - id: EXECUTE
+    capabilities:
+      - executor
+"""
+
+    def fixture(self) -> tuple[tempfile.TemporaryDirectory[str], Path]:
+        temp = tempfile.TemporaryDirectory()
+        root = Path(temp.name) / "repo"
+        shutil.copytree(ROOT, root)
+        self.addCleanup(temp.cleanup)
+        return temp, root
+
+    def write_case(self, root: Path, text: str) -> None:
+        path = root / self.CASE_PATH
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+
+    def run_validator(self, root: Path) -> subprocess.CompletedProcess[str]:
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+        original_root = VALIDATOR_MODULE.ROOT
+        try:
+            VALIDATOR_MODULE.ROOT = root
+            with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+                returncode = VALIDATOR_MODULE.main()
+        finally:
+            VALIDATOR_MODULE.ROOT = original_root
+        return subprocess.CompletedProcess(
+            args=["python3", str(root / VALIDATOR)],
+            returncode=returncode,
+            stdout=stdout.getvalue(),
+            stderr=stderr.getvalue(),
+        )
+
+    def assert_case_rejected(self, text: str, expected: str) -> None:
+        _, root = self.fixture()
+        self.write_case(root, text)
+        result = self.run_validator(root)
+        output = result.stdout + result.stderr
+        self.assertNotEqual(result.returncode, 0, output)
+        self.assertIn(expected, output)
+
+    def test_canonical_case_router_has_one_execute_capability_route(self) -> None:
+        _, root = self.fixture()
+        path = root / self.CASE_PATH
+        self.assertTrue(path.is_file(), f"missing canonical case artifact: {self.CASE_PATH}")
+        original_root = VALIDATOR_MODULE.ROOT
+        try:
+            VALIDATOR_MODULE.ROOT = root
+            document = VALIDATOR_MODULE.load_protocol_document(str(self.CASE_PATH))
+        finally:
+            VALIDATOR_MODULE.ROOT = original_root
+        self.assertEqual(
+            document,
+            {"cases": [{"id": "EXECUTE", "capabilities": ["executor"]}]},
+        )
+        result = self.run_validator(root)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_unknown_case_id_fails_closed(self) -> None:
+        self.assert_case_rejected(
+            self.CANONICAL_CASE.replace("EXECUTE", "VERIFY"),
+            "unsupported case id 'VERIFY'",
+        )
+
+    def test_duplicate_case_id_fails_closed(self) -> None:
+        self.assert_case_rejected(
+            self.CANONICAL_CASE.replace(
+                "  - id: EXECUTE\n    capabilities:\n      - executor\n",
+                "  - id: EXECUTE\n    capabilities:\n      - executor\n"
+                "  - id: EXECUTE\n    capabilities:\n      - executor\n",
+            ),
+            "duplicate case id 'EXECUTE'",
+        )
+
+    def test_empty_or_duplicate_capability_load_fails_closed(self) -> None:
+        cases = [
+            (
+                "cases:\n  - id: EXECUTE\n    capabilities: []\n",
+                "path 'cases[0].capabilities' must not be empty",
+            ),
+            (
+                "cases:\n  - id: EXECUTE\n    capabilities:\n      - executor\n      - executor\n",
+                "path 'cases[0].capabilities' must not contain duplicates",
+            ),
+        ]
+        for text, expected in cases:
+            with self.subTest(expected=expected):
+                self.assert_case_rejected(text, expected)
+
+    def test_unknown_and_noncanonical_capability_keys_fail_closed(self) -> None:
+        cases = [
+            (self.CANONICAL_CASE.replace("executor", "unknown"), "unsupported capability key 'unknown'"),
+            (self.CANONICAL_CASE.replace("executor", "Executor"), "invalid capability key 'Executor'"),
+            (self.CANONICAL_CASE.replace("executor", "research"), "EXECUTE must route to exactly ['executor']"),
+        ]
+        for text, expected in cases:
+            with self.subTest(expected=expected):
+                self.assert_case_rejected(text, expected)
+
+    def test_malformed_case_shape_fails_closed(self) -> None:
+        cases = [
+            ("case: EXECUTE\n", "path 'case-router' missing required fields ['cases']"),
+            ("cases: EXECUTE\n", "path 'case-router.cases' must be list"),
+            ("cases:\n  - id: EXECUTE\n", "missing required fields ['capabilities']"),
+            (
+                "cases:\n  - id: EXECUTE\n    capabilities:\n      - executor\n    mode: CODEX_LOCAL\n",
+                "unexpected fields ['mode']",
+            ),
+        ]
+        for text, expected in cases:
+            with self.subTest(expected=expected):
+                self.assert_case_rejected(text, expected)
+
+    def test_binding_specialization_mode_task_state_and_lifecycle_fields_are_rejected(self) -> None:
+        forbidden = (
+            "binding", "specialization", "mode", "task", "state",
+            "next", "retry", "success", "failure", "terminal", "transition",
+        )
+        for field in forbidden:
+            with self.subTest(field=field):
+                text = self.CANONICAL_CASE + f"    {field}: forbidden\n"
+                self.assert_case_rejected(text, f"unexpected fields ['{field}']")
+
+    def test_owner_path_and_sha_fields_are_rejected(self) -> None:
+        for field in ("owner", "path", "sha"):
+            with self.subTest(field=field):
+                text = self.CANONICAL_CASE + f"    {field}: duplicated\n"
+                self.assert_case_rejected(text, f"unexpected fields ['{field}']")
+
+
 class Task0004GovernanceTests(unittest.TestCase):
     def read(self, relative: str) -> str:
         return (ROOT / relative).read_text(encoding="utf-8")

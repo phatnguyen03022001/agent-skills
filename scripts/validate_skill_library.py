@@ -58,6 +58,8 @@ LIFECYCLE_STATES = frozenset({
 PROGRAM_ARTIFACT_TYPE = "GENERATED_PROGRAM"
 PROGRAM_AUTHORITY = "NONE"
 PROGRAM_INVALIDATION = "FULL_REGENERATION_ON_MATERIAL_INPUT_CHANGE"
+CASE_ROUTER_PATH = ".agent/case-router.yaml"
+ADMITTED_CASE_ID = "EXECUTE"
 
 # One normalized semantic model serves both sparse protocol-v3 serialization and
 # explicit expanded-v3 task artifacts.  -1 means that no exact-file count cap is
@@ -394,6 +396,50 @@ def load_json_document(relative_path: str) -> dict[str, Any] | None:
         error(f"{relative_path}: top-level JSON document must be mapping")
         return None
     return document
+
+
+def validate_case_navigation() -> None:
+    label = CASE_ROUTER_PATH
+    document = load_protocol_document(label)
+    if document is None:
+        return
+
+    valid_document = require_mapping_schema(label, document, "case-router", {"cases": list})
+    cases = get_path(document, "cases")
+    if not valid_document or type(cases) is not list:
+        return
+
+    entries = require_mapping_sequence_schema(
+        label,
+        document,
+        "cases",
+        {"id": str, "capabilities": list},
+    )
+    if len(cases) != 1:
+        error(f"{label}: path 'cases' must contain exactly one admitted case")
+
+    seen_case_ids: set[str] = set()
+    for index, entry in entries:
+        case_id = entry["id"]
+        if case_id in seen_case_ids:
+            error(f"{label}: duplicate case id {case_id!r}")
+        seen_case_ids.add(case_id)
+        if case_id != ADMITTED_CASE_ID:
+            error(f"{label}: unsupported case id {case_id!r}")
+
+        capabilities = validate_string_list(
+            label,
+            entry["capabilities"],
+            f"cases[{index}].capabilities",
+            require_non_empty=True,
+        )
+        for capability in capabilities:
+            if not CAPABILITY_RE.fullmatch(capability):
+                error(f"{label}: invalid capability key {capability!r}")
+            elif capability not in EXPECTED_SKILLS or not (ROOT / capability / "SKILL.md").is_file():
+                error(f"{label}: unsupported capability key {capability!r}")
+        if case_id == ADMITTED_CASE_ID and capabilities != ["executor"]:
+            error(f"{label}: EXECUTE must route to exactly ['executor']")
 
 
 _MISSING = object()
@@ -1389,6 +1435,7 @@ def main() -> int:
 
     validate_readme_catalog()
     validate_generated_program_template()
+    validate_case_navigation()
     validate_task_template()
     validate_handoff_template()
     validate_report_template()
