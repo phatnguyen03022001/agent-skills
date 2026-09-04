@@ -1,0 +1,50 @@
+protocol_version: 3
+
+task_id: TASK-0032
+task_revision: 1
+review_revision: 1
+state: ACCEPTED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0032/report.yaml
+  commit: "2e38f47f5694c0d68a9e3562bba93296699c07c6"
+  report_revision: 1
+
+independence:
+  reviewer_role: ARCHITECT
+  exact_report_identity_verified: true
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: PASS
+  verifier_evidence: NOT_REQUIRED
+
+accepted_candidate:
+  commit: "c4d6d4e7e7ecde58444d8da7bd5e26f8735562a3"
+  role: "exact TASK-0032 implementation candidate"
+
+acceptance_basis:
+  - "Exact base-to-candidate diff changes only architect/SKILL.md and adds one concise task-authoring rule; Task Protocol, Executor, validators, runtime, templates, taxonomy, Case Router, model policy, and branch policy are unchanged."
+  - "The rule reuses exact ACCEPTED IMMUTABLE candidate correctness evidence only while candidate, review, and governing authority identities remain unchanged; it refreshes consequence-invalidated mutable/runtime predicates and permits stronger assurance or contradiction to require new proof."
+  - "Negative review counterfactual remains fail-closed: candidate identity drift breaks the reuse precondition, while a newly required/changed correctness predicate constitutes stronger or otherwise newly required assurance and cannot be satisfied by unrelated prior evidence. No claim/evidence registry, invalidation artifact, semantic-DAG artifact, or new validity class is introduced."
+  - "Deterministic proof is explicitly bundle-friendly and may contain ordered serial phases plus safely parallel independent checks while preserving every assurance predicate; this refers to existing Executor execution-bundle semantics rather than redefining them."
+  - "TASK-0021 counterfactual proves the accepted 27-test candidate-correctness evidence would be reused while current refs/topology/ancestry/capability and post-promotion identity remain fresh consequence-boundary proof."
+  - "Repository-native verification is green: validator PASS, 116/116 unittest PASS, py_compile PASS, git diff --check PASS, and the counterfactual PASS in one bounded deterministic verification bundle."
+  - "Fresh review-boundary GitHub observation proves dev=2e38f47f5694c0d68a9e3562bba93296699c07c6, main=db03b97b5c42c9c64ad8dce76bc694530e41a206, topology exactly {dev, main}; the report is a direct report-only child of candidate c4d6d4e7e7ecde58444d8da7bd5e26f8735562a3."
+  - "AC-5/CHECK-4 are correctly NOT_PROVEN inside the self-containing report; report publication and final remote closure are fresh review-boundary evidence, not same-commit predictions."
+
+follow_up_tasks:
+  - task_id: TASK-0033
+    repository: phatnguyen03022001/agent-skills
+    purpose: "Promote the exact accepted TASK-0032 candidate to stable main using existing immutable-evidence reuse and a bounded consequence bundle, then measure the natural promotion behavior without adding telemetry machinery."
+
+notes:
+  - "agent-skills/main movement alone will not activate this Architect rule ecosystem-wide; architect-profile/main remains the activation pointer and must later bind the promoted stable agent-skills revision."
+  - "Do not open a broader Mac/runtime optimization project unless natural post-correction tasks still reproduce an uncollapsed deterministic boundary class."
