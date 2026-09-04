@@ -1,0 +1,214 @@
+protocol_version: 3
+
+task_id: TASK-0029
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  gap_id: PG-01-PROPORTIONAL-SERIALIZATION
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "4a063c41f429207577434600a3571dc17822cd78"
+
+architect_analysis_skills:
+  - architect
+  - optimization
+  - simplicity
+  - verification
+
+execution_skills:
+  required:
+    - executor
+    - optimization
+    - simplicity
+    - verification
+  recommended: []
+
+authority_sources:
+  - source: "architect-profile/main@89dacd43b7a200a7b9cd36d9545f23c930eb4f44"
+    role: "active ecosystem authority-set identity and selective-context operating model"
+    precedence: 1
+  - source: "protocols/TASK_PROTOCOL.md@4a063c41f429207577434600a3571dc17822cd78"
+    role: "canonical protocol-v3 sparse serialization, proportional lanes, evidence reuse, and WHAT/BOUNDARY/PROOF ownership"
+    precedence: 2
+  - source: "contracts/IMPLEMENTATION_REPORT.md@4a063c41f429207577434600a3571dc17822cd78"
+    role: "canonical compact evidence-index obligation"
+    precedence: 3
+  - source: "current operator direction: reduce task/report/review ceremony before local deterministic parallelization"
+    role: "current optimization priority"
+    precedence: 4
+
+structure_authority:
+  status: RESOLVED
+  source: "existing protocol-v3 sparse/default semantics"
+  rationale: >-
+    This task aligns canonical examples, role-local procedure, and validator coverage with semantics
+    that already exist. It must not create protocol v4, task-lite/task-compact variants, another
+    lifecycle, another authority layer, or another artifact family.
+
+objective: >-
+  Make proportional protocol-v3 serialization the canonical default for new task/report/review
+  artifacts so small and normal work stops copying default controls and transcript-style evidence,
+  while preserving the same semantic authority, fail-closed behavior, acceptance quality, and full
+  backward compatibility for existing expanded v3 artifacts.
+
+scope:
+  required_changes:
+    - "Change the canonical task/report/review example/template surfaces so the default authored shape is sparse and material: identity + positive WHAT/BOUNDARY/PROOF + only non-default controls, and compact evidence/index fields rather than redundant process narration."
+    - "Preserve one canonical protocol-v3 semantic model. Omitted task controls must continue to normalize only through the existing protocol-v3 defaults table; omission must never imply extra authority, PASS, capability, branch permission, promotion, release, or hidden success."
+    - "Align Architect role-local guidance so task authoring defaults to material WHAT, material BOUNDARY, PROOF, and non-default controls only; it must not serialize Executor-local HOW or repeat protocol defaults for ceremony."
+    - "Align Executor role-local/report guidance so reports default to exact identity + AC/check evidence index + candidate/publication identity + only material gaps/deviations/blockers. Successful process transcripts and machine-reconstructible repeated facts must not be copied into prose merely for ceremony."
+    - "Align Architect review guidance/template so review defaults to exact reviewed-report identity, material compliance/contradictions, final judgment, candidate/promotion disposition when applicable, and follow-up only when material. Do not duplicate the Executor report transcript."
+    - "Update validator/tests only as required to prove sparse new artifacts and historical/expanded v3 artifacts are both valid under the same protocol version and semantic rules. Do not weaken fail-closed checks."
+    - "Add regression tests proving omitted/default task controls normalize identically to their explicit expanded v3 equivalents for the controls already owned by the protocol defaults table."
+    - "Add report/review compatibility tests proving only contract-authorized redundant/optional evidence may be omitted; exact report identity, candidate/acceptance evidence, blockers/deviations when present, and durable review binding remain reconstructible and mandatory where the existing contracts require them."
+    - "Run a bounded serialization pilot over at least 6 representative existing v3 episodes covering DIRECT-or-small, normal BOUNDED, promotion/activation, blocked/retry, and HIGH_ASSURANCE-like evidence shapes where canonical examples exist. Produce a temporary mechanically computed before/after byte comparison; do not persist a new telemetry subsystem."
+    - "Require the median combined task+report+review byte reduction across the pilot to be at least 40% for semantically equivalent sparse representations. If this threshold is not achieved without semantic/evidence loss, fail closed and report the reason instead of forcing a cosmetic reduction."
+    - "Require the canonical task/report/review template/example combined byte size to fall by at least 40% from the exact execution base unless a validator/contract necessity is independently proven; comments and explanatory prose do not count as semantic compression."
+    - "Use TASK-0029 itself as a dogfood check: its Executor report should be a compact evidence index under existing protocol-v3 authority, not a chronological terminal transcript."
+
+  allowed_existing_files_or_components:
+    - "templates/task.yaml"
+    - "templates/report.yaml"
+    - "templates/review.yaml"
+    - "protocols/TASK_PROTOCOL.md only for narrow non-semantic clarification necessary to keep sparse/default wording internally consistent; no new semantics"
+    - "contracts/IMPLEMENTATION_CONTRACT.md"
+    - "contracts/IMPLEMENTATION_REPORT.md"
+    - "contracts/ARCHITECT_REVIEW.md"
+    - "architect/SKILL.md"
+    - "executor/SKILL.md"
+    - "scripts/validate_skill_library.py"
+    - "scripts/test_validate_skill_library.py"
+    - "repository-native fixtures/tests directly required by the validator"
+    - ".agent/tasks/TASK-0029/report.yaml"
+    - "temporary run-owned pilot fixtures/scripts outside canonical reusable surfaces"
+
+invariants:
+  - "Protocol version remains 3."
+  - "There is exactly one task model; no task-lite, task-compact, report-lite, review-lite, alternate schema, or fourth execution lane is introduced."
+  - "Rich semantics do not require verbose serialization; sparse encoding must preserve the same normalized semantic model."
+  - "Architect owns material WHAT, material BOUNDARY, and PROOF; Executor owns local HOW unless consequences change."
+  - "GitHub remains canonical durable truth; compact artifacts must remain repository-reconstructible across fresh chats and successor agents."
+  - "Fail-closed authority/capability/promotion/release semantics cannot be weakened to save bytes."
+  - "Case Router remains exactly EXECUTE -> executor and is outside this task's mutation scope."
+  - "Embedding remains NOT_ADMITTED."
+  - "No scheduler/orchestrator/daemon/queue/cache/vector database or runtime intelligence is introduced."
+  - "Physical branch topology remains exactly {dev, main}."
+
+forbidden_changes:
+  - "Do not create protocol v4 or another artifact schema/family."
+  - "Do not make omission grant authority, capability, PASS, write permission, branch creation, promotion, release, or continuation."
+  - "Do not delete evidence needed to reconstruct exact task/report/review identity, material acceptance, blockers, deviations, candidate identity, or durable Architect judgment."
+  - "Do not add new CASE values or change Case Router semantics."
+  - "Do not implement local parallel execution, scheduler logic, execution batching, evidence epochs, embeddings, semantic retrieval, or runtime orchestration in this task."
+  - "Do not mutate agent-skills/main."
+  - "Do not create, rename, or delete branches."
+
+gap_policy:
+  local_auto_fix: false
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  REVIEW:
+    - repository_content_read
+    - repository_content_write
+    - exact_commit_report_resolution
+    - remote_ref_read
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Canonical task/report/review authored defaults are materially sparse while preserving the single protocol-v3 semantic model and existing fail-closed defaults."
+    evidence_required: "Exact changed templates/contracts/role guidance plus validator tests proving sparse and expanded v3 compatibility."
+  - id: AC-2
+    requirement: "Sparse task omission is semantics-preserving only for controls already covered by the canonical v3 defaults table; explicit expanded equivalents normalize identically."
+    evidence_required: "Focused normalization equivalence tests for every changed omission path."
+  - id: AC-3
+    requirement: "Compact report/review artifacts retain exact durable identity and material acceptance evidence while eliminating redundant successful-process narration and reconstructible repetition."
+    evidence_required: "Focused sparse report/review fixtures and negative tests showing mandatory identity/material evidence still fails closed when removed."
+  - id: AC-4
+    requirement: "At least 6 representative historical v3 episodes are reserialized in run-owned fixtures with no semantic/evidence loss and show >=40% median combined byte reduction."
+    evidence_required: "Mechanically computed per-episode before/after byte counts, median reduction, scenario coverage, and validator/semantic-equivalence proof."
+  - id: AC-5
+    requirement: "Canonical task/report/review template/example combined bytes decrease >=40% from exact base, or the task blocks with independently proven contract necessity rather than weakening semantics."
+    evidence_required: "Exact-base and candidate byte counts with reproducible calculation."
+  - id: AC-6
+    requirement: "Full repository validation/regression remains green and historical expanded protocol-v3 artifacts require no migration or backfill."
+    evidence_required: "Full validator/unit suite, representative historical fixture validation, py_compile where applicable, and git diff --check."
+  - id: AC-7
+    requirement: "No new schema, lifecycle, CASE, service, scheduler, retrieval mechanism, branch, dependency, or authority layer is introduced."
+    evidence_required: "Exact changed-path/diff proof and simplicity review."
+  - id: AC-8
+    requirement: "Implementation candidate and compact report-only child are published on dev with independent remote SHA proof; main remains unchanged and topology remains exactly {dev, main}."
+    evidence_required: "Candidate SHA, report SHA, fresh remote refs/topology, and local==remote proof when using the designated local mirror."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Fresh-resolve exact TASK-0029/base, active authority-set architect-profile/main@89dacd43b7a200a7b9cd36d9545f23c930eb4f44, pinned agent-skills@4a063c41f429207577434600a3571dc17822cd78, branch topology, and clean local ownership before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Measure exact-base bytes for canonical task/report/review templates and selected pilot episodes before editing; keep measurements run-owned/non-authoritative."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Run focused sparse-vs-expanded normalization and mandatory-evidence negative tests."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Run the full stdlib validator/unit regression suite and any repo-native verification required by changed surfaces."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Recompute >=40% median pilot reduction and >=40% combined canonical-template reduction mechanically from raw byte counts; fail closed on mismatch or semantic loss."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Run py_compile for modified Python, git diff --check, exact changed-path proof, simplicity check, and verify Case Router remains byte-identical/outside diff."
+      required: true
+    - id: CHECK-7
+      command_or_check: "Commit/push exact implementation candidate on dev, independently prove remote dev == candidate, create only the compact TASK-0029 report child, push it, independently prove remote dev == report SHA, require main unchanged/topology {dev, main}, and reconcile designated local dev to final remote dev before NEEDS_REVIEW."
+      required: true
+
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
