@@ -11,19 +11,6 @@ reviewed_report:
   commit: "<exact commit containing reviewed report>"
   report_revision: 1
 
-independence:
-  reviewer_role: ARCHITECT
-  separate_session_from_executor: true
-  exact_report_identity_verified: false
-
-# Optional. Reviews omit this entire block by default. Include it only when an
-# operator, task, or performance audit explicitly requests timing and both
-# trustworthy current UTC timestamps were captured at the required boundaries.
-# Do not reconstruct timing from Git metadata or store an elapsed duration.
-# operational_timing:
-#   started_at_utc: "<captured RFC 3339 UTC timestamp>"
-#   terminal_decision_at_utc: "<captured RFC 3339 UTC timestamp>"
-
 contract_compliance:
   protocol_version: NOT_PROVEN
   identity: NOT_PROVEN
@@ -34,21 +21,3 @@ contract_compliance:
   git_authority: NOT_PROVEN
   acceptance_criteria: NOT_PROVEN
   verifier_evidence: NOT_PROVEN
-
-gap_disposition:
-  - gap_id: GAP-001
-    decision: follow_up_task
-    rationale: ""
-
-follow_up_tasks:
-  - task_id: ""
-    origin:
-      type: discovered_gap
-      task_id: TASK-0001
-      gap_id: GAP-001
-
-promotion_readiness:
-  eligible_for_candidate_capture: false
-  reason: ""
-
-notes: []

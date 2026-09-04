@@ -65,6 +65,8 @@ Architect closes the material WHAT, BOUNDARY, and PROOF, then delegates implemen
 
 For task serialization, Architect uses the Task Protocol's single protocol-v3 normalization/default table. Omitted implementation prescription means bounded Executor discretion inside an already-positive semantic/component boundary; omitted authority never grants permission. Explicit expanded-v3 controls remain authoritative and retain their restrictive meaning.
 
+Canonical new tasks serialize material identity, WHAT, BOUNDARY, PROOF, and only non-default controls. Do not copy protocol-v3 defaults or Executor-local HOW merely for ceremony; serialize a defaulted control only when the task intentionally differs from the canonical normalized meaning.
+
 ## Architect micro-maintenance exception
 
 Architect may use the protocol's narrow taskless micro-maintenance exception only after proving every eligibility predicate before mutation. The exact mutation must be explicitly authorized, small, bounded, reversible, low-risk, non-semantic for product/runtime/public contracts and reusable governance/protocol, outside task/report/review evidence and dependency/branch/promotion/release changes, and cheaply deterministically verifiable.

@@ -14,32 +14,11 @@ execution:
     name: dev
     role: integration
   authorized_base_head: ""
-  pre_execution_head: ""
   final_execution_head: ""
 
 skill_library:
   repository: phatnguyen03022001/agent-skills
   authorized_revision: ""
-  observed_revision: ""
-
-execution_skills_used:
-  required: []
-  recommended: []
-  external: []
-
-pre_execution_checks:
-  protocol_version_supported: false
-  handoff_type_confirmed: false
-  task_at_base_confirmed: false
-  task_identity_confirmed: false
-  architect_binding_confirmed: false
-  repository_confirmed: false
-  branch_confirmed: false
-  base_head_confirmed: false
-  skill_revision_confirmed: false
-  required_execution_skills_available: false
-  structure_authority_confirmed: false
-  working_tree_clean: false
 
 capability_preflight:
   phase: EXECUTION
@@ -50,35 +29,13 @@ capability_preflight:
     - repository_content_write
   passed: false
 
-# Optional. Omit this entire block by default. Include it only when an operator, task, or performance
-# audit explicitly requests timing and both trustworthy boundary timestamps were captured. Never
-# partially populate, invent, approximate, reconstruct, or derive timing from Git commit times.
-# operational_timing:
-#   started_at_utc: "<captured RFC 3339 UTC timestamp>"
-#   terminal_decision_at_utc: "<captured RFC 3339 UTC timestamp>"
-
 authoritative_verification:
   required: false
   performed: false
   result: ""
   evidence: ""
 
-local_hygiene:
-  result: PASS
-  run_root: ""
-  cleanup_performed: false
-  retained: []
-  evidence: ""
-
-# Optional. Omit changed-file enumeration when exact Git/task/verifier evidence reconstructs the
-# same fact. Omission never means PASS, permission, or hidden success.
-
-commits_created:
-  - sha: ""
-    message: ""
-
 pushed: false
-promoted_to_main: false
 
 acceptance_evidence:
   - criterion_id: AC-1
@@ -89,31 +46,5 @@ executor_checks:
   - check_id: CHECK-1
     result: ""
     evidence: ""
-
-discovered_gaps:
-  - gap_id: GAP-001
-    classification: FOLLOW_UP
-    type: architecture
-    severity: high
-    description: ""
-    evidence: ""
-    impact: ""
-    blocks_current_task: false
-    action_taken: none
-    suggested_next_step: architect_review
-
-structural_observations:
-  - type: file_growth
-    path: ""
-    evidence: ""
-    recommendation: split_candidate
-    action_taken: none
-
-deviations_from_task: []
-blockers: []
-
-working_tree_after:
-  clean: false
-  summary: ""
 
 result: NEEDS_REVIEW

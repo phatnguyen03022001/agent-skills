@@ -12,6 +12,7 @@ import shutil
 import subprocess
 import tempfile
 import unittest
+from copy import deepcopy
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -32,6 +33,134 @@ class ValidatorRegressionTests(unittest.TestCase):
         shutil.copytree(ROOT, root)
         self.addCleanup(temp.cleanup)
         return temp, root
+
+    def materialize_expanded_task_template(self, root: Path) -> Path:
+        path = root / "templates" / "task.yaml"
+        text = path.read_text(encoding="utf-8")
+        marker = "\nacceptance_criteria:\n"
+        self.assertIn(marker, text)
+        block = (
+            "\ncontinuation_policy:\n"
+            "  mode: MANUAL\n"
+            "  stop_conditions:\n"
+            "    - BLOCKED\n"
+            "    - STALE_STATE\n"
+            "    - AUTHORITY_REQUIRED\n"
+            "    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE\n"
+            "    - REVIEW_REQUIRED\n"
+            "    - REVERIFY_REQUIRED\n"
+            "    - USER_STOP\n"
+            "\ncapability_requirements:\n"
+            "  EXECUTION:\n"
+            "    - repository_content_write\n"
+            "\nrelease_authority:\n"
+            "  create_version_tag: false\n"
+            "  mutate_repository_metadata: false\n"
+            "  publish_release: false\n"
+        )
+        path.write_text(text.replace(marker, block + marker, 1), encoding="utf-8")
+        return path
+
+    def materialize_expanded_report_template(self, root: Path) -> Path:
+        path = root / "templates" / "report.yaml"
+        text = path.read_text(encoding="utf-8")
+        text = text.replace('  authorized_base_head: ""\n  final_execution_head: ""', '  authorized_base_head: ""\n  pre_execution_head: ""\n  final_execution_head: ""', 1)
+        text = text.replace('  authorized_revision: ""\n', '  authorized_revision: ""\n  observed_revision: ""\n', 1)
+        marker = "\ncapability_preflight:\n"
+        self.assertIn(marker, text)
+        preflight = (
+            "\nexecution_skills_used:\n"
+            "  required: []\n"
+            "  recommended: []\n"
+            "  external: []\n"
+            "\npre_execution_checks:\n"
+            "  protocol_version_supported: false\n"
+            "  handoff_type_confirmed: false\n"
+            "  task_at_base_confirmed: false\n"
+            "  task_identity_confirmed: false\n"
+            "  architect_binding_confirmed: false\n"
+            "  repository_confirmed: false\n"
+            "  branch_confirmed: false\n"
+            "  base_head_confirmed: false\n"
+            "  skill_revision_confirmed: false\n"
+            "  required_execution_skills_available: false\n"
+            "  structure_authority_confirmed: false\n"
+            "  working_tree_clean: false\n"
+        )
+        text = text.replace(marker, preflight + marker, 1)
+        marker = "\npushed: false\n"
+        self.assertIn(marker, text)
+        evidence = (
+            "\nlocal_hygiene:\n"
+            "  result: PASS\n"
+            '  run_root: ""\n'
+            "  cleanup_performed: false\n"
+            "  retained: []\n"
+            '  evidence: ""\n'
+            "\ncommits_created:\n"
+            '  - sha: ""\n'
+            '    message: ""\n'
+        )
+        text = text.replace(marker, evidence + marker + "promoted_to_main: false\n", 1)
+        marker = "\nresult: NEEDS_REVIEW\n"
+        self.assertIn(marker, text)
+        tail = (
+            "\ndiscovered_gaps:\n"
+            "  - gap_id: GAP-001\n"
+            "    classification: FOLLOW_UP\n"
+            "    type: architecture\n"
+            "    severity: high\n"
+            '    description: ""\n'
+            '    evidence: ""\n'
+            '    impact: ""\n'
+            "    blocks_current_task: false\n"
+            "    action_taken: none\n"
+            "    suggested_next_step: architect_review\n"
+            "\nstructural_observations:\n"
+            "  - type: file_growth\n"
+            '    path: ""\n'
+            '    evidence: ""\n'
+            "    recommendation: split_candidate\n"
+            "    action_taken: none\n"
+            "\ndeviations_from_task: []\n"
+            "blockers: []\n"
+            "\nworking_tree_after:\n"
+            "  clean: false\n"
+            '  summary: ""\n'
+        )
+        path.write_text(text.replace(marker, tail + marker, 1), encoding="utf-8")
+        return path
+
+    def materialize_expanded_review_template(self, root: Path) -> Path:
+        path = root / "templates" / "review.yaml"
+        text = path.read_text(encoding="utf-8")
+        marker = "\ncontract_compliance:\n"
+        self.assertIn(marker, text)
+        independence = (
+            "\nindependence:\n"
+            "  reviewer_role: ARCHITECT\n"
+            "  separate_session_from_executor: true\n"
+            "  exact_report_identity_verified: false\n"
+        )
+        text = text.replace(marker, independence + marker, 1)
+        tail = (
+            "\ngap_disposition:\n"
+            "  - gap_id: GAP-001\n"
+            "    decision: follow_up_task\n"
+            '    rationale: ""\n'
+            "\nfollow_up_tasks:\n"
+            '  - task_id: ""\n'
+            "    origin:\n"
+            "      type: discovered_gap\n"
+            "      task_id: TASK-0001\n"
+            "      gap_id: GAP-001\n"
+            "\npromotion_readiness:\n"
+            "  eligible_for_candidate_capture: false\n"
+            '  reason: ""\n'
+            "\nnotes: []\n"
+        )
+        path.write_text(text.rstrip() + tail, encoding="utf-8")
+        return path
 
     def run_validator(self, root: Path) -> subprocess.CompletedProcess[str]:
         stdout = io.StringIO()
@@ -175,14 +304,14 @@ class ValidatorRegressionTests(unittest.TestCase):
         for key in keys:
             with self.subTest(key=key):
                 def mutate(root: Path, key=key) -> None:
-                    path = root / "templates" / "report.yaml"
+                    path = self.materialize_expanded_report_template(root)
                     text = path.read_text(encoding="utf-8")
                     before = f"  {key}: false"
                     self.assertIn(before, text)
                     text = text.replace(before, f"  {key}_missing: false", 1)
                     path.write_text(text, encoding="utf-8")
                 output = self.assert_rejected(mutate)
-                self.assertIn(f"missing required path 'pre_execution_checks.{key}'", output)
+                self.assertIn(f"path 'pre_execution_checks' missing required fields ['{key}']", output)
 
     def test_review_identity_compliance_field_is_required(self) -> None:
         def mutate(root: Path) -> None:
@@ -207,6 +336,9 @@ class ValidatorRegressionTests(unittest.TestCase):
                 def mutate(root: Path, relative=relative, before=before, after=after) -> None:
                     path = root / relative
                     text = path.read_text(encoding="utf-8")
+                    if relative == "templates/report.yaml" and before not in text:
+                        path = self.materialize_expanded_report_template(root)
+                        text = path.read_text(encoding="utf-8")
                     self.assertIn(before, text)
                     path.write_text(text.replace(before, after, 1), encoding="utf-8")
                 output = self.assert_rejected(mutate)
@@ -222,6 +354,9 @@ class ValidatorRegressionTests(unittest.TestCase):
                 def mutate(root: Path, relative=relative, before=before, after=after) -> None:
                     path = root / relative
                     text = path.read_text(encoding="utf-8")
+                    if relative == "templates/report.yaml" and before not in text:
+                        path = self.materialize_expanded_report_template(root)
+                        text = path.read_text(encoding="utf-8")
                     self.assertIn(before, text)
                     path.write_text(text.replace(before, after, 1), encoding="utf-8")
                 output = self.assert_rejected(mutate)
@@ -229,7 +364,7 @@ class ValidatorRegressionTests(unittest.TestCase):
 
     def test_review_gap_disposition_schema_is_enforced(self) -> None:
         def mutate(root: Path) -> None:
-            path = root / "templates" / "review.yaml"
+            path = self.materialize_expanded_review_template(root)
             text = path.read_text(encoding="utf-8")
             before = "  - gap_id: GAP-001\n    decision: follow_up_task\n    rationale: \"\""
             self.assertIn(before, text)
@@ -239,7 +374,7 @@ class ValidatorRegressionTests(unittest.TestCase):
 
     def test_defined_gap_classification_remains_accepted(self) -> None:
         _, root = self.fixture()
-        path = root / "templates" / "report.yaml"
+        path = self.materialize_expanded_report_template(root)
         text = path.read_text(encoding="utf-8")
         self.assertIn("    classification: FOLLOW_UP", text)
         path.write_text(text.replace("    classification: FOLLOW_UP", "    classification: LOCAL", 1), encoding="utf-8")
@@ -272,7 +407,6 @@ class ValidatorRegressionTests(unittest.TestCase):
             ("templates/report.yaml", "execution_skills_used.recommended", "  recommended: []"),
             ("templates/report.yaml", "execution_skills_used.external", "  external: []"),
             ("templates/report.yaml", "pushed", "pushed: false"),
-            ("templates/report.yaml", "promoted_to_main", "promoted_to_main: false"),
             ("templates/report.yaml", "authoritative_verification.required", "  required: false"),
             ("templates/report.yaml", "authoritative_verification.performed", "  performed: false"),
             ("templates/report.yaml", "authoritative_verification.result", '  result: ""'),
@@ -283,20 +417,28 @@ class ValidatorRegressionTests(unittest.TestCase):
         ]
         for relative, dotted, before in cases:
             with self.subTest(path=dotted):
-                def mutate(root: Path, relative=relative, before=before) -> None:
+                def mutate(root: Path, relative=relative, dotted=dotted, before=before) -> None:
                     path = root / relative
+                    if relative == "templates/report.yaml" and dotted.startswith(("execution_skills_used.", "working_tree_after.")):
+                        path = self.materialize_expanded_report_template(root)
+                    elif relative == "templates/review.yaml" and dotted.startswith("promotion_readiness."):
+                        path = self.materialize_expanded_review_template(root)
                     text = path.read_text(encoding="utf-8")
                     needle = f"\n{before}\n"
                     self.assertIn(needle, text)
                     path.write_text(text.replace(needle, "\n", 1), encoding="utf-8")
                 output = self.assert_rejected(mutate)
-                self.assertIn(f"missing required path '{dotted}'", output)
+                if dotted.startswith(("execution_skills_used.", "working_tree_after.", "promotion_readiness.")):
+                    parent, field = dotted.rsplit(".", 1)
+                    self.assertIn(f"path '{parent}' missing required fields ['{field}']", output)
+                else:
+                    self.assertIn(f"missing required path '{dotted}'", output)
 
     def test_review_ineligible_states_cannot_be_candidate_eligible(self) -> None:
         for state in ("REVISION_REQUIRED", "BLOCKED"):
             with self.subTest(state=state):
                 _, root = self.fixture()
-                path = root / "templates" / "review.yaml"
+                path = self.materialize_expanded_review_template(root)
                 text = path.read_text(encoding="utf-8")
                 text = text.replace("state: REVISION_REQUIRED", f"state: {state}", 1)
                 text = text.replace("  eligible_for_candidate_capture: false", "  eligible_for_candidate_capture: true", 1)
@@ -309,7 +451,7 @@ class ValidatorRegressionTests(unittest.TestCase):
         for eligible in (True, False):
             with self.subTest(eligible=eligible):
                 _, root = self.fixture()
-                path = root / "templates" / "review.yaml"
+                path = self.materialize_expanded_review_template(root)
                 text = path.read_text(encoding="utf-8")
                 text = text.replace("state: REVISION_REQUIRED", "state: ACCEPTED", 1)
                 text = text.replace(
@@ -371,7 +513,7 @@ class ValidatorRegressionTests(unittest.TestCase):
 
     def test_continuation_modes_are_closed_and_auto_until_stop_is_legal(self) -> None:
         _, root = self.fixture()
-        path = root / "templates" / "task.yaml"
+        path = self.materialize_expanded_task_template(root)
         text = path.read_text(encoding="utf-8")
         self.assertIn("continuation_policy:\n  mode: MANUAL", text)
         path.write_text(text.replace("  mode: MANUAL", "  mode: AUTO_UNTIL_STOP", 1), encoding="utf-8")
@@ -379,7 +521,7 @@ class ValidatorRegressionTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
         _, root = self.fixture()
-        path = root / "templates" / "task.yaml"
+        path = self.materialize_expanded_task_template(root)
         text = path.read_text(encoding="utf-8")
         self.assertIn("continuation_policy:\n  mode: MANUAL", text)
         path.write_text(text.replace("  mode: MANUAL", "  mode: FOREVER", 1), encoding="utf-8")
@@ -389,7 +531,7 @@ class ValidatorRegressionTests(unittest.TestCase):
 
     def test_continuation_stop_conditions_are_non_waivable(self) -> None:
         def mutate(root: Path) -> None:
-            path = root / "templates" / "task.yaml"
+            path = self.materialize_expanded_task_template(root)
             text = path.read_text(encoding="utf-8")
             self.assertIn("    - STALE_STATE\n", text)
             path.write_text(text.replace("    - STALE_STATE\n", "", 1), encoding="utf-8")
@@ -398,7 +540,7 @@ class ValidatorRegressionTests(unittest.TestCase):
 
     def test_malformed_continuation_policy_is_rejected(self) -> None:
         def mutate(root: Path) -> None:
-            path = root / "templates" / "task.yaml"
+            path = self.materialize_expanded_task_template(root)
             text = path.read_text(encoding="utf-8")
             before = "continuation_policy:\n  mode: MANUAL\n  stop_conditions:"
             self.assertIn(before, text)
@@ -408,7 +550,7 @@ class ValidatorRegressionTests(unittest.TestCase):
 
     def test_capability_requirement_structure_is_phase_specific_and_closed(self) -> None:
         def mutate(root: Path) -> None:
-            path = root / "templates" / "task.yaml"
+            path = self.materialize_expanded_task_template(root)
             text = path.read_text(encoding="utf-8")
             before = "capability_requirements:\n  EXECUTION:\n    - repository_content_write"
             self.assertIn(before, text)
@@ -417,7 +559,7 @@ class ValidatorRegressionTests(unittest.TestCase):
         self.assertIn("capability_requirements.EXECUTION", output)
 
         def mutate_phase(root: Path) -> None:
-            path = root / "templates" / "task.yaml"
+            path = self.materialize_expanded_task_template(root)
             text = path.read_text(encoding="utf-8")
             self.assertIn("  EXECUTION:", text)
             path.write_text(text.replace("  EXECUTION:", "  BANANA:", 1), encoding="utf-8")
@@ -426,7 +568,7 @@ class ValidatorRegressionTests(unittest.TestCase):
 
     def test_release_authority_is_independent_from_git_promotion_authority(self) -> None:
         _, root = self.fixture()
-        path = root / "templates" / "task.yaml"
+        path = self.materialize_expanded_task_template(root)
         text = path.read_text(encoding="utf-8")
         release_block = (
             "release_authority:\n"
@@ -441,7 +583,7 @@ class ValidatorRegressionTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
         _, root = self.fixture()
-        path = root / "templates" / "task.yaml"
+        path = self.materialize_expanded_task_template(root)
         text = path.read_text(encoding="utf-8")
         self.assertIn("  publish_release: false", text)
         path.write_text(text.replace("  publish_release: false", "  publish_release: no", 1), encoding="utf-8")
@@ -566,11 +708,10 @@ class ValidatorRegressionTests(unittest.TestCase):
             frozenset({"PASS", "RETAINED_FOR_EVIDENCE", "BLOCKED"}),
         )
         report = (ROOT / "templates" / "report.yaml").read_text(encoding="utf-8")
-        self.assertIn("local_hygiene:", report)
-        self.assertIn("  result: PASS", report)
+        self.assertNotIn("local_hygiene:", report)
 
         _, root = self.fixture()
-        path = root / "templates" / "report.yaml"
+        path = self.materialize_expanded_report_template(root)
         text = path.read_text(encoding="utf-8")
         self.assertIn("  result: PASS", text)
         path.write_text(text.replace("  result: PASS", "  result: UNKNOWN", 1), encoding="utf-8")
@@ -600,7 +741,7 @@ class ValidatorRegressionTests(unittest.TestCase):
 
     def test_task0002_legacy_v3_report_without_local_hygiene_remains_valid(self) -> None:
         _, root = self.fixture()
-        path = root / "templates" / "report.yaml"
+        path = self.materialize_expanded_report_template(root)
         text = path.read_text(encoding="utf-8")
         marker = "local_hygiene:\n"
         self.assertIn(marker, text)
@@ -1239,6 +1380,15 @@ class Task0007ProtocolCorrectnessTests(unittest.TestCase):
         _, root = self.fixture()
         path = root / "templates" / "review.yaml"
         text = path.read_text(encoding="utf-8")
+        text = text.replace(
+            "\ncontract_compliance:\n",
+            "\nindependence:\n"
+            "  reviewer_role: ARCHITECT\n"
+            "  separate_session_from_executor: true\n"
+            "  exact_report_identity_verified: false\n"
+            "\ncontract_compliance:\n",
+            1,
+        )
         text = text.replace("state: REVISION_REQUIRED", "state: ACCEPTED", 1)
         text = text.replace(
             "  exact_report_identity_verified: false",
@@ -1585,7 +1735,7 @@ class Task0021EvidenceLifecycleTests(unittest.TestCase):
         _, root = self.fixture()
         path = root / "templates" / "report.yaml"
         text = path.read_text(encoding="utf-8")
-        self.assertIn("# operational_timing:\n", text)
+        self.assertNotIn("operational_timing:", text)
         document = VALIDATOR_MODULE.load_protocol_document("templates/report.yaml")
         assert document is not None
         self.assertNotIn("operational_timing", document)
@@ -2197,6 +2347,212 @@ class Task0025StableAdoptionGateTests(unittest.TestCase):
         self.assertIn("does not prescribe task launch field names", generic)
         self.assertIn("agent runtime remains an optional capability surface", generic)
         self.assertIn("mobile/chatgpt+github-only operation is first-class", generic)
+
+
+class Task0029SparseSerializationTests(unittest.TestCase):
+    def fixture(self) -> tuple[tempfile.TemporaryDirectory[str], Path]:
+        temp = tempfile.TemporaryDirectory()
+        root = Path(temp.name) / "repo"
+        shutil.copytree(ROOT, root)
+        self.addCleanup(temp.cleanup)
+        return temp, root
+
+    def load_document(self, root: Path, relative: str) -> dict[str, object]:
+        original_root = VALIDATOR_MODULE.ROOT
+        try:
+            VALIDATOR_MODULE.ROOT = root
+            document = VALIDATOR_MODULE.load_protocol_document(relative)
+        finally:
+            VALIDATOR_MODULE.ROOT = original_root
+        assert document is not None
+        return document
+
+    def validation_errors(self, root: Path, validator_name: str) -> list[str]:
+        original_root = VALIDATOR_MODULE.ROOT
+        try:
+            VALIDATOR_MODULE.ROOT = root
+            VALIDATOR_MODULE.errors.clear()
+            getattr(VALIDATOR_MODULE, validator_name)()
+            return list(VALIDATOR_MODULE.errors)
+        finally:
+            VALIDATOR_MODULE.errors.clear()
+            VALIDATOR_MODULE.ROOT = original_root
+
+    def remove_top_level(self, path: Path, keys: set[str]) -> None:
+        lines = path.read_text(encoding="utf-8").splitlines()
+        output: list[str] = []
+        skipping = False
+        for line in lines:
+            if skipping:
+                if line and not line.startswith((" ", "#")):
+                    skipping = False
+                else:
+                    continue
+            key = line.split(":", 1)[0] if line and not line.startswith((" ", "#")) else None
+            if key in keys:
+                skipping = True
+                continue
+            output.append(line)
+        path.write_text("\n".join(output).rstrip() + "\n", encoding="utf-8")
+
+    def make_sparse_task(self, root: Path) -> Path:
+        path = root / "templates" / "task.yaml"
+        self.remove_top_level(path, {"continuation_policy", "capability_requirements", "release_authority"})
+        return path
+
+    def make_sparse_report(self, root: Path) -> Path:
+        path = root / "templates" / "report.yaml"
+        self.remove_top_level(
+            path,
+            {
+                "execution_skills_used",
+                "pre_execution_checks",
+                "local_hygiene",
+                "commits_created",
+                "discovered_gaps",
+                "structural_observations",
+                "deviations_from_task",
+                "blockers",
+                "working_tree_after",
+                "promoted_to_main",
+            },
+        )
+        text = path.read_text(encoding="utf-8")
+        text = text.replace('  pre_execution_head: ""\n', "", 1)
+        text = text.replace('  observed_revision: ""\n', "", 1)
+        path.write_text(text, encoding="utf-8")
+        return path
+
+    def make_sparse_review(self, root: Path) -> Path:
+        path = root / "templates" / "review.yaml"
+        self.remove_top_level(path, {"independence", "gap_disposition", "follow_up_tasks", "promotion_readiness", "notes"})
+        return path
+
+    def test_sparse_and_explicit_default_task_controls_normalize_equivalently(self) -> None:
+        _, root = self.fixture()
+        self.make_sparse_task(root)
+        sparse = self.load_document(root, "templates/task.yaml")
+        expanded = deepcopy(sparse)
+        expanded_scope = expanded.setdefault("scope", {})
+        assert isinstance(expanded_scope, dict)
+        expanded_scope["expected_files_are_restrictive"] = False
+        for key in ("structure_policy", "continuation_policy", "capability_requirements", "release_authority"):
+            expanded[key] = deepcopy(VALIDATOR_MODULE.TASK_NORMALIZATION_DEFAULTS[key])
+
+        self.assertEqual(
+            VALIDATOR_MODULE.normalize_task_document(sparse),
+            VALIDATOR_MODULE.normalize_task_document(expanded),
+        )
+        self.assertEqual(self.validation_errors(root, "validate_task_template"), [])
+
+    def test_sparse_and_expanded_report_shapes_preserve_material_evidence(self) -> None:
+        _, expanded_root = self.fixture()
+        expanded = self.load_document(expanded_root, "templates/report.yaml")
+        self.assertEqual(self.validation_errors(expanded_root, "validate_report_template"), [])
+
+        _, sparse_root = self.fixture()
+        self.make_sparse_report(sparse_root)
+        sparse = self.load_document(sparse_root, "templates/report.yaml")
+        self.assertEqual(self.validation_errors(sparse_root, "validate_report_template"), [])
+
+        for dotted in (
+            "task_id",
+            "task_revision",
+            "report_revision",
+            "state",
+            "task_source.path",
+            "execution.repository",
+            "execution.branch.name",
+            "execution.branch.role",
+            "execution.authorized_base_head",
+            "execution.final_execution_head",
+            "skill_library.authorized_revision",
+            "pushed",
+            "acceptance_evidence",
+            "executor_checks",
+            "result",
+        ):
+            self.assertEqual(
+                VALIDATOR_MODULE.get_path(expanded, dotted),
+                VALIDATOR_MODULE.get_path(sparse, dotted),
+                dotted,
+            )
+
+    def test_sparse_and_expanded_review_shapes_preserve_durable_binding_and_judgment(self) -> None:
+        _, expanded_root = self.fixture()
+        expanded = self.load_document(expanded_root, "templates/review.yaml")
+        self.assertEqual(self.validation_errors(expanded_root, "validate_review_template"), [])
+
+        _, sparse_root = self.fixture()
+        self.make_sparse_review(sparse_root)
+        sparse = self.load_document(sparse_root, "templates/review.yaml")
+        self.assertEqual(self.validation_errors(sparse_root, "validate_review_template"), [])
+
+        for dotted in (
+            "task_id",
+            "task_revision",
+            "review_revision",
+            "state",
+            "reviewed_report.repository",
+            "reviewed_report.path",
+            "reviewed_report.commit",
+            "reviewed_report.report_revision",
+            "contract_compliance.protocol_version",
+            "contract_compliance.identity",
+            "contract_compliance.execution_base",
+            "contract_compliance.skill_rules",
+            "contract_compliance.scope",
+            "contract_compliance.structure_policy",
+            "contract_compliance.git_authority",
+            "contract_compliance.acceptance_criteria",
+            "contract_compliance.verifier_evidence",
+        ):
+            self.assertEqual(
+                VALIDATOR_MODULE.get_path(expanded, dotted),
+                VALIDATOR_MODULE.get_path(sparse, dotted),
+                dotted,
+            )
+
+    def test_sparse_report_still_rejects_missing_material_evidence(self) -> None:
+        mutations = (
+            ('  final_execution_head: ""', '  final_execution_head_missing: ""', "execution.final_execution_head"),
+            ("acceptance_evidence:", "acceptance_evidence_missing:", "acceptance_evidence"),
+            ("executor_checks:", "executor_checks_missing:", "executor_checks"),
+            ("result: NEEDS_REVIEW", "result_missing: NEEDS_REVIEW", "result"),
+        )
+        for old, new, missing_path in mutations:
+            with self.subTest(missing_path=missing_path):
+                _, root = self.fixture()
+                path = self.make_sparse_report(root)
+                text = path.read_text(encoding="utf-8")
+                self.assertIn(old, text)
+                path.write_text(text.replace(old, new, 1), encoding="utf-8")
+                errors = self.validation_errors(root, "validate_report_template")
+                self.assertTrue(any(f"missing required path '{missing_path}'" in item for item in errors), errors)
+
+    def test_sparse_review_still_rejects_missing_exact_report_identity(self) -> None:
+        _, root = self.fixture()
+        path = self.make_sparse_review(root)
+        text = path.read_text(encoding="utf-8")
+        old = '  commit: "<exact commit containing reviewed report>"'
+        self.assertIn(old, text)
+        path.write_text(text.replace(old, '  commit_missing: ""', 1), encoding="utf-8")
+        errors = self.validation_errors(root, "validate_review_template")
+        self.assertTrue(any("missing required path 'reviewed_report.commit'" in item for item in errors), errors)
+
+    def test_role_and_contract_guidance_defaults_to_material_sparse_authoring(self) -> None:
+        architect = (ROOT / "architect" / "SKILL.md").read_text(encoding="utf-8").lower()
+        executor = (ROOT / "executor" / "SKILL.md").read_text(encoding="utf-8").lower()
+        task_contract = (ROOT / "contracts" / "IMPLEMENTATION_CONTRACT.md").read_text(encoding="utf-8").lower()
+        report_contract = (ROOT / "contracts" / "IMPLEMENTATION_REPORT.md").read_text(encoding="utf-8").lower()
+        review_contract = (ROOT / "contracts" / "ARCHITECT_REVIEW.md").read_text(encoding="utf-8").lower()
+
+        self.assertIn("material identity, what, boundary, proof, and only non-default controls", architect)
+        self.assertIn("omit controls that equal the protocol-v3 defaults", task_contract)
+        self.assertIn("omit reconstructible execution transcript", executor)
+        self.assertIn("expanded-v3 report fields remain valid compatibility input", report_contract)
+        self.assertIn("exact reviewed-report identity, material compliance, and final judgment", review_contract)
+        self.assertIn("expanded-v3 review fields remain valid compatibility input", review_contract)
 
 
 if __name__ == "__main__":

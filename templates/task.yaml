@@ -71,21 +71,6 @@ gap_policy:
   public_contract_change: revised_contract_required
   blocking_gap_behavior: BLOCKED
 
-continuation_policy:
-  mode: MANUAL
-  stop_conditions:
-    - BLOCKED
-    - STALE_STATE
-    - AUTHORITY_REQUIRED
-    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
-    - REVIEW_REQUIRED
-    - REVERIFY_REQUIRED
-    - USER_STOP
-
-capability_requirements:
-  EXECUTION:
-    - repository_content_write
-
 acceptance_criteria:
   - id: AC-1
     requirement: ""
@@ -106,11 +91,6 @@ git_authority:
   commit: false
   push: false
   promote_to_main: false
-
-release_authority:
-  create_version_tag: false
-  mutate_repository_metadata: false
-  publish_release: false
 
 blocking_decisions: []
 execution_ready: false

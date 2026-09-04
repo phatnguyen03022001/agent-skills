@@ -20,6 +20,8 @@ Task fields remain explicit where they carry artifact-specific obligations:
 
 The Task Protocol owns one protocol-v3 normalization/default table for omitted optional implementation-prescription controls. Missing exact-file or local-structure prescription defaults to bounded Executor discretion inside the positive semantic/component boundary; it does not deny necessary local companion files. Missing authority fields never default to permission. Explicit expanded-v3 controls, including restrictive exact-file and structure policies, retain their original meaning.
 
+Canonical new task artifacts omit controls that equal the protocol-v3 defaults and serialize only material identity, positive WHAT/BOUNDARY/PROOF, and controls that intentionally differ from those defaults. Existing expanded-v3 tasks remain valid without migration; omission never invents a new default outside the Task Protocol table.
+
 The semantic meaning and interaction of those controls are defined once in the Task Protocol rather than repeated here.
 
 ## Structure, scope, and revisions

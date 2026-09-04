@@ -1006,42 +1006,77 @@ def validate_report_template() -> None:
         ("task_id", str), ("task_revision", int), ("report_revision", int),
         ("state", str), ("task_source.path", str), ("execution.repository", str),
         ("execution.branch.name", str), ("execution.branch.role", str),
-        ("execution.authorized_base_head", str),
-        ("execution.pre_execution_head", str), ("execution.final_execution_head", str),
-        ("skill_library.repository", str),
-        ("skill_library.authorized_revision", str), ("skill_library.observed_revision", str),
-        ("execution_skills_used.required", list),
-        ("execution_skills_used.recommended", list),
-        ("execution_skills_used.external", list),
-        ("pre_execution_checks.protocol_version_supported", bool),
-        ("pre_execution_checks.handoff_type_confirmed", bool),
-        ("pre_execution_checks.task_at_base_confirmed", bool),
-        ("pre_execution_checks.task_identity_confirmed", bool),
-        ("pre_execution_checks.architect_binding_confirmed", bool),
-        ("pre_execution_checks.repository_confirmed", bool),
-        ("pre_execution_checks.branch_confirmed", bool),
-        ("pre_execution_checks.base_head_confirmed", bool),
-        ("pre_execution_checks.skill_revision_confirmed", bool),
-        ("pre_execution_checks.required_execution_skills_available", bool),
-        ("pre_execution_checks.structure_authority_confirmed", bool),
-        ("pre_execution_checks.working_tree_clean", bool),
-        ("pushed", bool), ("promoted_to_main", bool),
+        ("execution.authorized_base_head", str), ("execution.final_execution_head", str),
+        ("skill_library.repository", str), ("skill_library.authorized_revision", str),
+        ("pushed", bool),
         ("authoritative_verification", dict),
         ("authoritative_verification.required", bool),
         ("authoritative_verification.performed", bool),
         ("authoritative_verification.result", str),
         ("authoritative_verification.evidence", str),
-        ("working_tree_after.clean", bool), ("working_tree_after.summary", str),
         ("result", str),
     ]:
         require_field(label, doc, dotted, expected_type)
+
+    for dotted, expected_type in [
+        ("execution.pre_execution_head", str),
+        ("skill_library.observed_revision", str),
+        ("promoted_to_main", bool),
+    ]:
+        value = get_path(doc, dotted)
+        if value is not _MISSING and type(value) is not expected_type:
+            error(f"{label}: path '{dotted}' must be {expected_type.__name__}, got {type(value).__name__}")
+
+    execution_skills = get_path(doc, "execution_skills_used")
+    if execution_skills is not _MISSING:
+        require_mapping_schema(
+            label,
+            execution_skills,
+            "execution_skills_used",
+            {"required": list, "recommended": list, "external": list},
+        )
+
+    pre_checks = get_path(doc, "pre_execution_checks")
+    if pre_checks is not _MISSING:
+        require_mapping_schema(
+            label,
+            pre_checks,
+            "pre_execution_checks",
+            {
+                "protocol_version_supported": bool,
+                "handoff_type_confirmed": bool,
+                "task_at_base_confirmed": bool,
+                "task_identity_confirmed": bool,
+                "architect_binding_confirmed": bool,
+                "repository_confirmed": bool,
+                "branch_confirmed": bool,
+                "base_head_confirmed": bool,
+                "skill_revision_confirmed": bool,
+                "required_execution_skills_available": bool,
+                "structure_authority_confirmed": bool,
+                "working_tree_clean": bool,
+            },
+        )
+
+    working_tree_after = get_path(doc, "working_tree_after")
+    if working_tree_after is not _MISSING:
+        require_mapping_schema(
+            label,
+            working_tree_after,
+            "working_tree_after",
+            {"clean": bool, "summary": str},
+        )
+
+    optional_sequences = {"changed_files", "commits_created", "discovered_gaps", "structural_observations"}
     for dotted, schema in REPORT_SEQUENCE_SCHEMAS.items():
-        if dotted == "changed_files" and get_path(doc, dotted) is _MISSING:
+        if dotted in optional_sequences and get_path(doc, dotted) is _MISSING:
             continue
         closed_values = {"classification": GAP_CLASSIFICATIONS} if dotted == "discovered_gaps" else None
         require_mapping_sequence_schema(label, doc, dotted, schema, closed_values)
-    require_field(label, doc, "deviations_from_task", list)
-    require_field(label, doc, "blockers", list)
+    for dotted in ("deviations_from_task", "blockers"):
+        value = get_path(doc, dotted)
+        if value is not _MISSING and type(value) is not list:
+            error(f"{label}: path '{dotted}' must be list")
     require_field(label, doc, "state", str, "REPORTED")
 
     preflight = get_path(doc, "capability_preflight")
@@ -1111,18 +1146,30 @@ def validate_review_template() -> None:
         ("contract_compliance.git_authority", str),
         ("contract_compliance.acceptance_criteria", str),
         ("contract_compliance.verifier_evidence", str),
-        ("promotion_readiness.eligible_for_candidate_capture", bool),
-        ("promotion_readiness.reason", str),
-        ("notes", list),
     ]:
         require_field(label, doc, dotted, expected_type)
     for dotted, schema in REVIEW_SEQUENCE_SCHEMAS.items():
+        if get_path(doc, dotted) is _MISSING:
+            continue
         items = require_mapping_sequence_schema(label, doc, dotted, schema)
         if dotted == "follow_up_tasks":
             for index, item in items:
                 require_mapping_schema(
                     label, item["origin"], f"follow_up_tasks[{index}].origin", FOLLOW_UP_ORIGIN_SCHEMA
                 )
+
+    promotion_readiness = get_path(doc, "promotion_readiness")
+    if promotion_readiness is not _MISSING:
+        require_mapping_schema(
+            label,
+            promotion_readiness,
+            "promotion_readiness",
+            {"eligible_for_candidate_capture": bool, "reason": str},
+        )
+
+    notes = get_path(doc, "notes")
+    if notes is not _MISSING and type(notes) is not list:
+        error(f"{label}: path 'notes' must be list")
 
     validate_operational_timing(label, doc)
 
