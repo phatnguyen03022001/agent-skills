@@ -1,0 +1,165 @@
+protocol_version: 3
+
+task_id: TASK-0036
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: "SUPPORT_REPO_GITIGNORE_HYGIENE_AGENT_SKILLS"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "ac2f213095e339dafa96825d89a6f6de164792bc"
+
+architect_analysis_skills: []
+
+execution_skills:
+  required:
+    - executor
+    - verification
+    - simplicity
+    - github-workflow
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "architect-profile/main@0f13d7a036d7c866baa66751067cc2aaf49dd849"
+    role: "active ecosystem authority set"
+    precedence: 1
+  - source: "agent-skills/dev@a53b7275ee9c9c88342ed96cd3baf2bf89882185"
+    role: "exact repository working-state base before hygiene task materialization"
+    precedence: 2
+  - source: "operator fresh local observation: agent-skills has no .gitignore and local .DS_Store plus .codex/environments/environment.toml are untracked"
+    role: "concrete hygiene defect motivating the task"
+    precedence: 3
+
+structure_authority:
+  status: RESOLVED
+  source: "repository root ignore policy"
+  rationale: >-
+    This task adds exactly one repository-root .gitignore plus the canonical task report. No source,
+    package, directory, workflow, runtime, protocol, or repository structure is otherwise changed.
+
+objective: >-
+  Add the smallest stack-appropriate repository-root .gitignore for agent-skills so macOS metadata,
+  Python local artifacts, local environment files, and the operator-local Codex environment file no longer
+  create false dirty managed-mirror state, without hiding repository-owned .codex content or any tracked artifact.
+
+scope:
+  required_changes:
+    - >-
+      Create repository-root .gitignore containing exactly the minimal supported baseline for this repository:
+      .DS_Store; __pycache__/; *.py[cod]; .venv/; venv/; .pytest_cache/; .mypy_cache/; .ruff_cache/;
+      .coverage; coverage/; .env; .env.* with !.env.example and !.env.*.example exceptions; and
+      .codex/environments/environment.toml.
+    - >-
+      Do not add broad unrelated patterns such as .cache/, node_modules/, .next/, build/, dist/, or an ignore for
+      the entire .codex/ directory unless fresh repository evidence proves an exact need and the task is revised.
+    - >-
+      Preserve any existing operator-owned local .DS_Store and .codex/environments/environment.toml bytes exactly;
+      do not delete, clean, stash, move, rewrite, or inspect their contents merely because they become ignored.
+    - >-
+      Publish exact .gitignore candidate and compact report-only child on dev.
+  allowed_existing_files_or_components:
+    - ".gitignore"
+    - ".agent/tasks/TASK-0036/report.yaml"
+
+invariants:
+  - "No tracked repository file becomes ignored by the new rules."
+  - "Any tracked .env.example or .env.*.example remains trackable and is not hidden by the ignore rules."
+  - "Only .codex/environments/environment.toml is ignored under .codex; the .codex directory as a whole is not ignored."
+  - "No existing local untracked operator-owned file is deleted or modified by this task."
+  - "No source, tests, skills, protocol, Case Router, model policy, runtime, dependency, workflow, or support-repository content outside this repository is modified."
+  - "Topology remains exactly {dev, main}; main remains unchanged."
+
+forbidden_changes:
+  - "Do not delete or clean local untracked files just to obtain a clean status."
+  - "Do not ignore the whole .codex/ tree."
+  - "Do not add generic framework/build patterns without repository evidence."
+  - "Do not modify any file other than .gitignore and .agent/tasks/TASK-0036/report.yaml."
+  - "Do not create/delete/rename branches, tags, releases, repository settings, or promote main."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: >-
+      Exact base-to-candidate diff adds only root .gitignore with the authorized minimal patterns and no unrelated ignore entries.
+    evidence_required: "Exact diff and parsed line-set proof."
+  - id: AC-2
+    requirement: >-
+      git ls-files -ci --exclude-standard is empty on the exact candidate, proving no tracked artifact is newly hidden.
+    evidence_required: "Exact command result."
+  - id: AC-3
+    requirement: >-
+      git check-ignore proves .DS_Store, representative Python cache/venv/env artifacts, coverage artifacts, and
+      .codex/environments/environment.toml are ignored while .env.example and a representative .env.test.example are not ignored;
+      a representative other .codex path is not ignored.
+    evidence_required: "Deterministic synthetic check-ignore evidence without modifying operator-owned files."
+  - id: AC-4
+    requirement: >-
+      Existing repository verification remains green as applicable and git diff --check passes; no unrelated tracked bytes change.
+    evidence_required: "Repository-native verification plus diff/status evidence."
+  - id: AC-5
+    requirement: >-
+      Exact candidate and report-only child are published on dev; main is unchanged, topology remains {dev, main},
+      and final local tracked/index status is clean while operator-owned ignored files, if present, remain preserved.
+    evidence_required: "Candidate/report identities, fresh refs/topology, and local hygiene proof."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: >-
+        Fresh-resolve exact task/base, active authority set, repo refs/topology, current .gitignore absence, tracked-file inventory,
+        and local status without reading operator-owned ignored-file contents.
+      required: true
+    - id: CHECK-2
+      command_or_check: >-
+        Add only the authorized .gitignore and run deterministic ignore-policy checks including git ls-files -ci --exclude-standard,
+        synthetic git check-ignore positive/negative cases, repository-native verification as applicable, and git diff --check.
+      required: true
+    - id: CHECK-3
+      command_or_check: >-
+        Publish exact candidate and report-only child on dev, then freshly prove final dev/main/topology and local tracked/index hygiene;
+        preserve operator-owned ignored files exactly and do not self-attest report publication before post-push observation.
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+blocking_decisions: []
+execution_ready: true
