@@ -1,0 +1,161 @@
+protocol_version: 3
+
+task_id: TASK-0040
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0040/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "eba7b32d19a0a06750f93d1fe1702705d456f4ee"
+  final_execution_head: "eba7b32d19a0a06750f93d1fe1702705d456f4ee"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "11a5720adf96555bfe4187067d8dd51627ec8676"
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  available:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  missing: []
+  passed: true
+  evidence: >-
+    CODEX_LOCAL resolved the exact target/task/base binding, the pinned support revision, repository-native Git
+    execution, local report-write/commit capability, remote ref reads, and current non-force push capability. Fresh
+    remote reads and a non-mutating push dry-run immediately before the promotion consequence proved the required
+    current capability.
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_REQUIRED
+  evidence: "TASK-0040 designates no separate authoritative verifier."
+
+pushed: true
+promoted_to_main: true
+
+reused_evidence:
+  accepted_review:
+    commit: "6c8fc8aa1617a954fcf220563a1cf389de2752c4"
+    path: .agent/tasks/TASK-0039/review.yaml
+    state: ACCEPTED
+  reviewed_report:
+    commit: "a285ce9ca8bd90bfafe471f9ca483373e50c1ea4"
+    path: .agent/tasks/TASK-0039/report.yaml
+    report_revision: 1
+  accepted_candidate:
+    commit: "ed8d9fb35bb8b052530ca879e68a227d77e4a8a6"
+    parent: "f9b0e00185b39f9c84ecb07121b5bf2c281ee7d9"
+  prior_correctness_proofs:
+    - "repository validator PASS"
+    - "116/116 unittest PASS"
+    - "git diff --check PASS"
+    - "exact scope/lineage guards PASS"
+    - "semantic-invariant and forbidden-surface guards PASS"
+  applicability: >-
+    Fresh binding re-resolved the exact TASK-0039 accepted review, report, candidate, and candidate parent. The
+    candidate still changes only executor/SKILL.md from its exact base; its bytes, relevant validator/test surfaces,
+    dependencies, and accepted semantic predicates remain unchanged. TASK-0040 adds only promotion and report
+    publication predicates. Therefore the accepted immutable correctness evidence remains applicable; only current
+    authority, refs/topology, ancestry, capability, promotion, and publication predicates required fresh evidence.
+
+newly_run_proofs:
+  - >-
+    Fresh read-only resolution proved architect-profile/main=b7753ba37abe193c8801ac26302ecff7bbb35604,
+    agent-skills dev=eba7b32d19a0a06750f93d1fe1702705d456f4ee, main=
+    11a5720adf96555bfe4187067d8dd51627ec8676, and topology exactly {dev, main}; immutable Git history proved the
+    old main is an ancestor of the exact candidate. An exact non-mutating non-force push dry-run passed.
+  - >-
+    A first local command assembly attempt was rejected by Git before source-ref resolution because zsh interpreted
+    an unbraced refspec fragment; it made no remote ref mutation. The replacement bounded serial consequence freshly
+    re-ran all mutable guards, non-force pushed the literal exact candidate to refs/heads/main, and post-proved
+    main=ed8d9fb35bb8b052530ca879e68a227d77e4a8a6 with dev unchanged and topology exactly {dev, main}.
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: >-
+      Fresh binding resolved TASK-0039 review 6c8fc8aa1617a954fcf220563a1cf389de2752c4, report
+      a285ce9ca8bd90bfafe471f9ca483373e50c1ea4, candidate ed8d9fb35bb8b052530ca879e68a227d77e4a8a6, and its
+      direct parent f9b0e00185b39f9c84ecb07121b5bf2c281ee7d9. The applicability record confirms that the accepted
+      immutable correctness evidence covers all currently required correctness predicates under unchanged semantics
+      and dependencies.
+  - criterion_id: AC-2
+    status: PASS
+    evidence: >-
+      No TASK-0039 validator, unittest, diff-check, scope, semantic, or forbidden-surface producer was rerun.
+      Newly executed work was limited to exact identity/lineage inspection and consequence-sensitive authority,
+      refs/topology, capability, promotion, and post-promotion proofs.
+  - criterion_id: AC-3
+    status: PASS
+    evidence: >-
+      Immediately before the successful promotion, a fresh guard proved dev=
+      eba7b32d19a0a06750f93d1fe1702705d456f4ee, main=11a5720adf96555bfe4187067d8dd51627ec8676,
+      topology exactly {dev, main}, architect-profile/main=b7753ba37abe193c8801ac26302ecff7bbb35604, and old main
+      ancestry of the exact candidate. The current non-force push dry-run had passed.
+  - criterion_id: AC-4
+    status: PASS
+    evidence: >-
+      The fresh bounded serial promotion consequence returned JOIN PASS across guard, exact strict non-force push,
+      and remote post-proof. It set refs/heads/main exactly to ed8d9fb35bb8b052530ca879e68a227d77e4a8a6 and showed
+      dev unchanged. The preceding malformed local refspec invocation exited before source-ref resolution and did
+      not mutate a remote ref; the successful consequence repeated its complete mutable guard.
+  - criterion_id: AC-5
+    status: NOT_PROVEN
+    evidence: >-
+      Promotion is proven: main equals ed8d9fb35bb8b052530ca879e68a227d77e4a8a6 while dev remains the task base
+      before report authorship. This report-only child publication and final fresh dev/main/topology plus local
+      managed-mirror closure occur after this report is committed and are intentionally not self-attested.
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: >-
+      Fresh resolution proved the exact TASK-0040 revision/base, pinned skills, current architect-profile authority,
+      accepted TASK-0039 review/report/candidate identities, candidate lineage, current target refs/topology,
+      old-main ancestry, and required promotion/report capabilities.
+  - check_id: CHECK-2
+    result: PASS
+    evidence: >-
+      Accepted immutable TASK-0039 correctness evidence was reused with explicit current-predicate applicability;
+      no acceptance-equivalent correctness producer was rerun because no invalidated or newly required correctness
+      predicate was found.
+  - check_id: CHECK-3
+    result: PASS
+    evidence: >-
+      After a failed no-mutation local refspec assembly attempt, a fresh bounded promotion JOIN passed complete
+      mutable guard, exact strict non-force promotion of the accepted candidate, and exact remote post-proof.
+  - check_id: CHECK-4
+    result: NOT_PROVEN
+    evidence: >-
+      Report commit/publication and final fresh remote/local closure are post-report facts and will be freshly proved
+      after this report commit rather than self-attested in it.
+
+deviations_from_task:
+  - >-
+    The first attempted promotion command used an unbraced zsh variable adjacent to the refspec and failed locally
+    before source-ref resolution. It created no remote mutation; a fresh fully guarded literal-refspec consequence
+    then completed the authorized promotion.
+
+result: NEEDS_REVIEW
