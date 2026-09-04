@@ -1,0 +1,154 @@
+protocol_version: 3
+
+task_id: TASK-0032
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: operator_direction
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "db03b97b5c42c9c64ad8dce76bc694530e41a206"
+
+execution_skills:
+  required:
+    - executor
+    - verification
+    - simplicity
+    - github-workflow
+
+authority_sources:
+  - source: "architect-profile/main@116e624b4c17d4949562b4d3f16385bfcf582130"
+    role: "active ecosystem authority-set"
+    precedence: 1
+  - source: "agent-skills/main@db03b97b5c42c9c64ad8dce76bc694530e41a206"
+    role: "active stable workflow semantics"
+    precedence: 2
+  - source: "architect-profile/.agent/tasks/TASK-0021/report.yaml@00fe4f97b545e6195537fa22c566fc6e0a24f37c"
+    role: "field evidence of redundant exact-candidate reverification during activation"
+    precedence: 3
+
+objective: >-
+  Make Architect task authoring actually consume the existing evidence-validity and execution-bundle
+  semantics: exact accepted immutable candidate correctness evidence is reused, only invalidated or
+  consequence-sensitive predicates are refreshed, and deterministic local work is delegated to one
+  or a few bounded execution bundles instead of forcing model/runtime round-trips between commands.
+
+scope:
+  required_changes:
+    - >-
+      Update architect/SKILL.md with one concise task-authoring rule that forbids ceremonial
+      acceptance-equivalent reverification of an exact ACCEPTED immutable candidate when candidate,
+      review, and governing authority identities are unchanged. Reverification remains valid only
+      for an invalidated evidence class, explicit stronger assurance, contradiction, or a check whose
+      truth materially depends on current mutable/runtime state.
+    - >-
+      Require promotion/activation task PROOF to refresh only predicates invalidated by the next
+      consequence, including current remote refs/topology/ancestry/current capability and fresh
+      post-mutation remote identity, while reusing unchanged IMMUTABLE correctness evidence.
+    - >-
+      Require Architect-authored deterministic local proof to be bundle-friendly: one bounded
+      invocation may contain ordered serial phases and safely parallel independent checks, so task
+      wording must not force one model/runtime synchronization boundary per deterministic command.
+    - >-
+      Keep the rule referential to existing Task Protocol and Executor execution-bundle semantics;
+      do not duplicate or redefine their semantic ownership.
+
+allowed_existing_files_or_components:
+  - architect/SKILL.md
+  - .agent/tasks/TASK-0032/report.yaml
+
+invariants:
+  - "Task Protocol evidence-validity classes and execution-bundle definition remain unchanged."
+  - "Executor authority, lifecycle, promotion lineage, review ownership, and fail-closed semantics remain unchanged."
+  - "No Agent Runtime change, new runtime intelligence, scheduler, queue, cache, registry, daemon, callback service, telemetry service, or new CASE is introduced."
+  - "No model-routing policy change is introduced."
+  - "No doctrine-token validator expansion is introduced."
+  - "Topology remains exactly {dev, main}."
+
+forbidden_changes:
+  - "Do not modify protocols/TASK_PROTOCOL.md unless existing text is proven contradictory; if contradiction is found, stop and report BLOCKING rather than broadening scope."
+  - "Do not modify executor/SKILL.md, Agent Runtime, templates, contracts, taxonomy, Case Router, model policy, branch policy, or support repositories."
+  - "Do not add new validator doctrine tokens or a benchmark/telemetry framework."
+  - "Do not mutate agent-skills/main."
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  REVIEW:
+    - repository_content_read
+    - repository_content_write
+    - exact_commit_report_resolution
+    - remote_ref_read
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Implementation changes only architect/SKILL.md and adds no duplicated protocol authority."
+    evidence_required: "Exact base-to-candidate diff plus ownership review."
+  - id: AC-2
+    requirement: "Architect task-authoring semantics explicitly reuse unchanged exact ACCEPTED IMMUTABLE candidate correctness evidence and refresh only invalidated/consequence-sensitive evidence."
+    evidence_required: "Exact changed text mapped to existing Task Protocol validity classes."
+  - id: AC-3
+    requirement: "Architect task-authoring semantics explicitly allow deterministic local proof to collapse into bounded execution bundles with serial phases and safe independent parallel checks without reducing assurance predicates."
+    evidence_required: "Exact changed text mapped to existing Executor execution-bundle semantics."
+  - id: AC-4
+    requirement: "A read-only counterfactual against architect-profile TASK-0021 shows the revised rule would reuse prior accepted candidate correctness evidence and retain fresh promotion guards/post-proof, without requiring the full 27-test suite solely for ceremony."
+    evidence_required: "Compact before/after predicate classification in report; no target mutation."
+  - id: AC-5
+    requirement: "Repository-native validator/tests, py_compile where applicable, and git diff --check remain green; candidate and compact report child are published on dev with main unchanged."
+    evidence_required: "Bounded deterministic verification result plus fresh dev/main/topology proof."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Fresh-resolve exact task/base, active authority-set, repository identity, dev/main topology, required skills/capabilities, and existing Task Protocol/Architect/Executor ownership boundaries."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Apply only the smallest architect/SKILL.md correction and prove exact diff; no protocol/executor/validator-token expansion."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Run one bounded deterministic verification bundle covering existing validator/tests, py_compile where applicable, git diff --check, and the TASK-0021 read-only counterfactual classification."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Publish exact candidate then compact report child on dev; fresh-prove main unchanged, topology {dev, main}, and final local hygiene."
+      required: true
+
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
