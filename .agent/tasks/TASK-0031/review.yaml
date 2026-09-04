@@ -1,0 +1,42 @@
+protocol_version: 3
+
+task_id: TASK-0031
+task_revision: 1
+review_revision: 1
+state: ACCEPTED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0031/report.yaml
+  commit: "bdcb2f6519b540176c717fe91c84036408e53a19"
+  report_revision: 1
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: PASS
+  verifier_evidence: NOT_REQUIRED
+
+accepted_candidate:
+  commit: "db03b97b5c42c9c64ad8dce76bc694530e41a206"
+  role: "exact stable agent-skills main revision"
+
+acceptance_basis:
+  - "Fresh review-boundary GitHub observation proves dev=bdcb2f6519b540176c717fe91c84036408e53a19, main=db03b97b5c42c9c64ad8dce76bc694530e41a206, and topology exactly {dev, main}."
+  - "The report commit is a report-only child of TASK-0031 planning base 52664288170439dcd5e05ef80c3e6e762ec0a6bc and adds only .agent/tasks/TASK-0031/report.yaml."
+  - "Stable main equals the exact accepted TASK-0030 candidate and excludes TASK-0030 report/review and TASK-0031 planning/report descendants."
+  - "Candidate revalidation evidence is green: validator PASS, 116/116 unittest PASS, py_compile PASS, git diff --check PASS, taxonomy 15, Case Router unchanged, and exact eight candidate paths."
+  - "AC-5/CHECK-5 are correctly NOT_PROVEN inside the self-containing report; report publication identity and final remote closure are fresh REMOTE_MUTABLE evidence owned by this review boundary, not same-commit report claims."
+
+follow_up_tasks:
+  - task_id: TASK-0020
+    repository: phatnguyen03022001/architect-profile
+    purpose: "Rebind authority.lock to agent-skills@db03b97b5c42c9c64ad8dce76bc694530e41a206 and validate the next activation candidate."
+
+notes:
+  - "agent-skills/main movement alone does not activate ecosystem semantics; architect-profile/main remains the activation pointer."
