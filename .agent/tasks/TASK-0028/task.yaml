@@ -1,0 +1,217 @@
+protocol_version: 3
+
+task_id: TASK-0028
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: accepted_follow_up
+  task_id: TASK-0027
+  gap_id: "CR-03-STABLE-CASE-ROUTER-PROMOTION"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "337c0be6618090e704b345b1bf93df488a4985af"
+
+architect_analysis_skills:
+  - architect
+  - github-workflow
+  - simplicity
+  - verification
+
+execution_skills:
+  required:
+    - executor
+    - github-workflow
+    - simplicity
+    - verification
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: ".agent/tasks/TASK-0027/review.yaml@6cfbfc145487dee8448b1872e02c41662a2b1d9b"
+    role: "Architect acceptance and stable-promotion authority for the exact Case Router candidate."
+    precedence: 1
+  - source: ".agent/tasks/TASK-0027/report.yaml@6042a5d74fb56d33f02b32dbd0fe92029d03028f"
+    role: "Exact execution, pilot, regression, and publication evidence for the accepted candidate."
+    precedence: 2
+  - source: "agent-skills candidate@4a063c41f429207577434600a3571dc17822cd78"
+    role: "Exact accepted reusable semantic candidate to promote."
+    precedence: 3
+  - source: "agent-skills stable main@337c0be6618090e704b345b1bf93df488a4985af"
+    role: "Exact stable base that must remain unchanged until all promotion gates pass."
+    precedence: 4
+
+structure_authority:
+  status: RESOLVED
+  source: "TASK-0027 accepted review"
+  rationale: >-
+    This is a promotion-only task. It creates no reusable implementation candidate and may add
+    only the normal TASK-0028 report on dev. The only reusable semantic state change is moving
+    agent-skills/main by non-force fast-forward to the already accepted exact candidate.
+
+objective: >-
+  Promote exactly the accepted static Case Router candidate
+  4a063c41f429207577434600a3571dc17822cd78 to agent-skills/main after fresh independent
+  verification, without semantic expansion, branch creation, or ecosystem activation. Keep dev
+  as the evidence/task branch and stop with support main stable but not yet activated by
+  architect-profile authority lock.
+
+scope:
+  required_changes:
+    - "Fresh-resolve repository identity and require remote physical topology exactly {dev, main}."
+    - "Require planning-base dev to match the exact handoff snapshot and require main to remain exactly 337c0be6618090e704b345b1bf93df488a4985af before promotion."
+    - "Resolve TASK-0027 accepted review at exact commit 6cfbfc145487dee8448b1872e02c41662a2b1d9b, report commit 6042a5d74fb56d33f02b32dbd0fe92029d03028f, and semantic candidate 4a063c41f429207577434600a3571dc17822cd78."
+    - "Independently prove the candidate changes exactly .agent/case-router.yaml, scripts/validate_skill_library.py, and scripts/test_validate_skill_library.py relative to the TASK-0027 planning base 763e12d1d8c900397070964e0dd291a265325ed5, and that the report/review/task-authority descendants are not part of the semantic candidate tip."
+    - "Re-run repository-native validator, complete unittest regression, focused Case Router tests, and git diff --check against the exact accepted candidate bytes using the smallest safe detached/temporary verification method; do not alter reusable files."
+    - "Prove stable main 337c0be6618090e704b345b1bf93df488a4985af is the merge-base ancestor of candidate 4a063c41f429207577434600a3571dc17822cd78 and candidate is not behind/diverged from main."
+    - "Only after all gates pass, non-force fast-forward main to exactly 4a063c41f429207577434600a3571dc17822cd78. Do not move main to TASK-0027 report, review, TASK-0028 task, or any later dev commit."
+    - "Fresh-observe GitHub and require main exactly equals 4a063c41f429207577434600a3571dc17822cd78, dev remains the TASK-0028 planning/evidence lineage, and topology remains exactly {dev, main}."
+    - "Publish only the normal TASK-0028 Executor report on dev after promotion, push it, independently prove remote dev equals the report SHA, and reconcile the designated local dev mirror to final remote dev when executing locally."
+    - "Record explicitly that support main promotion does not activate the new ecosystem authority set. architect-profile/main and its authority lock remain untouched; activation is a later task."
+
+  allowed_existing_files_or_components:
+    - ".agent/tasks/TASK-0028/task.yaml"
+    - ".agent/tasks/TASK-0028/report.yaml"
+    - ".agent/tasks/TASK-0027/task.yaml"
+    - ".agent/tasks/TASK-0027/report.yaml"
+    - ".agent/tasks/TASK-0027/review.yaml"
+    - ".agent/case-router.yaml"
+    - "scripts/validate_skill_library.py"
+    - "scripts/test_validate_skill_library.py"
+    - "temporary detached verification material outside repository authority"
+
+invariants:
+  - "The exact promoted semantic candidate is 4a063c41f429207577434600a3571dc17822cd78 and no other commit."
+  - "Case Router semantics remain exactly one reusable CASE: EXECUTE -> executor."
+  - "CASE remains navigation only and distinct from BINDING, SPECIALIZATION, MODE, TASK, and STATE."
+  - "No embedding, classifier, fuzzy intent routing, workflow/state engine, or second capability registry is admitted."
+  - "Support main promotion is not ecosystem activation. architect-profile/main remains the activation pointer and is out of scope."
+  - "Physical topology remains exactly {dev, main}."
+  - "Promotion must be non-force and ancestry-safe."
+  - "GitHub remains repository SSOT."
+
+forbidden_changes:
+  - "Do not modify .agent/case-router.yaml, scripts/validate_skill_library.py, scripts/test_validate_skill_library.py, README, protocols, skills, templates, or any reusable semantic file."
+  - "Do not add any CASE or change EXECUTE capability loads."
+  - "Do not implement bootstrap integration, architect-profile authority-lock update, ecosystem activation, embedding, semantic retrieval, or any external-repository mutation."
+  - "Do not create, rename, or delete branches."
+  - "Do not create staging, PRs, issues, tags, releases, or repository metadata changes."
+  - "Do not force-push, reset main backward, rebase main, or promote report/review/task-authority commits as the stable tip."
+  - "Do not create an implementation commit in TASK-0028; the accepted candidate already exists."
+
+gap_policy:
+  local_auto_fix: false
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - native_repository_execution
+    - git_push
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_read
+    - repository_content_write
+    - remote_ref_read
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "TASK-0027 acceptance and exact candidate identity are independently reconstructed from canonical GitHub evidence."
+    evidence_required: "Exact task/report/review/candidate commit identities and lineage proof."
+  - id: AC-2
+    requirement: "The exact candidate is reverified without semantic mutation and preserves all accepted Case Router boundaries."
+    evidence_required: "Focused Case Router tests, full validator, full unittest regression, git diff --check, and exact changed-path proof on candidate bytes."
+  - id: AC-3
+    requirement: "Stable promotion is ancestry-safe and exact."
+    evidence_required: "Fresh pre-promotion refs, merge-base/ancestor proof, non-force promotion, and post-promotion main == 4a063c41f429207577434600a3571dc17822cd78."
+  - id: AC-4
+    requirement: "No report/review/task-authority descendant becomes the stable main tip."
+    evidence_required: "Exact post-promotion main SHA and comparison against TASK-0027 report/review and TASK-0028 planning commits."
+  - id: AC-5
+    requirement: "Promotion introduces no semantic expansion or embedding/router-v2 machinery."
+    evidence_required: "No reusable file mutation in TASK-0028 and exact candidate boundary review."
+  - id: AC-6
+    requirement: "Support promotion remains separate from ecosystem activation."
+    evidence_required: "Fresh proof architect-profile is unmodified by this task and report statement that authority-lock/activation remains pending."
+  - id: AC-7
+    requirement: "Final remote topology remains exactly {dev, main}; dev carries TASK-0028 report evidence while main equals the accepted candidate."
+    evidence_required: "Fresh final branch refs and topology proof."
+  - id: AC-8
+    requirement: "Local execution closes against GitHub SSOT without creating durable unpublished truth."
+    evidence_required: "Final remote dev report SHA plus local dev == remote dev and tracked/index clean when executed locally."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Fresh-resolve TASK-0028 revision 1 at exact planning base, stable main, TASK-0027 accepted review/report/candidate, topology {dev, main}, and all required promotion capabilities before any ref mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Verify exact candidate 4a063c41f429207577434600a3571dc17822cd78 with focused Case Router tests, python3 scripts/validate_skill_library.py, python3 -m unittest scripts/test_validate_skill_library.py, and git diff --check using exact candidate bytes."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Prove main 337c0be6618090e704b345b1bf93df488a4985af is the merge-base ancestor of candidate and candidate is an ancestry-safe forward target."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Non-force fast-forward main to exactly 4a063c41f429207577434600a3571dc17822cd78, then independently fresh-resolve GitHub main and require exact equality."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Verify no external repository or architect-profile authority lock was mutated and no reusable agent-skills file changed during TASK-0028 execution."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Publish report-only child on dev, independently confirm remote dev report SHA, require final topology {dev, main} with main=candidate, reconcile local dev to remote dev if local, and stop at NEEDS_REVIEW."
+      required: true
+
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: true
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
