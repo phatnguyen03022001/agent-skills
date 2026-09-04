@@ -1,0 +1,69 @@
+protocol_version: 3
+
+task_id: TASK-0026
+task_revision: 1
+review_revision: 1
+state: ACCEPTED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0026/report.yaml
+  commit: "d6da052516f849784d8d92ccc34d3cef85057d45"
+  report_revision: 1
+
+independence:
+  reviewer_role: ARCHITECT
+  separate_session_from_executor: true
+  exact_report_identity_verified: true
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: PASS
+  verifier_evidence: NOT_REQUIRED
+
+architect_decision:
+  case_router_admission: ACCEPTED
+  admitted_form: "small static navigation projection from CASE to existing canonical capability keys/entrypoints"
+  embedding_admission: NOT_PROVEN
+  rationale: >-
+    CR-00 proves repeated material routing-read waste across 12 independent episodes and 6 repositories,
+    three materially distinct recurring capability sets, and median reducible overhead of 60.0% by
+    artifact count and 51.947308% by bytes without moving semantic authority. This is sufficient to
+    admit a bounded static Case Router. It is not authority for workflow transitions, next/retry maps,
+    lifecycle state, binding, specialization, mode, task state, or embedding. Only one exact recurring
+    capability set crosses repository boundaries, so the next task must keep the initial taxonomy
+    minimal and evidence-backed rather than predeclaring an exhaustive ecosystem case catalog.
+
+gap_disposition:
+  - gap_id: CR-00-CASE-ROUTER-ADMISSION
+    disposition: RESOLVED
+    reason: "Mechanical admission evidence is PROVEN and Architect admits only the bounded static navigation layer."
+  - gap_id: CR-00-EMBEDDING-ADMISSION
+    disposition: NOT_ADMITTED
+    reason: "The baseline records no meaningful residual semantic-search waste after the minimal static projection; embedding remains NOT_PROVEN."
+
+follow_up_tasks:
+  - task_id: "CR-01"
+    origin:
+      type: admitted_follow_up
+      task_id: TASK-0026
+      gap_id: CR-00-CASE-ROUTER-ADMISSION
+
+promotion_readiness:
+  eligible_for_candidate_capture: false
+  reason: >-
+    TASK-0026 is measurement evidence only. No reusable router semantics were implemented and main
+    must remain unchanged. CR-01 must materialize and pilot the bounded navigation contract first.
+
+notes:
+  - "Baseline commit e42230d9e7f2c2d73b51135baafb4b51f3dc61aa changes only case-routing-baseline.json."
+  - "Report commit d6da052516f849784d8d92ccc34d3cef85057d45 is its direct report-only child and current dev at review start."
+  - "Fresh GitHub observation confirms dev=d6da052516f849784d8d92ccc34d3cef85057d45, main=337c0be6618090e704b345b1bf93df488a4985af, topology exactly {dev, main}."
+  - "The canonical report necessarily records CHECK-6 as pending before its own publication; the operator terminal evidence states the subsequent report push, remote confirmation, and local reconciliation completed. This sequencing does not weaken the CR-00 admission measurements and no separate authoritative verifier was required."
+  - "CR-01 must preserve CASE != BINDING != SPECIALIZATION != MODE != TASK != STATE and must reject next/retry/success/terminal transition fields."
