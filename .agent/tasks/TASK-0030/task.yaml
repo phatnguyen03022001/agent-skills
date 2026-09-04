@@ -1,0 +1,187 @@
+protocol_version: 3
+
+task_id: TASK-0030
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: discovered_gap
+  task_id: TASK-0029
+  gap_id: EX-01-CONTROL-PLANE-ACCELERATION
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "4a063c41f429207577434600a3571dc17822cd78"
+
+execution_skills:
+  required:
+    - executor
+    - optimization
+    - simplicity
+    - verification
+    - github-workflow
+
+authority_sources:
+  - source: "architect-profile/main@89dacd43b7a200a7b9cd36d9545f23c930eb4f44"
+    role: "active ecosystem authority-set"
+    precedence: 1
+  - source: ".agent/tasks/TASK-0029/review.yaml@fcb475e804ed54ab4215af770092bc313f80db2f"
+    role: "accepted sparse-serialization result and explicit EX-01 follow-up"
+    precedence: 2
+  - source: "current operator evidence: promotion/verification tasks spend material wall-clock in model-tool synchronization, serial deterministic checks, and repeated mutable-state refresh"
+    role: "observed optimization trigger"
+    precedence: 3
+
+structure_authority:
+  status: RESOLVED
+  source: "existing protocol-v3 roles and execution surfaces"
+  rationale: >-
+    This task changes reusable execution procedure only. The optimization is a bounded invocation pattern,
+    not a scheduler, service, runtime brain, cache, queue, state machine, or new organizational role.
+
+objective: >-
+  Preserve the same fail-closed assurance predicates while materially reducing model/runtime synchronization
+  boundaries. Define evidence validity and invalidation precisely, refresh mutable evidence only at consequence
+  boundaries, and allow one bounded deterministic execution bundle to run independently attributable checks
+  concurrently only when isolation/resource predicates prove parallel execution safe.
+
+scope:
+  required_changes:
+    - "Define four evidence-validity classes for an active exact binding: IMMUTABLE, LOCAL_MUTABLE, REMOTE_MUTABLE, and RUNTIME. Exact commit/blob/task/review/skill/candidate identities may be reused while unchanged; local state is invalidated by relevant local/observation mutation; GitHub refs/topology must be freshly resolved at consequential canonical boundaries; runtime capability/auth/quota evidence is short-lived and never authority."
+    - "Replace ambiguous reusable wording such as 'before any ref mutation' with consequence-specific language distinguishing observation mutation (for example fetch/remote-tracking refs), authorized target-ref mutation, and canonical publication mutation."
+    - "Define consequence-boundary refresh rules: fresh mutable evidence immediately before an authorized consequence that depends on it, and fresh proof after canonical publication/ref mutation. Do not reread immutable exact-SHA evidence for ceremony inside the same binding."
+    - "Define EXECUTION BUNDLE as one bounded local/runtime invocation containing multiple deterministic checks and returning one compact independently attributable JOIN result. It carries no authority/state and creates no durable cache."
+    - "Parallelize bundle jobs only when all are proven to have no shared mutable state, no ordering dependency, no conflicting externally rate-limited dependency, no material resource contention, and independently attributable results. Otherwise serialize them. Same write surface, database/port/temp/cache conflicts, migrations, publication/ref mutation, and final mutation gates remain serial."
+    - "When a mandatory full suite semantically subsumes a focused suite, do not run focused tests first on the happy path. Focused tests are diagnostic after failure unless the task gives them distinct acceptance authority."
+    - "Resolve the TASK-0029 post-report self-reference: a report must not claim a same-commit post-publication predicate as durable PASS before it can exist. Canonical report stores candidate/pre-publication evidence; fresh remote publication identity is independently resolved after push and at review/consequence boundaries. Local mirror reconciliation is operational LOCAL_MUTABLE hygiene, not remote canonical authority."
+    - "Keep Executor final publication closure fail-closed: remote report ref, main/topology constraints, and local mirror hygiene when required must still be checked after publication; the optimization changes where evidence is consumed, not whether predicates exist."
+    - "Dogfood the new model while verifying TASK-0030: run at least four safe independent deterministic verification jobs through at most two bounded runtime invocations, produce a compact JOIN result, then perform mutation/publication serially."
+    - "Mechanically compare the dogfood verification synchronization count with an equivalent one-command-per-check serial plan and prove at least 50% fewer model/runtime synchronization boundaries without removing any assurance predicate. Wall-clock timing may be recorded only as non-authoritative telemetry when trustworthy boundaries are available; it is not an acceptance gate."
+
+  allowed_existing_files_or_components:
+    - "protocols/TASK_PROTOCOL.md"
+    - "executor/SKILL.md"
+    - "verification/SKILL.md"
+    - "optimization/SKILL.md"
+    - "github-workflow/SKILL.md"
+    - "contracts/IMPLEMENTATION_REPORT.md"
+    - "contracts/ARCHITECT_REVIEW.md"
+    - "templates/report.yaml and templates/review.yaml only if required to remove self-referential/pending-final-refresh ambiguity"
+    - "scripts/validate_skill_library.py and scripts/test_validate_skill_library.py only for mechanically enforceable changed semantics"
+    - ".agent/tasks/TASK-0030/report.yaml"
+    - "run-owned temporary commands/fixtures used for the dogfood bundle and synchronization measurement"
+
+invariants:
+  - "Protocol version remains 3 and TASK-0029 sparse/expanded compatibility remains intact."
+  - "Assurance predicates are preserved; optimization targets synchronization boundaries, not rule deletion."
+  - "Authority, capability, evidence validity, and consequence remain distinct."
+  - "Remote mutable GitHub truth is never cached across a consequence boundary merely because the Executor itself made no mutation."
+  - "Agent Runtime remains transport only for CHATGPT_LOCAL."
+  - "Case Router remains exactly EXECUTE -> executor and byte-identical."
+  - "No new CASE, role, lane, lifecycle, task/report/review family, branch, service, dependency, or persistent execution state is introduced."
+  - "Topology remains exactly {dev, main}; main is not mutated by this task."
+
+forbidden_changes:
+  - "Do not build a scheduler, orchestrator, daemon, queue, database, execution registry, persistent cache, workflow engine, or parallel-agent framework."
+  - "Do not modify agent-runtime or make Agent Runtime decide workflow/policy."
+  - "Do not create an execution-bundle service or durable bundle artifact."
+  - "Do not parallelize jobs with shared mutable state, ordering dependencies, rate-limit conflict, material resource contention, or ambiguous attribution."
+  - "Do not weaken fresh remote proof before/after canonical publication mutation."
+  - "Do not add embedding/vector/semantic retrieval."
+  - "Do not mutate agent-skills/main or create/delete/rename branches."
+  - "Do not expand TASK-0030 into live historical task-ledger validation; that remains a separate adversarial-cleanup concern."
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  REVIEW:
+    - repository_content_read
+    - repository_content_write
+    - exact_commit_report_resolution
+    - remote_ref_read
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Evidence classes and invalidation rules are explicit, consequence-based, and do not create authority or persistent cache semantics."
+    evidence_required: "Exact reusable semantic diff plus focused tests/validation where mechanically applicable."
+  - id: AC-2
+    requirement: "EXECUTION BUNDLE is a bounded invocation pattern only; safe-parallel eligibility requires all isolation/resource/attribution predicates and unsafe cases remain serial."
+    evidence_required: "Executor/verification/optimization guidance plus positive and negative examples/tests."
+  - id: AC-3
+    requirement: "Remote refs/topology are freshly resolved at canonical consequence boundaries while immutable exact-SHA evidence is reused without ceremony and local/runtime evidence is invalidated at the correct events."
+    evidence_required: "Focused consequence-boundary scenarios including external remote drift between observations."
+  - id: AC-4
+    requirement: "Post-report publication closure has no self-referential PASS/PENDING ambiguity: canonical report evidence, fresh remote publication proof, review binding, and local operational hygiene have explicit owners/timing."
+    evidence_required: "Protocol/contract/template behavior and regression tests covering report publication followed by fresh remote review."
+  - id: AC-5
+    requirement: "Focused-before-full redundancy is removed when the full mandatory suite subsumes it, while separately authoritative focused checks remain supported."
+    evidence_required: "Procedure text and focused regression examples."
+  - id: AC-6
+    requirement: "TASK-0030 dogfood runs at least four safe independent deterministic checks in <=2 runtime invocations and proves >=50% synchronization-boundary reduction against equivalent serial execution with the same predicates."
+    evidence_required: "Compact run-owned bundle manifest/result and mechanical boundary count; no persistent telemetry subsystem."
+  - id: AC-7
+    requirement: "Full repository regression remains green; protocol v3, expanded compatibility, sparse serialization, Case Router bytes, taxonomy, and branch topology remain unchanged."
+    evidence_required: "Full validator/unit suite, py_compile for changed Python, git diff --check, exact changed paths, Case Router blob identity, and simplicity review."
+  - id: AC-8
+    requirement: "Implementation candidate and compact report child are published on dev with fresh remote proof; main remains unchanged and final local mirror hygiene is checked without treating local state as canonical authority."
+    evidence_required: "Candidate/report SHAs, fresh remote refs/topology, and truthful terminal local-hygiene evidence."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Fresh-resolve exact TASK-0030/base, active authority-set, pinned skills, repository identity, dev/main/topology, local task ownership, and runtime capabilities."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Run focused evidence-validity/invalidation, external-remote-drift, safe/unsafe bundle, report-publication-closure, and focused-vs-full scenarios."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Dogfood >=4 safe independent deterministic verification jobs through <=2 bounded runtime invocations; JOIN results remain individually attributable."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Mechanically compare synchronization boundaries against equivalent serial one-command-per-check execution and require >=50% reduction with identical assurance predicates."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Run full validator/unit regression, historical expanded-v3 and TASK-0029 sparse compatibility, py_compile for changed Python, git diff --check, exact changed-path proof, Case Router byte identity, and simplicity review."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Publish exact candidate then compact report child on dev; independently refresh GitHub after each publication, keep main unchanged/topology {dev, main}, perform final local hygiene check, and stop at NEEDS_REVIEW."
+      required: true
+
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
