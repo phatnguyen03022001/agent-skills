@@ -1,0 +1,236 @@
+protocol_version: 3
+
+task_id: TASK-0026
+task_revision: 1
+report_revision: 1
+state: REPORTED
+terminal_status: NEEDS_REVIEW
+
+task_source:
+  path: .agent/tasks/TASK-0026/task.yaml
+  commit: "dd26c2851a0d7d488170f895cb09bd12b8c93ae0"
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "dd26c2851a0d7d488170f895cb09bd12b8c93ae0"
+  pre_execution_head: "dd26c2851a0d7d488170f895cb09bd12b8c93ae0"
+  final_execution_head: "e42230d9e7f2c2d73b51135baafb4b51f3dc61aa"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "337c0be6618090e704b345b1bf93df488a4985af"
+  observed_revision: "337c0be6618090e704b345b1bf93df488a4985af"
+
+execution_skills_used:
+  required:
+    - executor
+    - gap-analysis
+    - simplicity
+    - verification
+  recommended:
+    - research
+  external:
+    - superpowers:using-superpowers
+    - superpowers:executing-plans
+    - superpowers:verification-before-completion
+
+pre_execution_checks:
+  protocol_version_supported: true
+  handoff_type_confirmed: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  working_tree_clean: false
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_commit
+    - git_push
+  available:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_commit
+    - git_push
+  missing: []
+  passed: true
+  evidence: >-
+    Direct git ls-remote resolved the exact GitHub refs; git show/read checks resolved
+    repository content; native Git/Python execution and writable workspace were available;
+    configured author/committer identities and a non-mutating push dry-run proved commit and
+    push paths before mutation.
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_REQUIRED
+  evidence: >-
+    TASK-0026 explicitly sets authoritative_verification.required=false. The baseline was
+    validated and recomputed with one-off Python stdlib checks; no CI/workflow was required.
+
+local_hygiene:
+  result: RETAINED_FOR_EVIDENCE
+  run_root: /private/tmp/task-0026-huR99H
+  cleanup_performed: true
+  retained:
+    - identity: ".DS_Store"
+      reason: "Pre-existing operator-owned untracked state was neither staged nor modified."
+    - identity: ".codex/"
+      reason: "Pre-existing operator-owned untracked state was neither staged nor modified."
+  evidence: >-
+    The run-owned temporary clone root was proved exact, contained only current-run clones,
+    and removed safely. The two pre-existing operator-owned untracked entries remain preserved.
+
+changed_files:
+  - path: .agent/tasks/TASK-0026/case-routing-baseline.json
+    summary: "Bounded derived CR-00 measurement evidence with exact canonical source/read-set data and recomputable metrics."
+    new_file: true
+    in_scope: true
+    structure_authorized: true
+
+commits_created:
+  - sha: "e42230d9e7f2c2d73b51135baafb4b51f3dc61aa"
+    message: "evidence(TASK-0026): record case-routing baseline"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: >-
+      case-routing-baseline.json records exactly 12 unique real canonical episodes across 6
+      repositories, all exact task/report/review lineages, a fixed 9-repository source universe,
+      an eligible-pool hash, mandatory anchors, and an outcome-independent deterministic rule.
+      The selected elite-drive episode is the lexicographically smallest eligible one; the five
+      remaining episodes are the first normalized repository/task entries after anchor exclusion.
+  - criterion_id: AC-2
+    status: PASS
+    evidence: >-
+      The baseline contains 70 exact artifact definitions with repository, immutable revision,
+      path, raw Git-blob byte size, blob SHA, purpose, routing classification, and read phase.
+      Every episode records its locator, observed trace, post-hoc minimal read set, three
+      material inference points, owner/path projection, and exact pinned agent-skills entrypoint.
+      The trace is a current reproducible read-set proxy, not manufactured historical chat data.
+  - criterion_id: AC-3
+    status: PASS
+    evidence: >-
+      Independent stdlib recomputation passed for all per-episode and aggregate counts, bytes,
+      support-repository hops, inference points, unnecessary reads, premature reads, nearest-rank
+      median/p75 values, and reduction percentages. Raw totals are 63 observed routing artifacts
+      versus 24 minimal artifacts, 597637 observed bytes versus 292681 minimal bytes; median
+      reductions are 60.0% by artifact count and 51.947308% by bytes.
+  - criterion_id: AC-4
+    status: PASS
+    evidence: >-
+      Two materially similar routing-read waste patterns recur in all 12 independent episodes
+      across 6 target repositories, exceeding the 3-episode/2-repository threshold. Exact
+      capability grouping finds 3 materially distinct recurring sets from at least 2 episodes;
+      repository diversity is recorded separately, including that only one recurring exact set
+      crosses repositories. No CASE key is defined.
+  - criterion_id: AC-5
+    status: PASS
+    evidence: >-
+      All three mechanical gates are true: repeated material routing waste, at least two
+      materially different recurring capability sets, and median reducible overhead of at least
+      50% by artifact count or bytes. The machine result is PROVEN; the baseline explicitly
+      records architect_final_admission_decision=NOT_MADE, so this Executor report does not make
+      the Architect's final admission decision.
+  - criterion_id: AC-6
+    status: PASS
+    evidence: >-
+      The baseline records no meaningful residual semantic-search waste in the exact-path proxy
+      but marks embedding status NOT_PROVEN because no semantic retrieval was executed. The
+      exact changed-path proof contains no embedding, vector, index, retrieval, or cache machinery.
+  - criterion_id: AC-7
+    status: PASS
+    evidence: >-
+      The exact base-to-baseline diff has one path only: .agent/tasks/TASK-0026/case-routing-baseline.json.
+      The artifact authority is NONE and explicitly states that existing task, pinned skill, and
+      target-repository owners remain authoritative. No Case Router, taxonomy/map, classifier,
+      workflow/state subsystem, embedding, reusable governance semantic, or external repository
+      was changed.
+  - criterion_id: AC-8
+    status: PASS
+    evidence: >-
+      Baseline commit e42230d9e7f2c2d73b51135baafb4b51f3dc61aa was non-force pushed to dev and an
+      independent GitHub read proved dev exactly equals that SHA, main remains exactly
+      337c0be6618090e704b345b1bf93df488a4985af, and remote topology is exactly {dev, main}.
+      The report-only child and final local reconciliation remain the final publication-closure
+      checks recorded below before terminal NEEDS_REVIEW.
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: >-
+      Fresh canonical resolution proved repository phatnguyen03022001/agent-skills, topology
+      {dev, main}, origin/dev dd26c2851a0d7d488170f895cb09bd12b8c93ae0, origin/main
+      337c0be6618090e704b345b1bf93df488a4985af, active local dev, exact TASK-0026 revision 1,
+      pinned agent-skills authority, architect-profile TASK-0017 review, and all required
+      read/execute/commit/push capabilities before baseline mutation.
+  - check_id: CHECK-2
+    result: PASS
+    evidence: >-
+      One-off Python stdlib validation accepted valid JSON, authority NONE, exactly 12 unique
+      episodes, 6 repositories, all mandatory anchors, deterministic pool selection, complete
+      artifact fields, exact lineage bindings, and per-episode metric recomputation.
+  - check_id: CHECK-3
+    result: PASS
+    evidence: >-
+      The same independent recomputation derived routing-waste thresholds, 3 recurring exact
+      capability sets, nearest-rank median/p75 reductions, the >=50% gate, and the NOT_PROVEN
+      embedding observation without trusting hand-written aggregates.
+  - check_id: CHECK-4
+    result: PASS
+    evidence: >-
+      Before report creation, git status and staged diff showed the baseline as the only new
+      execution path; the baseline commit contains only that path. The report is the only
+      additional path authorized after this publication step.
+  - check_id: CHECK-5
+    result: PASS
+    evidence: "git diff --check passed on the baseline candidate and the baseline JSON parser/recomputation passed."
+  - check_id: CHECK-6
+    result: PENDING_FINAL_REFRESH
+    evidence: >-
+      Baseline remote identity is independently proven. This report-only child must now be
+      committed and pushed, followed by fresh GitHub dev/main/topology reads, local dev
+      reconciliation, local==remote and tracked/index cleanliness proofs, then terminal
+      NEEDS_REVIEW.
+
+discovered_gaps: []
+
+structural_observations:
+  - type: evidence_boundary
+    path: .agent/tasks/TASK-0026/case-routing-baseline.json
+    evidence: >-
+      Only one of the three recurring exact capability sets crosses repository boundaries; the
+      other recurring sets are independently repeated within the selected corpus. Architect may
+      weigh this boundary when judging durable admission, but it is not a missing Executor proof.
+    recommendation: architect_review
+    action_taken: none
+
+deviations_from_task: []
+blockers: []
+
+working_tree_after:
+  clean: false
+  summary: >-
+    No tracked differences remain after final report publication/reconciliation; pre-existing
+    operator-owned .DS_Store and .codex/ untracked state is preserved and never staged.
+
+result: NEEDS_REVIEW
