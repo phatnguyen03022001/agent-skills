@@ -689,12 +689,6 @@ class ValidatorRegressionTests(unittest.TestCase):
         combined = architect + protocol + readme
         for token in (
             "TASK LAUNCH",
-            "Chat",
-            "Executor",
-            "Model",
-            "Effort",
-            "Progress",
-            "short explanation",
             "PROMPT TO COPY",
             "presentation only",
             "not persisted",
@@ -813,21 +807,15 @@ class ValidatorRegressionTests(unittest.TestCase):
         self.assertTrue(program.is_file())
         self.assertEqual(json.loads(program.read_text(encoding="utf-8"))["authority"], "NONE")
 
-    def test_task0003_task_launch_fields_and_concrete_program_progress(self) -> None:
+    def test_task0003_task_launch_does_not_prescribe_profile_fields(self) -> None:
         architect = (ROOT / "architect" / "SKILL.md").read_text(encoding="utf-8")
         protocol = (ROOT / "protocols" / "TASK_PROTOCOL.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         combined = architect + protocol + readme
         for token in (
-            "Chat",
-            "Executor",
-            "Model",
-            "Effort",
-            "Progress",
-            "Giải thích",
             "PROMPT TO COPY",
-            "Program 2/4 · agent-standards · execution",
-            "fake percentages",
+            "presentation only",
+            "does not prescribe TASK LAUNCH field names",
         ):
             self.assertIn(token, combined)
 

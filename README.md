@@ -18,8 +18,6 @@ TASK LAUNCH is operator-facing presentation only. It is non-authoritative, is no
 
 `PROMPT TO COPY` is a compact authority locator to the canonical repository/task/base/phase authority, not duplicated authority. Generic `agent-skills` does not prescribe TASK LAUNCH field names, ordering, language, executor menus, model/effort display, or other operator-profile presentation choices.
 
-<!-- protocol-v3 validator/test compatibility tokens only; not launch guidance: Chat Executor Model Effort Progress short explanation Giải thích Program 2/4 · agent-standards · execution fake percentages -->
-
 ## Maintenance and frozen taxonomy
 
 Mature governance may correctly return NO CHANGE REQUIRED when no material reproduced problem exists. Corrective maintenance uses the smallest safe change. The exact 15-skill taxonomy remains closed by default; admission reasoning is owned by [simplicity](simplicity/SKILL.md), while this README keeps the discovery catalog unchanged.

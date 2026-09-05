@@ -105,8 +105,6 @@ TASK LAUNCH is Architect-owned operator-facing presentation only. It is non-auth
 
 `PROMPT TO COPY` stays compact and points to canonical repository/task/base/phase authority instead of duplicating scope, invariants, forbidden changes, acceptance criteria, capabilities, Git/release authority, verification detail, or protocol boilerplate.
 
-<!-- protocol-v3 validator compatibility tokens only; not launch guidance: Chat Executor Model Effort Progress Program 2/4 · agent-standards · execution -->
-
 ## Stable governance and change admission
 
 NO CHANGE REQUIRED is preferred when no material problem is reproduced. Admit governance change only for evidence-backed defects, stale rules/external reality, recurring missing capability, security/compatibility failure, material cost/usability/maintainability regression, or explicit durable maintainer-objective change. Use the smallest safe correction and keep taxonomy admission reasoning with [simplicity](../simplicity/SKILL.md).

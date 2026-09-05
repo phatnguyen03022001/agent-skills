@@ -1369,8 +1369,7 @@ def validate_protocol_docs() -> None:
         "discard previous repository-specific assumptions",
         "simultaneous ambiguous active target is forbidden",
         "PROGRAM", "program.generated.json", "full regeneration", "just in time",
-        "Chat", "Executor", "Model", "Effort", "Progress",
-        "PROMPT TO COPY", "Program 2/4 · agent-standards · execution",
+        "PROMPT TO COPY",
         "evidence-first sequence", "candidate diff boundary", "material risk triggers",
         "stop when material predicates are proven", "preference-only revision",
         "default hot path", "explicitly requests", "No timing-enabled or telemetry-mode field",
@@ -1395,8 +1394,7 @@ def validate_protocol_docs() -> None:
     require_tokens(ROOT / "README.md", [
         "PROGRAM", "presentation only", "ordered repository-local tasks",
         "program.generated.json", "authority `NONE`",
-        "TASK LAUNCH", "Chat", "Executor", "Model", "Effort", "Progress",
-        "Program 2/4 · agent-standards · execution", "fake percentages",
+        "TASK LAUNCH",
     ])
     require_tokens(ROOT / "contracts" / "IMPLEMENTATION_CONTRACT.md", [
         "positive semantic/component scope",
