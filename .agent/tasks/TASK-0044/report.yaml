@@ -46,7 +46,7 @@ authoritative_verification:
   result: NOT_REQUIRED
   evidence: Task declares no authoritative verification mechanism.
 
-pushed: true
+pushed: false
 
 acceptance_evidence:
   - criterion_id: AC-1
@@ -68,9 +68,9 @@ executor_checks:
     evidence: The focused suite, library validator, and 120 existing regression tests passed before the final targeted review correction and are reused as immutable implementation evidence; this correction additionally runs the actual report schema CLI, with no source/test rerun.
   - check_id: CHECK-3
     result: NOT_PROVEN
-    evidence: Actual report validation and the report-only non-force publication are completed by this revision-2 session, while the resulting report commit identity and fresh remote/local equality are verified after publication rather than self-attested here.
+    evidence: The report schema CLI and current Git observations proved the revision-2 correction and current capability surface; the report-only commit identity, non-force publication, and fresh remote/local equality remain post-authorship checks.
 
 deviations_from_task:
-  - "Revision 1 recorded only repository_content_write and did not record the complete pre-execution capability check. Revision 2 does not fabricate that historical record: its available list is current-session evidence for repository content read/write, native repository execution, Git history reads, commit, push, and remote-ref reads. The successful schema validation, report-only commit, non-force publication, and fresh equality checks are actual operations of this correction and are not attributed to the original execution preflight."
+  - "Revision 1 recorded only repository_content_write and did not record the complete pre-execution capability check. Revision 2 does not fabricate that historical record: its available list is current-session evidence for repository content read/write, native repository execution, Git history reads, commit, push, and remote-ref reads. The successful schema validation and current Git observations are actual operations of this correction; the report-only commit, non-force publication, and fresh equality checks remain post-authorship facts and are not attributed to the original execution preflight."
 
 result: NEEDS_REVIEW
