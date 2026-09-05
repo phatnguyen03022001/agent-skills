@@ -1,0 +1,29 @@
+protocol_version: 3
+task_id: TASK-0043
+task_revision: 1
+review_revision: 1
+state: REVISION_REQUIRED
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0043/report.yaml
+  commit: "b52ecb70edd9e3975c2bae6fd173135fbf006465"
+  report_revision: 1
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: FAIL
+  verifier_evidence: NOT_REQUIRED
+acceptance_basis:
+  - 'The explicit-file CLI reuses existing schemas and task normalization; default validator and reported 120-test evidence remain useful. Candidate/report lineage is preserved.'
+  - 'AC-2 fails two reproduced cases: ["[executor]"] is a flat quoted scalar list but is rejected by structural-character filtering; [executor: value] is accepted as a string list although its unquoted colon-space denotes unsupported YAML mapping syntax. This contradicts scalar compatibility and fail-closed intent.'
+  - 'AC-1 regression coverage must reproduce the observed retained mapping with path instead of identity, rather than only a scalar retained item.'
+promotion_readiness:
+  eligible_for_candidate_capture: false
+  reason: "Bounded parser correction and regression coverage required."
+notes:
+  - "Continue TASK-0043 rev 1 from this published review commit. Keep the same three-file scope and original authorized base; identify the correction candidate as final_execution_head and publish report revision 2 as its report-only child. Preserve prior immutable history. No new task, parser framework, schema or doctrine change."
