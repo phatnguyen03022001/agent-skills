@@ -1,0 +1,90 @@
+protocol_version: 3
+task_id: TASK-0043
+task_revision: 1
+state: APPROVED
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: ACTUAL_ARTIFACT_VALIDATION
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "ed8d9fb35bb8b052530ca879e68a227d77e4a8a6"
+execution_skills:
+  required:
+    - executor
+    - verification
+    - simplicity
+    - github-workflow
+authority_sources:
+  - source: current operator instruction
+    role: "Bounded dev debt closure with this root Architect and Terra/high Executors."
+    precedence: 1
+  - source: "agent-runtime@b0fbb4b595e965cfaf2ae42721534522179b67d9:.agent/tasks/TASK-0020/report.yaml"
+    role: "Observed retained path-versus-identity report schema failure missed by template-only validation."
+    precedence: 2
+  - source: "architect-profile@e6faa2a5448267cd3d910d002fd6c87b1a112299:.agent/tasks/TASK-0031/report.yaml"
+    role: "Observed incomplete optional local_hygiene shape."
+    precedence: 3
+structure_authority:
+  status: RESOLVED
+  source: existing scripts/validate_skill_library.py and test module
+  rationale: "Expose existing schema checks for actual artifacts and narrowly support already-used YAML scalar flow lists. No new schema or validation framework."
+objective: "Make existing protocol-v3 schema validation directly usable on an explicit task/report/review file, so template-suite success cannot be confused with newly authored artifact validity."
+scope:
+  required_changes:
+    - "Add a bounded CLI entrypoint in the existing validator for an explicit task, report or review path, reusing the same existing schema checks and task normalization as template validation. Preserve the default library-validation command."
+    - "Support flat YAML flow lists containing ordinary bare scalar strings already used by canonical tasks, including required skill names and repository paths. Preserve existing quoted/JSON list input and fail closed on unsupported tags, anchors or malformed input; do not build a general YAML parser."
+    - "Document one compact actual-artifact command at the existing README validation entrypoint."
+  allowed_existing_files_or_components:
+    - scripts/validate_skill_library.py
+    - scripts/test_validate_skill_library.py
+    - README.md
+invariants:
+  - "Existing protocol version, schemas, normalization/defaults, lifecycle, role ownership, 15 skills, runtime carrier and historical evidence remain unchanged."
+  - "Actual-artifact validation is read-only and parses data, never executes artifact text or traverses arbitrary repository history."
+forbidden_changes:
+  - "No new schema, framework, registry, service, dependency or automatic history migration."
+  - "No Protocol/Executor doctrine additions, main/staging, branch creation, force push or release."
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Valid actual task/report/review files pass the same schema checks as templates, and the two observed invalid hygiene report shapes fail with useful field diagnostics."
+    evidence_required: "CLI regression tests using valid/invalid artifacts and an external file path; no mutation of inputs."
+  - id: AC-2
+    requirement: "Existing bare flow-list examples parse without widening unsupported YAML authority or changing scalar meaning."
+    evidence_required: "Causal parser regressions plus malformed/tag/anchor rejection and quoted-list compatibility tests."
+  - id: AC-3
+    requirement: "Default library validation and full regression suite remain valid; exact dev lineage is published."
+    evidence_required: "Validator/full tests/compile/whitespace, exact scope, valid actual report, linear candidate/report and fresh refs."
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Resolve task/base and reproduce actual-report and bare-list limitations using synthetic fixtures, not mutable historical rewrites."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Run focused then full existing verification and validate actual task/report/review samples through the new CLI."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Publish exact candidate/report-only child and prove final dev/main/local identity externally."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+blocking_decisions: []
+execution_ready: true
