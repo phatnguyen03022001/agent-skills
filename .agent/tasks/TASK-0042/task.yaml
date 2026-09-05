@@ -1,0 +1,79 @@
+protocol_version: 3
+task_id: TASK-0042
+task_revision: 1
+state: APPROVED
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: PRESENTATION_TOKEN_SEDIMENT
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "ed8d9fb35bb8b052530ca879e68a227d77e4a8a6"
+execution_skills:
+  required: [executor, verification, simplicity, github-workflow]
+authority_sources:
+  - source: current operator instruction
+    role: "Root governing Architect and Terra/high Executors for bounded dev debt closure."
+    precedence: 1
+  - source: "agent-skills/dev@861805d15c48202b9007168eb47bb6fd6911a56b"
+    role: "Accepted TASK-0041 and current generic-versus-profile presentation ownership."
+    precedence: 2
+structure_authority:
+  status: RESOLVED
+  source: "Existing validator, tests, role skill and README."
+  rationale: "Remove obsolete presentation requirements and their compatibility-only comments without changing governance semantics."
+objective: "Stop requiring profile-specific historical launch wording in generic skill validation, so live files no longer carry comments solely to satisfy obsolete token checks."
+scope:
+  required_changes:
+    - "Remove obsolete launch-field/example token requirements from the validator and corresponding historical live-wording assertions; remove now-unnecessary compatibility-only comments from README and Architect skill."
+    - "Retain meaningful tests for non-authoritative launch/prompt behavior and canonical ownership. Do not replace old token ceremony with new wording ceremony."
+  allowed_existing_files_or_components: [README.md, architect/SKILL.md, scripts/validate_skill_library.py, scripts/test_validate_skill_library.py]
+invariants:
+  - "Task Protocol, Executor, 15-skill taxonomy, artifact schemas, four execution surfaces, role-local gates, evidence reuse and one-logical-runtime-bundle/one-terminal_exec semantics remain unchanged."
+  - "Historical task/report/review evidence stays immutable."
+forbidden_changes:
+  - "No broad positive-guidance purge, new owner, framework, schema, lifecycle or runtime work."
+  - "No main/staging, new branch, force push or release."
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Removing obsolete profile presentation words no longer causes generic validation failure."
+    evidence_required: "Causal regression proving the old failure and acceptance without compatibility-only comments; real semantic boundary checks remain."
+  - id: AC-2
+    requirement: "Only the bounded presentation coupling is removed."
+    evidence_required: "Exact diff/owner rationale; unchanged Protocol and Executor blobs; validator/full tests/compile/whitespace pass."
+  - id: AC-3
+    requirement: "Linear dev candidate/report publication preserves main and clean task-copy closure."
+    evidence_required: "Exact candidate/report lineage and fresh final refs."
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Bind exact task/base and reproduce obsolete presentation-token validation before correction."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Run focused and full verification; prove scope and unchanged invariant blobs."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Publish candidate then report-only child non-force to dev and prove final refs externally."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+blocking_decisions: []
+execution_ready: true
