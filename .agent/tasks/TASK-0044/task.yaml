@@ -1,0 +1,98 @@
+protocol_version: 3
+task_id: TASK-0044
+task_revision: 1
+state: APPROVED
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: OPAQUE_ENV_RECONCILIATION
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "ed8d9fb35bb8b052530ca879e68a227d77e4a8a6"
+architect_analysis_skills: []
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+execution_skills:
+  recommended: []
+  required: [executor, verification, simplicity, github-workflow]
+authority_sources:
+  - source: current operator instruction
+    role: "On local target startup align env format with env example, retain existing values, insert <thiếu key> for missing keys, group extras below and never expose values to the model. Close five-repo dev debt with Terra/high Executors."
+    precedence: 1
+structure_authority:
+  status: RESOLVED
+  source: "Existing agent-skills scripts and Executor local execution procedure."
+  rationale: "One explicit stateless file transformation supplies the requested missing behavior. Existing Git/native transport is reused; no environment manager, new skill or Runtime primitive."
+objective: "Provide a bounded local env reconciliation command that preserves opaque operator values and blocks startup on unresolved configuration."
+scope:
+  required_changes:
+    - "Add scripts/reconcile_env.py using only Python stdlib, with explicit --example PATH and --env PATH arguments, read-only default/check and explicit --write. Operate only on those files, never discover other env files, source/execute assignments, fetch secrets or print file contents."
+    - "For the documented supported single-line dotenv subset, preserve template comments/blanks and key order, preserve each existing assignment value verbatim including quote/escape text, insert a quoted literal <thiếu key> for every missing example key instead of adopting template values, and group existing extra keys below. Preserve operator-only comments deterministically; idempotent output is required."
+    - "Support ordinary identifier keys, optional export prefix, comments/blanks and single-line unquoted/single-quoted/double-quoted assignments. Fail before writing on duplicate keys, malformed or unsupported multiline/ambiguous syntax, symlinks/non-regular inputs or identical source/destination; no attempt at a full dotenv grammar. Error messages must not contain values or source lines."
+    - "Write atomically through a private same-directory temporary file with cleanup on failure. New env files are private; existing permissions are preserved or tightened, never widened. Preserve the existing file on parse/validation failure; no persistent backup, daemon, new dependency or background watcher."
+    - "Return nonzero when reconciliation is needed in check mode, any placeholder remains after write, or malformed input occurs; document the distinction. Print only a compact non-secret result/count. This command cannot certify provider credentials."
+    - "Add one compact README command and a bounded pointer in Executor local startup procedure: when authorized local target startup uses an env example, reconcile via the repo-native equivalent or this command before starting; unresolved placeholders stop startup for missing operator configuration. No secret values are returned to the model."
+  allowed_existing_files_or_components:
+    - scripts/reconcile_env.py
+    - scripts/test_reconcile_env.py
+    - README.md
+    - executor/SKILL.md
+invariants:
+  - "No real operator env values are read into agent context/logs/tests/reports. Only synthetic fixture values are inspected during this task; do not touch any real .env file."
+  - "Exactly 15 skills and existing Task Protocol, runtime four-tool surface and Git divergence rules stay unchanged. The helper has no Git synchronization or execution authority."
+  - "No automatic universal startup hook: the existing Executor procedure supplies the invocation when applicable; a target may separately adopt a repo-native startup command."
+forbidden_changes:
+  - "No source application work, real env mutation, secret output, dependency/install, schema, framework, config manager, service, new role/skill, main/staging, new branch, force push or release."
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Opaque values survive reconciliation, template order/missing markers/extra grouping are correct and a second run is byte-identical."
+    evidence_required: "Synthetic command-level tests cover check/write, missing env file, reordered keys, extra keys/comments, export/quoting and unresolved-marker exit behavior."
+  - id: AC-2
+    requirement: "Invalid inputs cannot corrupt operator state or expose values."
+    evidence_required: "Synthetic tests cover duplicate/malformed/multiline input, symlink/non-regular/same-path rejection, file unchanged on failure, temporary cleanup, permissions and stdout/stderr secret absence."
+  - id: AC-3
+    requirement: "Small scoped utility and applicable startup navigation preserve existing governance and are published with truthful lineage."
+    evidence_required: "Focused/full existing tests, validator, whitespace/scope, actual report schema, candidate/report-only commits and fresh dev/local equality."
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Bind exact task and identify narrow supported format; create synthetic failure cases without any operator env contents."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Run command-level synthetic tests and existing library validation/test suite once after the bounded helper is complete."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Validate actual task/report artifacts, publish candidate/report child non-force to dev and prove fresh refs."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+blocking_decisions: []
+execution_ready: true
