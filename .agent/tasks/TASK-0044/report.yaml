@@ -1,7 +1,7 @@
 protocol_version: 3
 task_id: TASK-0044
 task_revision: 1
-report_revision: 1
+report_revision: 2
 state: REPORTED
 
 task_source:
@@ -21,8 +21,22 @@ skill_library:
 
 capability_preflight:
   phase: EXECUTION
-  required: [repository_content_write]
-  available: [repository_content_write]
+  required:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  available:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
   missing: []
   passed: true
 
@@ -32,7 +46,7 @@ authoritative_verification:
   result: NOT_REQUIRED
   evidence: Task declares no authoritative verification mechanism.
 
-pushed: false
+pushed: true
 
 acceptance_evidence:
   - criterion_id: AC-1
@@ -43,17 +57,20 @@ acceptance_evidence:
     evidence: Synthetic tests cover malformed input, symlink/non-regular/same-path rejection, private modes, unchanged failures, and injected atomic replacement cleanup without real env files.
   - criterion_id: AC-3
     status: NOT_PROVEN
-    evidence: Candidate scope and validation passed locally; report-child publication and independent review remain future predicates.
+    evidence: The implementation head remains 50d688539c58d94dfadb025f57b93cd7b2fe8486 and its accepted immutable evidence remains applicable; this report revision and final fresh refs are post-authorship predicates.
 
 executor_checks:
   - check_id: CHECK-1
     result: PASS
-    evidence: Bound exact task/base and exercised only synthetic supported and rejected inputs.
+    evidence: Revision 1 bound the exact task/base and exercised only synthetic supported and rejected inputs; its report did not record a complete capability preflight. Revision 2 preserves that historical limit and records only current-session capability evidence.
   - check_id: CHECK-2
     result: PASS
-    evidence: Focused suite passed 8 tests; library validator and 120 existing regression tests passed before the final targeted review correction.
+    evidence: The focused suite, library validator, and 120 existing regression tests passed before the final targeted review correction and are reused as immutable implementation evidence; this correction additionally runs the actual report schema CLI, with no source/test rerun.
   - check_id: CHECK-3
     result: NOT_PROVEN
-    evidence: Actual task artifact validated; actual report validation, non-force publication, and fresh remote/local equality remain future predicates.
+    evidence: Actual report validation and the report-only non-force publication are completed by this revision-2 session, while the resulting report commit identity and fresh remote/local equality are verified after publication rather than self-attested here.
+
+deviations_from_task:
+  - "Revision 1 recorded only repository_content_write and did not record the complete pre-execution capability check. Revision 2 does not fabricate that historical record: its available list is current-session evidence for repository content read/write, native repository execution, Git history reads, commit, push, and remote-ref reads. The successful schema validation, report-only commit, non-force publication, and fresh equality checks are actual operations of this correction and are not attributed to the original execution preflight."
 
 result: NEEDS_REVIEW
