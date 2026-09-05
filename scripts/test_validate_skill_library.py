@@ -10,6 +10,7 @@ import json
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
 from copy import deepcopy
@@ -2596,6 +2597,101 @@ class Task0030ControlPlaneAccelerationTests(unittest.TestCase):
         self.assertIn("local mirror", combined)
         self.assertIn("local_mutable", combined)
         self.assertIn("not canonical remote authority", combined)
+
+
+class ActualArtifactCliTests(unittest.TestCase):
+    def run_artifact_validator(self, kind: str, path: Path) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [sys.executable, str(ROOT / VALIDATOR), "--artifact", kind, str(path)],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+
+    def copy_external_artifact(self, relative_path: str) -> tuple[tempfile.TemporaryDirectory[str], Path]:
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        path = Path(temp.name) / Path(relative_path).name
+        path.write_text((ROOT / relative_path).read_text(encoding="utf-8"), encoding="utf-8")
+        return temp, path
+
+    def test_external_task_report_and_review_are_validated_read_only(self) -> None:
+        for kind, relative_path in (
+            ("task", "templates/task.yaml"),
+            ("report", ".agent/tasks/TASK-0042/report.yaml"),
+            ("review", "templates/review.yaml"),
+        ):
+            with self.subTest(kind=kind):
+                _, path = self.copy_external_artifact(relative_path)
+                before = path.read_bytes()
+                result = self.run_artifact_validator(kind, path)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertEqual(path.read_bytes(), before)
+
+    def test_actual_report_hygiene_failures_have_field_diagnostics(self) -> None:
+        cases = (
+            (
+                "incomplete",
+                "local_hygiene:\n  result: PASS\n",
+                "path 'local_hygiene' missing required fields",
+            ),
+            (
+                "retained-path",
+                "local_hygiene:\n  result: RETAINED_FOR_EVIDENCE\n  run_root: /private/tmp/run\n"
+                "  cleanup_performed: false\n  retained: [/private/tmp/evidence]\n  evidence: retained\n",
+                "path 'local_hygiene.retained[0]' must be mapping",
+            ),
+        )
+        for name, hygiene, diagnostic in cases:
+            with self.subTest(name=name):
+                _, path = self.copy_external_artifact("templates/report.yaml")
+                path.write_text(path.read_text(encoding="utf-8") + "\n" + hygiene, encoding="utf-8")
+                result = self.run_artifact_validator("report", path)
+                self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertIn(diagnostic, result.stdout + result.stderr)
+
+    def test_flat_flow_lists_accept_bare_and_quoted_scalars(self) -> None:
+        VALIDATOR_MODULE.errors.clear()
+        canonical = VALIDATOR_MODULE.load_protocol_path(ROOT / ".agent/tasks/TASK-0042/task.yaml")
+        self.assertIsNotNone(canonical, VALIDATOR_MODULE.errors)
+        assert canonical is not None
+        self.assertEqual(
+            canonical["execution_skills"]["required"],
+            ["executor", "verification", "simplicity", "github-workflow"],
+        )
+
+        cases = (
+            "  required: [executor]",
+            '  required: ["executor"]',
+        )
+        for replacement in cases:
+            with self.subTest(replacement=replacement):
+                _, path = self.copy_external_artifact("templates/task.yaml")
+                text = path.read_text(encoding="utf-8")
+                required = "  required:\n    - executor"
+                self.assertIn(required, text)
+                path.write_text(text.replace(required, replacement, 1), encoding="utf-8")
+                result = self.run_artifact_validator("task", path)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_flat_flow_lists_reject_unsupported_or_malformed_syntax(self) -> None:
+        invalid_values = (
+            "[!tag executor]",
+            "[&anchor executor]",
+            "[*anchor]",
+            "[executor,]",
+            "[[executor]]",
+        )
+        for value in invalid_values:
+            with self.subTest(value=value):
+                _, path = self.copy_external_artifact("templates/task.yaml")
+                text = path.read_text(encoding="utf-8")
+                required = "  required:\n    - executor"
+                path.write_text(text.replace(required, f"  required: {value}", 1), encoding="utf-8")
+                result = self.run_artifact_validator("task", path)
+                self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertIn("flow list", result.stdout + result.stderr)
 
 
 if __name__ == "__main__":

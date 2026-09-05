@@ -190,6 +190,14 @@ class ProtocolYamlError(ValueError):
     pass
 
 
+def display_path(path: Path) -> str:
+    """Render repository paths compactly while keeping external-file diagnostics useful."""
+    try:
+        return str(path.resolve().relative_to(ROOT.resolve()))
+    except ValueError:
+        return str(path)
+
+
 def strip_yaml_comment(raw: str) -> str:
     single = double = escaped = False
     for index, char in enumerate(raw):
@@ -210,19 +218,65 @@ def preprocess_yaml(path: Path) -> list[tuple[int, int, str]]:
     lines: list[tuple[int, int, str]] = []
     for number, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
         if "\t" in raw:
-            raise ProtocolYamlError(f"{path.relative_to(ROOT)}:{number}: tabs are not supported")
+            raise ProtocolYamlError(f"{display_path(path)}:{number}: tabs are not supported")
         raw = strip_yaml_comment(raw).rstrip()
         if not raw.strip():
             continue
         indent = len(raw) - len(raw.lstrip(" "))
         if indent % 2:
-            raise ProtocolYamlError(f"{path.relative_to(ROOT)}:{number}: indentation must use two-space steps")
+            raise ProtocolYamlError(f"{display_path(path)}:{number}: indentation must use two-space steps")
         lines.append((number, indent, raw[indent:]))
     if not lines:
-        raise ProtocolYamlError(f"{path.relative_to(ROOT)}: empty YAML document")
+        raise ProtocolYamlError(f"{display_path(path)}: empty YAML document")
     if lines[0][1] != 0:
-        raise ProtocolYamlError(f"{path.relative_to(ROOT)}:{lines[0][0]}: top-level content must start at column 1")
+        raise ProtocolYamlError(f"{display_path(path)}:{lines[0][0]}: top-level content must start at column 1")
     return lines
+
+
+def parse_flat_flow_list(raw: str, path: Path, number: int) -> list[Any]:
+    """Parse the deliberately small flow-list subset used by task artifacts."""
+    if not raw.endswith("]"):
+        raise ProtocolYamlError(f"{display_path(path)}:{number}: malformed flow list")
+    inner = raw[1:-1].strip()
+    if not inner:
+        return []
+
+    items: list[str] = []
+    start = 0
+    quote: str | None = None
+    escaped = False
+    for index, char in enumerate(inner):
+        if quote:
+            if escaped:
+                escaped = False
+            elif quote == '"' and char == "\\":
+                escaped = True
+            elif char == quote:
+                quote = None
+            continue
+        if char in ("'", '"'):
+            quote = char
+        elif char == ",":
+            item = inner[start:index].strip()
+            if not item:
+                raise ProtocolYamlError(f"{display_path(path)}:{number}: malformed flow list")
+            items.append(item)
+            start = index + 1
+    if quote or escaped:
+        raise ProtocolYamlError(f"{display_path(path)}:{number}: malformed flow list")
+    item = inner[start:].strip()
+    if not item:
+        raise ProtocolYamlError(f"{display_path(path)}:{number}: malformed flow list")
+    items.append(item)
+
+    values: list[Any] = []
+    for item in items:
+        if item.startswith(("!", "&", "*", "[", "{", "|", ">")) or any(
+            indicator in item for indicator in ("[", "]", "{", "}")
+        ):
+            raise ProtocolYamlError(f"{display_path(path)}:{number}: unsupported flow list item syntax")
+        values.append(scalar_value(item, path, number))
+    return values
 
 
 def scalar_value(raw: str, path: Path, number: int) -> Any:
@@ -240,7 +294,7 @@ def scalar_value(raw: str, path: Path, number: int) -> Any:
     if raw[:1] in ("'", '"'):
         quote = raw[0]
         if len(raw) < 2 or raw[-1] != quote:
-            raise ProtocolYamlError(f"{path.relative_to(ROOT)}:{number}: unterminated quoted scalar")
+            raise ProtocolYamlError(f"{display_path(path)}:{number}: unterminated quoted scalar")
         inner = raw[1:-1]
         escaped = False
         for char in inner:
@@ -248,20 +302,22 @@ def scalar_value(raw: str, path: Path, number: int) -> Any:
                 escaped = True
                 continue
             if char == quote and not escaped:
-                raise ProtocolYamlError(f"{path.relative_to(ROOT)}:{number}: unexpected quote inside quoted scalar")
+                raise ProtocolYamlError(f"{display_path(path)}:{number}: unexpected quote inside quoted scalar")
             escaped = False
         if escaped:
-            raise ProtocolYamlError(f"{path.relative_to(ROOT)}:{number}: unterminated escape in quoted scalar")
+            raise ProtocolYamlError(f"{display_path(path)}:{number}: unterminated escape in quoted scalar")
         return inner
-    if raw.startswith(("[", "{", "|", ">")):
-        raise ProtocolYamlError(f"{path.relative_to(ROOT)}:{number}: unsupported YAML value syntax")
+    if raw.startswith("["):
+        return parse_flat_flow_list(raw, path, number)
+    if raw.startswith(("{", "|", ">", "!", "&", "*")):
+        raise ProtocolYamlError(f"{display_path(path)}:{number}: unsupported YAML value syntax")
     return raw
 
 
 def split_mapping(text: str, path: Path, number: int) -> tuple[str, str]:
     match = KEY_RE.match(text)
     if not match:
-        raise ProtocolYamlError(f"{path.relative_to(ROOT)}:{number}: expected mapping key")
+        raise ProtocolYamlError(f"{display_path(path)}:{number}: expected mapping key")
     return match.group(1), match.group(2).strip()
 
 
@@ -274,18 +330,18 @@ def parse_mapping(
         if current_indent < indent:
             break
         if current_indent > indent:
-            raise ProtocolYamlError(f"{path.relative_to(ROOT)}:{number}: unexpected indentation")
+            raise ProtocolYamlError(f"{display_path(path)}:{number}: unexpected indentation")
         if text.startswith("-"):
             break
         key, raw_value = split_mapping(text, path, number)
         if key in result:
-            raise ProtocolYamlError(f"{path.relative_to(ROOT)}:{number}: duplicate mapping key '{key}'")
+            raise ProtocolYamlError(f"{display_path(path)}:{number}: duplicate mapping key '{key}'")
         index += 1
         if raw_value:
             result[key] = scalar_value(raw_value, path, number)
             if index < len(lines) and lines[index][1] > indent:
                 raise ProtocolYamlError(
-                    f"{path.relative_to(ROOT)}:{lines[index][0]}: scalar '{key}' cannot have nested content"
+                    f"{display_path(path)}:{lines[index][0]}: scalar '{key}' cannot have nested content"
                 )
             continue
         if index >= len(lines) or lines[index][1] <= indent:
@@ -293,7 +349,7 @@ def parse_mapping(
             continue
         if lines[index][1] != indent + 2:
             raise ProtocolYamlError(
-                f"{path.relative_to(ROOT)}:{lines[index][0]}: nested content for '{key}' must indent by two spaces"
+                f"{display_path(path)}:{lines[index][0]}: nested content for '{key}' must indent by two spaces"
             )
         if lines[index][2].startswith("-"):
             result[key], index = parse_sequence(lines, index, indent + 2, path)
@@ -311,11 +367,11 @@ def parse_sequence(
         if current_indent < indent:
             break
         if current_indent > indent:
-            raise ProtocolYamlError(f"{path.relative_to(ROOT)}:{number}: unexpected indentation in sequence")
+            raise ProtocolYamlError(f"{display_path(path)}:{number}: unexpected indentation in sequence")
         if not text.startswith("-"):
             break
         if text == "-" or not text.startswith("- "):
-            raise ProtocolYamlError(f"{path.relative_to(ROOT)}:{number}: malformed sequence item")
+            raise ProtocolYamlError(f"{display_path(path)}:{number}: malformed sequence item")
 
         item_text = text[2:].strip()
         index += 1
@@ -324,7 +380,7 @@ def parse_sequence(
             value = scalar_value(item_text, path, number)
             if index < len(lines) and lines[index][1] > indent:
                 raise ProtocolYamlError(
-                    f"{path.relative_to(ROOT)}:{lines[index][0]}: scalar sequence item cannot have nested content"
+                    f"{display_path(path)}:{lines[index][0]}: scalar sequence item cannot have nested content"
                 )
             result.append(value)
             continue
@@ -339,7 +395,7 @@ def parse_sequence(
             else:
                 if lines[index][1] != indent + 2:
                     raise ProtocolYamlError(
-                        f"{path.relative_to(ROOT)}:{lines[index][0]}: nested sequence mapping must indent by two spaces"
+                        f"{display_path(path)}:{lines[index][0]}: nested sequence mapping must indent by two spaces"
                     )
                 if lines[index][2].startswith("-"):
                     item[key], index = parse_sequence(lines, index, indent + 2, path)
@@ -349,18 +405,37 @@ def parse_sequence(
         if index < len(lines) and lines[index][1] > indent:
             if lines[index][1] != indent + 2 or lines[index][2].startswith("-"):
                 raise ProtocolYamlError(
-                    f"{path.relative_to(ROOT)}:{lines[index][0]}: malformed sequence mapping item"
+                    f"{display_path(path)}:{lines[index][0]}: malformed sequence mapping item"
                 )
             tail, index = parse_mapping(lines, index, indent + 2, path)
             overlap = set(item) & set(tail)
             if overlap:
                 duplicate = sorted(overlap)[0]
                 raise ProtocolYamlError(
-                    f"{path.relative_to(ROOT)}:{number}: duplicate mapping key '{duplicate}' inside sequence item"
+                    f"{display_path(path)}:{number}: duplicate mapping key '{duplicate}' inside sequence item"
                 )
             item.update(tail)
         result.append(item)
     return result, index
+
+
+def load_protocol_path(path: Path, label: str | None = None) -> dict[str, Any] | None:
+    label = label or display_path(path)
+    if not path.is_file():
+        error(f"{label}: file does not exist")
+        return None
+    try:
+        lines = preprocess_yaml(path)
+        if lines[0][2].startswith("-"):
+            raise ProtocolYamlError(f"{label}:{lines[0][0]}: top-level document must be a mapping")
+        document, index = parse_mapping(lines, 0, 0, path)
+        if index != len(lines):
+            number, _, _ = lines[index]
+            raise ProtocolYamlError(f"{label}:{number}: unexpected content or indentation")
+    except ProtocolYamlError as exc:
+        error(str(exc))
+        return None
+    return document
 
 
 def load_protocol_document(relative_path: str) -> dict[str, Any] | None:
@@ -368,18 +443,7 @@ def load_protocol_document(relative_path: str) -> dict[str, Any] | None:
     if not path.is_file():
         error(f"missing required protocol template: {relative_path}")
         return None
-    try:
-        lines = preprocess_yaml(path)
-        if lines[0][2].startswith("-"):
-            raise ProtocolYamlError(f"{relative_path}:{lines[0][0]}: top-level document must be a mapping")
-        document, index = parse_mapping(lines, 0, 0, path)
-        if index != len(lines):
-            number, _, _ = lines[index]
-            raise ProtocolYamlError(f"{relative_path}:{number}: unexpected content or indentation")
-    except ProtocolYamlError as exc:
-        error(str(exc))
-        return None
-    return document
+    return load_protocol_path(path, relative_path)
 
 
 def load_json_document(relative_path: str) -> dict[str, Any] | None:
@@ -903,11 +967,7 @@ def validate_generated_program_template() -> None:
             error(f"{label}: coverage ref {ref!r} cannot be both covered and excluded")
 
 
-def validate_task_template() -> None:
-    label = "templates/task.yaml"
-    doc = load_protocol_document(label)
-    if doc is None:
-        return
+def validate_task_document(label: str, doc: dict[str, Any]) -> None:
     doc = normalize_task_document(doc)
     validate_version(label, doc)
     for dotted, expected_type in [
@@ -981,6 +1041,13 @@ def validate_task_template() -> None:
         error(f"{label}: execution-ready task requires Executor git_authority.commit for canonical report evidence")
 
 
+def validate_task_template() -> None:
+    label = "templates/task.yaml"
+    doc = load_protocol_document(label)
+    if doc is not None:
+        validate_task_document(label, doc)
+
+
 def validate_handoff_template() -> None:
     label = "templates/handoff.yaml"
     doc = load_protocol_document(label)
@@ -996,11 +1063,7 @@ def validate_handoff_template() -> None:
     require_field(label, doc, "handoff_type", str, "EXECUTOR")
 
 
-def validate_report_template() -> None:
-    label = "templates/report.yaml"
-    doc = load_protocol_document(label)
-    if doc is None:
-        return
+def validate_report_document(label: str, doc: dict[str, Any]) -> None:
     validate_version(label, doc)
     for dotted, expected_type in [
         ("task_id", str), ("task_revision", int), ("report_revision", int),
@@ -1126,11 +1189,14 @@ def validate_report_template() -> None:
     validate_operational_timing(label, doc)
 
 
-def validate_review_template() -> None:
-    label = "templates/review.yaml"
+def validate_report_template() -> None:
+    label = "templates/report.yaml"
     doc = load_protocol_document(label)
-    if doc is None:
-        return
+    if doc is not None:
+        validate_report_document(label, doc)
+
+
+def validate_review_document(label: str, doc: dict[str, Any]) -> None:
     validate_version(label, doc)
     for dotted, expected_type in [
         ("task_id", str), ("task_revision", int), ("review_revision", int),
@@ -1201,6 +1267,13 @@ def validate_review_template() -> None:
             error(f"{label}: ACCEPTED review requires independence.exact_report_identity_verified=true")
     if eligible is True and state != "ACCEPTED":
         error(f"{label}: only ACCEPTED review may be candidate-eligible")
+
+
+def validate_review_template() -> None:
+    label = "templates/review.yaml"
+    doc = load_protocol_document(label)
+    if doc is not None:
+        validate_review_document(label, doc)
 
 
 def validate_continuation_template() -> None:
@@ -1418,7 +1491,53 @@ def validate_protocol_docs() -> None:
     ])
 
 
-def main() -> int:
+ARTIFACT_VALIDATORS = {
+    "task": validate_task_document,
+    "report": validate_report_document,
+    "review": validate_review_document,
+}
+
+
+def print_errors() -> int:
+    if errors:
+        print("\nErrors:", file=sys.stderr)
+        for message in errors:
+            print(f"  ERROR: {message}", file=sys.stderr)
+        return 1
+    return 0
+
+
+def validate_explicit_artifact(kind: str, raw_path: str) -> int:
+    errors.clear()
+    warnings.clear()
+    validator = ARTIFACT_VALIDATORS.get(kind)
+    if validator is None:
+        error(f"unsupported artifact type {kind!r}; expected task, report, or review")
+        return print_errors()
+
+    path = Path(raw_path)
+    label = str(path)
+    document = load_protocol_path(path, label)
+    if document is not None:
+        validator(label, document)
+
+    if print_errors():
+        return 1
+    print(f"OK: validated {kind} artifact {label}")
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    argv = [] if argv is None else argv
+    if argv:
+        if len(argv) == 3 and argv[0] == "--artifact":
+            return validate_explicit_artifact(argv[1], argv[2])
+        print(
+            "usage: validate_skill_library.py [--artifact {task,report,review} PATH]",
+            file=sys.stderr,
+        )
+        return 2
+
     errors.clear()
     warnings.clear()
 
@@ -1493,10 +1612,7 @@ def main() -> int:
         print("\nWarnings:")
         for message in warnings:
             print(f"  WARN: {message}")
-    if errors:
-        print("\nErrors:", file=sys.stderr)
-        for message in errors:
-            print(f"  ERROR: {message}", file=sys.stderr)
+    if print_errors():
         return 1
 
     print(f"\nOK: validated curated 15-skill taxonomy and protocol v{SUPPORTED_PROTOCOL_VERSION}")
@@ -1504,4 +1620,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(sys.argv[1:]))

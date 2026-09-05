@@ -64,3 +64,5 @@ There is one task model, not task-lite/task-compact variants. Navigation:
 ## Validation
 
 The stdlib-only validator checks the exact taxonomy, frontmatter/catalog, constrained YAML, canonical templates, generated-program JSON shape/graph/coverage invariants, protocol-v3 compatibility, required doctrine tokens, and internal links. The repository keeps one bounded validation workflow on relevant pushes to `dev`; workflow policy is owned by [github-workflow](github-workflow/SKILL.md).
+
+Validate one authored artifact without changing it with `python3 scripts/validate_skill_library.py --artifact report .agent/tasks/TASK-0043/report.yaml`; replace `report` with `task` or `review` as needed.
