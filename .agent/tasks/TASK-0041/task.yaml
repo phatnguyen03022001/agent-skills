@@ -1,0 +1,114 @@
+protocol_version: 3
+
+task_id: TASK-0041
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: ""
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "ed8d9fb35bb8b052530ca879e68a227d77e4a8a6"
+
+execution_skills:
+  required: [executor, verification, simplicity, github-workflow]
+
+authority_sources:
+  - source: "current operator instruction"
+    role: "bounded governance-prune authority"
+    precedence: 1
+  - source: "agent-skills/dev@7ced2489e5b9a04d0d31bf3b0ae4c0c7d57b66fe"
+    role: "exact development state"
+    precedence: 2
+
+structure_authority:
+  status: RESOLVED
+  source: "protocols/TASK_PROTOCOL.md ownership declaration"
+  rationale: "Task Protocol owns cross-role semantics; role skills own role-local procedure."
+
+objective: >-
+  Remove only duplicated cross-role Task Protocol prose from architect/SKILL.md and executor/SKILL.md while preserving
+  role-local fail-closed behavior, protocol v3 semantics, deterministic bundle semantics, validator compatibility,
+  successor reconstructibility, and the 15-skill taxonomy. Prefer deletion; keep any repeated text that is materially
+  required as a role-local gate.
+
+scope:
+  required_changes:
+    - "Classify candidate passages as CROSS_ROLE_DUPLICATE, ROLE_LOCAL_GATE, NAVIGATION_POINTER, or DISTINCT_ROLE_PROCEDURE before mutation."
+    - "Delete/collapse only CROSS_ROLE_DUPLICATE material; keep the smallest role-local instruction needed to apply Task Protocol semantics."
+    - "Focus Architect changes on the detailed evidence-validity/rebinding/bundle restatement in PROOF guidance."
+    - "Executor changes are optional and only for proven duplicate prose; preserve all Executor-specific mutation, divergence, dirty-state, hygiene, report, and Agent Runtime bundle-carrier behavior."
+    - "Change validator/tests only if they enforce removed duplicate wording rather than a semantic invariant; do not replace token ceremony with new token ceremony."
+  allowed_existing_files_or_components:
+    - "architect/SKILL.md"
+    - "executor/SKILL.md"
+    - "existing validator/tests only when proven necessary companion surfaces"
+
+invariants:
+  - "protocols/TASK_PROTOCOL.md remains byte-identical to base."
+  - "Protocol v3 lifecycle, authority/capability, evidence-validity, continuation, promotion/release, and normalization semantics remain unchanged."
+  - "Deterministic execution-bundle semantics remain unchanged, including one logical Agent Runtime bundle -> exactly one terminal_exec."
+  - "Historical .agent/tasks/** remains untouched except TASK-0041 report publication."
+  - "No new doctrine owner, framework, lifecycle, role, registry, cache, telemetry, bundle API, scheduler, queue, or orchestration mechanism."
+
+forbidden_changes:
+  - "Do not modify protocols/TASK_PROTOCOL.md."
+  - "Do not change bundle/runtime-carrier semantics, lifecycle, authority model, evidence-validity meaning, continuation, promotion/release semantics, schema, or taxonomy."
+  - "Do not touch sibling support repos or product repos."
+  - "Do not expand into provider/controller, compatibility-token, promotion/release ownership, or profile/bootstrap cleanup."
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Every removed/collapsed passage maps to an exact existing Task Protocol owner; role-local gates and distinct procedures remain."
+    evidence_required: "Compact before/after semantic-owner map."
+  - id: AC-2
+    requirement: "Live duplicate governance surface is reduced without creating a new owner or broader cleanup."
+    evidence_required: "Exact diff and changed-path summary."
+  - id: AC-3
+    requirement: "Task Protocol blob is unchanged; validator, full unit suite, applicable compile checks, and git diff --check pass on exact candidate."
+    evidence_required: "Fresh exact verification evidence."
+  - id: AC-4
+    requirement: "Candidate/report publication is linear and non-force on dev; main remains unchanged."
+    evidence_required: "Fresh refs and exact candidate/report lineage."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Fresh-resolve task/base/refs/skills/local state and classify candidate passages before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Apply smallest deletion/collapse, then run focused + full repository verification as one maximal deterministic bundle when no material return boundary exists."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Prove exact blobs/paths/forbidden surfaces, publish candidate then report-only child, and prove final refs/state."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+blocking_decisions: []
+execution_ready: true
