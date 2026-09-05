@@ -2637,10 +2637,17 @@ class ActualArtifactCliTests(unittest.TestCase):
                 "path 'local_hygiene' missing required fields",
             ),
             (
-                "retained-path",
+                "retained-scalar",
                 "local_hygiene:\n  result: RETAINED_FOR_EVIDENCE\n  run_root: /private/tmp/run\n"
                 "  cleanup_performed: false\n  retained: [/private/tmp/evidence]\n  evidence: retained\n",
                 "path 'local_hygiene.retained[0]' must be mapping",
+            ),
+            (
+                "retained-path-not-identity",
+                "local_hygiene:\n  result: RETAINED_FOR_EVIDENCE\n  run_root: /private/tmp/run\n"
+                "  cleanup_performed: false\n  retained:\n    - path: /private/tmp/evidence\n"
+                "      reason: retained\n  evidence: retained\n",
+                "path 'local_hygiene.retained[0]' missing required fields ['identity']",
             ),
         )
         for name, hygiene, diagnostic in cases:
@@ -2675,6 +2682,11 @@ class ActualArtifactCliTests(unittest.TestCase):
                 result = self.run_artifact_validator("task", path)
                 self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
+        self.assertEqual(
+            VALIDATOR_MODULE.parse_flat_flow_list('["[executor]"]', ROOT / "templates/task.yaml", 1),
+            ["[executor]"],
+        )
+
     def test_flat_flow_lists_reject_unsupported_or_malformed_syntax(self) -> None:
         invalid_values = (
             "[!tag executor]",
@@ -2682,6 +2694,7 @@ class ActualArtifactCliTests(unittest.TestCase):
             "[*anchor]",
             "[executor,]",
             "[[executor]]",
+            "[executor: value]",
         )
         for value in invalid_values:
             with self.subTest(value=value):

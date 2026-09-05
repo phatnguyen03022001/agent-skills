@@ -271,8 +271,11 @@ def parse_flat_flow_list(raw: str, path: Path, number: int) -> list[Any]:
 
     values: list[Any] = []
     for item in items:
-        if item.startswith(("!", "&", "*", "[", "{", "|", ">")) or any(
-            indicator in item for indicator in ("[", "]", "{", "}")
+        quoted = item[:1] in ("'", '"')
+        if not quoted and (
+            item.startswith(("!", "&", "*", "[", "{", "|", ">"))
+            or any(indicator in item for indicator in ("[", "]", "{", "}"))
+            or re.search(r":\s", item)
         ):
             raise ProtocolYamlError(f"{display_path(path)}:{number}: unsupported flow list item syntax")
         values.append(scalar_value(item, path, number))
