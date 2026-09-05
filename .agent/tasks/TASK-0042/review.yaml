@@ -1,7 +1,7 @@
 protocol_version: 3
 task_id: TASK-0042
 task_revision: 1
-review_revision: 1
+review_revision: 2
 state: ACCEPTED
 reviewed_report:
   repository: phatnguyen03022001/agent-skills
@@ -27,3 +27,9 @@ promotion_readiness:
   reason: "Closes bounded presentation sediment on dev only."
 notes:
   - "Separate observed limitation: the constrained YAML parser does not accept bare flow-list scalars already used by canonical tasks. Actual-artifact validation also needs an accessible entrypoint so valid template checks cannot be mistaken for validation of a newly authored report. These are separately scoped next work, not hidden changes in TASK-0042."
+
+independence:
+  reviewer_role: ARCHITECT
+  separate_session_from_executor: true
+  exact_report_identity_verified: true
+metadata_correction: "Records the already-performed independent report identity check explicitly; prior complete review-schema validity claim omitted this declaration. Candidate evidence is unchanged."

@@ -1,13 +1,13 @@
 protocol_version: 3
 task_id: TASK-0043
 task_revision: 1
-review_revision: 1
-state: REVISION_REQUIRED
+review_revision: 2
+state: ACCEPTED
 reviewed_report:
   repository: phatnguyen03022001/agent-skills
   path: .agent/tasks/TASK-0043/report.yaml
-  commit: "b52ecb70edd9e3975c2bae6fd173135fbf006465"
-  report_revision: 1
+  commit: "251d64ac220dda305b5cfdbed074c70ce1f3a06e"
+  report_revision: 2
 contract_compliance:
   protocol_version: PASS
   identity: PASS
@@ -16,14 +16,18 @@ contract_compliance:
   scope: PASS
   structure_policy: PASS
   git_authority: PASS
-  acceptance_criteria: FAIL
+  acceptance_criteria: PASS
   verifier_evidence: NOT_REQUIRED
+independence:
+  reviewer_role: ARCHITECT
+  separate_session_from_executor: true
+  exact_report_identity_verified: true
 acceptance_basis:
-  - 'The explicit-file CLI reuses existing schemas and task normalization; default validator and reported 120-test evidence remain useful. Candidate/report lineage is preserved.'
-  - 'AC-2 fails two reproduced cases: ["[executor]"] is a flat quoted scalar list but is rejected by structural-character filtering; [executor: value] is accepted as a string list although its unquoted colon-space denotes unsupported YAML mapping syntax. This contradicts scalar compatibility and fail-closed intent.'
-  - 'AC-1 regression coverage must reproduce the observed retained mapping with path instead of identity, rather than only a scalar retained item.'
+  - "Independent reproduction confirms quoted structural characters remain scalar data and unquoted colon-space flow mappings fail closed. Correction adds the observed retained mapping path-versus-identity regression."
+  - "The correction candidate 99f359faca313d883699699277fbe4ed52a14e86 changes only the two authorized validator/test files, preserving the original bounded CLI and README implementation. Focused CLI tests, default validator, all 120 tests, compilation and whitespace pass; actual report revision 2 validates."
+  - "Original candidate/report and REVISION_REQUIRED history remain immutable. The correction is a direct child of review 24c79fe59453946aef9c44fcfb4f8cb5247762a2; report revision 2 at 251d64ac220dda305b5cfdbed074c70ce1f3a06e is its report-only child. Fresh GitHub/local equality closes publication evidence; main is unchanged."
 promotion_readiness:
   eligible_for_candidate_capture: false
-  reason: "Bounded parser correction and regression coverage required."
+  reason: "Closes bounded actual-artifact validation on dev; no stable activation."
 notes:
-  - "Continue TASK-0043 rev 1 from this published review commit. Keep the same three-file scope and original authorized base; identify the correction candidate as final_execution_head and publish report revision 2 as its report-only child. Preserve prior immutable history. No new task, parser framework, schema or doctrine change."
+  - "Schema checks do not prove semantic correctness. The original sparse planning task omits required artifact fields, which the new CLI correctly rejects; this acceptance does not claim historical task-schema compliance or authorize automatic migration. New planning must validate the actual task before publication."
