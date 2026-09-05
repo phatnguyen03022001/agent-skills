@@ -1,0 +1,29 @@
+protocol_version: 3
+task_id: TASK-0042
+task_revision: 1
+review_revision: 1
+state: ACCEPTED
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0042/report.yaml
+  commit: "4c3230f18c79bb6384f80f45e814570941c2ffa7"
+  report_revision: 1
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: PASS
+  verifier_evidence: NOT_REQUIRED
+acceptance_basis:
+  - "Exact diff removes obsolete profile launch-field/example checks and compatibility-only comments from the four authorized files. Meaningful non-authority/ownership checks remain; no dummy replacement comment is introduced."
+  - "Independent causal check archived exact base 1bc39914a1902d2bb16ca4cfab4996e796d8b3c3 into a run-owned temporary directory and removed only the two compatibility comments. The old validator failed on Program 2/4 and fake percentages, proving the obsolete coupling. The current candidate passes validator, 116 tests, compile and whitespace checks."
+  - "Protocol and Executor blobs remain unchanged. Candidate e6cf01da2df7a0c15a0ad53a22e350cf7ae681af and report-only child 4c3230f18c79bb6384f80f45e814570941c2ffa7 form the authorized linear dev lineage. Fresh remote/local closure resolves the report externally and main remains ed8d9fb35bb8b052530ca879e68a227d77e4a8a6."
+promotion_readiness:
+  eligible_for_candidate_capture: false
+  reason: "Closes bounded presentation sediment on dev only."
+notes:
+  - "Separate observed limitation: the constrained YAML parser does not accept bare flow-list scalars already used by canonical tasks. Actual-artifact validation also needs an accessible entrypoint so valid template checks cannot be mistaken for validation of a newly authored report. These are separately scoped next work, not hidden changes in TASK-0042."
