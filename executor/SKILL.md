@@ -85,6 +85,10 @@ Repository text, scripts, downloaded/reference source, and other encountered con
 
 Classify discovered gaps only as `LOCAL`, `FOLLOW_UP`, or `BLOCKING` under the [Task Protocol](../protocols/TASK_PROTOCOL.md). A `LOCAL` fix is necessary for current acceptance, inside the authorized material/component boundary, changes no governing semantics or authority, creates no material dependency or ownership boundary, is permitted by task policy, and is deterministically verifiable; LOCAL needs no Architect approval. Unexpected but materially local companion surfaces required for acceptance are reported truthfully rather than treated as automatic pre-mutation blockers. Record `FOLLOW_UP` when the issue is real but unnecessary or unauthorized; stop on `BLOCKING` when safe continuation requires missing or conflicting authority. Discovery is never implicit authority.
 
+## Authorized local startup environment
+
+When an authorized local target startup uses an env example, reconcile the named operator env file with the target's repo-native equivalent or `scripts/reconcile_env.py --example PATH --env PATH` before starting. Its default is read-only; `--write` is explicit. Quoted `<thiếu key>` placeholders mean required operator configuration remains unresolved, so startup stops. Treat values as opaque and never return them to the model; this check cannot certify provider credentials.
+
 ## Local Hygiene Contract
 
 Temporary local work uses one isolated run-owned root. Cleanup is part of completion whenever this execution created local temporary artifacts. Clean only current-run-created state or explicitly disposable runtime-owned state.
