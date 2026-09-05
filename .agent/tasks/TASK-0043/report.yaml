@@ -1,7 +1,7 @@
 protocol_version: 3
 task_id: TASK-0043
 task_revision: 1
-report_revision: 1
+report_revision: 2
 state: REPORTED
 
 task_source:
@@ -13,7 +13,7 @@ execution:
     name: dev
     role: integration
   authorized_base_head: "1211e6d3a89f1b4b2985a036dbb9ad46fb180d87"
-  final_execution_head: "92fae3029470e60e3e745eaf8602c2f6056c360b"
+  final_execution_head: "99f359faca313d883699699277fbe4ed52a14e86"
 
 skill_library:
   repository: phatnguyen03022001/agent-skills
@@ -47,21 +47,21 @@ pushed: true
 acceptance_evidence:
   - criterion_id: AC-1
     status: PASS
-    evidence: "The new read-only --artifact task|report|review CLI reuses the existing task normalization and schema validators. External valid files pass; incomplete local_hygiene and retained-path scalar shapes fail with local_hygiene field diagnostics."
+    evidence: "The read-only --artifact task|report|review CLI reuses existing task normalization and schema validators. External valid files pass; incomplete local_hygiene, retained scalar, and retained mapping with path instead of identity fail with local_hygiene field diagnostics."
   - criterion_id: AC-2
     status: PASS
-    evidence: "The constrained parser accepts canonical bare and quoted flat flow lists while rejecting tags, anchors, nested flow structures, and malformed trailing-comma input."
+    evidence: "The constrained parser accepts canonical bare and quoted flat flow lists, including quoted structural text, while rejecting tags, anchors, nested flow structures, malformed trailing commas, and unquoted colon-space mapping syntax."
   - criterion_id: AC-3
     status: NOT_PROVEN
-    evidence: "Candidate 92fae3029470e60e3e745eaf8602c2f6056c360b passed validator, 120 tests, py_compile, whitespace and diff checks, and was published non-force to dev. This report child and final refs are post-authorship facts."
+    evidence: "Candidate 99f359faca313d883699699277fbe4ed52a14e86 passed validator, 120 tests, py_compile, whitespace and diff checks, and was published non-force to dev. This report revision and final refs are post-authorship facts."
 
 executor_checks:
   - check_id: CHECK-1
     result: PASS
-    evidence: "Exact base, task identity, clean checkout, remote dev/main refs, pinned skills, actual-artifact limitation, and canonical TASK-0042 bare flow list were resolved before mutation."
+    evidence: "Published TASK-0043 review revision 1 authorized this bounded correction from 24c79fe59453946aef9c44fcfb4f8cb5247762a2; only the parser and its regression tests changed."
   - check_id: CHECK-2
     result: PASS
-    evidence: "Focused CLI regressions and the full suite passed. The candidate also passed python compilation, git diff --check, and whitespace inspection."
+    evidence: "Focused actual-artifact CLI regressions and the full 120-test suite passed. The candidate also passed python compilation, git diff --check, and whitespace inspection."
   - check_id: CHECK-3
     result: NOT_PROVEN
     evidence: "Candidate publication passed; this required report-only child publication and final fresh remote/local proof occur after this report is committed."
