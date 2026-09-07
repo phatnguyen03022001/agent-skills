@@ -10,10 +10,8 @@ on:
       - "contracts/**"
       - "templates/**"
       - "protocols/**"
-      - "scripts/validate_skill_library.py"
-      - "scripts/test_validate_skill_library.py"
-      - "scripts/reconcile_env.py"
-      - "scripts/test_reconcile_env.py"
+      - ".agent/case-router.yaml"
+      - "scripts/**"
       - ".github/workflows/validate-skill-library.yml"
 
 permissions:

@@ -2315,12 +2315,28 @@ class Task0025StableAdoptionGateTests(unittest.TestCase):
         ):
             self.assertIn(identity, task)
 
-    def test_existing_validate_workflow_is_the_candidate_verifier(self) -> None:
-        workflow = (ROOT / ".github" / "workflows" / "validate-skill-library.yml").read_text(encoding="utf-8").lower()
+    def test_existing_validate_workflow_covers_live_validation_inputs_only(self) -> None:
+        workflow = (ROOT / ".github" / "workflows" / "validate-skill-library.yml").read_text(encoding="utf-8")
         self.assertIn("branches:\n      - dev", workflow)
-        self.assertIn('"scripts/test_validate_skill_library.py"', workflow)
+        path_block = workflow.split("    paths:\n", 1)[1].split("\n\npermissions:", 1)[0]
+        paths = [line.strip()[2:].strip('"') for line in path_block.splitlines() if line.strip().startswith("- ")]
+        self.assertEqual(
+            paths,
+            [
+                "README.md",
+                "**/SKILL.md",
+                "contracts/**",
+                "templates/**",
+                "protocols/**",
+                ".agent/case-router.yaml",
+                "scripts/**",
+                ".github/workflows/validate-skill-library.yml",
+            ],
+        )
+        self.assertNotIn(".agent/tasks/**", paths)
         self.assertIn("python3 scripts/validate_skill_library.py", workflow)
         self.assertIn("python3 -m unittest scripts/test_validate_skill_library.py", workflow)
+        self.assertIn("python3 -m unittest scripts.test_reconcile_env", workflow)
 
     def test_operator_preferences_stay_outside_generic_agent_skills(self) -> None:
         generic_paths = (
