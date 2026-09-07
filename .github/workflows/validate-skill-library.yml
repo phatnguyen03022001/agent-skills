@@ -12,6 +12,8 @@ on:
       - "protocols/**"
       - "scripts/validate_skill_library.py"
       - "scripts/test_validate_skill_library.py"
+      - "scripts/reconcile_env.py"
+      - "scripts/test_reconcile_env.py"
       - ".github/workflows/validate-skill-library.yml"
 
 permissions:
@@ -32,3 +34,5 @@ jobs:
         run: python3 scripts/validate_skill_library.py
       - name: Unit tests
         run: python3 -m unittest scripts/test_validate_skill_library.py
+      - name: Reconciler unit tests
+        run: python3 -m unittest scripts.test_reconcile_env
