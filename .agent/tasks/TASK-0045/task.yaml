@@ -1,0 +1,113 @@
+protocol_version: 3
+task_id: TASK-0045
+task_revision: 1
+state: APPROVED
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: RECONCILE_ENV_CI_COVERAGE
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "ed8d9fb35bb8b052530ca879e68a227d77e4a8a6"
+architect_analysis_skills: []
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+execution_skills:
+  recommended: []
+  required: [executor, verification, simplicity, github-workflow]
+authority_sources:
+  - source: "current operator instruction"
+    role: "Close the reproduced five-repository support debt cleanly with ChatGPT Local Executors."
+    precedence: 1
+  - source: "agent-skills/.agent/tasks/TASK-0044/review.yaml@084d4657d1602a19cf91c68b07716221f34b6aca"
+    role: "Accepted env reconciler implementation whose regression suite must be covered by CI."
+    precedence: 2
+  - source: "agent-skills/.github/workflows/validate-skill-library.yml@084d4657d1602a19cf91c68b07716221f34b6aca"
+    role: "Exact live workflow reproducing the missing path triggers and missing reconciler test invocation."
+    precedence: 3
+structure_authority:
+  status: RESOLVED
+  source: "Existing validate-skill-library GitHub Actions workflow."
+  rationale: "The defect is one false-green CI route in an existing workflow. The smallest correction is workflow coverage only; no new workflow, automation layer, dependency, or reconciler semantic change is required."
+objective: "Make the existing agent-skills validation workflow cover reconcile_env source changes and execute its existing regression suite so the accepted reconciler cannot bypass CI."
+scope:
+  required_changes:
+    - "Update the existing dev validation workflow path filters so changes to scripts/reconcile_env.py or scripts/test_reconcile_env.py trigger the workflow."
+    - "Run the existing reconciler unit suite scripts.test_reconcile_env in the same validation job in addition to the existing validator/library tests."
+    - "Keep the workflow bounded to the existing validation job and current Python/checkout toolchain; use no dependency, cache service, matrix, scheduler, registry, or new workflow."
+    - "Verify locally that the existing library suite and reconciler suite pass, validate the actual task/report artifacts, publish one implementation candidate and one report-only child on dev, and freshly prove remote/local dev equality."
+    - "After candidate publication, observe the GitHub Actions run triggered by the exact candidate/workflow change when current capability permits; if the run is unavailable or inconclusive, report that exact postcondition rather than fabricating PASS."
+  allowed_existing_files_or_components:
+    - .github/workflows/validate-skill-library.yml
+    - .agent/tasks/TASK-0045/report.yaml
+invariants:
+  - "scripts/reconcile_env.py and scripts/test_reconcile_env.py behavior and bytes remain unchanged."
+  - "Existing validator semantics, Task Protocol, README, 15-skill taxonomy, Case Router, and runtime surface remain unchanged."
+  - "One existing workflow remains the sole CI surface for this correction; no new automation layer is introduced."
+  - "Topology remains exactly {dev, main}; main is not mutated."
+forbidden_changes:
+  - "Do not modify reconciler implementation/tests, validator implementation/tests, Task Protocol, README, skills, contracts, templates, dependencies, repository settings, branch topology, main, tags, or releases."
+  - "Do not add a new workflow, action dependency, matrix, cache service, scheduler, queue, daemon, registry, database, or orchestration layer."
+  - "Do not weaken or skip the existing library validation/tests to make CI faster."
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Exact base-to-candidate diff changes only .github/workflows/validate-skill-library.yml and adds both reconciler path triggers without broadening unrelated workflow scope."
+    evidence_required: "Exact changed-path/diff proof and workflow path-filter inspection."
+  - id: AC-2
+    requirement: "The validation job executes the existing library validator/tests and the existing reconcile_env regression suite; all local suites pass on the exact candidate."
+    evidence_required: "Candidate-bound command output for validator, existing library tests, reconciler tests, and git diff --check."
+  - id: AC-3
+    requirement: "The candidate/report lineage is published non-force on dev with main unchanged and final local tracked/index state clean; any GitHub Actions post-publication observation is reported truthfully."
+    evidence_required: "Exact candidate/report commits, fresh dev/main refs/topology, local closure evidence, and exact workflow-run identity/result when observable."
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Fresh-bind exact task/base, prove local/remote dev equality and clean state, resolve required execution capabilities, and confirm the reproduced workflow gap still exists before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Make the smallest workflow-only edit, then run python3 scripts/validate_skill_library.py, python3 -B -m unittest scripts.test_validate_skill_library, python3 -B -m unittest scripts.test_reconcile_env, actual artifact validation, git diff --check, and exact scope checks on one exact candidate."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Publish the exact candidate and report-only child non-force to dev, fresh-resolve final refs/topology/local hygiene, and observe the exact triggered GitHub Actions run if current capability is available."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+blocking_decisions: []
+execution_ready: true
