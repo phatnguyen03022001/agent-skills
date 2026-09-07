@@ -1,0 +1,192 @@
+protocol_version: 3
+task_id: TASK-0049
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: EXECUTOR_FIT_DECOMPOSITION_GATE
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "ed8d9fb35bb8b052530ca879e68a227d77e4a8a6"
+
+architect_analysis_skills:
+  - architect
+  - verification
+  - simplicity
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+execution_skills:
+  recommended: []
+  required: [executor, verification, simplicity]
+
+authority_sources:
+  - source: "Current operator instruction for the five-repository closure and Executor-fit governance evaluation."
+    role: "Add only the smallest deterministic task-decomposition gate if current governance can authorize an independently rejectable multi-outcome task."
+    precedence: 1
+  - source: "TASK-0048 accepted review commit 22f430499c8f483ce2c868e2c84a92fe3ebbc62b."
+    role: "Fresh predecessor closure on dev; checkout maintenance is terminal ACCEPTED before this governance task is created."
+    precedence: 2
+  - source: "architect/SKILL.md, protocols/TASK_PROTOCOL.md, contracts/IMPLEMENTATION_CONTRACT.md and templates/task.yaml at 22f430499c8f483ce2c868e2c84a92fe3ebbc62b."
+    role: "Current governance evidence: Architect closes WHAT/BOUNDARY/PROOF and tasks carry restrictive scope, but no pre-authorization rule requires one coherent material outcome or splits sibling outcomes that can be independently accepted/rejected."
+    precedence: 3
+
+structure_authority:
+  status: RESOLVED
+  source: "Existing Architect skill plus existing validator regression suite."
+  rationale: "Executor-fit is Architect-local task-decomposition judgment. The smallest correction is one planning rule in architect/SKILL.md with focused regression coverage; no task schema, protocol lifecycle, planner, score, registry or service is required."
+
+objective: "Add a minimal Architect-local Executor-fit gate that prevents authorization of materially independent sibling outcomes inside one canonical task while preserving the existing protocol-v3 task schema and lifecycle."
+
+scope:
+  required_changes:
+    - "Add one concise Executor-fit/task-decomposition rule to architect/SKILL.md that is evaluated before Architect authorizes a normal canonical task."
+    - "Use exactly the planning outcomes FIT, SPLIT_REQUIRED and CAPABILITY_BLOCKED as Architect-local judgment semantics, not serialized task fields or lifecycle states."
+    - "Define FIT only when the intended task is one coherent material outcome, one repository/base binding, one independently reviewable candidate boundary, one coherent acceptance/evidence boundary, all required current-phase capabilities are currently satisfiable, and there is no sibling material outcome that a reviewer could independently reject while accepting the rest."
+    - "Define SPLIT_REQUIRED when the intended work contains materially independent sibling outcomes or independently rejectable review/acceptance boundaries; Architect must split those outcomes before canonical task authorization. Do not split merely because implementation has multiple files, steps, components, tests or deterministic jobs when they serve one coherent outcome."
+    - "Define CAPABILITY_BLOCKED when the material outcome is coherent but a required current-phase capability cannot presently be satisfied; capability unavailability must not be disguised as task splitting, scheduling or provider orchestration."
+    - "State explicitly that this gate creates no complexity score, token budget, duration estimate, task points, queue, scheduler, planner service, new schema, task field, lifecycle state or additional organizational role."
+    - "Add focused regression coverage in scripts/test_validate_skill_library.py that locks the three outcomes, the independently-rejectable-sibling criterion, one-repository/base/review/evidence boundary semantics, and the prohibition on numeric/scoring/task-schema machinery."
+    - "Run repository-native validation, complete validator/library tests, reconciler tests, applicable compile checks and git diff --check on the exact candidate; publish candidate/report non-force to dev and stop for Governing Architect review."
+  allowed_existing_files_or_components:
+    - architect/SKILL.md
+    - scripts/test_validate_skill_library.py
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Protocol version remains 3 and templates/task.yaml is unchanged; FIT/SPLIT_REQUIRED/CAPABILITY_BLOCKED are not canonical artifact fields or lifecycle states."
+  - "Executor-fit governs Architect task decomposition quality only; it does not prescribe Executor-local HOW."
+  - "One coherent outcome may still span multiple files/components/verification steps when those surfaces share one inseparable material acceptance boundary."
+  - "Capability blocking remains current-phase runtime evidence and does not create queue/scheduler semantics."
+  - "One governing Architect and one active repository binding semantics remain unchanged."
+  - "Repository topology remains exactly dev/main; main is read-only and unchanged."
+
+forbidden_changes:
+  - "Do not add numerical complexity scores, token-budget scoring, duration prediction, task points or sizing scales."
+  - "Do not add a queue, scheduler, task database, registry, planner service, orchestration layer, dependency engine, daemon or persistent capability state."
+  - "Do not add or change task/report/review schema fields, protocol version, lifecycle states, organizational roles, continuation semantics, Git topology, release semantics or promotion semantics."
+  - "Do not modify templates/task.yaml, protocols/TASK_PROTOCOL.md, contracts, executor skill, workflow, dependencies, Case Router, repository settings, tags or releases unless a contradiction discovered during execution requires Architect revision first."
+  - "Do not create branches, mutate main, force-push, rewrite history, promote, tag, release or author review.yaml."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0049/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Architect has an explicit deterministic Executor-fit gate before normal canonical task authorization."
+    evidence_required: "Exact architect/SKILL.md candidate text and regression prove the three outcomes FIT, SPLIT_REQUIRED and CAPABILITY_BLOCKED and their placement in pre-authorization planning."
+  - id: AC-2
+    requirement: "FIT means one coherent independently reviewable material outcome rather than arbitrary scope accumulation."
+    evidence_required: "Regression proves FIT requires one repository/base binding, one candidate/review boundary, one coherent acceptance/evidence boundary, satisfiable required current-phase capabilities and no independently rejectable sibling material outcome."
+  - id: AC-3
+    requirement: "Material sibling outcomes are split for reviewability without splitting implementation ceremony."
+    evidence_required: "Exact guidance and regression prove independently rejectable sibling outcomes yield SPLIT_REQUIRED, while multiple files/steps/components/tests alone do not require splitting when they serve one coherent outcome."
+  - id: AC-4
+    requirement: "Unavailable capability is represented as capability blocking rather than decomposition or orchestration."
+    evidence_required: "Exact guidance and regression prove coherent work with unavailable required current-phase capability yields CAPABILITY_BLOCKED and does not introduce scheduling/provider-routing state."
+  - id: AC-5
+    requirement: "The rule introduces no new schema/lifecycle/scoring/control-plane machinery."
+    evidence_required: "Exact diff changes only architect/SKILL.md and scripts/test_validate_skill_library.py; task template/protocol/contracts remain unchanged and focused regression rejects or explicitly guards against numeric scoring, task-field/lifecycle interpretation, queue, scheduler and planner-service semantics."
+  - id: AC-6
+    requirement: "Existing repository validation remains green."
+    evidence_required: "Fresh exact-candidate validator PASS, complete validator/library tests PASS, reconciler tests PASS, applicable compile checks PASS and git diff --check PASS."
+  - id: AC-7
+    requirement: "Existing GitHub Actions validation passes for the exact candidate."
+    evidence_required: "Fresh Validate skill library push run for exact candidate SHA completes SUCCESS with existing validation/test job semantics."
+  - id: AC-8
+    requirement: "Candidate/report publication remains bounded to dev with exact lineage and main unchanged."
+    evidence_required: "Implementation candidate has exact task base as sole parent and only the two authorized changed files; report is report-only child; fresh remote/local/topology proof confirms dev closure, main unchanged, no branch creation and clean tree."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Fresh-bind TASK-0049 revision 1 at exact handoff base; require dev, local HEAD = origin/dev = handoff base, clean tree, unchanged main/topology, report absent and every required EXECUTION capability freshly available before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Reconfirm current Architect/task semantics do not already contain a one-coherent-outcome or independently-rejectable-sibling split gate; do not implement if fresh canonical truth contradicts this task premise."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Add the smallest Architect-local rule plus focused regression only; prove task schema, protocol, contracts, Executor semantics and control-plane surfaces remain untouched."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Run repository-native validator, complete validator/library and reconciler tests, applicable compile checks, exact changed-path proof and git diff --check on the candidate."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Publish candidate non-force to dev, require exact-SHA existing validation workflow SUCCESS, author/validate/publish only .agent/tasks/TASK-0049/report.yaml, fresh-prove final remote/local closure and stop for Governing Architect review."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
