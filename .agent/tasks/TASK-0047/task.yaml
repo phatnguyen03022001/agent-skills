@@ -1,0 +1,167 @@
+protocol_version: 3
+task_id: TASK-0047
+task_revision: 1
+state: APPROVED
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: CI_LIVE_VALIDATION_INPUT_COVERAGE
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "ed8d9fb35bb8b052530ca879e68a227d77e4a8a6"
+architect_analysis_skills:
+  - github-workflow
+  - verification
+  - simplicity
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+execution_skills:
+  recommended: []
+  required: [executor, verification, simplicity, github-workflow]
+authority_sources:
+  - source: "Current operator instruction for five-repository closure and validator/test input-coverage correction."
+    role: "Close only the reproduced false-green route in the existing agent-skills validation workflow without adding orchestration or broad historical-task triggers."
+    precedence: 1
+  - source: "TASK-0046 accepted review commit 407c11d598340d1a754d862b760e0d3e55b4d791."
+    role: "Freshly published predecessor closure on dev; TASK-0046 is terminal ACCEPTED before this task is created."
+    precedence: 2
+  - source: ".github/workflows/validate-skill-library.yml, .agent/case-router.yaml, scripts/validate_skill_library.py, scripts/test_validate_skill_library.py, scripts/test_reconcile_env.py and scripts/fixtures/governance_eval_corpus.json at dev commit 407c11d598340d1a754d862b760e0d3e55b4d791."
+    role: "Current live CI trigger policy and actual validator/test input graph used to reproduce the path-filter false-green defect."
+    precedence: 3
+structure_authority:
+  status: RESOLVED
+  source: "Existing single validation workflow and existing validator regression suite."
+  rationale: "The defect is only incomplete path ownership in one current workflow. A narrow trigger-policy correction plus regression coverage is sufficient; no new workflow, dependency graph, registry, generated metadata, service or lifecycle is justified."
+objective: "Ensure the existing agent-skills validation workflow runs for every current live mutable validator/test input while preserving bounded validation ownership and avoiding fragile per-script trigger enumeration."
+scope:
+  required_changes:
+    - "Update only the existing .github/workflows/validate-skill-library.yml path filter so .agent/case-router.yaml is a live trigger and the scripts tree is covered by one bounded scripts/** rule rather than fragile enumeration of individual validator/reconciler/test implementation files."
+    - "Preserve the existing README.md, **/SKILL.md, contracts/**, templates/**, protocols/** and workflow-self trigger coverage. Remove redundant exact scripts/validate_skill_library.py, scripts/test_validate_skill_library.py, scripts/reconcile_env.py and scripts/test_reconcile_env.py path entries when scripts/** supersedes them."
+    - "Add narrow regression coverage in scripts/test_validate_skill_library.py that mechanically locks the admitted live validation-input trigger policy, including .agent/case-router.yaml and scripts/**, while proving historical .agent/tasks/** is not added as a generic trigger."
+    - "Use the reproduced causal cases as acceptance evidence: a case-router-only mutation can change validator outcome and a governance-eval-corpus-only mutation can change validator-test outcome, therefore neither path may bypass the existing workflow. Historical task artifacts read only as immutable regression fixtures do not by themselves require .agent/tasks/** trigger expansion."
+    - "Run the repository-native validator, complete validator/library unit suite, reconciler tests, applicable compile checks and git diff --check on the exact candidate; publish candidate and truthful report non-force to dev and stop for Governing Architect review."
+  allowed_existing_files_or_components:
+    - .github/workflows/validate-skill-library.yml
+    - scripts/test_validate_skill_library.py
+  expected_files_are_restrictive: true
+invariants:
+  - "Exactly one existing validation workflow remains the owner; no duplicate CI workflow or second validation framework is introduced."
+  - "The workflow remains push-to-dev, read-only contents, one standard Linux job, bounded timeout and existing validator/test commands unless a directly required syntax adjustment is necessary for this task."
+  - "Every admitted current live mutable validator/test implementation input is covered through existing top-level ownership patterns plus .agent/case-router.yaml and scripts/**."
+  - "Historical .agent/tasks/** remains outside generic workflow triggers solely because regression tests read immutable historical evidence."
+  - "README.md, skill, contract, template, protocol and workflow-self coverage remains present."
+  - "Repository topology remains exactly dev/main; main is read-only and unchanged."
+forbidden_changes:
+  - "Do not add a new workflow, CI framework, generated dependency graph, workflow registry, task registry, scheduler, queue, daemon, planner service, database or generic dependency engine."
+  - "Do not add .agent/tasks/** or another broad historical-task trigger merely because tests read immutable historical fixtures."
+  - "Do not broaden triggers to unrelated repository surfaces outside actual validation ownership."
+  - "Do not modify validator semantics, Case Router semantics, governance-eval corpus contents, reconcile_env behavior, protocol semantics, skills, contracts, templates, dependencies, actions/checkout pin, repository settings, tags or releases."
+  - "Do not create branches, mutate main, force-push, rewrite history, promote, tag, release or mutate repository metadata."
+  - "Do not author review.yaml."
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0047/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+acceptance_criteria:
+  - id: AC-1
+    requirement: "A change to .agent/case-router.yaml cannot bypass the existing validation workflow on dev."
+    evidence_required: "Exact final workflow trigger plus regression assertion covering .agent/case-router.yaml, tied to the reproduced validator-failure causal case."
+  - id: AC-2
+    requirement: "A change anywhere under the live scripts tree, including scripts/fixtures/governance_eval_corpus.json, cannot bypass the existing validation workflow on dev."
+    evidence_required: "Exact final scripts/** trigger plus regression assertion, tied to the reproduced governance-eval-corpus test-failure causal case."
+  - id: AC-3
+    requirement: "Existing live README, SKILL, contracts, templates, protocols and workflow-self trigger coverage remains intact."
+    evidence_required: "Focused trigger-policy regression proves all admitted top-level validation ownership patterns remain present."
+  - id: AC-4
+    requirement: "The correction does not create historical-task trigger noise."
+    evidence_required: "Exact final workflow and regression prove .agent/tasks/** is not added merely because immutable historical fixtures are read by tests."
+  - id: AC-5
+    requirement: "The trigger representation is the smallest stable ownership rule rather than redundant per-script enumeration."
+    evidence_required: "Exact workflow diff uses one scripts/** rule and removes superseded exact script-path entries without adding unrelated trigger breadth."
+  - id: AC-6
+    requirement: "Repository validation behavior remains green after the trigger-only policy correction."
+    evidence_required: "Fresh exact-candidate python3 scripts/validate_skill_library.py PASS, complete scripts.test_validate_skill_library PASS, scripts.test_reconcile_env PASS, applicable Python compile checks PASS and git diff --check PASS."
+  - id: AC-7
+    requirement: "The existing GitHub Actions workflow runs successfully for the exact implementation candidate."
+    evidence_required: "Fresh exact-SHA GitHub Actions run for Validate skill library completes successfully and its logs show the repository-native validator and both test suites pass."
+  - id: AC-8
+    requirement: "Candidate and report publication remain bounded to dev with main/topology unchanged."
+    evidence_required: "Fresh exact parent/diff/ref proof: implementation changes only the two authorized existing files, report is a report-only child, dev reaches exact report commit, main remains unchanged, no branch is created, local HEAD equals origin/dev and tree is clean."
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Fresh-bind TASK-0047 revision 1 at its exact handoff base; require dev, local HEAD = origin/dev = handoff base, clean tree, unchanged main/topology, report.yaml absent and fresh availability of every required EXECUTION capability including non-mutating Git push-capability proof before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Reproduce or independently confirm the two causal false-green inputs from exact base: .agent/case-router.yaml changes can alter validator result, and scripts/fixtures/governance_eval_corpus.json changes can alter validator-test result, while neither current path matches the existing workflow trigger set."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Add a failing focused regression first where practical, then implement only the existing workflow path-filter correction and regression needed for .agent/case-router.yaml plus scripts/** while preserving required existing trigger ownership and excluding .agent/tasks/**."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Run the full repository-native validator and complete validator/library and reconciler tests on the exact candidate; run applicable compile checks and git diff --check; prove changed paths are exactly .github/workflows/validate-skill-library.yml and scripts/test_validate_skill_library.py."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Publish the exact candidate non-force to dev, require the exact-SHA existing validation workflow to complete successfully, author/validate/publish only .agent/tasks/TASK-0047/report.yaml as the report child, then fresh-prove remote/local closure and stop for Governing Architect review."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+blocking_decisions: []
+execution_ready: true
