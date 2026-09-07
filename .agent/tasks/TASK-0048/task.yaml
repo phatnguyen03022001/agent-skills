@@ -1,0 +1,160 @@
+protocol_version: 3
+task_id: TASK-0048
+task_revision: 1
+state: APPROVED
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: CHECKOUT_RUNTIME_MAINTENANCE
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "ed8d9fb35bb8b052530ca879e68a227d77e4a8a6"
+architect_analysis_skills:
+  - github-workflow
+  - verification
+  - simplicity
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+execution_skills:
+  recommended: []
+  required: [executor, verification, simplicity, github-workflow]
+authority_sources:
+  - source: "Current operator instruction for five-repository closure and checkout maintenance classification."
+    role: "Close justified pre-freeze checkout runtime maintenance with the smallest immutable-pin update and no dependency-management machinery."
+    precedence: 1
+  - source: "TASK-0047 accepted review commit 321566705a2714c4265f56b01008f22ee3efa670."
+    role: "Freshly published predecessor closure on dev; validation-input coverage is terminal ACCEPTED before this maintenance task is created."
+    precedence: 2
+  - source: "Current .github/workflows/validate-skill-library.yml at review commit 321566705a2714c4265f56b01008f22ee3efa670."
+    role: "Current workflow authority: actions/checkout is pinned to exact SHA 11d5960a326750d5838078e36cf38b85af677262, which is upstream v4.4.0 and declares runs.using node20."
+    precedence: 3
+  - source: "Official actions/checkout release v7.0.1 published 2026-07-20, tag refs/tags/v7.0.1 -> exact commit 3d3c42e5aac5ba805825da76410c181273ba90b1; action.yml at that commit declares runs.using node24."
+    role: "Fresh upstream maintenance evidence selecting the current stable supported immutable checkout revision."
+    precedence: 4
+structure_authority:
+  status: RESOLVED
+  source: "Existing single validation workflow."
+  rationale: "This is one dependency-pin maintenance correction in an existing workflow. No additional workflow, dependency manager, update bot, registry or abstraction is justified."
+objective: "Replace the deprecated-node20 actions/checkout v4.4.0 immutable pin with current stable actions/checkout v7.0.1 at exact commit 3d3c42e5aac5ba805825da76410c181273ba90b1 while preserving the existing validation workflow's least-privilege behavior and exact validation semantics."
+scope:
+  required_changes:
+    - "Modify only the Checkout uses line in .github/workflows/validate-skill-library.yml from actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0 to actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1."
+    - "Preserve all existing workflow triggers, path coverage, contents: read permission, concurrency behavior, ubuntu-latest runner, five-minute timeout, job structure, validator command, validator/library unit-test command and reconciler-test command."
+    - "Verify the exact candidate workflow still completes successfully on GitHub Actions for the candidate SHA and that the checkout step resolves the exact new immutable revision without the prior actions/checkout node20 deprecation warning."
+    - "Run repository-native validation/tests and git diff --check on the exact candidate, publish candidate and truthful report non-force to dev, fresh-prove final refs/topology, then stop for Governing Architect review."
+  allowed_existing_files_or_components:
+    - .github/workflows/validate-skill-library.yml
+  expected_files_are_restrictive: true
+invariants:
+  - "Exactly one existing validation workflow remains the owner."
+  - "The action remains pinned by exact immutable commit SHA; no floating major/minor tag is used in the workflow."
+  - "Workflow permissions remain contents: read and no new secret, token, write permission, artifact, cache, matrix, schedule, workflow_dispatch, PR workflow or external service is introduced."
+  - "Validation-input coverage accepted by TASK-0047 remains byte-for-byte semantically unchanged."
+  - "Repository topology remains exactly dev/main; main is read-only and unchanged."
+forbidden_changes:
+  - "Do not add Dependabot, Renovate, dependency-update automation, a dependency registry, workflow registry, generated pin manifest, scheduler, queue, daemon, service or generic maintenance framework."
+  - "Do not modify validation commands, trigger paths, Case Router, validator/test semantics, scripts, protocols, contracts, skills, templates, dependencies, repository settings, tags or releases."
+  - "Do not use a mutable actions/checkout tag such as @v7 as the committed workflow authority; commit the exact v7.0.1 SHA."
+  - "Do not create branches, mutate main, force-push, rewrite history, promote, tag, release or mutate repository metadata."
+  - "Do not author review.yaml."
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: forbidden
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0048/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+acceptance_criteria:
+  - id: AC-1
+    requirement: "The workflow uses current stable actions/checkout v7.0.1 by exact immutable SHA 3d3c42e5aac5ba805825da76410c181273ba90b1."
+    evidence_required: "Exact candidate diff plus upstream official tag/release identity proves the committed SHA is v7.0.1; no floating tag is committed."
+  - id: AC-2
+    requirement: "The checkout maintenance removes the known node20 runtime-deprecation condition without changing validation ownership."
+    evidence_required: "Official action.yml at selected exact SHA declares runs.using node24; exact candidate GitHub Actions logs/check evidence shows Checkout succeeds and does not emit the prior actions/checkout node20 deprecation warning."
+  - id: AC-3
+    requirement: "Least privilege and existing workflow semantics remain unchanged."
+    evidence_required: "Base-to-candidate diff contains only the one Checkout uses/comment line; contents: read, triggers, path coverage, concurrency, runner, timeout and all three validation/test commands are unchanged."
+  - id: AC-4
+    requirement: "Repository validation remains green on the exact candidate."
+    evidence_required: "Fresh exact-candidate repository-native validator PASS, complete validator/library tests PASS, reconciler tests PASS and git diff --check PASS."
+  - id: AC-5
+    requirement: "The existing GitHub Actions workflow passes for the exact candidate SHA."
+    evidence_required: "Fresh Validate skill library push run for exact candidate SHA completes SUCCESS with Checkout, Validate, Unit tests and Reconciler unit tests successful."
+  - id: AC-6
+    requirement: "Candidate/report publication remains bounded to dev and exact task lineage."
+    evidence_required: "Implementation candidate has exact task base as sole parent and changes only the workflow file; report is a report-only child; fresh remote dev/main/topology and local-hygiene proof shows main unchanged, no branch creation and clean closure."
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Fresh-bind TASK-0048 revision 1 at its exact handoff base; require dev, local HEAD = origin/dev = handoff base, clean tree, unchanged main/topology, report.yaml absent and fresh availability of required EXECUTION capabilities including non-mutating Git push-capability proof before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Fresh-confirm current workflow pin is exact actions/checkout v4.4.0 SHA 11d5960a326750d5838078e36cf38b85af677262 with upstream action.yml node20, and selected official stable v7.0.1 resolves to exact SHA 3d3c42e5aac5ba805825da76410c181273ba90b1 with action.yml node24."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Change only the Checkout uses/comment line to exact v7.0.1 SHA; prove no other workflow byte changes semantically or structurally."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Run repository-native validator, complete validator/library and reconciler tests, git diff --check and exact changed-path/diff proof on the candidate; publish candidate non-force to dev."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Require exact-SHA Validate skill library GitHub Actions SUCCESS for the candidate and inspect the Checkout step/job evidence for successful new action execution without the prior node20 checkout warning; then author/validate/publish only .agent/tasks/TASK-0048/report.yaml, fresh-prove final remote/local closure and stop for Governing Architect review."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+blocking_decisions: []
+execution_ready: true
