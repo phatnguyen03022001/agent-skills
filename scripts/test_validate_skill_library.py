@@ -2615,6 +2615,64 @@ class Task0030ControlPlaneAccelerationTests(unittest.TestCase):
         self.assertIn("not canonical remote authority", combined)
 
 
+class Task0049ExecutorFitDecompositionTests(unittest.TestCase):
+    def executor_fit_section(self) -> str:
+        architect = (ROOT / "architect" / "SKILL.md").read_text(encoding="utf-8")
+        heading = "## Executor-fit task-decomposition gate"
+        self.assertIn(heading, architect)
+        section = architect.split(heading, 1)[1].split("\n## ", 1)[0].lower()
+        return section
+
+    def test_executor_fit_gate_defines_exact_architect_local_outcomes(self) -> None:
+        section = self.executor_fit_section()
+        self.assertIn("before authorizing a normal canonical task", section)
+        for outcome in ("`fit`", "`split_required`", "`capability_blocked`"):
+            self.assertIn(outcome, section)
+        self.assertIn("architect-local planning judgments", section)
+        self.assertIn("not serialized task fields or lifecycle states", section)
+
+    def test_fit_requires_one_coherent_review_and_evidence_boundary(self) -> None:
+        section = self.executor_fit_section()
+        for requirement in (
+            "one coherent material outcome",
+            "one repository/base binding",
+            "one independently reviewable candidate boundary",
+            "one coherent acceptance/evidence boundary",
+            "required current-phase capabilities are currently satisfiable",
+            "no sibling material outcome",
+            "independently rejected",
+        ):
+            self.assertIn(requirement, section)
+
+    def test_split_required_targets_independent_outcomes_not_implementation_ceremony(self) -> None:
+        section = self.executor_fit_section()
+        self.assertIn("materially independent sibling outcomes", section)
+        self.assertIn("independently rejectable review/acceptance boundaries", section)
+        self.assertIn("split those outcomes before canonical task authorization", section)
+        for ceremony in ("multiple files", "steps", "components", "tests", "deterministic jobs"):
+            self.assertIn(ceremony, section)
+        self.assertIn("do not by themselves require splitting", section)
+
+    def test_capability_blocked_does_not_add_scoring_schema_or_control_plane(self) -> None:
+        section = self.executor_fit_section()
+        self.assertIn("required current-phase capability cannot presently be satisfied", section)
+        self.assertIn("capability blocking, not task splitting, scheduling, or provider orchestration", section)
+        for prohibition in (
+            "no complexity score",
+            "token budget",
+            "duration estimate",
+            "task points",
+            "queue",
+            "scheduler",
+            "planner service",
+            "new schema",
+            "task field",
+            "lifecycle state",
+            "additional organizational role",
+        ):
+            self.assertIn(prohibition, section)
+
+
 class ActualArtifactCliTests(unittest.TestCase):
     def run_artifact_validator(self, kind: str, path: Path) -> subprocess.CompletedProcess[str]:
         return subprocess.run(

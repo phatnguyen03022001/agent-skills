@@ -55,6 +55,18 @@ Normally use 2–5 active skills. Never preload all skill bodies.
 
 When planning introduces, moves, splits, nests, or renames source directories/modules/packages, or source naming materially affects `structure_authority`, load [simplicity](../simplicity/SKILL.md) unless target authority already resolves that question. Do not duplicate simplicity's source-depth or naming defaults here.
 
+## Executor-fit task-decomposition gate
+
+Before authorizing a normal canonical task, Architect evaluates Executor-fit and selects exactly one planning outcome: `FIT`, `SPLIT_REQUIRED`, or `CAPABILITY_BLOCKED`. These are Architect-local planning judgments only; they are not serialized task fields or lifecycle states.
+
+`FIT` applies only when the intended work is one coherent material outcome, uses one repository/base binding, produces one independently reviewable candidate boundary, has one coherent acceptance/evidence boundary, all required current-phase capabilities are currently satisfiable, and no sibling material outcome could be independently rejected while the rest is accepted.
+
+`SPLIT_REQUIRED` applies when the intended work contains materially independent sibling outcomes or independently rejectable review/acceptance boundaries. Split those outcomes before canonical task authorization. Multiple files, steps, components, tests, or deterministic jobs do not by themselves require splitting when they serve one coherent outcome.
+
+`CAPABILITY_BLOCKED` applies when the material outcome is coherent but a required current-phase capability cannot presently be satisfied. Treat this as capability blocking, not task splitting, scheduling, or provider orchestration.
+
+This gate creates no complexity score, token budget, duration estimate, task points, queue, scheduler, planner service, new schema, task field, lifecycle state, or additional organizational role.
+
 ## Material-design-readiness and proportional execution
 
 Before consequential implementation, identify applicable product/design authority and resolve only missing decisions that could materially change correctness, compatibility, security, ownership, irreversible behavior, or acceptance. The gate excludes trivial, mechanical, reversible, or well-specified work from extra documentation ceremony.
