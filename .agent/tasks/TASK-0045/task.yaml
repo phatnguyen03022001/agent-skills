@@ -1,11 +1,11 @@
 protocol_version: 3
 task_id: TASK-0045
-task_revision: 1
+task_revision: 2
 state: APPROVED
 origin:
-  type: user_request
-  task_id: ""
-  gap_id: RECONCILE_ENV_CI_COVERAGE
+  type: follow_up
+  task_id: TASK-0045
+  gap_id: REV1_CLOSURE_LINEAGE_RECOVERY
 architect_binding:
   target_repository: phatnguyen03022001/agent-skills
 target:
@@ -29,47 +29,78 @@ execution_skills:
   recommended: []
   required: [executor, verification, simplicity, github-workflow]
 authority_sources:
-  - source: "current operator instruction"
-    role: "Close the reproduced five-repository support debt cleanly with ChatGPT Local Executors."
+  - source: "Current operator instruction for bounded TASK-0045 closure-only recovery."
+    role: "Author revision 2 only to close truthful canonical report lineage for the already-existing TASK-0045 implementation; revision 2 must not author, modify, recreate, or reinterpret candidate bytes."
     precedence: 1
-  - source: "agent-skills/.agent/tasks/TASK-0044/review.yaml@084d4657d1602a19cf91c68b07716221f34b6aca"
-    role: "Accepted env reconciler implementation whose regression suite must be covered by CI."
+  - source: "agent-skills implementation subject b27710a1073b1a59e21ff09590af42ea235f956b with exact parent 49c4d100b50c6a6029b63b8e7d322288ba8f5986."
+    role: "Immutable pre-existing TASK-0045 implementation identity. Exact parent-to-subject diff changes only .github/workflows/validate-skill-library.yml."
     precedence: 2
-  - source: "agent-skills/.github/workflows/validate-skill-library.yml@084d4657d1602a19cf91c68b07716221f34b6aca"
-    role: "Exact live workflow reproducing the missing path triggers and missing reconciler test invocation."
+  - source: "GitHub Actions run 34079477450 for phatnguyen03022001/agent-skills."
+    role: "Freshly resolved completed successful Validate skill library push run for exact head SHA b27710a1073b1a59e21ff09590af42ea235f956b on dev."
     precedence: 3
+  - source: "phatnguyen03022001/agent-skills@ed8d9fb35bb8b052530ca879e68a227d77e4a8a6"
+    role: "Pinned self-hosting skill-library authority; this revision is also the current main ref and remains read-only."
+    precedence: 4
 structure_authority:
   status: RESOLVED
-  source: "Existing validate-skill-library GitHub Actions workflow."
-  rationale: "The defect is one false-green CI route in an existing workflow. The smallest correction is workflow coverage only; no new workflow, automation layer, dependency, or reconciler semantic change is required."
-objective: "Make the existing agent-skills validation workflow cover reconcile_env source changes and execute its existing regression suite so the accepted reconciler cannot bypass CI."
+  source: "Existing TASK-0045 task lineage and protocol-v3 task/report ownership."
+  rationale: "Revision 2 is closure-only report-lineage recovery. The implementation already exists, so no source, workflow, parser, framework, automation, schema, topology, or architecture mutation is justified."
+objective: "Close canonical TASK-0045 Executor evidence/report lineage for the exact pre-existing implementation subject b27710a1073b1a59e21ff09590af42ea235f956b without authoring or modifying candidate bytes, while truthfully re-resolving candidate identity, applicable prior verification evidence, exact GitHub Actions evidence, report publication, and final remote/local closure."
 scope:
   required_changes:
-    - "Update the existing dev validation workflow path filters so changes to scripts/reconcile_env.py or scripts/test_reconcile_env.py trigger the workflow."
-    - "Run the existing reconciler unit suite scripts.test_reconcile_env in the same validation job in addition to the existing validator/library tests."
-    - "Keep the workflow bounded to the existing validation job and current Python/checkout toolchain; use no dependency, cache service, matrix, scheduler, registry, or new workflow."
-    - "Verify locally that the existing library suite and reconciler suite pass, validate the actual task/report artifacts, publish one implementation candidate and one report-only child on dev, and freshly prove remote/local dev equality."
-    - "After candidate publication, observe the GitHub Actions run triggered by the exact candidate/workflow change when current capability permits; if the run is unavailable or inconclusive, report that exact postcondition rather than fabricating PASS."
+    - "Fresh-bind TASK-0045 revision 2 to its exact handoff base. Before any Executor mutation, require branch dev, local HEAD = origin/dev = the exact revision-2 handoff base, a clean working tree, and fresh availability of every required EXECUTION capability including an actual non-mutating Git push-capability check."
+    - "Freshly prove the pre-existing implementation subject is exactly b27710a1073b1a59e21ff09590af42ea235f956b, its sole parent is exactly 49c4d100b50c6a6029b63b8e7d322288ba8f5986, and that exact parent-to-subject diff changes only .github/workflows/validate-skill-library.yml. Revision 2 did not author or modify that candidate and must say so explicitly."
+    - "Re-resolve prior candidate-bound verification evidence for the exact subject: validator PASS, 120 library tests PASS, 8 scripts.test_reconcile_env tests PASS, and git diff --check PASS. Reuse those prior immutable results only after exact candidate identity and applicability are freshly established, including proof that later revision-2 planning authority changes do not alter the candidate or the verification-relevant implementation surfaces. If trustworthy provenance or applicability for any claimed result cannot be established, do not fabricate it; fail closed or reverify only as required to obtain truthful evidence without changing candidate bytes."
+    - "Freshly resolve GitHub Actions run 34079477450 and require it to be the completed successful Validate skill library push run on dev with exact head SHA b27710a1073b1a59e21ff09590af42ea235f956b."
+    - "Author only .agent/tasks/TASK-0045/report.yaml. The report must bind the exact pre-existing candidate and parent, distinguish revision-1 implementation history from revision-2 closure work, explicitly state revision 2 authored or modified no candidate bytes, record only evidence whose provenance/applicability is actually established, and avoid predicting its own post-publication state."
+    - "Validate the actual report artifact, run git diff --check, and prove the pre-publication revision-2 Executor diff is report.yaml only before commit."
+    - "Commit and push only report.yaml non-force to dev as the sole Executor mutation after the exact revision-2 handoff base. Then freshly prove the report commit has exactly one parent equal to that handoff base, its delta is report.yaml only, remote dev equals the exact report commit, remote main is unchanged, branches remain exactly {dev, main}, local HEAD = origin/dev, and the local working tree is clean. Stop at Governing Architect review."
   allowed_existing_files_or_components:
-    - .github/workflows/validate-skill-library.yml
     - .agent/tasks/TASK-0045/report.yaml
+  expected_files_are_restrictive: true
 invariants:
-  - "scripts/reconcile_env.py and scripts/test_reconcile_env.py behavior and bytes remain unchanged."
-  - "Existing validator semantics, Task Protocol, README, 15-skill taxonomy, Case Router, and runtime surface remain unchanged."
-  - "One existing workflow remains the sole CI surface for this correction; no new automation layer is introduced."
-  - "Topology remains exactly {dev, main}; main is not mutated."
+  - "Implementation subject remains exactly b27710a1073b1a59e21ff09590af42ea235f956b with sole parent 49c4d100b50c6a6029b63b8e7d322288ba8f5986."
+  - "Revision 2 did not author, amend, modify, recreate, rebase, cherry-pick, or otherwise rewrite the implementation candidate."
+  - "The implementation diff remains workflow-only: .github/workflows/validate-skill-library.yml is the sole parent-to-subject changed path."
+  - "No workflow/source/test/parser/framework/automation/schema/template/protocol/skill/runtime implementation mutation is authorized by revision 2."
+  - "Prior candidate-bound verification may be reused only when exact identity, provenance, and applicability are freshly established; no revision-1 execution history may be invented."
+  - "GitHub Actions evidence remains bound to exact run 34079477450 and exact head SHA b27710a1073b1a59e21ff09590af42ea235f956b."
+  - "Topology remains exactly {dev, main}; main remains unchanged and read-only."
 forbidden_changes:
-  - "Do not modify reconciler implementation/tests, validator implementation/tests, Task Protocol, README, skills, contracts, templates, dependencies, repository settings, branch topology, main, tags, or releases."
-  - "Do not add a new workflow, action dependency, matrix, cache service, scheduler, queue, daemon, registry, database, or orchestration layer."
-  - "Do not weaken or skip the existing library validation/tests to make CI faster."
+  - "Do not modify .github/workflows/validate-skill-library.yml, scripts/reconcile_env.py, scripts/test_reconcile_env.py, validator implementation/tests, README, Task Protocol, skills, contracts, templates, dependencies, repository settings, tags, releases, or any unrelated file."
+  - "Do not reimplement, amend, recreate, rebase, cherry-pick, squash, revert-and-reapply, or otherwise change candidate b27710a1073b1a59e21ff09590af42ea235f956b or its bytes."
+  - "Do not fabricate revision-1 execution history, test counts, command outputs, publication checks, or evidence attribution."
+  - "Do not create branches, mutate main, force-push, rewrite history, promote, tag, release, or mutate repository metadata."
+  - "Do not add or expand parser, framework, automation, workflow, scheduler, cache, matrix, registry, queue, daemon, database, or orchestration machinery."
+  - "Do not author review.yaml."
 gap_policy:
-  local_auto_fix: true
+  local_auto_fix: false
   scope_expansion: forbidden
   architecture_change: forbidden
   spec_change: forbidden
   dependency_change: revised_contract_required
   public_contract_change: revised_contract_required
   blocking_gap_behavior: BLOCKED
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0045/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
 capability_requirements:
   EXECUTION:
     - repository_content_read
@@ -81,24 +112,36 @@ capability_requirements:
     - remote_ref_read
 acceptance_criteria:
   - id: AC-1
-    requirement: "Exact base-to-candidate diff changes only .github/workflows/validate-skill-library.yml and adds both reconciler path triggers without broadening unrelated workflow scope."
-    evidence_required: "Exact changed-path/diff proof and workflow path-filter inspection."
+    requirement: "Revision 2 truthfully binds and preserves the exact pre-existing implementation without claiming authorship or modification."
+    evidence_required: "Fresh exact subject/parent/object/diff proof for b27710a1073b1a59e21ff09590af42ea235f956b and 49c4d100b50c6a6029b63b8e7d322288ba8f5986, plus report wording that revision 2 authored or modified no candidate bytes."
   - id: AC-2
-    requirement: "The validation job executes the existing library validator/tests and the existing reconcile_env regression suite; all local suites pass on the exact candidate."
-    evidence_required: "Candidate-bound command output for validator, existing library tests, reconciler tests, and git diff --check."
+    requirement: "Prior local verification evidence is reused only when candidate identity, provenance, and applicability are freshly established."
+    evidence_required: "Truthful candidate-bound evidence for validator PASS, 120 library tests PASS, 8 reconciler tests PASS, and git diff --check PASS, together with fresh proof that revision-2 planning changes do not alter the candidate or relevant implementation surfaces; any unresolvable evidence is not claimed."
   - id: AC-3
-    requirement: "The candidate/report lineage is published non-force on dev with main unchanged and final local tracked/index state clean; any GitHub Actions post-publication observation is reported truthfully."
-    evidence_required: "Exact candidate/report commits, fresh dev/main refs/topology, local closure evidence, and exact workflow-run identity/result when observable."
+    requirement: "GitHub Actions evidence is freshly bound to the exact candidate."
+    evidence_required: "Fresh resolution of run 34079477450 shows workflow Validate skill library, event push, branch dev, head SHA b27710a1073b1a59e21ff09590af42ea235f956b, status completed, conclusion success."
+  - id: AC-4
+    requirement: "Revision-2 Executor mutation is report-lineage closure only."
+    evidence_required: "Exact handoff-base-to-report commit comparison adds only .agent/tasks/TASK-0045/report.yaml; no implementation, workflow, source, governance, topology, main, or metadata mutation occurs."
+  - id: AC-5
+    requirement: "Report publication and final remote/local closure are freshly proven after publication."
+    evidence_required: "Fresh remote report parent/diff/dev/main/topology proof plus local HEAD = origin/dev and clean working tree after push."
 verification:
   executor_checks:
     - id: CHECK-1
-      command_or_check: "Fresh-bind exact task/base, prove local/remote dev equality and clean state, resolve required execution capabilities, and confirm the reproduced workflow gap still exists before mutation."
+      command_or_check: "Fresh-resolve TASK-0045 revision 2, exact handoff base, branch/status, origin/dev, main/topology, and every required EXECUTION capability. Before mutation require local HEAD = origin/dev = handoff base, clean state, and successful non-mutating Git push-capability proof."
       required: true
     - id: CHECK-2
-      command_or_check: "Make the smallest workflow-only edit, then run python3 scripts/validate_skill_library.py, python3 -B -m unittest scripts.test_validate_skill_library, python3 -B -m unittest scripts.test_reconcile_env, actual artifact validation, git diff --check, and exact scope checks on one exact candidate."
+      command_or_check: "Freshly prove candidate b27710a1073b1a59e21ff09590af42ea235f956b has sole parent 49c4d100b50c6a6029b63b8e7d322288ba8f5986 and workflow-only diff; re-resolve candidate-bound validator/120-library/8-reconciler/git-diff-check evidence only with trustworthy provenance and fresh applicability proof."
       required: true
     - id: CHECK-3
-      command_or_check: "Publish the exact candidate and report-only child non-force to dev, fresh-resolve final refs/topology/local hygiene, and observe the exact triggered GitHub Actions run if current capability is available."
+      command_or_check: "Freshly resolve GitHub Actions run 34079477450 and require exact candidate SHA, dev push event, completed status, success conclusion, and Validate skill library workflow identity."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Create only .agent/tasks/TASK-0045/report.yaml with truthful closure attribution, validate the actual report artifact, run git diff --check, and prove report-only scope before commit."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Commit/push only report.yaml non-force to dev, then fresh-prove report sole parent = revision-2 handoff base, report-only diff, dev = report commit, main unchanged, branches exactly {dev, main}, local HEAD = origin/dev, and clean working tree; stop at Governing Architect review."
       required: true
   authoritative_verification:
     required: false
@@ -109,5 +152,9 @@ git_authority:
   commit: true
   push: true
   promote_to_main: false
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
 blocking_decisions: []
 execution_ready: true
