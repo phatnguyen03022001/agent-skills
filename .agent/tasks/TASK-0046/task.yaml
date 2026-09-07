@@ -1,0 +1,178 @@
+protocol_version: 3
+task_id: TASK-0046
+task_revision: 1
+state: APPROVED
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: PROTOCOL_V3_SERIALIZATION_COMPATIBILITY_BOUNDARY
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "ed8d9fb35bb8b052530ca879e68a227d77e4a8a6"
+architect_analysis_skills: []
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+execution_skills:
+  recommended: []
+  required: [executor, verification, simplicity, github-workflow]
+authority_sources:
+  - source: "Current operator instruction for protocol-v3 compatibility-contract correction."
+    role: "Distinguish protocol semantic validity from the constrained validator's supported YAML serialization subset without expanding the parser into general YAML support."
+    precedence: 1
+  - source: "TASK-0045 revision 2 accepted review commit 16ccc15c4b21cc56a6de292d6f5a77ce9b652f96."
+    role: "Freshly verified predecessor authority on dev; review state is ACCEPTED and binds reviewed TASK-0045 revision-2 report d3411b3960db8519dd97ce42011160cb955f84c1."
+    precedence: 2
+  - source: "Historical TASK-0013 task commit 223107420e0fa2a240f84320abeee7dcc041cecd and accepted review commit 1a3c44c744cb6b8cbb6f5cf3d75152aff8055268."
+    role: "Immutable accepted protocol-v3 regression evidence: canonical task.yaml uses YAML block-scalar serialization including >- while remaining accepted historical evidence."
+    precedence: 3
+  - source: "README.md, protocols/TASK_PROTOCOL.md, scripts/validate_skill_library.py and scripts/test_validate_skill_library.py at dev commit 16ccc15c4b21cc56a6de292d6f5a77ce9b652f96."
+    role: "Current live compatibility wording and constrained-validator implementation/test authority where the reproduced contradiction exists."
+    precedence: 4
+structure_authority:
+  status: RESOLVED
+  source: "Existing README, Task Protocol, constrained stdlib validator and validator regression suite."
+  rationale: "The defect belongs in existing compatibility wording plus the existing validator outcome boundary. No parser expansion, dependency, registry, migration layer or new reusable subsystem is justified."
+objective: "Make protocol-v3 compatibility truthful by separating artifact semantic validity from whether the current constrained mechanical validator supports the artifact's YAML serialization, while preserving historical canonical evidence and the parser's deliberately narrow deterministic subset."
+scope:
+  required_changes:
+    - "Update only the minimum README and Task Protocol wording needed to state that protocol-v3 semantic validity and current validator serialization support are distinct. Existing valid historical v3 artifacts remain valid canonical evidence even when their YAML serialization is outside the validator's current deterministic subset; backward compatibility does not require every constrained validator to parse every historical YAML form."
+    - "Update the existing constrained validator only as narrowly required so an artifact whose serialization is outside the supported subset is not classified, reported or implied to be PROTOCOL_INVALID solely because parsing is unsupported. The validator may distinguish outcomes equivalent to supported serialization plus valid artifact, supported serialization plus invalid artifact, and serialization outside the validator subset where artifact validity cannot be mechanically determined. Exact names, exit-code choices and internal implementation are Executor-local HOW unless current code structure requires a narrower choice."
+    - "Use the exact historical .agent/tasks/TASK-0013/task.yaml behavior as a read-only regression reproducer/evidence case where appropriate. Its block-scalar serialization must remain byte-unchanged and need not become parseable by the constrained validator."
+    - "Preserve rejection of malformed or semantically invalid artifacts that use serialization already supported by the constrained parser, and preserve acceptance of valid artifacts using currently supported serialization. Do not weaken existing schema, protocol-version, closed-value, structure or fail-closed validation semantics for parseable input."
+    - "Add narrow regression tests that prove the compatibility boundary without adding generic block-scalar handling or any broader YAML grammar. Tests must demonstrate the exact TASK-0013 unsupported-serialization case is not falsely represented as protocol-invalid, while supported valid and supported invalid cases retain their current semantic outcomes."
+    - "Run the repository-native validator/library suite and focused compatibility regressions on the exact candidate. Validate the actual TASK-0046 task/report artifacts where the constrained validator supports their serialization, run git diff --check, and prove the exact candidate diff stays within the authorized live surfaces."
+    - "Publish the implementation candidate and then .agent/tasks/TASK-0046/report.yaml as truthful non-force children on dev under existing Task Protocol lineage. Freshly prove final remote/local equality, clean state, unchanged main and no branch creation, then stop for Governing Architect review."
+  allowed_existing_files_or_components:
+    - README.md
+    - protocols/TASK_PROTOCOL.md
+    - scripts/validate_skill_library.py
+    - scripts/test_validate_skill_library.py
+  expected_files_are_restrictive: true
+invariants:
+  - "Protocol version remains exactly 3; no protocol-v4 migration or alternate dialect is introduced."
+  - "All pre-existing .agent/tasks historical task.yaml, report.yaml and review.yaml bytes remain unchanged, including exact TASK-0013 evidence."
+  - "Unsupported serialization means only that this constrained validator cannot determine protocol validity from those bytes; it does not itself prove semantic invalidity or require migration, rewrite or reserialization."
+  - "The constrained parser remains deliberately narrow and stdlib-only; future constrained validators are not obligated to parse every YAML serialization historically accepted under protocol v3."
+  - "Currently supported serialization retains existing strict validation semantics for malformed, invalid and valid artifacts."
+  - "Repository topology remains exactly the existing dev/main branches; main is read-only and unchanged."
+forbidden_changes:
+  - "Do not implement a general YAML parser, generic block-scalar parser, broad YAML compatibility layer or parser feature solely to parse historical artifacts."
+  - "Do not add PyYAML or any new dependency solely for compatibility, and do not add a compatibility registry, history database, migration framework, service, role, lifecycle, parser framework or reusable subsystem."
+  - "Do not modify, migrate, rewrite, reserialize, copy-replace or bulk-normalize TASK-0013 or any other historical task/report/review artifact."
+  - "Do not weaken current validation strictness for serialization already supported by the constrained parser."
+  - "Do not modify templates, contracts, skills, workflow files, dependency manifests, repository settings, tags, releases or unrelated files unless a concrete blocker proves the task contract insufficient; such a blocker requires revision rather than scope expansion."
+  - "Do not create branches, mutate main, force-push, rewrite history, promote, tag, release or mutate repository metadata."
+  - "Do not author review.yaml."
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0046/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Live README and Task Protocol no longer imply that every semantically valid historical protocol-v3 artifact serialization must be parseable by the current constrained validator."
+    evidence_required: "Exact final wording and focused regression assertions preserve backward-compatible v3 semantics while explicitly separating semantic validity from validator serialization support."
+  - id: AC-2
+    requirement: "The exact accepted historical TASK-0013 reproducer is no longer falsely represented as protocol-invalid solely because its serialization includes unsupported block-scalar syntax."
+    evidence_required: "Read-only regression against exact .agent/tasks/TASK-0013/task.yaml plus immutable identity/history proof; result must distinguish unsupported serialization or inability to determine validity from semantic protocol invalidity without modifying TASK-0013 bytes."
+  - id: AC-3
+    requirement: "Currently supported malformed or semantically invalid artifacts remain rejected."
+    evidence_required: "Existing and focused negative tests over supported serialization remain green and preserve current fail-closed validation behavior."
+  - id: AC-4
+    requirement: "Currently supported semantically valid artifacts remain accepted."
+    evidence_required: "Existing and focused positive tests over supported serialization remain green."
+  - id: AC-5
+    requirement: "No parser creep or general YAML support is introduced."
+    evidence_required: "Exact candidate diff and targeted tests show no generic block-scalar implementation, third-party YAML parser, new dependency or expanded grammar beyond the current deterministic subset."
+  - id: AC-6
+    requirement: "Existing agent-skills validator and library tests remain green on the exact candidate."
+    evidence_required: "Fresh full repository validator and complete scripts.test_validate_skill_library suite PASS on exact candidate bytes, plus any repository-native companion tests required by the final changed surfaces."
+  - id: AC-7
+    requirement: "Narrow regression coverage mechanically locks the semantic-validity versus serialization-support boundary."
+    evidence_required: "Focused new tests exercise exact TASK-0013 unsupported serialization and representative supported valid/invalid artifacts without relying on historical-byte mutation."
+  - id: AC-8
+    requirement: "Exact implementation candidate diff remains wholly inside the authorized live contract/documentation and validator/test surfaces."
+    evidence_required: "Execution-base-to-candidate changed-path proof contains only README.md, protocols/TASK_PROTOCOL.md, scripts/validate_skill_library.py and scripts/test_validate_skill_library.py, with no unrelated or historical artifact changes."
+  - id: AC-9
+    requirement: "Actual TASK-0046 task/report artifacts validate where applicable under the constrained validator's supported serialization."
+    evidence_required: "Read-only artifact validation of the canonical TASK-0046 task and authored report succeeds when their serialization is supported; unsupported-serialization classification must not be mislabeled as protocol invalidity."
+  - id: AC-10
+    requirement: "Candidate and report publication are non-force to dev with main unchanged and final local/remote closure proven."
+    evidence_required: "Fresh commit-parent/diff/ref/topology proof after publication: dev equals exact report commit, main equals its pre-execution identity, no new branch exists, local HEAD equals origin/dev and working tree is clean."
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Fresh-bind TASK-0046 revision 1 at its exact handoff base; require dev, local HEAD = origin/dev = handoff base, clean tree, unchanged main/topology and fresh availability of every required EXECUTION capability including non-mutating Git push-capability proof before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Reproduce current exact TASK-0013 behavior from immutable historical bytes and add causal focused regression coverage that distinguishes unsupported serialization/inconclusive validation from semantic protocol invalidity before changing production validator behavior."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Implement only the smallest README/Task Protocol and validator/test changes required by the accepted architectural distinction; do not add block-scalar parsing, third-party YAML, parser framework or historical migration."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Run focused regressions, python3 scripts/validate_skill_library.py, python3 -m unittest scripts.test_validate_skill_library, applicable Python compile checks and git diff --check on the exact candidate; prove supported valid/invalid behavior is preserved and candidate paths are exactly authorized."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Validate the actual TASK-0046 task and report artifacts where applicable, publish candidate then report non-force to dev, and fresh-prove exact parent/diff identities, unchanged main/topology, local HEAD = origin/dev and clean tree; stop for Governing Architect review."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+blocking_decisions: []
+execution_ready: true
