@@ -1,0 +1,49 @@
+protocol_version: 3
+
+task_id: TASK-0047
+task_revision: 1
+review_revision: 1
+state: ACCEPTED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0047/report.yaml
+  commit: "75cb38dfd0957f1e2ced3610371c57b3fc9bb33c"
+  report_revision: 1
+
+independence:
+  reviewer_role: ARCHITECT
+  separate_session_from_executor: true
+  exact_report_identity_verified: true
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: PASS
+  verifier_evidence: NOT_REQUIRED
+
+accepted_candidate:
+  commit: "59b1ed657621213f795dac4cabb5c59a2502ed64"
+  role: "exact TASK-0047 validation-workflow input-coverage implementation candidate"
+
+acceptance_basis:
+  - "Fresh review resolution proves canonical TASK-0047 is protocol v3, revision 1, state APPROVED and execution_ready true at exact authorized base e633dbf897465921b295d5fb8907e63f47ace59b; canonical report is revision 1 and binds that base plus candidate 59b1ed657621213f795dac4cabb5c59a2502ed64."
+  - "Exact candidate 59b1ed657621213f795dac4cabb5c59a2502ed64 has the sole parent e633dbf897465921b295d5fb8907e63f47ace59b and changes only .github/workflows/validate-skill-library.yml and scripts/test_validate_skill_library.py. Exact report commit 75cb38dfd0957f1e2ced3610371c57b3fc9bb33c has the sole parent candidate 59b1ed657621213f795dac4cabb5c59a2502ed64 and adds only .agent/tasks/TASK-0047/report.yaml."
+  - "The workflow path filter now preserves README.md, **/SKILL.md, contracts/**, templates/**, protocols/** and workflow-self coverage, adds exact .agent/case-router.yaml, replaces four fragile exact script entries with bounded scripts/**, and does not add .agent/tasks/** or generic .agent/** coverage."
+  - "The focused regression mechanically locks that exact admitted path set and preserves all three existing validator/test commands, so the causal false-green routes for Case Router and scripts/fixtures/governance_eval_corpus.json are closed without adding unrelated CI ownership."
+  - "The existing workflow remains one push-to-dev Linux job with contents: read, five-minute timeout, concurrency cancellation and the same Validate, Unit tests and Reconciler unit tests execution steps. No second workflow, dependency graph, registry, scheduler, queue, service, lifecycle, validator-semantic change, Case Router change, corpus change, dependency change or checkout-pin change is introduced."
+  - "Fresh GitHub Actions resolution proves run 34101030828 is Validate skill library, event push, exact head SHA 59b1ed657621213f795dac4cabb5c59a2502ed64, status completed and conclusion success. Its exact job records Checkout, Validate, Unit tests and Reconciler unit tests as completed success on that exact SHA."
+  - "The report's AC-6 evidence records exact-candidate validator PASS, 122/122 validator-library tests PASS, 8/8 reconciler tests PASS, compile checks PASS and git diff --check PASS; no contradictory exact-SHA evidence was found during review."
+  - "The reported causal-reproduction deviation is non-persistent: the transient local .agent/case-router.yaml edit was restored from exact base before implementation, and exact candidate/report Git history proves that file is absent from every published TASK-0047 implementation/report diff. The deviation therefore leaves no surviving semantic, scope, or canonical-history violation."
+  - "Fresh review-boundary GitHub proof establishes dev=75cb38dfd0957f1e2ced3610371c57b3fc9bb33c before review publication, main=ed8d9fb35bb8b052530ca879e68a227d77e4a8a6 unchanged, and remote topology exactly {dev, main}. Executor terminal evidence records final local HEAD=origin/dev=remote dev and a clean working tree; local mirror hygiene is subordinate operational evidence, not canonical remote authority."
+
+follow_up_tasks: []
+
+notes:
+  - "This review accepts only the exact TASK-0047 candidate/report lineage and the bounded validation-input trigger correction. It does not authorize main mutation, promotion, tag, release, repository-metadata mutation, checkout maintenance, or further governance changes."
+  - "CHATGPT_LOCAL was unavailable at the review publication boundary because the Agent Runtime connector could not invoke terminal_exec. Review publication therefore used the currently authorized GitHub surface with repository push permission; required canonical GitHub evidence was not weakened."
