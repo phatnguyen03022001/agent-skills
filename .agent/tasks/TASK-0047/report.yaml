@@ -1,0 +1,98 @@
+protocol_version: 3
+
+task_id: TASK-0047
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0047/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "e633dbf897465921b295d5fb8907e63f47ace59b"
+  final_execution_head: "59b1ed657621213f795dac4cabb5c59a2502ed64"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "ed8d9fb35bb8b052530ca879e68a227d77e4a8a6"
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  available:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+  missing: []
+  passed: true
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_REQUIRED
+  evidence: "TASK-0047 declares no separate authoritative verification mechanism; repository-native validation, unit regressions, compile checks, exact Git identity, and exact-SHA GitHub Actions evidence are the required Executor proof."
+
+pushed: true
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: "Candidate 59b1ed657621213f795dac4cabb5c59a2502ed64 adds .agent/case-router.yaml to the existing dev workflow path filter and the focused trigger-policy regression requires that exact path. On the exact base, a temporary case-router-only mutation from EXECUTE to VERIFY changed python3 scripts/validate_skill_library.py from PASS to exit 1 with unsupported case id 'VERIFY'."
+  - criterion_id: AC-2
+    status: PASS
+    evidence: "Candidate 59b1ed657621213f795dac4cabb5c59a2502ed64 uses one scripts/** trigger and the focused regression requires that bounded rule. On the exact base, a temporary scripts/fixtures/governance_eval_corpus.json-only duplicate-case mutation changed the canonical corpus test from PASS to FAIL with duplicate case_id evidence."
+  - criterion_id: AC-3
+    status: PASS
+    evidence: "The focused regression mechanically locks the admitted path list and preserves README.md, **/SKILL.md, contracts/**, templates/**, protocols/**, and .github/workflows/validate-skill-library.yml coverage together with .agent/case-router.yaml and scripts/**."
+  - criterion_id: AC-4
+    status: PASS
+    evidence: "The exact admitted path list in the regression excludes .agent/tasks/**, and the final workflow contains no generic historical-task trigger."
+  - criterion_id: AC-5
+    status: PASS
+    evidence: "The candidate workflow diff replaces the four exact validator/reconciler script entries with one scripts/** ownership rule and adds only .agent/case-router.yaml; no unrelated trigger surface, workflow, registry, dependency graph, service, or orchestration layer is introduced."
+  - criterion_id: AC-6
+    status: PASS
+    evidence: "On exact candidate 59b1ed657621213f795dac4cabb5c59a2502ed64: python3 scripts/validate_skill_library.py PASS; python3 -m unittest scripts/test_validate_skill_library.py runs 122 tests with 122 PASS; python3 -m unittest scripts.test_reconcile_env runs 8 tests with 8 PASS; compile(source, ..., 'exec') checks for all four validator/reconciler Python modules PASS; git diff --check PASS."
+  - criterion_id: AC-7
+    status: PASS
+    evidence: "GitHub Actions run 34101030828 for exact head SHA 59b1ed657621213f795dac4cabb5c59a2502ed64 completed SUCCESS. Its logs show checkout at that exact SHA, python3 scripts/validate_skill_library.py PASS, 122 validator/library tests PASS, and 8 reconciler tests PASS."
+  - criterion_id: AC-8
+    status: NOT_PROVEN
+    evidence: "The implementation candidate is already published non-force to remote dev at 59b1ed657621213f795dac4cabb5c59a2502ed64 with exact parent e633dbf897465921b295d5fb8907e63f47ace59b, candidate paths limited to the two authorized existing files, main still at ed8d9fb35bb8b052530ca879e68a227d77e4a8a6, and topology still dev/main. Exact report-only child publication, final remote/local equality, and final clean-tree proof are necessarily verified after this report commit and are not self-attested here."
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: "Before first persistent candidate mutation, origin was git@github.com:phatnguyen03022001/agent-skills.git; branch was dev; local HEAD and fresh remote dev equaled exact base e633dbf897465921b295d5fb8907e63f47ace59b; tree was clean; TASK-0047 was revision 1, APPROVED, execution_ready true; report.yaml was absent; remote topology was exactly dev/main with main at ed8d9fb35bb8b052530ca879e68a227d77e4a8a6; all required EXECUTION capabilities were available; git author identity resolved; and git push --dry-run origin HEAD:dev succeeded."
+  - check_id: CHECK-2
+    result: PASS
+    evidence: "Exact-base causal reproduction used isolated temporary copies: a case-router-only EXECUTE-to-VERIFY mutation changed validator outcome to failure, and a governance-eval-corpus-only duplicate case_id mutation changed the canonical corpus test outcome to failure. The base workflow path list contained neither .agent/case-router.yaml nor scripts/**."
+  - check_id: CHECK-3
+    result: PASS
+    evidence: "A focused trigger-policy regression was added first and observed failing against the base workflow because the old per-script enumeration did not equal the required live-input ownership set. The minimal workflow path-filter correction then made the focused regression pass without changing validator, Case Router, corpus, reconciler, protocol, dependency, or workflow-job semantics."
+  - check_id: CHECK-4
+    result: PASS
+    evidence: "Exact candidate verification passed the repository-native validator, complete 122-test validator/library suite, complete 8-test reconciler suite, applicable Python compile checks, and git diff --check. Base-to-candidate changed paths are exactly .github/workflows/validate-skill-library.yml and scripts/test_validate_skill_library.py."
+  - check_id: CHECK-5
+    result: NOT_PROVEN
+    evidence: "Candidate publication and exact-SHA GitHub Actions SUCCESS are proven before report authorship. This report is validated before commit; its exact report-only child identity, remote publication, unchanged main/topology, final local HEAD equality, and clean tree are post-publication predicates proven after the report commit rather than predicted here."
+
+deviations_from_task:
+  - "During causal reproduction, one run-owned command briefly modified .agent/case-router.yaml in the canonical working copy instead of only the temporary copy. The mutation was immediately restored from exact HEAD e633dbf897465921b295d5fb8907e63f47ace59b before candidate implementation, and subsequent clean-tree and exact-diff checks proved that no Case Router byte entered the candidate or canonical history."
+
+result: NEEDS_REVIEW
