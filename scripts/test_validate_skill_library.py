@@ -2616,6 +2616,39 @@ class ActualArtifactCliTests(unittest.TestCase):
         path.write_text((ROOT / relative_path).read_text(encoding="utf-8"), encoding="utf-8")
         return temp, path
 
+    def test_artifact_cli_distinguishes_unsupported_serialization_from_protocol_invalidity(self) -> None:
+        historical = ROOT / ".agent/tasks/TASK-0013/task.yaml"
+        before = historical.read_bytes()
+        unsupported = self.run_artifact_validator("task", historical)
+        unsupported_output = unsupported.stdout + unsupported.stderr
+        self.assertEqual(unsupported.returncode, 3, unsupported_output)
+        self.assertIn("UNSUPPORTED_SERIALIZATION", unsupported_output)
+        self.assertIn("validity not mechanically determined", unsupported_output.lower())
+        self.assertNotIn("PROTOCOL_INVALID", unsupported_output)
+        self.assertEqual(historical.read_bytes(), before)
+
+        _, valid_path = self.copy_external_artifact("templates/task.yaml")
+        valid = self.run_artifact_validator("task", valid_path)
+        self.assertEqual(valid.returncode, 0, valid.stdout + valid.stderr)
+
+        _, invalid_path = self.copy_external_artifact("templates/task.yaml")
+        text = invalid_path.read_text(encoding="utf-8")
+        self.assertIn("protocol_version: 3", text)
+        invalid_path.write_text(text.replace("protocol_version: 3", "protocol_version: 4", 1), encoding="utf-8")
+        invalid = self.run_artifact_validator("task", invalid_path)
+        invalid_output = invalid.stdout + invalid.stderr
+        self.assertEqual(invalid.returncode, 1, invalid_output)
+        self.assertNotIn("UNSUPPORTED_SERIALIZATION", invalid_output)
+
+    def test_protocol_docs_separate_semantic_validity_from_validator_serialization_support(self) -> None:
+        readme = (ROOT / "README.md").read_text(encoding="utf-8").lower()
+        protocol = (ROOT / "protocols/TASK_PROTOCOL.md").read_text(encoding="utf-8").lower()
+        combined = readme + "\n" + protocol
+        self.assertIn("semantic validity", combined)
+        self.assertIn("serialization support", combined)
+        self.assertIn("valid historical", combined)
+        self.assertIn("need not be parseable", combined)
+
     def test_external_task_report_and_review_are_validated_read_only(self) -> None:
         for kind, relative_path in (
             ("task", "templates/task.yaml"),

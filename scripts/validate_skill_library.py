@@ -189,6 +189,9 @@ def validate_readme_catalog() -> None:
 class ProtocolYamlError(ValueError):
     pass
 
+class UnsupportedProtocolSerializationError(ProtocolYamlError):
+    pass
+
 
 def display_path(path: Path) -> str:
     """Render repository paths compactly while keeping external-file diagnostics useful."""
@@ -277,7 +280,7 @@ def parse_flat_flow_list(raw: str, path: Path, number: int) -> list[Any]:
             or any(indicator in item for indicator in ("[", "]", "{", "}"))
             or re.search(r":\s", item)
         ):
-            raise ProtocolYamlError(f"{display_path(path)}:{number}: unsupported flow list item syntax")
+            raise UnsupportedProtocolSerializationError(f"{display_path(path)}:{number}: unsupported flow list item syntax")
         values.append(scalar_value(item, path, number))
     return values
 
@@ -313,7 +316,7 @@ def scalar_value(raw: str, path: Path, number: int) -> Any:
     if raw.startswith("["):
         return parse_flat_flow_list(raw, path, number)
     if raw.startswith(("{", "|", ">", "!", "&", "*")):
-        raise ProtocolYamlError(f"{display_path(path)}:{number}: unsupported YAML value syntax")
+        raise UnsupportedProtocolSerializationError(f"{display_path(path)}:{number}: unsupported YAML value syntax")
     return raw
 
 
@@ -422,7 +425,7 @@ def parse_sequence(
     return result, index
 
 
-def load_protocol_path(path: Path, label: str | None = None) -> dict[str, Any] | None:
+def load_protocol_path(path: Path, label: str | None = None, *, unsupported_serialization_is_inconclusive: bool = False) -> dict[str, Any] | None:
     label = label or display_path(path)
     if not path.is_file():
         error(f"{label}: file does not exist")
@@ -435,6 +438,11 @@ def load_protocol_path(path: Path, label: str | None = None) -> dict[str, Any] |
         if index != len(lines):
             number, _, _ = lines[index]
             raise ProtocolYamlError(f"{label}:{number}: unexpected content or indentation")
+    except UnsupportedProtocolSerializationError as exc:
+        if unsupported_serialization_is_inconclusive:
+            raise
+        error(str(exc))
+        return None
     except ProtocolYamlError as exc:
         error(str(exc))
         return None
@@ -1520,7 +1528,11 @@ def validate_explicit_artifact(kind: str, raw_path: str) -> int:
 
     path = Path(raw_path)
     label = str(path)
-    document = load_protocol_path(path, label)
+    try:
+        document = load_protocol_path(path, label, unsupported_serialization_is_inconclusive=True)
+    except UnsupportedProtocolSerializationError as exc:
+        print(f"UNSUPPORTED_SERIALIZATION: {exc}; protocol validity not mechanically determined by this constrained validator", file=sys.stderr)
+        return 3
     if document is not None:
         validator(label, document)
 

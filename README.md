@@ -2,11 +2,11 @@
 
 A deliberately curated library of **exactly 15** reusable agent skills plus deterministic contracts, templates, and protocols for software engineering across repositories.
 
-`agent-skills` defines **HOW WE WORK**. A target repository defines **WHAT THE PRODUCT IS** and stores live tasks/evidence. Supported protocol version is **3**; existing valid expanded v3 artifacts remain valid.
+`agent-skills` defines **HOW WE WORK**. A target repository defines **WHAT THE PRODUCT IS** and stores live tasks/evidence. Supported protocol version is **3**; existing valid historical protocol-v3 artifacts remain valid canonical evidence even when their serialization is outside the current constrained validator subset and therefore need not be parseable by every later constrained validator.
 
 ## Governance ownership
 
-[Task Protocol](protocols/TASK_PROTOCOL.md) is the semantic owner for reusable cross-role task-governance semantics. Architect and Executor skills own role-local procedure and safety boundaries; contracts own artifact-specific obligations; templates are example/default shapes; the validator mechanically enforces supported structure and compatibility. This README is discovery and navigation, not a second normative protocol.
+[Task Protocol](protocols/TASK_PROTOCOL.md) is the semantic owner for reusable cross-role task-governance semantics. Architect and Executor skills own role-local procedure and safety boundaries; contracts own artifact-specific obligations; templates are example/default shapes. Protocol semantic validity and current validator serialization support are distinct: the constrained validator mechanically enforces supported structure only for serialization inside its deterministic subset. This README is discovery and navigation, not a second normative protocol.
 
 The normal flow is planning and exact handoff → restrictive execution and Executor report → Architect review → exact-SHA verification when required → explicit promotion → separately authorized release. Binding, lifecycle, authority/capability separation, continuation, promotion lineage, and release semantics are defined only by the Task Protocol.
 
