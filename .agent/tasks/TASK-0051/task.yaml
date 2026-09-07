@@ -1,0 +1,186 @@
+protocol_version: 3
+
+task_id: TASK-0051
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: LEGACY_REVIEW_FOLLOW_UP_SERIALIZATION
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "de060ab9c61627eeec02937519eddfffd8bc1e26"
+
+architect_analysis_skills:
+  - architect
+  - verification
+  - simplicity
+  - github-workflow
+
+execution_skills:
+  required:
+    - executor
+    - verification
+    - simplicity
+    - github-workflow
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "Current operator post-freeze remediation instruction"
+    role: "Authorizes a smallest forward-compatible correction where the explicit review artifact validator misclassifies canonical legacy protocol-v3 follow_up_tasks string serialization."
+    precedence: 1
+  - source: "phatnguyen03022001/architect-profile@b0a1e5f54f0704c0c1332835bedd9b2524be851f:.agent/bootstrap/authority.lock.json"
+    role: "Pins the active agent-skills authority at de060ab9c61627eeec02937519eddfffd8bc1e26. Current dev descendants through TASK-0050 are evidence-only before this task."
+    precedence: 2
+  - source: "phatnguyen03022001/agent-skills@de060ab9c61627eeec02937519eddfffd8bc1e26:protocols/TASK_PROTOCOL.md"
+    role: "Separates protocol semantic validity from constrained validator serialization support and preserves valid historical protocol-v3 evidence."
+    precedence: 3
+
+structure_authority:
+  status: RESOLVED
+  source: "Existing constrained review artifact validator, protocol semantic owner, and validator tests"
+  rationale: "Recognize only the existing all-string legacy follow_up_tasks representation while retaining the structured mapping representation for canonical new reviews. No general YAML parser or schema epoch is authorized."
+
+objective: "Make the explicit review artifact validator truthfully recognize canonical legacy protocol-v3 all-string follow_up_tasks serialization without rewriting historical evidence or manufacturing semantic acceptance."
+
+scope:
+  required_changes:
+    - "Fresh-bind TASK-0051 revision 1 at its exact handoff base and prove current remote dev/main, selected-authority ancestry, clean target identity, and current execution capability before mutation."
+    - "Adjust only review artifact validation so a non-empty homogeneous all-string follow_up_tasks sequence is recognized as legacy protocol-v3 serialization, while the existing structured mapping form remains the required form for canonical new reviews and mixed forms remain rejected."
+    - "Document the distinction between legacy serialization recognition and semantic acceptance at the protocol-owned boundary. Validator recognition must not create, alter, or infer an ACCEPTED judgment."
+    - "Add focused deterministic regression coverage for the exact accepted TASK-0050 string artifact, structured review compatibility, mixed or malformed follow_up_tasks rejection, and unchanged inconclusive handling for unsupported YAML serialization such as accepted TASK-0014."
+    - "Separately red-team only current mechanically claimed validator predicates. Do not add work for natural-language assertions the canonical contract does not claim to mechanically enforce."
+    - "Run repository-native validation, validate the actual report, publish candidate and report-only direct child non-force to dev, fresh-prove lineage and refs, then stop at NEEDS_REVIEW."
+  allowed_existing_files_or_components:
+    - "scripts/validate_skill_library.py"
+    - "scripts/test_validate_skill_library.py"
+    - "protocols/TASK_PROTOCOL.md"
+    - ".agent/tasks/TASK-0051/report.yaml"
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Canonical new review artifacts continue to use structured follow_up_tasks mappings when follow-up metadata is present."
+  - "Legacy string recognition is compatibility handling only; it does not prove a natural-language follow-up, report identity, or review state semantics."
+  - "The constrained YAML parser remains constrained. Unsupported scalar or block forms continue to report protocol validity as mechanically inconclusive rather than being parsed by a general YAML implementation."
+  - "Existing historical task, report, and review bytes remain immutable."
+  - "No schema epoch, migration database, evidence registry, blanket task CI trigger, dependency, workflow, branch, main ref, tag, release, repository metadata, authority lock, or sibling repository mutation is authorized."
+
+forbidden_changes:
+  - "Do not bulk rewrite or backfill review artifacts, including TASK-0050, TASK-0014, TASK-0023, or TASK-0009."
+  - "Do not add a general YAML parser, broaden arbitrary YAML acceptance, or weaken structured mapping validation for canonical new reviews."
+  - "Do not claim the validator proves all prose semantics or add checks unrelated to its explicit structural contract."
+  - "Do not force-push, rewrite history, create a branch, promote main, create tags/releases, or modify repository metadata."
+
+gap_policy:
+  local_auto_fix: false
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: forbidden
+  public_contract_change: forbidden
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - ".agent/tasks/TASK-0051/report.yaml"
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: "No unlisted files are authorized."
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "The exact accepted legacy TASK-0050 review is not falsely rejected solely for all-string follow_up_tasks serialization."
+    evidence_required: "Focused validator regression invokes the explicit review artifact validation path on TASK-0050/review.yaml and reports recognized legacy compatibility without rewriting its bytes."
+  - id: AC-2
+    requirement: "Forward structured review validation and malformed follow-up protection remain bounded."
+    evidence_required: "Focused tests prove structured mapping follow_up_tasks remains accepted, mixed or malformed representations fail, and new-review documentation retains structured mappings as canonical."
+  - id: AC-3
+    requirement: "Unsupported YAML serialization remains truthfully inconclusive rather than silently broadened."
+    evidence_required: "Exact TASK-0014 review validation remains the existing unsupported-serialization outcome, while a supported structured artifact such as TASK-0023 validates."
+  - id: AC-4
+    requirement: "Compatibility recognition does not manufacture semantic acceptance."
+    evidence_required: "Source/test review proves the validator retains its existing state/identity/compliance checks and treats a legacy string only as serialization compatibility."
+  - id: AC-5
+    requirement: "The forward fix and evidence are bounded and reconstructible."
+    evidence_required: "Repository-native suite, actual task/report validation, git diff check, candidate/report direct-child lineage, and fresh non-force dev publication proof pass."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Freshly prove exact task/base/remote identity, selected-authority relationship, clean local target state, and current execution capability before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Run focused exact-artifact compatibility regressions and the repository-native validator suite, then prove candidate diff scope and unchanged unsupported-serialization boundary."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Validate the actual report, publish only authorized commits non-force to dev, then refresh dev/main and candidate/report lineage proof before NEEDS_REVIEW."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - non_force_git_push
+    - remote_ref_read
+  REVIEW:
+    - repository_content_read
+    - native_repository_execution
+    - git_history_read
+    - remote_ref_read
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
