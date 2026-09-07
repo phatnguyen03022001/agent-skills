@@ -144,6 +144,8 @@ An available generic local execution surface may satisfy ordinary engineering ca
 
 Sparse serialization is only an encoding of this same protocol-v3 semantic model. The validator materializes the following table before validating or consuming an optional control; it must not create a task-lite/task-compact dialect or protocol v4.
 
+Review follow-up serialization is a bounded compatibility case at the same boundary: canonical new `review.yaml` artifacts use zero or more structured `follow_up_tasks` mappings containing follow-up metadata, while historical protocol-v3 reviews may use a non-empty homogeneous all-string sequence. The constrained validator recognizes that string sequence only as legacy serialization; it does not infer task existence, follow-up meaning, report identity, review state, or acceptance from those strings. Mixed or malformed forms remain invalid, and unsupported YAML serialization remains mechanically inconclusive rather than being handed to a general YAML parser.
+
 | Omitted serialized control | Canonical normalized meaning |
 | --- | --- |
 | `scope.expected_files_are_restrictive` | `false`; exact-file enumeration is an optional aid, not a default boundary. |

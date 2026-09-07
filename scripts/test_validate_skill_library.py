@@ -2690,6 +2690,73 @@ class ActualArtifactCliTests(unittest.TestCase):
         path.write_text((ROOT / relative_path).read_text(encoding="utf-8"), encoding="utf-8")
         return temp, path
 
+    def replace_follow_up_tasks(self, path: Path, replacement: str) -> None:
+        text = path.read_text(encoding="utf-8")
+        start = text.index("follow_up_tasks:\n")
+        end = text.index("\n\nnotes:", start)
+        path.write_text(text[:start] + replacement + text[end:], encoding="utf-8")
+
+    def test_exact_task0050_legacy_follow_up_strings_are_compatible(self) -> None:
+        path = ROOT / ".agent/tasks/TASK-0050/review.yaml"
+        before = path.read_bytes()
+        result = self.run_artifact_validator("review", path)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(path.read_bytes(), before)
+
+    def test_exact_task0023_structured_follow_up_tasks_remain_compatible(self) -> None:
+        path = ROOT / ".agent/tasks/TASK-0023/review.yaml"
+        before = path.read_bytes()
+        result = self.run_artifact_validator("review", path)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(path.read_bytes(), before)
+
+    def test_follow_up_tasks_mixed_and_empty_string_forms_are_rejected(self) -> None:
+        for replacement, expected in (
+            (
+                "follow_up_tasks:\n"
+                '  - "legacy follow-up"\n'
+                "  - task_id: TASK-0001\n"
+                "    origin:\n"
+                "      type: discovered_gap\n"
+                "      task_id: TASK-0001\n"
+                "      gap_id: GAP-001",
+                "path 'follow_up_tasks[0]' must be mapping",
+            ),
+            (
+                "follow_up_tasks:\n"
+                '  - ""',
+                "follow_up_tasks[0]' must be non-empty string",
+            ),
+        ):
+            with self.subTest(expected=expected):
+                _, path = self.copy_external_artifact(".agent/tasks/TASK-0050/review.yaml")
+                before = path.read_bytes()
+                self.replace_follow_up_tasks(path, replacement)
+                result = self.run_artifact_validator("review", path)
+                output = result.stdout + result.stderr
+                self.assertEqual(result.returncode, 1, output)
+                self.assertIn(expected, output)
+                self.assertNotEqual(path.read_bytes(), before)
+
+    def test_exact_task0014_unsupported_review_yaml_remains_inconclusive(self) -> None:
+        path = ROOT / ".agent/tasks/TASK-0014/review.yaml"
+        before = path.read_bytes()
+        result = self.run_artifact_validator("review", path)
+        output = result.stdout + result.stderr
+        self.assertEqual(result.returncode, 3, output)
+        self.assertIn("UNSUPPORTED_SERIALIZATION", output)
+        self.assertIn("validity not mechanically determined", output.lower())
+        self.assertEqual(path.read_bytes(), before)
+
+    def test_task0009_missing_review_is_reported_without_backfill(self) -> None:
+        path = ROOT / ".agent/tasks/TASK-0009/review.yaml"
+        self.assertFalse(path.exists())
+        result = self.run_artifact_validator("review", path)
+        output = result.stdout + result.stderr
+        self.assertEqual(result.returncode, 1, output)
+        self.assertIn("file does not exist", output)
+        self.assertFalse(path.exists())
+
     def test_artifact_cli_distinguishes_unsupported_serialization_from_protocol_invalidity(self) -> None:
         historical = ROOT / ".agent/tasks/TASK-0013/task.yaml"
         before = historical.read_bytes()

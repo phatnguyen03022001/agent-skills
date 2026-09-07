@@ -676,6 +676,35 @@ def require_mapping_sequence_schema(
     return valid_items
 
 
+def validate_follow_up_tasks(label: str, document: dict[str, Any]) -> None:
+    """Validate canonical mappings and the bounded legacy string encoding."""
+    value = get_path(document, "follow_up_tasks")
+    if value is _MISSING:
+        return
+    if type(value) is not list:
+        error(f"{label}: path 'follow_up_tasks' must be list")
+        return
+
+    # Historical protocol-v3 reviews serialized follow-up task references as a
+    # non-empty homogeneous list of strings. This is compatibility recognition,
+    # not semantic validation of the referenced task or review judgment.
+    if value and all(type(item) is str for item in value):
+        for index, item in enumerate(value):
+            if not item.strip():
+                error(f"{label}: path 'follow_up_tasks[{index}]' must be non-empty string")
+        return
+
+    # Canonical new reviews use the structured mapping form. Keeping this
+    # branch separate makes mixed and malformed representations fail closed.
+    items = require_mapping_sequence_schema(
+        label, document, "follow_up_tasks", REVIEW_SEQUENCE_SCHEMAS["follow_up_tasks"]
+    )
+    for index, item in items:
+        require_mapping_schema(
+            label, item["origin"], f"follow_up_tasks[{index}].origin", FOLLOW_UP_ORIGIN_SCHEMA
+        )
+
+
 def validate_string_list(
     label: str,
     value: Any,
@@ -1226,14 +1255,12 @@ def validate_review_document(label: str, doc: dict[str, Any]) -> None:
     ]:
         require_field(label, doc, dotted, expected_type)
     for dotted, schema in REVIEW_SEQUENCE_SCHEMAS.items():
+        if dotted == "follow_up_tasks":
+            validate_follow_up_tasks(label, doc)
+            continue
         if get_path(doc, dotted) is _MISSING:
             continue
-        items = require_mapping_sequence_schema(label, doc, dotted, schema)
-        if dotted == "follow_up_tasks":
-            for index, item in items:
-                require_mapping_schema(
-                    label, item["origin"], f"follow_up_tasks[{index}].origin", FOLLOW_UP_ORIGIN_SCHEMA
-                )
+        require_mapping_sequence_schema(label, doc, dotted, schema)
 
     promotion_readiness = get_path(doc, "promotion_readiness")
     if promotion_readiness is not _MISSING:
