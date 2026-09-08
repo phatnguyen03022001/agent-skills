@@ -1,0 +1,42 @@
+protocol_version: 3
+
+task_id: TASK-0052
+task_revision: 1
+review_revision: 1
+state: ACCEPTED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-skills
+  path: .agent/tasks/TASK-0052/report.yaml
+  commit: "8d45c5b76c7a6b42f7d3d8cd54db7727a91ce07f"
+  report_revision: 1
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: PASS
+  verifier_evidence: PASS
+
+acceptance_basis:
+  - "Fresh GitHub proof resolves agent-skills dev to report commit 8d45c5b76c7a6b42f7d3d8cd54db7727a91ce07f immediately before review publication and main remains ed8d9fb35bb8b052530ca879e68a227d77e4a8a6."
+  - "Exact lineage and diff proof resolves base 4bdbae8bd09e2b5c2248c3bed784e180a2f7af3e, sole implementation candidate child 1826d33bd1e467896c133109b37db8b0656b3276, and sole report child 8d45c5b76c7a6b42f7d3d8cd54db7727a91ce07f. The candidate changes only executor/SKILL.md and scripts/test_validate_skill_library.py; the report changes only .agent/tasks/TASK-0052/report.yaml."
+  - "Independent source review confirms positive current-task/run ownership plus cleanup authority is required before process/resource lifecycle mutation, while positively task-owned children, descendants, test servers, and explicitly task-owned local services/containers remain eligible for bounded cleanup."
+  - "Independent source review confirms unknown PID/PGID/name/tree/port/service/container ownership fails closed and broad matching is not ownership proof; ordinary target-task authority excludes Agent Runtime, secure tunnel, transport/controller ancestors, and shared operator execution infrastructure."
+  - "Independent source review confirms the rule is not absolute: a separately authorized infrastructure-maintenance task may resolve its own exact authority for bounded Agent Runtime/tunnel lifecycle action. No Runtime source, Task Protocol, router, language skill/role, registry, supervisor, watchdog, sandbox, or unrelated taxonomy change is present."
+  - "Exact-SHA GitHub Actions run 34204878418 checked out implementation candidate 1826d33bd1e467896c133109b37db8b0656b3276 and passed the repository-native validator, all 135 validator/doctrine tests, and all 8 reconcile-env tests. The canonical report additionally records PASS for TASK-0052 task/report artifact validation and git diff checks, with no contradictory evidence found during independent review."
+
+promotion_readiness:
+  eligible_for_candidate_capture: true
+  reason: "TASK-0052 is an accepted source-bearing agent-skills governance change. The exact support-authority source candidate is 1826d33bd1e467896c133109b37db8b0656b3276; report and review descendants are evidence lineage only. Any architect-profile authority selection remains a separate bounded decision."
+
+follow_up_tasks: []
+
+independence:
+  reviewer_role: ARCHITECT
+  separate_session_from_executor: true
+  exact_report_identity_verified: true
