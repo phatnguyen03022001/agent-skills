@@ -1,0 +1,208 @@
+protocol_version: 3
+
+task_id: TASK-0052
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: EXECUTOR_PROCESS_OWNERSHIP_BOUNDARY
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "3c4a31598da4c4e12cb0925bee1b471f160d3b4e"
+
+architect_analysis_skills:
+  - architect
+  - verification
+  - simplicity
+  - reliability
+  - github-workflow
+
+execution_skills:
+  required:
+    - executor
+    - verification
+    - simplicity
+    - github-workflow
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "Current operator instruction: Executor process-ownership boundary hardening"
+    role: "Authorizes one bounded reusable-governance refinement so ordinary Executor cleanup fails closed on positive current-task ownership while preserving separately authorized infrastructure maintenance."
+    precedence: 1
+  - source: "phatnguyen03022001/architect-profile@c370ff7f1afcc7efcee3bdbb862c93da4008a3c3:.agent/bootstrap/authority.lock.json"
+    role: "Pins selected agent-skills authority at 3c4a31598da4c4e12cb0925bee1b471f160d3b4e and preserves the two-role Architect/Executor model."
+    precedence: 2
+  - source: "phatnguyen03022001/agent-skills@3c4a31598da4c4e12cb0925bee1b471f160d3b4e:executor/SKILL.md"
+    role: "Owns Executor-specific restrictive execution, local hygiene, and safety boundaries; current semantics protect filesystem cleanup but do not explicitly establish the required process/resource ownership invariant."
+    precedence: 3
+
+structure_authority:
+  status: RESOLVED
+  source: "Existing executor/SKILL.md Local Hygiene/Restrictive Execution ownership and existing doctrine regression surface in scripts/test_validate_skill_library.py"
+  rationale: "Keep the rule in the existing Executor owner and extend only the existing semantic regression test surface. No Task Protocol, validator-core, router, Runtime, language-skill, or new framework change is required."
+
+objective: "Make Executor process/resource cleanup fail closed on positive current-task ownership and explicitly exclude shared execution substrate from ordinary target-task cleanup authority, while preserving legitimate task-owned cleanup and separately authorized infrastructure maintenance."
+
+scope:
+  required_changes:
+    - "Fresh-bind TASK-0052 revision 1 at its exact handoff base and prove current remote dev/main, selected agent-skills authority ancestry, clean target identity, and required execution capabilities before mutation."
+    - "Refine executor/SKILL.md in the existing restrictive-execution/local-hygiene boundary so a process, service, container, or other execution resource may be terminated or lifecycle-mutated only when ownership by the current authorized task/run is positively established and current task authority permits that cleanup."
+    - "Preserve legitimate cleanup of positively task-owned children, descendants, test servers, and explicitly task-owned local services/containers when the active task permits it."
+    - "State that Agent Runtime, the secure tunnel, execution transport/controller ancestors, and other shared operator execution infrastructure are not task-owned merely because they carry, support, block, or appear related to the current target task. Ordinary target-task authority therefore does not authorize signaling, stopping, restarting, or reconfiguring them."
+    - "Make unknown PID, PGID, process-tree, process-name, port, service, container, or equivalent ownership fail closed. Broad process-name/tree/port cleanup mechanisms may only act on a target set whose current-task ownership is already positively proven; matching or apparent relevance is not ownership proof."
+    - "Preserve a separate authority path: an explicitly authorized infrastructure-maintenance task may govern bounded Agent Runtime/tunnel lifecycle action. Do not encode an absolute never-terminate-Runtime rule."
+    - "Add a bounded semantic regression in the existing scripts/test_validate_skill_library.py doctrine-test surface covering: A) exact task-owned PID/PGID cleanup may be allowed; B) an unknown process occupying a port must not be signaled; C) ordinary target work must not stop/restart Agent Runtime or tunnel; D) a separately authorized bounded Runtime-maintenance task resolves that separate authority instead of inheriting the ordinary-target prohibition blindly."
+    - "Run complete repository-native validation, validate the actual report, publish the implementation candidate non-force to dev, create a report-only direct child, publish it non-force, fresh-prove exact lineage/refs, then stop at NEEDS_REVIEW without self-approval."
+  allowed_existing_files_or_components:
+    - "executor/SKILL.md"
+    - "scripts/test_validate_skill_library.py"
+    - ".agent/tasks/TASK-0052/report.yaml"
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Process/resource cleanup is an authority-and-ownership semantic boundary, not a sandbox, executable blacklist, host confinement mechanism, or hostile-code defense."
+  - "Positive ownership by the current authorized task/run plus task cleanup authority is required before Executor termination or lifecycle mutation of an execution resource."
+  - "Positively task-owned children, descendants, test servers, and explicitly task-owned services/containers remain eligible for bounded cleanup."
+  - "Shared execution substrate is not task-owned by use, ancestry, port occupancy, process naming, apparent fault relevance, or because it supports the active task."
+  - "Unknown ownership fails closed; broad process-name, tree, PID/PGID, port, service, or container matching is never a substitute for positive ownership proof."
+  - "Separately authorized infrastructure maintenance remains possible and must resolve its own exact authority before bounded Runtime/tunnel lifecycle action."
+  - "Exactly two organizational roles remain Architect and Executor. No language-specific role or reusable Go/Python/TypeScript skill is introduced."
+  - "Selected/current Agent Runtime child/session process-group isolation remains unchanged; no Runtime or tunnel implementation change is authorized."
+
+forbidden_changes:
+  - "Do not modify protocols/TASK_PROTOCOL.md, .agent/case-router.yaml, README taxonomy, any skill other than executor/SKILL.md, or any sibling repository."
+  - "Do not create Go, Python, or TypeScript skills or roles, language router cases, or language-specific process-cleanup policy."
+  - "Do not modify agent-runtime or tunnel source/configuration, and do not add a Runtime watchdog, supervisor, kill interceptor, self-defense daemon, process manager, PID registry, ownership database, policy engine, sandbox, or equivalent machinery."
+  - "Do not blacklist kill, pkill, killall, python, bash, or other executables as the enforcement model."
+  - "Do not broaden ordinary target-task authority into shared infrastructure maintenance and do not make shared infrastructure absolutely untouchable under separately authorized maintenance authority."
+  - "Do not add a new validator solely for this semantic rule, new organizational role, dependency, top-level ownership boundary, router case, unrelated cleanup, word-count cleanup, taxonomy refactor, branch, tag, release, or repository metadata change."
+
+gap_policy:
+  local_auto_fix: false
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: forbidden
+  public_contract_change: forbidden
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - ".agent/tasks/TASK-0052/report.yaml"
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: "No unlisted files are authorized."
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Executor may terminate or lifecycle-mutate an execution process/resource only when ownership by the current authorized task/run is positively established and current task authority permits cleanup."
+    evidence_required: "Executor source text plus focused doctrine regression explicitly encode positive current-task/run ownership and cleanup-authority preconditions."
+  - id: AC-2
+    requirement: "Legitimate task-owned descendant and local-resource cleanup remains allowed."
+    evidence_required: "Source and cold-successor regression prove that a task-started server with exact PID/PGID ownership, its descendants, and explicitly task-owned services/containers remain eligible for authorized cleanup."
+  - id: AC-3
+    requirement: "Ordinary target-task authority excludes shared execution substrate from cleanup/lifecycle authority."
+    evidence_required: "Source and cold-successor regression explicitly cover Agent Runtime, secure tunnel, transport/controller ancestors, and other shared operator execution infrastructure, including the case where they appear to cause task problems."
+  - id: AC-4
+    requirement: "Unknown ownership fails closed."
+    evidence_required: "Focused regression proves that a process occupying a needed port without positive current-task ownership is not signaled or treated as task-owned."
+  - id: AC-5
+    requirement: "Broad cleanup mechanisms do not become ownership proof."
+    evidence_required: "Source/test review proves process-name, tree, PID/PGID, port, service, container, pkill-style, or equivalent broad selection is permitted only after the selected target set is positively proven task-owned."
+  - id: AC-6
+    requirement: "Separately authorized infrastructure maintenance remains possible."
+    evidence_required: "Source and cold-successor regression prove an explicitly authorized bounded Runtime-maintenance task resolves its separate authority rather than being blocked by an absolute never-touch-Runtime rule."
+  - id: AC-7
+    requirement: "The architecture remains bounded to existing owners."
+    evidence_required: "Exact candidate diff proves only executor/SKILL.md and the existing doctrine test file changed; two-role semantics, 15-skill taxonomy, router, Task Protocol, Runtime source, and language-skill absence remain unchanged."
+  - id: AC-8
+    requirement: "All current agent-skills native validators/tests required by repository authority pass."
+    evidence_required: "python3 scripts/validate_skill_library.py, python3 -m unittest scripts/test_validate_skill_library.py, python3 -m unittest scripts.test_reconcile_env, git diff --check, and actual task/report artifact validation all PASS on the relevant exact states."
+  - id: AC-9
+    requirement: "A fresh Executor reading canonical authority answers the bounded cold-successor scenarios consistently without a new behavioral framework."
+    evidence_required: "Existing doctrine regression surface explicitly proves scenarios A-D and fails if the rule permits unknown/shared cleanup, forbids legitimate task-owned cleanup, or makes Runtime maintenance absolutely impossible."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Freshly prove exact TASK-0052 revision 1/base/target identity, current remote dev/main, selected-authority ancestry, clean/divergence-safe local state, required execution skills, current Agent Runtime/native_repository_execution availability, and every current-phase mutation capability before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Implement only the authorized Executor semantic/test changes; run the bounded cold-successor doctrine regression and complete repository-native checks: python3 scripts/validate_skill_library.py; python3 -m unittest scripts/test_validate_skill_library.py; python3 -m unittest scripts.test_reconcile_env; python3 scripts/validate_skill_library.py --artifact task .agent/tasks/TASK-0052/task.yaml; git diff --check; then prove exact candidate diff scope and no forbidden architecture expansion."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Validate .agent/tasks/TASK-0052/report.yaml with the repository artifact validator, commit the implementation candidate, fresh-check remote dev before non-force publication, publish the candidate to dev, create the report-only direct child, publish it non-force, refresh dev/main and exact candidate/report lineage, then stop with NEEDS_REVIEW and never create or self-approve review.yaml."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - non_force_git_push
+    - remote_ref_read
+  REVIEW:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - non_force_git_push
+    - remote_ref_read
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
