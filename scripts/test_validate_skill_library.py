@@ -2673,6 +2673,56 @@ class Task0049ExecutorFitDecompositionTests(unittest.TestCase):
             self.assertIn(prohibition, section)
 
 
+class Task0052ExecutorProcessOwnershipBoundaryTests(unittest.TestCase):
+    def executor_doctrine(self) -> str:
+        return (ROOT / "executor" / "SKILL.md").read_text(encoding="utf-8").lower()
+
+    def test_scenario_a_exact_task_owned_pid_pgid_cleanup_may_be_allowed(self) -> None:
+        executor = self.executor_doctrine()
+        for marker in (
+            "ownership by the current authorized task/run is positively established",
+            "current task authority permits that cleanup",
+            "children, descendants, test servers",
+            "explicitly task-owned local services/containers",
+            "pid/pgid",
+        ):
+            self.assertIn(marker, executor)
+
+    def test_scenario_b_unknown_port_occupant_must_not_be_signaled(self) -> None:
+        executor = self.executor_doctrine()
+        for marker in (
+            "unknown ownership fails closed",
+            "unknown process occupying a needed port",
+            "must not be signaled",
+            "process-name, tree, pid/pgid, port, service, container",
+            "matching or apparent relevance is not ownership proof",
+        ):
+            self.assertIn(marker, executor)
+
+    def test_scenario_c_ordinary_target_work_excludes_shared_execution_substrate(self) -> None:
+        executor = self.executor_doctrine()
+        for marker in (
+            "agent runtime",
+            "secure tunnel",
+            "execution transport/controller ancestors",
+            "shared operator execution infrastructure",
+            "not task-owned merely because they carry, support, block, or appear related",
+            "ordinary target-task authority",
+            "does not authorize signaling, stopping, restarting, or reconfiguring",
+        ):
+            self.assertIn(marker, executor)
+
+    def test_scenario_d_separate_runtime_maintenance_authority_remains_possible(self) -> None:
+        executor = self.executor_doctrine()
+        for marker in (
+            "separately authorized infrastructure-maintenance task",
+            "resolve its own exact authority",
+            "bounded agent runtime/tunnel lifecycle action",
+            "not an absolute never-terminate-runtime rule",
+        ):
+            self.assertIn(marker, executor)
+
+
 class ActualArtifactCliTests(unittest.TestCase):
     def run_artifact_validator(self, kind: str, path: Path) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
