@@ -1,0 +1,233 @@
+protocol_version: 3
+
+task_id: TASK-0053
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: EXECUTOR_REPOSITORY_CONSTRUCTION_ACQUISITION
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-skills
+
+target:
+  repository: phatnguyen03022001/agent-skills
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "1826d33bd1e467896c133109b37db8b0656b3276"
+
+architect_analysis_skills:
+  - architect
+  - reuse-first
+  - verification
+  - simplicity
+  - github-workflow
+
+execution_skills:
+  required:
+    - executor
+    - reuse-first
+    - verification
+    - simplicity
+    - github-workflow
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "Current operator instruction: repository construction / OSS acquisition capability"
+    role: "Authorizes one bounded reusable-governance refinement so fresh Executors discover and adopt ecosystem-native repository construction paths before handwritten commodity reconstruction."
+    precedence: 1
+  - source: "phatnguyen03022001/architect-profile@508c64f02640911f1fdca81c8cde08748921eae7:.agent/bootstrap/authority.lock.json"
+    role: "Pins selected agent-skills authority at 1826d33bd1e467896c133109b37db8b0656b3276 and preserves the two-role Architect/Executor model."
+    precedence: 2
+  - source: "phatnguyen03022001/agent-skills@1826d33bd1e467896c133109b37db8b0656b3276:executor/SKILL.md"
+    role: "Owns the mandatory EXECUTE hot path and current restrictive execution semantics; it lacks deterministic repository-construction, scaffold-baseline, acquisition-scope, and hydration guidance."
+    precedence: 3
+  - source: "phatnguyen03022001/agent-skills@1826d33bd1e467896c133109b37db8b0656b3276:reuse-first/SKILL.md"
+    role: "Already owns the reusable build-vs-buy search order and remains normative for evaluating existing/native/framework/ecosystem alternatives without requiring a file change in this task."
+    precedence: 4
+  - source: "phatnguyen03022001/agent-skills@1826d33bd1e467896c133109b37db8b0656b3276:protocols/TASK_PROTOCOL.md"
+    role: "Already distinguishes Executor-local implementation of frozen dependency decisions from Architect-owned material dependency/consequence changes; no protocol change is authorized."
+    precedence: 5
+
+structure_authority:
+  status: RESOLVED
+  source: "Existing executor/SKILL.md execution owner plus existing semantic doctrine regressions in scripts/test_validate_skill_library.py"
+  rationale: "Repository-construction behavior must be present on the mandatory Executor hot path. reuse-first already owns build-vs-buy precedence, and Task Protocol already owns material dependency authority. Extend only Executor semantics and the existing regression surface; do not create a new skill, validator, router case, acquisition framework, or protocol layer."
+
+objective: "Make a fresh Executor construct or extend a repository by discovering and adopting the current ecosystem-native scaffold, toolchain, codegen, and mature OSS path; preserving required generated hygiene; and using the least-persistent authorized acquisition scope before resorting to custom implementation."
+
+scope:
+  required_changes:
+    - "Fresh-bind TASK-0053 revision 1 at its exact handoff base. Before mutation, prove target identity, current remote dev/main, exact selected agent-skills authority, clean/divergence-safe local state, and all required current-phase execution capabilities including Agent Runtime/native_repository_execution."
+    - "Refine executor/SKILL.md with a bounded repository-construction decision loop. The durable order starts by binding authority, classifying existing-repository versus greenfield/bootstrap work, and inspecting the repository/toolchain before acquisition or generation; subsequent discovery/acquisition/reuse steps are decision gates rather than ceremonial mandatory work when not applicable."
+    - "For an existing repository, require inspection of Git state, manifests, lockfiles, package-manager markers/versions, runtime pins, scripts, framework configuration, generator/codegen configuration, .gitignore, and repository-native verification surfaces before acquiring or generating anything material. Existing repository-pinned tooling, scripts, generators, and verification commands take precedence over remembered, globally installed, or merely latest external tooling unless an explicit upgrade/change is authorized."
+    - "For greenfield or framework bootstrap, require fresh resolution of the current official framework/toolchain documentation and supported scaffold/generator behavior before manually recreating equivalent boilerplate. Prefer existing target primitives, standard/native platform capability, official framework scaffold/generator, maintained ecosystem standard, mature admitted OSS, small local implementation, then custom framework only as a last resort justified by evidence. Do not hard-code transient current CLI flags into generic doctrine."
+    - "Make build-vs-buy operational on normal Executor work: before custom implementation of commodity capability, evaluate existing repository implementation, standard library/native platform, framework/platform capability, maintained ecosystem tooling/library, and mature admitted OSS. Fast model-generated code is not itself justification for a custom replacement."
+    - "Define least-persistent sufficient acquisition semantics without creating an acquisition subsystem: REPO_LOCAL for tooling that is part of the reproducible build/test/codegen contract; EPHEMERAL for one-shot scaffold/research/codegen or exact run-owned temporary tooling when persistence is unnecessary; GLOBAL only for stable cross-repository workstation primitives under separate machine/operator authority; CONTAINERIZED when tooling is materially heavy, conflicting, service-like, or benefits from isolation/reproducibility. Ordinary target-task authority must not silently grant Homebrew installs, npm/pnpm global installs, persistent uv tool installs, persistent go installs, PATH/shell-profile changes, runtime-manager changes, Docker-engine changes, persistent service mutation, or Agent Runtime/tunnel lifecycle mutation."
+    - "After scaffold or generation, require inspection of the generated diff before pruning or reshaping it. Preserve required framework/tool-owned baseline and companion files where applicable, including hygiene/configuration/lock/runtime/package-manager/verification metadata. Manual recreation or deletion of accepted generated baseline requires concrete task-compatible justification."
+    - "Make .gitignore an explicit repository-construction concern without introducing a universal mega-ignore. Preserve official framework defaults where applicable, then add only target-specific generated/local artifacts justified by the repository. Generated source, migrations, or codegen output are not automatically ignored; their source-control policy remains target-specific."
+    - "If a restrictive task path/file scope excludes a companion file required by an accepted scaffold/generator baseline, fail closed with the existing authority/blocking mechanism and report the mismatch before destructive pruning, silent omission, or ad-hoc manual reconstruction. Discovery of generated output is not implicit scope expansion."
+    - "Clarify in Executor semantics that dependency hydration executes an already-declared/pinned/locked dependency contract needed for authorized repository execution or verification and is not, by itself, dependency redesign. A command crosses into dependency/tool-contract mutation when it intentionally adds/removes/changes dependencies, ranges, resolutions, lifecycle execution policy, persistent codegen/tool contracts, or materially rewrites the declared/locked contract; such mutation requires the task authority already governed by Task Protocol. If a nominal hydration step unexpectedly rewrites the contract, stop and classify the gap instead of normalizing the rewrite."
+    - "Add focused semantic regressions in scripts/test_validate_skill_library.py that fail against the exact pre-change selected semantics and pass against the candidate, covering cold-successor scenarios A-G: A) a new authorized framework repository fresh-resolves the official scaffold before handwritten skeleton/config; B) an existing pnpm repository follows packageManager/lock/scripts rather than a global/latest CLI; C) required scaffold .gitignore omitted by restrictive scope causes authority/blocking escalation rather than silent deletion; D) locked declared dependencies may be hydrated for authorized verification without being treated as redesign; E) a sufficient one-shot CLI uses a resolved ephemeral mode rather than persistent global installation; F) Homebrew/global/PATH or equivalent machine mutation requires separate machine/operator authority; G) existing framework/native capability solving a commodity need is evaluated before custom implementation unless evidence rejects it."
+    - "Keep tests semantic and version-agnostic. Do not freeze current create-next-app flags, package versions, specific ecosystem release commands, or mutable external documentation syntax into generic doctrine. Reuse the existing validator/test architecture only."
+    - "Run complete repository-native validation, validate the canonical task and actual report artifacts, prove exact candidate diff scope, publish the source-bearing implementation candidate non-force to dev, create the canonical report-only direct child, publish it non-force, fresh-prove remote refs and lineage, then stop at NEEDS_REVIEW without self-review or self-promotion."
+  allowed_existing_files_or_components:
+    - "executor/SKILL.md"
+    - "scripts/test_validate_skill_library.py"
+    - ".agent/tasks/TASK-0053/report.yaml"
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Exactly two organizational roles remain ARCHITECT and EXECUTOR. Temporary frontend, UX/accessibility, performance, backend/data, or security specialization remains Executor specialization only."
+  - "No Go Agent, Python Agent, TypeScript Agent, generic Go/Python/TypeScript reusable skill, language router case, or file-extension routing rule is introduced."
+  - "Repository construction is reuse-first and ecosystem-native, but official/mature tooling is evidence to evaluate rather than blanket permission to expand task scope or mutate the workstation."
+  - "Existing repository-pinned toolchain and repository-native commands win over remembered/global/latest tooling unless the task explicitly authorizes an upgrade or contract change."
+  - "Least-persistent sufficient acquisition is preferred; ordinary target-task authority never silently grants machine-global or shared-operator-infrastructure mutation."
+  - "Generated baseline is inspected before pruning. Required companion files outside restrictive task authority cause a blocking authority gap rather than silent omission or manual reconstruction."
+  - ".gitignore hygiene is framework/target aware and minimal; no universal mega-ignore policy is introduced."
+  - "Dependency hydration of an already-declared locked contract is distinguished from material dependency/tool-contract mutation without changing Task Protocol semantics."
+  - "No new dependency, acquisition service, registry, download manager, package-manager abstraction, generator framework, template engine, daemon, watchdog, alternate runtime, or agent hierarchy is introduced."
+
+forbidden_changes:
+  - "Do not modify reuse-first/SKILL.md, protocols/TASK_PROTOCOL.md, .agent/case-router.yaml, README taxonomy, any skill other than executor/SKILL.md, or any sibling repository or evidence target repository such as phat-portfolio or ilets."
+  - "Do not create a new skill, validator framework, repository generator, template engine, OSS registry/service, package-manager abstraction, dependency broker, download manager, global tool database, scaffold orchestration engine, alternate runtime, watchdog, daemon, or machine setup framework."
+  - "Do not add Go/Python/TypeScript roles or skills, frontend/UX/performance/backend/security organizational roles, or language/file-extension router cases."
+  - "Do not install or upgrade tools on the workstation, mutate Homebrew/global npm/pnpm/uv/go state, modify PATH or shell profiles, change runtime managers/Docker engine, start persistent services, or stop/restart Agent Runtime/tunnel as part of this task."
+  - "Do not hard-code mutable framework/package versions, current scaffold flags, or current one-shot CLI syntax into reusable doctrine solely because they are valid today."
+  - "Do not modify architect-profile, agent-runtime, agent-documents, agent-standards, phat-portfolio, ilets, branch topology, main, tags, releases, repository metadata, or unrelated files."
+
+gap_policy:
+  local_auto_fix: false
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: forbidden
+  public_contract_change: forbidden
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - ".agent/tasks/TASK-0053/report.yaml"
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: "No unlisted files are authorized."
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "A fresh Executor inspects an existing target repository and its pinned/native toolchain before acquiring, scaffolding, generating, or substituting tooling."
+    evidence_required: "Executor source text and focused doctrine regression cover Git state, manifests, lockfiles, package-manager/runtime markers, scripts, framework/codegen configuration, .gitignore, and native verification, with existing pinned/native commands taking precedence over accidental global/latest tooling."
+  - id: AC-2
+    requirement: "For greenfield/framework bootstrap, a fresh Executor fresh-resolves the current official scaffold/generator mechanism before manually recreating equivalent boilerplate."
+    evidence_required: "Executor source plus version-agnostic cold-successor regression requires current official mechanism discovery and rejects handwritten equivalent baseline without concrete task-compatible justification."
+  - id: AC-3
+    requirement: "Existing repository authority and pinned tooling take precedence over remembered or globally installed latest tooling unless an upgrade is explicitly authorized."
+    evidence_required: "Cold-successor regression for an existing pnpm-style repository proves package-manager marker/lock/scripts govern execution rather than ambient global/latest CLI choice."
+  - id: AC-4
+    requirement: "Commodity functionality is evaluated through existing/native/framework/ecosystem/mature OSS options before custom implementation."
+    evidence_required: "Executor source and scenario G regression preserve reuse-first search precedence and require evidence to reject an available adequate option before custom rebuilding."
+  - id: AC-5
+    requirement: "Executor selects the least-persistent sufficient authorized acquisition mode and never infers machine-global mutation authority from ordinary target-task execution authority."
+    evidence_required: "Source and scenarios E-F distinguish REPO_LOCAL, EPHEMERAL, GLOBAL, and CONTAINERIZED intent; one-shot tooling can remain ephemeral while Homebrew/global/PATH/runtime-manager/shared-infrastructure mutation requires separate machine/operator authority."
+  - id: AC-6
+    requirement: "Scaffold/generated output is inspected and required framework/tool-owned baseline is preserved before pruning or reshaping."
+    evidence_required: "Executor source and scenario C require generated-diff inspection and preservation of necessary companion hygiene/configuration/lock/runtime/package-manager/verification surfaces."
+  - id: AC-7
+    requirement: ".gitignore is an explicit, bounded repository-construction hygiene concern rather than a universal ignore template."
+    evidence_required: "Source/test semantics preserve accepted official defaults when applicable, permit only justified target additions, and explicitly avoid treating generated source/migrations/codegen output as automatically ignored."
+  - id: AC-8
+    requirement: "Restrictive task scope conflicting with required scaffold-generated companion files fails closed instead of silently deleting, omitting, or manually reconstructing the baseline."
+    evidence_required: "Scenario C regression proves an omitted required generated .gitignore or equivalent companion surface becomes an authority/blocking gap with no implicit scope expansion."
+  - id: AC-9
+    requirement: "Declared locked dependency hydration is distinguishable from material dependency/tool-contract mutation without a Task Protocol change."
+    evidence_required: "Executor source and scenario D allow authorized execution/verification to hydrate an already-declared locked contract while requiring escalation if the operation intentionally or unexpectedly changes manifests, lock resolution, dependency ranges, lifecycle policy, or persistent tool/codegen contract."
+  - id: AC-10
+    requirement: "The architecture remains bounded: exactly two roles, no language skills/agents, no router/taxonomy expansion, and no acquisition/generator subsystem."
+    evidence_required: "Exact candidate diff proves only executor/SKILL.md and scripts/test_validate_skill_library.py changed; reuse-first, Task Protocol, router, taxonomy, dependencies, Runtime, and sibling repositories remain untouched."
+  - id: AC-11
+    requirement: "All current agent-skills repository-native validators/tests pass on the candidate and report states."
+    evidence_required: "python3 scripts/validate_skill_library.py, python3 -m unittest scripts/test_validate_skill_library.py, python3 -m unittest scripts.test_reconcile_env, git diff --check, canonical TASK-0053 artifact validation, and actual TASK-0053 report validation all PASS on their relevant exact states."
+  - id: AC-12
+    requirement: "A cold-successor Executor answers repository-construction scenarios A-G deterministically from canonical semantics without version-sensitive command memorization."
+    evidence_required: "Existing doctrine regression surface explicitly covers scenarios A-G and fails against the exact pre-change selected semantics before implementation, then passes against the candidate without hard-coded mutable CLI flags or release syntax."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Freshly prove exact TASK-0053 revision 1/base/target identity, current remote dev/main, selected agent-skills authority, clean/divergence-safe local state, current Agent Runtime/native_repository_execution availability, and every required current-phase capability before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Before changing executor/SKILL.md, add/run the focused repository-construction doctrine regression and prove it fails against the exact pre-change selected semantics for the missing behavior; then implement only authorized source/test changes and rerun the focused regression to PASS."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Run complete native checks: python3 scripts/validate_skill_library.py; python3 -m unittest scripts/test_validate_skill_library.py; python3 -m unittest scripts.test_reconcile_env; python3 scripts/validate_skill_library.py --artifact task .agent/tasks/TASK-0053/task.yaml; git diff --check; prove exact candidate diff contains only executor/SKILL.md and scripts/test_validate_skill_library.py."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Validate .agent/tasks/TASK-0053/report.yaml with the existing artifact validator, commit a source-bearing implementation candidate as the direct child of the exact execution base, fresh-check remote dev before non-force publication, publish candidate to dev, create the report-only direct child, publish it non-force, refresh remote dev/main and exact lineage, then stop NEEDS_REVIEW and never create or self-approve review.yaml."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - non_force_git_push
+    - remote_ref_read
+  REVIEW:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - non_force_git_push
+    - remote_ref_read
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true
