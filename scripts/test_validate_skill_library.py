@@ -2723,6 +2723,110 @@ class Task0052ExecutorProcessOwnershipBoundaryTests(unittest.TestCase):
             self.assertIn(marker, executor)
 
 
+class Task0053ExecutorRepositoryConstructionTests(unittest.TestCase):
+    def executor_doctrine(self) -> str:
+        return (ROOT / "executor" / "SKILL.md").read_text(encoding="utf-8").lower()
+
+    def test_scenario_a_greenfield_resolves_current_official_scaffold_before_manual_baseline(self) -> None:
+        executor = self.executor_doctrine()
+        for marker in (
+            "greenfield",
+            "fresh-resolve",
+            "current official",
+            "scaffold/generator",
+            "before manually recreating equivalent boilerplate",
+        ):
+            self.assertIn(marker, executor)
+
+    def test_scenario_b_existing_repository_uses_pinned_native_toolchain_before_ambient_latest(self) -> None:
+        executor = self.executor_doctrine()
+        for marker in (
+            "existing repository",
+            "git state",
+            "manifests",
+            "lockfiles",
+            "package-manager",
+            "runtime pins",
+            "scripts",
+            "framework configuration",
+            "generator/codegen configuration",
+            ".gitignore",
+            "repository-native verification",
+            "take precedence over remembered, globally installed, or merely latest external tooling",
+        ):
+            self.assertIn(marker, executor)
+
+    def test_scenario_c_generated_baseline_and_gitignore_scope_conflict_fail_closed(self) -> None:
+        executor = self.executor_doctrine()
+        for marker in (
+            "inspect the generated diff before pruning or reshaping",
+            "required companion files",
+            ".gitignore",
+            "official framework defaults",
+            "generated source, migrations, or codegen output are not automatically ignored",
+            "restrictive task",
+            "blocking",
+            "silent omission",
+            "manual reconstruction",
+        ):
+            self.assertIn(marker, executor)
+
+    def test_scenario_d_locked_dependency_hydration_is_not_dependency_redesign(self) -> None:
+        executor = self.executor_doctrine()
+        for marker in (
+            "dependency hydration",
+            "already-declared",
+            "pinned/locked dependency contract",
+            "authorized repository execution or verification",
+            "not, by itself, dependency redesign",
+            "intentionally adds/removes/changes dependencies",
+            "unexpectedly rewrites the contract",
+            "stop and classify the gap",
+        ):
+            self.assertIn(marker, executor)
+
+    def test_scenario_e_one_shot_tooling_prefers_ephemeral_over_persistent_global_install(self) -> None:
+        executor = self.executor_doctrine()
+        for marker in (
+            "least-persistent sufficient",
+            "repo_local",
+            "ephemeral",
+            "global",
+            "containerized",
+            "one-shot",
+            "persistence is unnecessary",
+        ):
+            self.assertIn(marker, executor)
+
+    def test_scenario_f_machine_global_mutation_requires_separate_operator_authority(self) -> None:
+        executor = self.executor_doctrine()
+        for marker in (
+            "homebrew",
+            "global npm/pnpm installs",
+            "persistent uv tool installs",
+            "persistent go installs",
+            "path or shell-profile changes",
+            "runtime-manager changes",
+            "docker-engine changes",
+            "persistent service mutation",
+            "agent runtime or tunnel lifecycle mutation",
+            "separate machine/operator authority",
+        ):
+            self.assertIn(marker, executor)
+
+    def test_scenario_g_existing_native_framework_and_mature_oss_precede_custom_rebuild(self) -> None:
+        executor = self.executor_doctrine()
+        for marker in (
+            "existing repository implementation",
+            "standard library/native platform",
+            "framework/platform capability",
+            "maintained ecosystem tooling/library",
+            "mature admitted oss",
+            "fast model-generated code is not itself justification for a custom replacement",
+        ):
+            self.assertIn(marker, executor)
+
+
 class ActualArtifactCliTests(unittest.TestCase):
     def run_artifact_validator(self, kind: str, path: Path) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
